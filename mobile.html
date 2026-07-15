@@ -930,8 +930,8 @@ h1{font-size:24px;font-weight:600;letter-spacing:-.4px;line-height:1.15;margin-t
   </div>
   <div class="chiprow" id="mv-chips"></div>
   <div class="mv-tabs">
-    <button class="mv-tab on"><span class="a">General</span><span class="b" id="mv-tab-sel">Luna 02</span></button>
-    <button class="mv-tab"><span class="a">Perne</span><span class="b">Maya 02</span></button>
+    <button class="mv-tab on" onclick="mvTab(this)"><span class="a">General</span><span class="b" id="mv-tab-sel">Luna 02</span></button>
+    <button class="mv-tab" onclick="mvTab(this)"><span class="a">Perne</span><span class="b">Maya 02</span></button>
   </div>
 
   <div class="col-head">
@@ -1258,6 +1258,10 @@ var lunaSel = 7; /* Luna 8 = index 7 */
       '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" onclick="event.stopPropagation();openModal()"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>');
   }
 })();
+function mvTab(el){
+  document.querySelectorAll('.mv-tab').forEach(function(t){ t.classList.remove('on'); });
+  el.classList.add('on');
+}
 function pickLuna(el){
   document.querySelectorAll('.mtile').forEach(function(t){ t.classList.remove('on'); });
   el.classList.add('on');
