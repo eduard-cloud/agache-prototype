@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Canapea Colecția Boston – Agache</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --purple:#4d35ff; --ink:#121212; --gray:#707173; --gray2:#b6b9be;
+  --hair:#ececec; --chipbg:#f2f2f2; --graysec:#f5f5f7;
+  --yellow:#feffbe; --yellow2:#ffffe0; --lav:#f6f5ff; --lavchip:#ebe8ff;
+  --blue:#eefbff; --cream:#f9f2df; --orange:#fa7800;
+}
+html{-webkit-text-size-adjust:100%}
+body{font-family:'DM Sans',sans-serif;color:var(--ink);background:#fff;overflow-x:hidden}
+button{cursor:pointer;border:none;background:none;font-family:inherit;color:inherit}
+a{text-decoration:none;color:inherit}
+img,video{display:block;max-width:100%}
+.page{max-width:480px;margin:0 auto;background:#fff;position:relative;min-height:100vh}
+
+/* ══ Views (SPA) ══ */
+.view{position:fixed;inset:0;max-width:480px;margin:0 auto;background:#fff;z-index:60;transform:translateX(100%);transition:transform .3s cubic-bezier(.32,.72,.35,1);overflow-y:auto;-webkit-overflow-scrolling:touch;visibility:hidden}
+.view.open{transform:translateX(0);visibility:visible}
+
+/* ══ Announcement bar ══ */
+#annbar{height:40px;background:var(--cream);display:flex;align-items:center;justify-content:space-between;padding:0 12px}
+#annbar .ann-txt{font-size:13px;letter-spacing:.1px;flex:1;text-align:center;transition:opacity .25s}
+#annbar button{width:28px;height:28px;display:flex;align-items:center;justify-content:center}
+
+/* ══ Header ══ */
+#header{height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:#fff}
+#header .h-side{display:flex;align-items:center;gap:20px}
+#header .logo{position:absolute;left:50%;transform:translateX(-50%)}
+#header .logo img{height:30px;width:auto}
+
+/* ══ Search ══ */
+#search{padding:4px 15px 14px}
+#search .s-in{position:relative}
+#search input{width:100%;height:44px;background:#ededed;border:none;border-radius:22px;padding:0 20px 0 44px;font-size:15px;font-family:inherit;color:var(--ink);outline:none}
+#search input::placeholder{color:rgba(0,0,0,.5)}
+#search svg{position:absolute;left:16px;top:11px}
+
+/* ══ Breadcrumb ══ */
+#crumb{padding:2px 15px 10px;font-size:13px;color:var(--gray);letter-spacing:.1px}
+#crumb .cur{color:var(--gray2)}
+
+/* ══ Hero gallery ══ */
+#hero{position:relative;height:370px;overflow:hidden;background:#f5f5f7}
+#hero .trk{display:flex;height:100%;transition:transform .35s cubic-bezier(.4,0,.2,1)}
+#hero .sl{flex:0 0 100%;height:100%}
+#hero .sl img,#hero .sl video{width:100%;height:100%;object-fit:cover}
+#hero-expand{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:20px;background:rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;box-shadow:0 .8px 3.2px rgba(0,0,0,.15);z-index:3;padding:0}
+#hero-expand img{width:16px;height:16px}
+.hero-arr{position:absolute;top:153px;width:24px;height:24px;padding:0;z-index:3}
+.hero-arr img{width:24px;height:24px}
+#hero-prev{left:16px}
+#hero-prev img{transform:rotate(180deg)}
+#hero-next{right:16px}
+#hero-conf{position:absolute;left:16px;top:316px;padding:8px 12px;background:#fff;border-radius:9999px;display:flex;align-items:center;gap:8px;font-size:13px;line-height:1.2;color:#363944;z-index:3}
+#hero-conf img{width:14px;height:14px}
+
+/* thumbnails */
+#thumbs{display:flex;gap:4px;padding:8px 15px 0}
+#thumbs button{width:48px;height:48px;flex:0 0 48px;border:2px solid transparent;padding:0;overflow:hidden;border-radius:2px}
+#thumbs button.on{border-color:var(--ink)}
+#thumbs img{width:100%;height:100%;object-fit:cover}
+
+/* ══ Product info ══ */
+.px{padding-left:15px;padding-right:15px}
+#pinfo{padding-top:26px}
+.p-tag-row{display:flex;align-items:flex-start;justify-content:space-between}
+.p-tag{font-size:11px;letter-spacing:1.1px;color:var(--gray);font-weight:500}
+.p-icons{display:flex;gap:16px}
+h1{font-size:24px;font-weight:600;letter-spacing:-.4px;line-height:1.15;margin-top:12px}
+.p-desc{font-size:15px;line-height:19px;margin-top:8px}
+.p-rate{display:flex;align-items:center;gap:8px;margin-top:14px}
+.stars{display:flex;gap:1px}
+.star{width:14px;height:14px;fill:#f5a623}
+.p-rate .sc{font-size:13px}
+.p-rate .cnt{font-size:13px;text-decoration:underline}
+.p-old{font-size:14px;color:var(--gray);text-decoration:line-through;margin-top:42px}
+.p-price-row{display:flex;align-items:center;gap:12px;margin-top:2px}
+.p-price{font-size:24px;font-weight:700;letter-spacing:-.3px}
+.p-badge{background:var(--orange);color:#fff;font-size:13px;font-weight:500;border-radius:12px;padding:4px 10px}
+
+/* type selector */
+#typesel{margin:34px 15px 0;background:#f4f4f6;border-radius:8px;display:flex;align-items:center;gap:12px;padding:6px 14px 6px 6px;width:calc(100% - 30px)}
+#typesel img{width:100px;height:55px;object-fit:cover;border-radius:4px;background:#fff}
+#typesel .t-i{flex:1;text-align:left}
+#typesel .t-n{font-size:14px;font-weight:500;text-decoration:underline}
+#typesel .t-d{font-size:13px;color:var(--gray);margin-top:2px}
+
+/* property pills */
+.sec-lbl{font-size:14px;color:var(--gray);display:flex;align-items:center;gap:5px}
+#props{margin-top:36px}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.pill{font-size:14px;padding:8px 16px;border-radius:18px;border:1px solid #c8cbd0;background:#fff;transition:all .15s}
+.pill.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* swatches */
+#swatches{margin-top:20px}
+.sw-grid{display:flex;flex-direction:column;gap:3px}
+.sw-row{display:flex;gap:3px}
+.sw{width:66px;height:67px;flex:0 0 66px;padding:0;position:relative;overflow:hidden}
+.sw img{width:100%;height:100%;object-fit:cover}
+.sw.on::after{content:"";position:absolute;inset:0;border:1.5px solid #111032;box-shadow:inset 0 0 0 4px #fff}
+.sw-plus{width:66px;height:67px;flex:0 0 66px;background:#f5f5f5;display:flex;align-items:center;justify-content:center}
+.sw-more{flex:1;height:67px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;font-size:13px;line-height:17px;text-decoration:underline}
+.sw-lbl-row{display:flex;align-items:center;justify-content:space-between;margin-top:14px}
+.sw-name{font-size:14px;font-weight:500;display:flex;align-items:center;gap:5px}
+.sw-guide{display:flex;align-items:center;gap:6px;font-size:12px;background:var(--chipbg);border-radius:14px;height:28px;padding:0 12px}
+.sw-guide span{text-decoration:underline}
+
+/* benefit cards */
+#bcards{display:flex;gap:8px;margin-top:52px}
+.bcard{flex:1;background:var(--lav);border-radius:12px;padding:16px 6px 14px;display:flex;flex-direction:column;align-items:center;gap:9px;color:var(--purple)}
+.bcard div{font-size:13px;line-height:17px;font-weight:500;text-align:center}
+
+/* vazute recent */
+.vz-lbl{margin-top:34px}
+.vz-row{display:flex;gap:3px;margin-top:10px}
+.vz-row .sw,.vz-row .sw-plus{border-radius:0}
+.vz2 .sw{width:57px;height:57px;flex:0 0 57px}
+.plus5{width:66px;height:67px;flex:0 0 66px;background:var(--chipbg);display:flex;align-items:center;justify-content:center;font-size:13px;text-decoration:underline}
+
+/* CTAs */
+#ctas{margin-top:46px;display:flex;flex-direction:column;gap:16px}
+.btn-buy{height:48px;background:var(--purple);color:#fff;border-radius:24px;font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:9px;width:100%;transition:transform .1s,background .2s}
+.btn-buy:active{transform:scale(.97)}
+.btn-call{height:48px;background:#fff;border:1.5px solid #363944;color:#363944;border-radius:24px;font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:9px;width:100%}
+.btn-call:active{background:var(--graysec)}
+
+/* info grid */
+#igrid{margin-top:32px;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);padding:20px 0;display:grid;grid-template-columns:1fr 1fr;gap:20px 12px}
+.ig{display:flex;gap:10px;color:var(--gray)}
+.ig .l1{font-size:13px}
+.ig .l2{font-size:14px;font-weight:600;color:var(--ink);margin-top:2px}
+
+/* specs */
+#specs{margin-top:24px;display:flex;flex-direction:column;gap:18px}
+.sp{display:flex;align-items:center;color:var(--gray)}
+.sp svg{flex:0 0 20px;margin-right:8px}
+.sp .k{font-size:14px;width:83px}
+.sp .v{font-size:14px;font-weight:600;color:var(--ink)}
+
+/* promise box */
+#promise{margin:26px 15px 0;background:var(--yellow);border-radius:12px;padding:18px 16px;display:flex;gap:22px}
+#promise .p-l{font-size:13px;font-weight:500;width:80px;flex:0 0 80px;line-height:17px}
+#promise .p-r{display:flex;flex-direction:column;gap:15px}
+#promise .p-r div{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:500}
+
+/* purple section */
+#mostrar{margin-top:36px;background:var(--purple);border-radius:20px;padding:16px 16px 34px;color:#fff}
+#mostrar img{width:100%;height:263px;object-fit:cover;border-radius:10px}
+#mostrar h2{font-size:24px;font-weight:600;letter-spacing:-.3px;margin-top:30px}
+#mostrar p{font-size:14px;line-height:18px;margin-top:9px;color:rgba(255,255,255,.92);max-width:250px}
+#mostrar button{margin-top:26px;height:44px;background:#fff;color:var(--purple);border-radius:22px;padding:0 22px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:8px}
+
+/* deep dive */
+#deep{background:var(--blue);margin-top:24px;padding:56px 0 62px}
+.eyebrow{font-size:12px;letter-spacing:.84px;font-weight:500;color:#363944;line-height:1.2}
+#deep h2,#construit h2,#confsec h2,#testim h2{font-size:32px;font-weight:500;letter-spacing:-.64px;line-height:1.1;margin-top:12px}
+#construit h2{margin-top:0}
+#deep .tabs{display:flex;gap:10px;margin-top:32px;overflow-x:auto;scrollbar-width:none;padding-right:15px}
+#deep .tabs::-webkit-scrollbar{display:none}
+.dtab{flex:0 0 auto;font-size:14px;padding:9px 18px;border-radius:18px;border:1px solid #c8cbd0;background:#fff;white-space:nowrap}
+.dtab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+#deep .dimg{margin-top:20px}
+#deep .dimg img{width:calc(100% - 30px);margin:0 15px}
+#deep h3{font-size:22px;font-weight:600;letter-spacing:-.3px;margin-top:30px}
+#deep .dbody{font-size:15px;line-height:19px;margin-top:24px}
+#deep .dspecs{margin-top:44px;display:flex;flex-direction:column;gap:9px;font-size:15px;line-height:17px}
+.dpanel{display:none}.dpanel.on{display:block}
+
+/* video */
+#vidsec{position:relative;height:340px;background:#111;overflow:hidden}
+#vidsec video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#vidsec .cap{position:absolute;left:14px;bottom:24px;font-size:11px;letter-spacing:2px;color:rgba(255,255,255,.85);font-weight:500}
+
+/* construite — exact per node 212:19467 */
+#construit{background:var(--graysec);padding:80px 0}
+#construit .chead{display:flex;flex-direction:column;gap:16px;padding:0 16px}
+.rail{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:0 15px;margin-top:36px}
+.rail::-webkit-scrollbar{display:none}
+#crail{gap:12px;padding:0 16px;margin-top:32px}
+.ccard{flex:0 0 300px;width:300px;height:450px;background:#fff;border-radius:16px;overflow:hidden;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:space-between;align-items:center}
+.ccard .ctxt{display:flex;flex-direction:column;gap:16px;padding:32px 24px;width:100%}
+.ccard .tag{font-size:16px;font-weight:500;letter-spacing:-.32px;line-height:1.2;color:#000}
+.ccard .ttl{font-size:24px;font-weight:600;line-height:1.1;color:#000}
+.ccard .dsc{font-size:16px;font-weight:500;letter-spacing:-.32px;line-height:1.2;color:var(--gray)}
+.ccard .ph{flex:0 0 auto}
+.ccard .ph img{object-fit:cover;width:100%;height:100%}
+.ph-garantie{width:274px;height:183px;margin-bottom:16px}
+.ph-arcuri{width:293px;height:165px}
+.ph-tesatura{width:300px;height:197px}
+.ph-captuseala{width:300px;height:256px;border-radius:0 0 16px 16px;overflow:hidden}
+.ph-strips{display:flex;gap:3px;height:195px}
+.ph-strips video{width:100.66px;height:201px;object-fit:cover;border-radius:12px 12px 0 0}
+.rail-nav{display:flex;justify-content:flex-end;gap:16px;padding:0 16px;margin-top:32px;align-items:center}
+.rn-prev,.rn-next{width:40px;height:40px;padding:0}
+.rn-prev img,.rn-next img{width:40px;height:40px;display:block}
+
+/* configureaza section */
+#confsec{padding:74px 0 0}
+#confsec .wph{position:relative;margin-top:26px}
+#confsec .wph img{width:100%;height:482px;object-fit:cover}
+#confsec .wbtn{position:absolute;left:14px;right:14px;bottom:34px;height:48px;background:#fff;border-radius:24px;font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:9px}
+
+/* testimonials */
+#testim{background:var(--graysec);padding:0 0 64px}
+.score-badge{width:150px;margin:0 auto;background:#fff;border-radius:16px;padding:20px 10px 18px;text-align:center;transform:translateY(-46px);box-shadow:0 2px 12px rgba(0,0,0,.05)}
+.score-badge .big{font-size:40px;font-weight:600;letter-spacing:-1px}
+.score-badge .stars{justify-content:center;margin-top:6px}
+.score-badge .cnt{font-size:13px;color:var(--gray);margin-top:8px}
+#testim .filters{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin-top:34px;padding:0 15px}
+#testim .filters::-webkit-scrollbar{display:none}
+.fpill{flex:0 0 auto;font-size:14px;padding:8px 16px;border-radius:18px;border:1px solid #c8cbd0;background:#fff;white-space:nowrap}
+.fpill.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.rvcard{flex:0 0 314px;background:#fff;border-radius:12px;overflow:hidden;scroll-snap-align:start}
+.rvcard .rp{height:231px;position:relative}
+.rvcard .rp img{width:100%;height:100%;object-fit:cover}
+.rv-badge{position:absolute;top:13px;left:14px;background:#fff;border-radius:14px;height:26px;display:flex;align-items:center;gap:5px;padding:0 10px;font-size:13px;font-weight:500}
+.rv-badge .star{width:11px;height:11px}
+.rvcard .bd{padding:20px 14px 18px}
+.rv-meta{display:flex;align-items:center;gap:7px}
+.rv-name{font-size:14px;font-weight:600}
+.rv-ver{font-size:13px;color:var(--gray);display:flex;align-items:center;gap:4px}
+.rv-date{font-size:13px;color:var(--gray);margin-left:auto}
+.rv-ttl{font-size:18px;font-weight:600;margin-top:16px}
+.rv-txt{font-size:14px;line-height:19px;margin-top:14px;color:#363944}
+.rv-prod{margin-top:20px;background:var(--graysec);border-radius:8px;display:flex;align-items:center;gap:10px;padding:6px 10px 6px 6px}
+.rv-prod img{width:85px;height:44px;object-fit:cover;border-radius:4px;background:#fff}
+.rv-prod .a{font-size:12px;color:var(--gray)}
+.rv-prod .b{font-size:13px;font-weight:500;text-decoration:underline;margin-top:1px}
+
+/* like / recent / locations */
+#like{padding:66px 15px 0}
+.h20{font-size:20px;font-weight:500;letter-spacing:-.2px}
+#like .grid{display:grid;grid-template-columns:1fr 1fr;gap:26px 11px;margin-top:34px}
+.pcard{border-radius:12px;overflow:hidden;background:var(--chipbg)}
+.pcard .im{height:130px;background:#e9e9e9}
+.pcard .im img{width:100%;height:100%;object-fit:cover}
+.pcard .tx{padding:10px 12px 12px}
+.pcard .n{font-size:13px;font-weight:500;line-height:16px}
+.pcard .p{font-size:13px;color:var(--gray);margin-top:4px}
+#recent{padding:96px 0 0}
+#recent .rail,#locs .rail{margin-top:32px}
+#recent .pcard,#locs .pcard{flex:0 0 160px;scroll-snap-align:start}
+#locs{padding:76px 0 60px}
+#locs .pcard .n{font-size:14px}
+
+/* ══════════ Materials view ══════════ */
+#mv-top{position:relative;padding-top:32px}
+.circ-btn{width:32px;height:32px;border-radius:50%;background:#fff;border:1px solid #e3e3e3;display:flex;align-items:center;justify-content:center}
+#mv-close{position:absolute;left:20px;top:32px;z-index:2}
+#mv-measure{position:absolute;right:20px;top:32px;z-index:2;width:40px;height:40px;padding:0;border-radius:50%;overflow:hidden;border:none}
+#mv-measure img{width:100%;height:100%}
+#mv-sofa{width:100%;height:220px;object-fit:contain;margin-top:16px}
+#mv-filterrow{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 0}
+#mv-filterbtn{display:flex;align-items:center;gap:8px;border:1px solid #d9dbe0;border-radius:20px;height:40px;padding:0 14px 0 6px;font-size:15px;font-weight:600}
+#mv-filterbtn .cntb{width:28px;height:28px;border-radius:50%;background:var(--ink);color:#fff;font-size:13px;font-weight:500;display:flex;align-items:center;justify-content:center}
+#mv-clear{font-size:13px;text-decoration:underline}
+.chiprow{display:flex;flex-wrap:wrap;gap:8px;padding:16px 20px 0}
+.fchip{display:flex;align-items:center;gap:7px;background:var(--chipbg);border-radius:8px;height:30px;padding:0 10px;font-size:13px}
+.fchip .csq{width:16px;height:16px;border-radius:3px}
+.mv-tabs{display:flex;margin-top:22px;border-bottom:1px solid var(--hair)}
+.mv-tab{flex:1;text-align:center;padding:6px 0 12px;position:relative;color:var(--gray2)}
+.mv-tab .a{font-size:15px;font-weight:600;display:block}
+.mv-tab .b{font-size:12px;display:block;margin-top:3px}
+.mv-tab.on{color:var(--ink)}
+.mv-tab.on .b{color:var(--gray)}
+.mv-tab.on::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--ink)}
+.col-head{display:flex;align-items:baseline;justify-content:space-between;padding:36px 18px 0}
+.col-head .t{font-size:20px;font-weight:600;display:flex;align-items:center;gap:6px}
+.col-head .pr{font-size:12px;color:var(--gray)}
+.col-head .pr b{font-size:15px;color:var(--ink);font-weight:600;margin-left:4px}
+.col-meta{font-size:10px;letter-spacing:.8px;color:var(--gray);padding:8px 18px 0}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:36px 15px;padding:22px 17px 0}
+.mtile{position:relative}
+.mtile .imw{position:relative;aspect-ratio:1;overflow:hidden}
+.mtile img{width:100%;height:100%;object-fit:cover}
+.mtile.on .imw::after{content:"";position:absolute;inset:0;border:2px solid var(--ink);box-shadow:inset 0 0 0 6px #fff}
+.mtile .lr{display:flex;align-items:center;justify-content:space-between;margin-top:9px}
+.mtile .nm{font-size:12px}
+#mv-sticky{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--hair);display:flex;align-items:center;justify-content:space-between;padding:12px 16px;margin-top:44px}
+#mv-sticky .nm{font-size:13px}
+#mv-sticky .pr{font-size:15px;font-weight:700;margin-top:2px}
+#mv-sticky .pr s{font-size:13px;font-weight:400;color:var(--gray2);margin-left:6px}
+#mv-sticky .bb{height:44px;background:#000;color:#fff;border-radius:22px;padding:0 18px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:8px}
+
+/* ══════════ Collection view ══════════ */
+.st-hero{position:relative;height:373px}
+.st-hero img{width:100%;height:100%;object-fit:cover}
+.st-back{position:absolute;left:20px;top:32px;width:32px;height:32px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;z-index:2}
+.st-dots{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:2}
+.st-dots i{width:20px;height:3px;background:rgba(255,255,255,.75);border-radius:2px}
+.st-dots i.on{background:var(--ink)}
+.st-body{padding:22px 17px 0}
+.st-title-row{display:flex;align-items:baseline;justify-content:space-between}
+.st-title{font-size:28px;font-weight:600;letter-spacing:-.4px}
+.st-sub{font-size:15px;color:var(--ink)}
+.st-desc{font-size:14px;line-height:17.5px;margin-top:14px}
+.st-chip{margin-top:20px;display:inline-flex;align-items:center;gap:8px;background:var(--lavchip);border-radius:8px;height:34px;padding:0 14px;color:var(--purple);font-size:14px}
+.st-chip span{text-decoration:underline}
+.yl-band{margin-top:28px;background:var(--yellow2);display:flex;padding:22px 0}
+.yl-band .c{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--purple);font-size:14px;font-weight:500;text-align:center;line-height:19px;padding:0 6px}
+.yl-band .c+.c{border-left:1px solid rgba(77,53,255,.35)}
+.rz-head{display:flex;align-items:baseline;justify-content:space-between;padding:34px 17px 0}
+.rz-head .t{font-size:22px;font-weight:600;letter-spacing:-.3px}
+.rz-head .s{font-size:22px;font-weight:700}
+.rz-head .s i{font-style:normal;color:var(--gray2);font-weight:400}
+.rz-row{display:flex;align-items:center;justify-content:space-between;padding:20px 17px;border-bottom:1px solid var(--hair)}
+.rz-row .k{font-size:15px;font-weight:600}
+.rz-row .k em{display:block;font-style:normal;font-weight:400;font-size:13px;color:var(--gray);margin-top:3px}
+.rz-row .vv{display:flex;align-items:center;gap:10px}
+.rz-row .v{font-size:14px;font-weight:600}
+.rz-row .v i{font-style:normal;color:var(--gray2);font-weight:400}
+.bar{width:60px;height:6px;background:#dcdcdc;border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ink);border-radius:3px}
+.see-more{display:block;margin:26px auto 0;font-size:15px;text-decoration:underline;display:flex;align-items:center;gap:6px;justify-content:center}
+.ft-h{font-size:22px;font-weight:600;padding:44px 17px 0}
+.ft-row{display:flex;justify-content:space-between;gap:20px;padding:18px 17px;border-bottom:1px solid var(--hair)}
+.ft-row .k{font-size:15px}
+.ft-row .v{font-size:14px;text-align:right;line-height:18px;color:var(--ink)}
+.mt-h{font-size:24px;font-weight:600;padding:48px 17px 0}
+.mt-p{font-size:14px;line-height:17.5px;padding:16px 17px 60px}
+
+/* ══════════ Filter sheet ══════════ */
+#dim{position:fixed;inset:0;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .25s;z-index:80}
+#dim.on{opacity:1;pointer-events:auto}
+#fsheet{position:fixed;left:0;right:0;bottom:0;max-width:480px;margin:0 auto;background:#fff;border-radius:20px 20px 0 0;z-index:90;transform:translateY(105%);transition:transform .3s cubic-bezier(.32,.72,.35,1);max-height:88vh;display:flex;flex-direction:column}
+#fsheet.on{transform:translateY(0)}
+#fs-head{display:flex;align-items:center;justify-content:space-between;padding:24px 22px 0}
+#fs-head .t{font-size:20px;font-weight:700}
+#fs-head button{font-size:13px;text-decoration:underline;color:var(--ink)}
+#fs-scroll{overflow-y:auto;padding-bottom:12px}
+#fs-chips{padding:20px 22px 4px}
+.fs-sec{border-bottom:1px solid var(--hair);padding:0 22px}
+.fs-sec:last-of-type{border-bottom:none}
+.fs-tt{display:flex;align-items:center;justify-content:space-between;width:100%;padding:22px 0;font-size:16px;font-weight:600;text-align:left}
+.fs-tt svg{transition:transform .25s}
+.fs-sec.open .fs-tt svg{transform:rotate(180deg)}
+.fs-bd{display:none;padding-bottom:20px}
+.fs-sec.open .fs-bd{display:block}
+.ck-row{display:flex;align-items:center;gap:12px;padding:9px 0;width:100%;text-align:left}
+.ck{width:20px;height:20px;border-radius:6px;border:1.5px solid #c8cbd0;flex:0 0 20px;display:flex;align-items:center;justify-content:center;background:#fff}
+.ck-row.on .ck{background:var(--ink);border-color:var(--ink)}
+.ck svg{opacity:0}
+.ck-row.on .ck svg{opacity:1}
+.ck-row .lb{font-size:15px;flex:1}
+.ck-row .ct{font-size:13px;color:var(--gray)}
+.ck-row .sb{display:block;font-size:12px;color:var(--gray);margin-top:3px}
+.cl-row{display:flex;align-items:center;justify-content:space-between;padding:17px 0;width:100%}
+.cl-row .lb{font-size:15px}
+.cl-row .dot{width:40px;height:40px;border-radius:50%;position:relative}
+.cl-row.on .dot::after{content:"";position:absolute;inset:-5px;border:2px solid var(--ink);border-radius:50%}
+#fs-foot{padding:14px 22px 10px;border-top:1px solid var(--hair)}
+#fs-apply{width:100%;height:52px;background:var(--purple);color:#fff;border-radius:26px;font-size:15px;font-weight:500}
+#fs-reset{display:block;margin:14px auto 0;font-size:13px;text-decoration:underline}
+.hbar{width:134px;height:5px;background:#d9d9d9;border-radius:3px;margin:16px auto 8px}
+
+/* ══════════ Swatch modal — full-screen bottom sheet (85vh) ══════════ */
+#smodal{position:fixed;inset:0;z-index:100;display:none;align-items:flex-end;justify-content:center}
+#smodal.on{display:flex}
+#smodal .mbg{position:absolute;inset:0;background:rgba(10,10,14,.55)}
+#smodal .mcard{position:relative;background:#fff;border-radius:20px 20px 0 0;max-width:480px;width:100%;height:92vh;height:92dvh;display:flex;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;animation:mslide .32s cubic-bezier(.32,.72,.35,1)}
+@keyframes mslide{from{transform:translateY(100%)}to{transform:none}}
+#smodal .st-hero{height:373px;flex:0 0 373px;overflow:hidden}
+#smodal .st-body{padding-bottom:26px}
+#smodal .mcard>*{flex-shrink:0}
+.mh-trk{display:flex;height:100%;transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.mh-trk img{flex:0 0 100%;width:100%;height:100%;object-fit:cover}
+.st-dots button{width:20px;height:12px;padding:0;display:flex;align-items:center}
+.st-dots button i{width:20px;height:3px;background:rgba(255,255,255,.75);border-radius:2px;display:block}
+.st-dots button.on i{background:var(--ink)}
+
+/* ══════════ Lightbox ══════════ */
+#lbox{position:fixed;inset:0;background:#000;z-index:110;display:none;align-items:center;justify-content:center}
+#lbox.on{display:flex}
+#lbox img,#lbox video{max-width:100%;max-height:100%;object-fit:contain}
+#lbox .lclose{position:absolute;top:24px;right:20px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;display:flex;align-items:center;justify-content:center}
+
+/* toast */
+#toast{position:fixed;left:50%;bottom:34px;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;font-size:14px;padding:12px 22px;border-radius:22px;transition:transform .3s;z-index:120;white-space:nowrap}
+#toast.on{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="page" id="pdp">
+
+  <!-- Announcement -->
+  <div id="annbar">
+    <button onclick="annNav(-1)" aria-label="Anterior"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <div class="ann-txt" id="anntxt">10% reducere la comenzi</div>
+    <button onclick="annNav(1)" aria-label="Următor"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+  </div>
+
+  <!-- Header -->
+  <header id="header">
+    <div class="h-side">
+      <button aria-label="Meniu"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.8"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg></button>
+    </div>
+    <a class="logo" href="#"><img src="assets/logo.png" alt="agache"></a>
+    <div class="h-side">
+      <button aria-label="Cont"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+      <button aria-label="Coș"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.8"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></button>
+    </div>
+  </header>
+
+  <!-- Search -->
+  <div id="search">
+    <div class="s-in">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,.45)" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" placeholder="Scrie ce cauți...">
+    </div>
+  </div>
+
+  <!-- Breadcrumb -->
+  <div id="crumb"><a href="#">Acasă</a> / <a href="#">Canapele</a> / <span class="cur">Canapea Boston</span></div>
+
+  <!-- Hero -->
+  <div id="hero">
+    <div class="trk" id="herotrk">
+      <div class="sl"><img src="assets/slide-1.png" alt="Canapea Boston"></div>
+      <div class="sl"><img src="assets/slide-2.png" alt="Canapea Boston"></div>
+      <div class="sl"><img src="assets/slide-3.png" alt="Canapea Boston"></div>
+      <div class="sl"><img src="assets/slide-4.png" alt="Canapea Boston"></div>
+      <div class="sl"><video src="hero-video.mp4" muted loop playsinline autoplay poster="assets/video-poster.png"></video></div>
+    </div>
+    <button id="hero-expand" onclick="openLightbox()" aria-label="Mărește"><img src="assets/expand-ico.svg" alt=""></button>
+    <button class="hero-arr" id="hero-prev" onclick="heroNav(-1)" aria-label="Anterior"><img src="assets/arrow-l.svg" alt=""></button>
+    <button class="hero-arr" id="hero-next" onclick="heroNav(1)" aria-label="Următor"><img src="assets/arrow-r.svg" alt=""></button>
+    <button id="hero-conf"><img src="assets/pencil-ruler.svg" alt="">Configurează</button>
+  </div>
+
+  <!-- Thumbnails -->
+  <div id="thumbs">
+    <button class="on" onclick="heroTo(0)"><img src="assets/thumb-1.png" alt=""></button>
+    <button onclick="heroTo(1)"><img src="assets/thumb-2.png" alt=""></button>
+    <button onclick="heroTo(2)"><img src="assets/thumb-3.png" alt=""></button>
+    <button onclick="heroTo(3)"><img src="assets/thumb-4.png" alt=""></button>
+    <button onclick="heroTo(4)"><img src="assets/thumb-5.png" alt=""></button>
+  </div>
+
+  <!-- Product info -->
+  <div id="pinfo" class="px">
+    <div class="p-tag-row">
+      <span class="p-tag">CONFIGURABILA</span>
+      <div class="p-icons">
+        <button aria-label="Distribuie"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.7"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
+        <button aria-label="Favorite"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.7"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+      </div>
+    </div>
+    <h1>Canapea Colecția Boston</h1>
+    <p class="p-desc">Canapea cu 3 locuri – extensibila, modulara si cu spatiu de depozitare.</p>
+    <div class="p-rate">
+      <div class="stars">
+        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <span class="sc">4.9/5</span>
+      <a class="cnt" href="#testim-h" onclick="scrollToReviews(event)">180 reviews</a>
+    </div>
+
+    <div class="p-old">4.745,00 lei</div>
+    <div class="p-price-row">
+      <div class="p-price">4.271,<sup style="font-size:14px">00</sup> lei</div>
+      <span class="p-badge">–383 lei</span>
+    </div>
+  </div>
+
+  <!-- Type selector -->
+  <button id="typesel" onclick="pressFeedback(this)">
+    <img src="assets/type-thumb.png" alt="Canapea cu 3 locuri">
+    <span class="t-i">
+      <span class="t-n">Canapea cu 3 locuri</span>
+      <span class="t-d" style="display:block">245 x 100 cm</span>
+    </span>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#707173" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+
+  <!-- Property pills -->
+  <div id="props" class="px">
+    <div class="sec-lbl">Alege din proprietatile speciale
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="pills">
+      <button class="pill" onclick="pickPill(this)">Impermeabil</button>
+      <button class="pill on" onclick="pickPill(this)">Easy Clean</button>
+      <button class="pill" onclick="pickPill(this)">Pet-Friendly</button>
+      <button class="pill" onclick="pickPill(this)">Piele sensibila</button>
+      <button class="pill" onclick="pickPill(this)">Standard</button>
+    </div>
+  </div>
+
+  <!-- Swatches -->
+  <div id="swatches" class="px">
+    <div class="sw-grid">
+      <div class="sw-row">
+        <button class="sw on" data-name="Luna 8" onclick="pickSwatch(this)"><img src="assets/sw-cream.png" alt="Luna 8"></button>
+        <button class="sw" data-name="Luna 14" onclick="pickSwatch(this)"><img src="assets/sw-gold.png" alt="Luna 14"></button>
+        <button class="sw" data-name="Luna 13" onclick="pickSwatch(this)"><img src="assets/sw-rust.png" alt="Luna 13"></button>
+        <button class="sw" data-name="Luna 10" onclick="pickSwatch(this)"><img src="assets/sw-gray.png" alt="Luna 10"></button>
+        <button class="sw-plus" onclick="openView('materials')" aria-label="Mai multe materiale"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.6"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="sw-row">
+        <button class="sw" data-name="Luna 5" onclick="pickSwatch(this)"><img src="assets/sw-teal.png" alt="Luna 5"></button>
+        <button class="sw" data-name="Luna 6" onclick="pickSwatch(this)"><img src="assets/sw-denim.png" alt="Luna 6"></button>
+        <button class="sw" data-name="Luna 12" onclick="pickSwatch(this)"><img src="assets/sw-charcoal.png" alt="Luna 12"></button>
+        <button class="sw-more" onclick="openView('materials')">Vezi +50<br>materiale</button>
+      </div>
+    </div>
+    <div class="sw-lbl-row">
+      <button class="sw-name" onclick="openModal()"><span id="swname">Luna 8</span>
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="sw-guide" onclick="openView('collection')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="#121212"><circle cx="7" cy="5" r="1.6"/><circle cx="13" cy="5" r="1.6"/><circle cx="7" cy="12" r="1.6"/><circle cx="13" cy="12" r="1.6"/><circle cx="7" cy="19" r="1.6"/><circle cx="13" cy="19" r="1.6"/></svg>
+        <span>Vezi ghidul de țesături</span>
+      </button>
+    </div>
+
+    <!-- Benefit cards -->
+    <div id="bcards">
+      <div class="bcard">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+        <div>10 ani garanție structurală</div>
+      </div>
+      <div class="bcard">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
+        <div>Fabricat în România</div>
+      </div>
+      <div class="bcard">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        <div>Retur gratuit 14 zile</div>
+      </div>
+    </div>
+
+    <!-- Vazute recent 1 -->
+    <div class="sec-lbl vz-lbl" style="color:#121212;font-weight:500">Vazute recent
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="vz-row">
+      <button class="sw" data-name="Luna 16" onclick="pickSwatch(this)"><img src="assets/vz1-0.png" alt=""></button>
+      <button class="sw" data-name="Luna 11" onclick="pickSwatch(this)"><img src="assets/vz1-1.png" alt=""></button>
+      <button class="sw" data-name="Luna 2" onclick="pickSwatch(this)"><img src="assets/vz1-2.png" alt=""></button>
+      <button class="sw" data-name="Luna 14" onclick="pickSwatch(this)"><img src="assets/vz1-3.png" alt=""></button>
+      <button class="plus5" onclick="openView('materials')">+5</button>
+    </div>
+
+    <!-- Vazute recent 2 -->
+    <div class="sec-lbl vz-lbl" style="color:#121212;font-weight:500">Vazute recent
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="vz-row vz2">
+      <button class="sw" data-name="Luna 5" onclick="pickSwatch(this)"><img src="assets/vz2-0.png" alt=""></button>
+      <button class="sw" data-name="Luna 16" onclick="pickSwatch(this)"><img src="assets/vz2-1.png" alt=""></button>
+      <button class="sw" data-name="Luna 10" onclick="pickSwatch(this)"><img src="assets/vz2-2.png" alt=""></button>
+      <button class="sw" data-name="Luna 1" onclick="pickSwatch(this)"><img src="assets/vz2-3.png" alt=""></button>
+      <button class="sw" data-name="Luna 14" onclick="pickSwatch(this)"><img src="assets/vz2-4.png" alt=""></button>
+      <button class="sw" data-name="Luna 4" onclick="pickSwatch(this)"><img src="assets/vz2-5.png" alt=""></button>
+    </div>
+
+    <!-- CTAs -->
+    <div id="ctas">
+      <button class="btn-buy" id="buybtn" onclick="addToCart(this)">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="21" r="1.6"/><circle cx="19" cy="21" r="1.6"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        Adaugă în coș
+      </button>
+      <button class="btn-call">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.42C1.6 2.3 2.4 1.39 3.5 1.38h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l1.69-1.69a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        Sună-ne
+      </button>
+    </div>
+
+    <!-- Info grid -->
+    <div id="igrid">
+      <div class="ig">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#707173" stroke-width="1.5"><rect x="2" y="7" width="20" height="11" rx="2"/><path d="M6 7V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2"/><path d="M2 13h20"/></svg>
+        <div><div class="l1">Durată producție</div><div class="l2">6 săptămâni</div></div>
+      </div>
+      <div class="ig">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#707173" stroke-width="1.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        <div><div class="l1">Transport gratuit</div><div class="l2">12 – 23 iulie</div></div>
+      </div>
+      <div class="ig">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#707173" stroke-width="1.5"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+        <div><div class="l1">Retur</div><div class="l2">Gratuit in 14 zile</div></div>
+      </div>
+      <div class="ig">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#707173" stroke-width="1.5"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
+        <div><div class="l1">Produs în</div><div class="l2">România</div></div>
+      </div>
+    </div>
+
+    <!-- Specs -->
+    <div id="specs">
+      <div class="sp">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9a9da3" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        <span class="k">Dimensiuni:</span><span class="v">245 × 100 × 68cm</span>
+      </div>
+      <div class="sp">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9a9da3" stroke-width="1.5"><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M5 9V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2"/><line x1="5" y1="21" x2="5" y2="17"/><line x1="19" y1="21" x2="19" y2="17"/></svg>
+        <span class="k">Extensibil:</span><span class="v">150 × 210cm</span>
+      </div>
+      <div class="sp">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9a9da3" stroke-width="1.5"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+        <span class="k">Culoare:</span><span class="v" id="speccolor">Luna 08</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Promise box -->
+  <div id="promise">
+    <div class="p-l">Promisiunea noastră</div>
+    <div class="p-r">
+      <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>10 ani garanție structurală</div>
+      <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.8"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>Fabricat în România</div>
+      <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.8"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Retur gratuit 14 zile</div>
+    </div>
+  </div>
+
+  <!-- Purple mostrar section -->
+  <div id="mostrar">
+    <img src="assets/fabrics-color.png" alt="Mostre de culori">
+    <h2>Comanda mostrar gratuit</h2>
+    <p>Nu ești sigur de culoare? Comandă un mostrar de culori gratuit – il expediem in mai putin de 24 de ore.</p>
+    <button onclick="toast('Mostrarul a fost comandat ✓')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+      Comanda mostrar
+    </button>
+  </div>
+
+  <!-- Deep dive -->
+  <div id="deep">
+    <div class="px">
+      <div class="eyebrow">DEEP DIVE</div>
+      <h2>Descoperă canapeaua ta și toate detaliile ei</h2>
+    </div>
+    <div class="tabs px">
+      <button class="dtab on" onclick="ddTab(this,'general')">Informații generale</button>
+      <button class="dtab" onclick="ddTab(this,'tehnic')">Detalii tehnice</button>
+      <button class="dtab" onclick="ddTab(this,'curatare')">Curățare și întreținere</button>
+      <button class="dtab" onclick="ddTab(this,'transport')">Transport și retur</button>
+      <button class="dtab" onclick="ddTab(this,'garantie')">Garanție</button>
+    </div>
+
+    <div class="dpanel on" id="dd-general">
+      <div class="dimg"><img src="assets/diagram.png" alt="Dimensiuni canapea"></div>
+      <div class="px">
+        <h3>Aici gasesti un subtitlu</h3>
+        <div class="dbody">Canapea 3 locuri este alegerea perfectă pentru cei care caută confort zilnic, spațiu de depozitare generos și un design modern. Boston se potrivește perfect atât în decoruri contemporane, cât și clasice.<br>Este extensibil, modular si se poate configura pe o mulțime de alte dimensiuni.</div>
+        <div class="dspecs">
+          <div>Lățime: 100 cm</div>
+          <div>Înălțime spătar: 68cm (fără perne)</div>
+          <div>Înălțime șezut: 35cm</div>
+          <div>Suprafața de dormit: 150 x 210 cm</div>
+          <div>Adancime șezut: 80 cm</div>
+          <div>Ladă de depozitare: Da, două.</div>
+        </div>
+      </div>
+    </div>
+    <div class="dpanel" id="dd-tehnic">
+      <div class="dimg"><img src="assets/diagram.png" alt="Detalii tehnice"></div>
+      <div class="px">
+        <h3>Specificații tehnice</h3>
+        <div class="dbody">Structura din lemn masiv de fag garantează durabilitate și stabilitate pe termen lung. Mecanismul de extensie a fost conceput pentru utilizare zilnică intensivă.</div>
+        <div class="dspecs">
+          <div>Structură: Lemn masiv de fag</div>
+          <div>Umplutură spătar: Spumă HR + fibră</div>
+          <div>Umplutură șezut: Spumă HR 35</div>
+          <div>Picioare: Metal vopsit negru</div>
+          <div>Mecanism extensie: Acțiune ușoară</div>
+        </div>
+      </div>
+    </div>
+    <div class="dpanel" id="dd-curatare">
+      <div class="dimg"><img src="assets/collection-hero.png" alt="Curățare" style="border-radius:8px"></div>
+      <div class="px">
+        <h3>Ghid de curățare</h3>
+        <div class="dbody">Menține frumusețea canapeei tale cu câteva reguli simple de îngrijire. Materialele noastre sunt tratate special pentru a rezista la uzura de zi cu zi.</div>
+        <div class="dspecs">
+          <div>Curățare regulată: Aspirare ușoară săptămânal</div>
+          <div>Pete: Cârpă umedă, tamponare ușoară</div>
+          <div>Produse: Evitați detergenții agresivi</div>
+          <div>Soare: Evitați expunerea directă prelungită</div>
+        </div>
+      </div>
+    </div>
+    <div class="dpanel" id="dd-transport">
+      <div class="dimg"><img src="assets/video-poster.png" alt="Transport" style="border-radius:8px"></div>
+      <div class="px">
+        <h3>Transport și retur</h3>
+        <div class="dbody">Livrăm gratuit în toată România. Canapeaua este ambalată cu grijă și transportată de echipe specializate care asigură și asamblarea la domiciliu.</div>
+        <div class="dspecs">
+          <div>Transport: Gratuit în România</div>
+          <div>Livrare cu asamblare: Inclus</div>
+          <div>Termen livrare: 6-8 săptămâni</div>
+          <div>Retur: Gratuit în 14 zile</div>
+        </div>
+      </div>
+    </div>
+    <div class="dpanel" id="dd-garantie">
+      <div class="dimg"><img src="assets/construit-1.png" alt="Garanție" style="border-radius:8px"></div>
+      <div class="px">
+        <h3>Garanție extinsă</h3>
+        <div class="dbody">Oferim una dintre cele mai lungi garanții din industrie — 10 ani pentru structura de lemn solid, dovedind că suntem convinși de calitatea produselor noastre.</div>
+        <div class="dspecs">
+          <div>Garanție structurală: 10 ani</div>
+          <div>Garanție mecanisme: 3 ani</div>
+          <div>Garanție tapițerie: 2 ani</div>
+          <div>Service la domiciliu: Gratuit</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Video -->
+  <div id="vidsec">
+    <video src="hero-video.mp4" autoplay muted loop playsinline poster="assets/video-poster.png"></video>
+    <div class="cap">DESCOPERĂ CANAPEAUA BOSTON</div>
+  </div>
+
+  <!-- Construite cu intentie -->
+  <div id="construit">
+    <div class="chead">
+      <div class="eyebrow">CONSTRUITE CU INTENTIE</div>
+      <h2>Canapele gândite și construite să reziste</h2>
+    </div>
+    <div class="rail" id="crail">
+      <div class="ccard">
+        <div class="ctxt">
+          <div class="tag">Garanție extinsă</div>
+          <div class="ttl">10 ani de garanție structurală</div>
+          <div class="dsc">Garanția noastră extinsă acoperă orice problemă legată de structura de lemn solid a canapelei. </div>
+        </div>
+        <div class="ph ph-garantie"><img src="assets/construit-garantie.png" alt="Structura canapelei"></div>
+      </div>
+      <div class="ccard">
+        <div class="ctxt">
+          <div class="tag">Canapea modulară</div>
+          <div class="ttl">Sistem de arcuri <br>si spuma</div>
+          <div class="dsc">Am gândit canapelele noastre pentru diverse cerințe - rezista pana la 130kg pe persoana.</div>
+        </div>
+        <div class="ph ph-arcuri"><img src="assets/construit-arcuri.png" alt="Sistem de arcuri"></div>
+      </div>
+      <div class="ccard">
+        <div class="ctxt">
+          <div class="tag">Atentie la detalii</div>
+          <div class="ttl">Tesatura <br>French </div>
+          <div class="dsc">Am gândit canapelele noastre pentru diverse cerințe - rezista pana la 130kg pe persoana.</div>
+        </div>
+        <div class="ph ph-tesatura"><img src="assets/construit-tesatura.png" alt="Tesatura French" style="object-position:0 93%"></div>
+      </div>
+      <div class="ccard">
+        <div class="ctxt">
+          <div class="tag">Materiale și culori</div>
+          <div class="ttl">300 de culori</div>
+          <div class="dsc">De la piele italiană la cord francez - limita până la care poți customiza rămâne imaginația ta. Și acolo însă te putem ajuta.</div>
+        </div>
+        <div class="ph-strips">
+          <video src="vela.mp4" autoplay muted loop playsinline></video>
+          <video src="bosco.mp4" autoplay muted loop playsinline></video>
+          <video src="rambo.mp4" autoplay muted loop playsinline></video>
+        </div>
+      </div>
+      <div class="ccard">
+        <div class="ctxt">
+          <div class="tag">Captuseala</div>
+          <div class="ttl">Captusit pe toate partile</div>
+          <div class="dsc">Am gândit canapelele noastre pentru diverse cerințe - rezista pana la 130kg pe persoana.</div>
+        </div>
+        <div class="ph ph-captuseala"><img src="assets/construit-captuseala.png" alt="Captuseala"></div>
+      </div>
+    </div>
+    <div class="rail-nav">
+      <button class="rn-prev" onclick="railNav('crail',-1)" aria-label="Anterior"><img src="assets/arrow-left-40.svg" alt=""></button>
+      <button class="rn-next" onclick="railNav('crail',1)" aria-label="Următor"><img src="assets/arrow-right-40.svg" alt=""></button>
+    </div>
+  </div>
+
+  <!-- Configureaza -->
+  <div id="confsec">
+    <div class="px">
+      <div class="eyebrow">CONFIGUREAZĂ-ȚI CANAPEAUA</div>
+      <h2>Vrei să îți creezi<br>o canapea unică?</h2>
+    </div>
+    <div class="wph">
+      <img src="assets/workshop.png" alt="Atelierul Agache">
+      <button class="wbtn" onclick="pressFeedback(this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.6"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        Configurează
+      </button>
+    </div>
+  </div>
+
+  <!-- Testimonials -->
+  <div id="testim" style="margin-top:120px">
+    <div class="score-badge">
+      <div class="big">4.9</div>
+      <div class="stars">
+        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <div class="cnt">21 recenzii</div>
+    </div>
+    <div class="px" id="testim-h" style="margin-top:-8px">
+      <div class="eyebrow">TESTIMONIALE</div>
+      <h2>30.000 de clienți fericiți în peste 30 de ani de activitate.</h2>
+    </div>
+    <div class="filters">
+      <button class="fpill on" onclick="pickFilter(this)">Review-uri cu poze</button>
+      <button class="fpill" onclick="pickFilter(this)">Asamblare</button>
+      <button class="fpill" onclick="pickFilter(this)">Transport și retur</button>
+      <button class="fpill" onclick="pickFilter(this)">Calitate</button>
+      <button class="fpill" onclick="pickFilter(this)">Garanție</button>
+    </div>
+    <div class="rail" id="rvrail">
+      <div class="rvcard">
+        <div class="rp">
+          <img src="assets/review-1.png" alt="Canapea Boston la client">
+        </div>
+        <div class="bd">
+          <div class="rv-meta">
+            <span class="rv-name">Cristian Lungu</span>
+            <span class="rv-ver"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#707173" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>verificat</span>
+            <span class="rv-date">27 Apr. 2025</span>
+          </div>
+          <div class="rv-ttl">Dormit zilnic</div>
+          <div class="rv-txt">dorm zilnic pe el, foarte ok, nu ma doare spatele, dorm chiar bine, recomand!</div>
+          <div class="rv-prod">
+            <img src="assets/review-thumb.png" alt="">
+            <div><div class="a">Recenzie pentru</div><div class="b">Boston Material Practic</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="rvcard">
+        <div class="rp">
+          <img src="assets/hero-1.png" alt="Canapea Boston">
+          <div class="rv-badge"><svg class="star" style="width:11px;height:11px" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>5/5</div>
+        </div>
+        <div class="bd">
+          <div class="rv-meta">
+            <span class="rv-name">Borozan Florina</span>
+            <span class="rv-ver"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#707173" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>verificat</span>
+            <span class="rv-date">14 Mar. 2025</span>
+          </div>
+          <div class="rv-ttl">Depășit așteptările</div>
+          <div class="rv-txt">Materialul este de o calitate remarcabilă, iar montajul a fost rapid. Livrarea a fost la timp, exact cum a fost promis.</div>
+          <div class="rv-prod">
+            <img src="assets/review-thumb.png" alt="">
+            <div><div class="a">Recenzie pentru</div><div class="b">Boston Material Practic</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="rail-nav">
+      <button class="rn-prev" onclick="railNav('rvrail',-1)" aria-label="Anterior"><img src="assets/arrow-left-40.svg" alt=""></button>
+      <button class="rn-next" onclick="railNav('rvrail',1)" aria-label="Următor"><img src="assets/arrow-right-40.svg" alt=""></button>
+    </div>
+  </div>
+
+  <!-- S-ar putea sa iti placa si... -->
+  <div id="like">
+    <div class="h20">S-ar putea sa iti placa si...</div>
+    <div class="grid">
+      <div class="pcard"><div class="im"><img src="assets/hero-1.png" alt=""></div><div class="tx"><div class="n">Canapea Colecția Boston</div><div class="p">4.271,00 lei</div></div></div>
+      <div class="pcard"><div class="im"><img src="assets/sofa-3d.png" alt="" style="object-fit:contain;background:#fff"></div><div class="tx"><div class="n">Colțar Colecția Boston</div><div class="p">5.077,00 lei</div></div></div>
+      <div class="pcard"><div class="im"><img src="assets/review-1.png" alt=""></div><div class="tx"><div class="n">Canapea Boston Practic</div><div class="p">4.745,00 lei</div></div></div>
+      <div class="pcard"><div class="im"><img src="assets/type-thumb.png" alt=""></div><div class="tx"><div class="n">Canapea cu 3 locuri</div><div class="p">4.300,00 lei</div></div></div>
+      <div class="pcard"><div class="im"><img src="assets/collection-hero.png" alt=""></div><div class="tx"><div class="n">Colecția Luna – mostre</div><div class="p">gratuit</div></div></div>
+      <div class="pcard"><div class="im"><img src="assets/video-poster.png" alt=""></div><div class="tx"><div class="n">Canapea Boston Colț</div><div class="p">5.900,00 lei</div></div></div>
+    </div>
+  </div>
+
+  <!-- Le-ai vazut recent -->
+  <div id="recent">
+    <div class="h20 px">Le-ai vazut recent</div>
+    <div class="rail" id="rcrail">
+      <div class="pcard"><div class="im"><img src="assets/hero-1.png" alt=""></div><div class="tx"><div class="n">Canapea Colecția Boston</div><div class="p">4.271,00 lei</div></div></div>
+      <div class="pcard"><div class="im"><img src="assets/sofa-3d.png" alt="" style="object-fit:contain;background:#fff"></div><div class="tx"><div class="n">Colțar Colecția Boston</div><div class="p">5.077,00 lei</div></div></div>
+      <div class="pcard"><div class="im"><img src="assets/modal-hero.png" alt=""></div><div class="tx"><div class="n">Material Luna 08</div><div class="p">mostră gratuită</div></div></div>
+      <div class="pcard"><div class="im"><img src="assets/review-1.png" alt=""></div><div class="tx"><div class="n">Canapea Boston Practic</div><div class="p">4.745,00 lei</div></div></div>
+    </div>
+    <div class="rail-nav">
+      <button class="rn-prev" onclick="railNav('rcrail',-1)" aria-label="Anterior"><img src="assets/arrow-left-40.svg" alt=""></button>
+      <button class="rn-next" onclick="railNav('rcrail',1)" aria-label="Următor"><img src="assets/arrow-right-40.svg" alt=""></button>
+    </div>
+  </div>
+
+  <!-- Locatiile noastre -->
+  <div id="locs">
+    <div class="h20 px">Locatiile noastre</div>
+    <div class="rail" id="lcrail">
+      <div class="pcard"><div class="im"><img src="assets/workshop.png" alt=""></div><div class="tx"><div class="n">Timișoara</div><div class="p">Atelier & Showroom</div></div></div>
+      <div class="pcard"><div class="im"><img src="assets/video-poster.png" alt=""></div><div class="tx"><div class="n">București</div><div class="p">Showroom</div></div></div>
+      <div class="pcard"><div class="im"><img src="assets/hero-1.png" alt=""></div><div class="tx"><div class="n">Cluj-Napoca</div><div class="p">Showroom</div></div></div>
+    </div>
+    <div class="rail-nav">
+      <button class="rn-prev" onclick="railNav('lcrail',-1)" aria-label="Anterior"><img src="assets/arrow-left-40.svg" alt=""></button>
+      <button class="rn-next" onclick="railNav('lcrail',1)" aria-label="Următor"><img src="assets/arrow-right-40.svg" alt=""></button>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<!-- ══════════ Materials view ══════════ -->
+<div class="view" id="view-materials">
+  <div id="mv-top">
+    <button class="circ-btn" id="mv-close" onclick="closeView('materials')" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <button id="mv-measure" aria-label="Dimensiuni"><img src="assets/btn-measure.png" alt=""></button>
+    <img id="mv-sofa" src="assets/sofa-3d.png" alt="Canapea Boston colțar">
+  </div>
+  <div id="mv-filterrow">
+    <button id="mv-filterbtn" onclick="openSheet()">
+      <span class="cntb" id="fcount">3</span> Filtre
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.7"><line x1="4" y1="7" x2="20" y2="7"/><circle cx="9" cy="7" r="2.2" fill="#fff"/><line x1="4" y1="16" x2="20" y2="16"/><circle cx="15" cy="16" r="2.2" fill="#fff"/></svg>
+    </button>
+    <button id="mv-clear" onclick="clearFilters()">Sterge filtrele</button>
+  </div>
+  <div class="chiprow" id="mv-chips"></div>
+  <div class="mv-tabs">
+    <button class="mv-tab on"><span class="a">General</span><span class="b" id="mv-tab-sel">Luna 02</span></button>
+    <button class="mv-tab"><span class="a">Perne</span><span class="b">Maya 02</span></button>
+  </div>
+
+  <div class="col-head">
+    <span class="t">Colectia Luna
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" onclick="event.stopPropagation();openView('collection')"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+    <span class="pr">pret<b>4.300 lei</b></span>
+  </div>
+  <div class="col-meta">TEXTURATĂ&nbsp;&nbsp;|&nbsp;&nbsp;90.000 MARTINDALE&nbsp;&nbsp;|&nbsp;&nbsp;PIELE SENSIBILĂ</div>
+  <div class="mgrid" id="mgrid1"></div>
+
+  <div class="col-head">
+    <span class="t">Colectia Luna
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" onclick="event.stopPropagation();openView('collection')"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+    <span class="pr">pret<b>4.300 lei</b></span>
+  </div>
+  <div class="col-meta">TEXTURATĂ&nbsp;&nbsp;|&nbsp;&nbsp;90.000 MARTINDALE&nbsp;&nbsp;|&nbsp;&nbsp;PIELE SENSIBILĂ</div>
+  <div class="mgrid" id="mgrid2"></div>
+
+  <div id="mv-sticky">
+    <div>
+      <div class="nm">Canapea Boston</div>
+      <div class="pr">9.077,00 lei<s>10.085,00 lei</s></div>
+    </div>
+    <button class="bb" onclick="addToCart(this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="21" r="1.6"/><circle cx="19" cy="21" r="1.6"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      Adaugă în coș
+    </button>
+  </div>
+</div>
+
+<!-- ══════════ Collection view ══════════ -->
+<div class="view" id="view-collection">
+  <div class="st-hero">
+    <img src="assets/collection-hero.png" alt="Colectia Luna">
+    <button class="st-back" onclick="closeView('collection')" aria-label="Înapoi"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
+    <div class="st-dots"><i class="on"></i><i></i><i></i></div>
+  </div>
+  <div class="st-body">
+    <div class="st-title-row"><span class="st-title">Colectia Luna</span></div>
+    <div class="st-desc">Material cu textură plăcută și elastică, realizat dintr-o țesătură tricotată durabilă, concepută pentru mobilier utilizat frecvent. Materialul oferă un echilibru foarte bun între confort, rezistență și durabilitate, fiind potrivit pentru utilizare zilnică.</div>
+    <button class="st-chip" onclick="toast('Mostrarul a fost comandat ✓')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+      <span>Comanda mostrar gratis</span>
+    </button>
+  </div>
+  <div class="yl-band">
+    <div class="c"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>Pentru piele sensibila</div>
+    <div class="c"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>Material texturat</div>
+    <div class="c"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Pentru uz extrem</div>
+  </div>
+  <div class="rz-head"><span class="t">Rezistență generala</span><span class="s">4.7<i>/5</i></span></div>
+  <div>
+    <div class="rz-row"><span class="k">Martindale<em>test abraziune</em></span><span class="vv"><span class="v">90.000</span><span class="bar"><i style="width:95%"></i></span></span></div>
+    <div class="rz-row"><span class="k">MACE<em>test agățare</em></span><span class="vv"><span class="v">5<i>/5</i></span><span class="bar"><i style="width:100%"></i></span></span></div>
+    <div class="rz-row"><span class="k">Rezistenta culoare<em>la frecare</em></span><span class="vv"><span class="v">4.5<i>/5</i></span><span class="bar"><i style="width:90%"></i></span></span></div>
+    <div class="rz-row"><span class="k">Rezistenta culoare<em>la lumina</em></span><span class="vv"><span class="v">4<i>/5</i></span><span class="bar"><i style="width:80%"></i></span></span></div>
+    <div class="rz-row" style="border-bottom:none"><span class="k">Pilling<em>scamosare</em></span><span class="vv"><span class="v">4<i>/5</i></span><span class="bar"><i style="width:80%"></i></span></span></div>
+  </div>
+  <button class="see-more" onclick="pressFeedback(this)">Vezi mai multe
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+  </button>
+  <div class="ft-h">Features</div>
+  <div>
+    <div class="ft-row"><span class="k">Certificari</span><span class="v">Pentru piele sensibila<br>(OEKO-TEX®)</span></div>
+    <div class="ft-row"><span class="k">Maintenance</span><span class="v">Pentru piele sensibila<br>(OEKO-TEX®)</span></div>
+    <div class="ft-row"><span class="k">Compozitie</span><span class="v">100% poliester</span></div>
+    <div class="ft-row"><span class="k">Culoare</span><span class="v">bej</span></div>
+    <div class="ft-row"><span class="k">Greutate (g/m²)</span><span class="v">350 – 390</span></div>
+    <div class="ft-row"><span class="k">Cod produs</span><span class="v">AGC331</span></div>
+    <div class="ft-row"><span class="k">Rezistență la foc</span><span class="v">BS 5852: Partea 1: 1979<br>sursa 0 (țigară)</span></div>
+    <div class="ft-row" style="border-bottom:none"><span class="k">Alunecare la cusătură</span><span class="v">urzeală 2,5 – 3,5 mm<br>băteală 2 mm</span></div>
+  </div>
+  <div class="mt-h">Întretinere</div>
+  <div class="mt-p">Aspirați regulat cu o perie moale și ștergeți imediat petele cu o cârpă curată și uscată, fără a freca. Folosiți doar produse de curățare delicate, pe bază de apă, și evitați expunerea directă la soare pentru a preveni decolorarea. Se recomandă curățarea profesională o dată pe an pentru a menține textura și culoarea țesăturii.</div>
+</div>
+
+<!-- ══════════ Filter sheet ══════════ -->
+<div id="dim" onclick="closeSheet();closeModal()"></div>
+<div id="fsheet">
+  <div id="fs-head"><span class="t">Filtre</span><button onclick="resetFilters()">Resetează</button></div>
+  <div id="fs-scroll">
+    <div class="chiprow" id="fs-chips" style="padding:20px 22px 16px"></div>
+    <div class="fs-sec open" id="sec-material">
+      <button class="fs-tt" onclick="togSec(this)">Material
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+      </button>
+      <div class="fs-bd">
+        <button class="ck-row on" data-f="Catifea" onclick="togCk(this)"><span class="ck"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lb">Catifea</span><span class="ct">(42)</span></button>
+        <button class="ck-row" data-f="Pluș" onclick="togCk(this)"><span class="ck"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lb">Pluș</span><span class="ct">(63)</span></button>
+        <button class="ck-row" data-f="Microfibră" onclick="togCk(this)"><span class="ck"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lb">Microfibră</span><span class="ct">(25)</span></button>
+        <button class="ck-row" data-f="Țesătură texturată" onclick="togCk(this)"><span class="ck"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lb">Țesătură texturată</span><span class="ct">(28)</span></button>
+        <button class="ck-row" data-f="Țesătură netedă" onclick="togCk(this)"><span class="ck"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lb">Țesătură netedă</span><span class="ct">(33)</span></button>
+      </div>
+    </div>
+    <div class="fs-sec open" id="sec-culoare">
+      <button class="fs-tt" onclick="togSec(this)">Culoare
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+      </button>
+      <div class="fs-bd">
+        <button class="cl-row" data-f="Maro / Bej" onclick="togCk(this)"><span class="lb">Maro / Bej</span><span class="dot" style="background:#9e8e7c"></span></button>
+        <button class="cl-row" data-f="Albastru" onclick="togCk(this)"><span class="lb">Albastru</span><span class="dot" style="background:#3b82f6"></span></button>
+        <button class="cl-row" data-f="Roșu" onclick="togCk(this)"><span class="lb">Roșu</span><span class="dot" style="background:#ef4444"></span></button>
+        <button class="cl-row" data-f="Roz" onclick="togCk(this)"><span class="lb">Roz</span><span class="dot" style="background:#f48fb1"></span></button>
+        <button class="cl-row" data-f="Galben" onclick="togCk(this)"><span class="lb">Galben</span><span class="dot" style="background:#e5a830"></span></button>
+        <button class="cl-row" data-f="Verde" onclick="togCk(this)"><span class="lb">Verde</span><span class="dot" style="background:#4caf50"></span></button>
+        <button class="cl-row" data-f="Gri" onclick="togCk(this)"><span class="lb">Gri</span><span class="dot" style="background:#b0b0b0"></span></button>
+        <button class="cl-row" data-f="Bej" onclick="togCk(this)"><span class="lb">Bej</span><span class="dot" style="background:#d4c5a9"></span></button>
+        <button class="cl-row" data-f="Negru" onclick="togCk(this)"><span class="lb">Negru</span><span class="dot" style="background:#1d1e1f"></span></button>
+      </div>
+    </div>
+    <div class="fs-sec open" id="sec-prop">
+      <button class="fs-tt" onclick="togSec(this)">Proprietăți
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+      </button>
+      <div class="fs-bd">
+        <button class="ck-row" data-f="Impermeabil" onclick="togCk(this)"><span class="ck"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lb">Impermeabil</span></button>
+        <button class="ck-row on" data-f="Easy Clean" onclick="togCk(this)"><span class="ck"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lb">Easy Clean</span></button>
+        <button class="ck-row" data-f="Pet Friendly" onclick="togCk(this)"><span class="ck"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lb">Pet Friendly</span></button>
+        <button class="ck-row" data-f="Piele sensibilă (OEKO-TEX®)" onclick="togCk(this)"><span class="ck"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lb">Piele sensibilă (OEKO-TEX®)</span></button>
+      </div>
+    </div>
+    <div class="fs-sec open" id="sec-rez">
+      <button class="fs-tt" onclick="togSec(this)">Rezistență
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+      </button>
+      <div class="fs-bd">
+        <button class="ck-row on" data-f="Uz zilnic" onclick="togCk(this)"><span class="ck"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lb">Uz zilnic<span class="sb">40.000–55.000 cicluri Martindale</span></span></button>
+        <button class="ck-row" data-f="Uz intensiv" onclick="togCk(this)"><span class="ck"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lb">Uz intensiv<span class="sb">55.000–75.000 cicluri Martindale</span></span></button>
+        <button class="ck-row" data-f="Uz extrem" onclick="togCk(this)"><span class="ck"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="lb">Uz extrem<span class="sb">peste 75.000 cicluri Martindale</span></span></button>
+      </div>
+    </div>
+  </div>
+  <div id="fs-foot">
+    <button id="fs-apply" onclick="applyFilters()">Aplică filtrele</button>
+    <button id="fs-reset" onclick="resetFilters()">Resetează</button>
+    <div class="hbar"></div>
+  </div>
+</div>
+
+<!-- ══════════ Swatch modal ══════════ -->
+<div id="smodal">
+  <div class="mbg" onclick="closeModal()"></div>
+  <div class="mcard">
+    <div class="st-hero" id="mhero">
+      <div class="mh-trk" id="mhtrk">
+        <img src="assets/modal-hero.png" alt="Luna 08">
+        <img src="assets/collection-hero.png" alt="Luna 08 drapat">
+      </div>
+      <button class="st-back" onclick="closeModal()" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      <div class="st-dots" id="mdots"><button class="on" onclick="mheroTo(0)" aria-label="Slide 1"><i></i></button><button onclick="mheroTo(1)" aria-label="Slide 2"><i></i></button></div>
+    </div>
+    <div class="st-body">
+      <div class="st-title-row"><span class="st-title" id="smod-name">Luna 08</span><span class="st-sub">bej deschis</span></div>
+      <div class="st-desc">Material cu textură plăcută și elastică, realizat dintr-o țesătură tricotată durabilă, concepută pentru mobilier utilizat frecvent. Materialul oferă un echilibru foarte bun între confort, rezistență și durabilitate, fiind potrivit pentru utilizare zilnică.</div>
+      <button class="st-chip" onclick="toast('Mostrarul a fost comandat ✓')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        <span>Comanda mostrar gratis</span>
+      </button>
+    </div>
+    <div class="yl-band" style="margin-top:24px">
+      <div class="c"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>Pentru piele sensibila</div>
+      <div class="c"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>Material texturat</div>
+      <div class="c"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Pentru uz extrem</div>
+    </div>
+    <div class="rz-head"><span class="t">Rezistență generala</span><span class="s">4.7<i>/5</i></span></div>
+    <div>
+      <div class="rz-row"><span class="k">Martindale<em>test abraziune</em></span><span class="vv"><span class="v">90.000</span><span class="bar"><i style="width:95%"></i></span></span></div>
+      <div class="rz-row"><span class="k">MACE<em>test agățare</em></span><span class="vv"><span class="v">5<i>/5</i></span><span class="bar"><i style="width:100%"></i></span></span></div>
+      <div class="rz-row"><span class="k">Rezistenta culoare<em>la frecare</em></span><span class="vv"><span class="v">4.5<i>/5</i></span><span class="bar"><i style="width:90%"></i></span></span></div>
+      <div class="rz-row"><span class="k">Rezistenta culoare<em>la lumina</em></span><span class="vv"><span class="v">4<i>/5</i></span><span class="bar"><i style="width:80%"></i></span></span></div>
+      <div class="rz-row" style="border-bottom:none"><span class="k">Pilling<em>scamosare</em></span><span class="vv"><span class="v">4<i>/5</i></span><span class="bar"><i style="width:80%"></i></span></span></div>
+    </div>
+    <button class="see-more" onclick="pressFeedback(this)">Vezi mai multe
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="ft-h">Features</div>
+    <div>
+      <div class="ft-row"><span class="k">Certificari</span><span class="v">Pentru piele sensibila<br>(OEKO-TEX®)</span></div>
+      <div class="ft-row"><span class="k">Maintenance</span><span class="v">Pentru piele sensibila<br>(OEKO-TEX®)</span></div>
+      <div class="ft-row"><span class="k">Compozitie</span><span class="v">100% poliester</span></div>
+      <div class="ft-row"><span class="k">Culoare</span><span class="v">bej</span></div>
+      <div class="ft-row"><span class="k">Greutate (g/m²)</span><span class="v">350 – 390</span></div>
+      <div class="ft-row"><span class="k">Cod produs</span><span class="v">AGC331</span></div>
+      <div class="ft-row"><span class="k">Rezistență la foc</span><span class="v">BS 5852: Partea 1: 1979<br>sursa 0 (țigară)</span></div>
+      <div class="ft-row" style="border-bottom:none"><span class="k">Alunecare la cusătură</span><span class="v">urzeală 2,5 – 3,5 mm<br>băteală 2 mm</span></div>
+    </div>
+    <div class="mt-h">Întretinere</div>
+    <div class="mt-p">Aspirați regulat cu o perie moale și ștergeți imediat petele cu o cârpă curată și uscată, fără a freca. Folosiți doar produse de curățare delicate, pe bază de apă, și evitați expunerea directă la soare pentru a preveni decolorarea. Se recomandă curățarea profesională o dată pe an pentru a menține textura și culoarea țesăturii.</div>
+  </div>
+</div>
+
+<!-- ══════════ Lightbox ══════════ -->
+<div id="lbox" onclick="closeLightbox()">
+  <div id="lbox-content"></div>
+  <button class="lclose" aria-label="Închide"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ── Announcement rotation ── */
+var annMsgs = ['10% reducere la comenzi', 'Transport gratuit în România', 'Retur gratuit în 14 zile'];
+var annIdx = 0;
+function annNav(d){
+  annIdx = (annIdx + d + annMsgs.length) % annMsgs.length;
+  var el = document.getElementById('anntxt');
+  el.style.opacity = 0;
+  setTimeout(function(){ el.textContent = annMsgs[annIdx]; el.style.opacity = 1; }, 200);
+}
+
+/* ── Hero carousel ── */
+var heroIdx = 0, heroN = 5;
+var herotrk = document.getElementById('herotrk');
+function heroRender(){
+  herotrk.style.transform = 'translateX(-' + heroIdx * 100 + '%)';
+  var tb = document.querySelectorAll('#thumbs button');
+  tb.forEach(function(b, i){ b.classList.toggle('on', i === heroIdx); });
+}
+function heroNav(d){ heroIdx = (heroIdx + d + heroN) % heroN; heroRender(); }
+function heroTo(i){ heroIdx = i; heroRender(); }
+(function(){
+  var sx = 0, dx = 0, hero = document.getElementById('hero');
+  hero.addEventListener('touchstart', function(e){ sx = e.touches[0].clientX; dx = 0; }, {passive:true});
+  hero.addEventListener('touchmove', function(e){ dx = e.touches[0].clientX - sx; }, {passive:true});
+  hero.addEventListener('touchend', function(){ if (Math.abs(dx) > 44) heroNav(dx < 0 ? 1 : -1); });
+})();
+
+/* ── Lightbox ── */
+function openLightbox(){
+  var c = document.getElementById('lbox-content');
+  var sl = herotrk.children[heroIdx].firstElementChild.cloneNode(true);
+  sl.style.cssText = 'max-width:100%;max-height:100%;object-fit:contain';
+  if (sl.tagName === 'VIDEO'){ sl.muted = true; sl.autoplay = true; sl.loop = true; }
+  c.innerHTML = ''; c.appendChild(sl);
+  document.getElementById('lbox').classList.add('on');
+}
+function closeLightbox(){ document.getElementById('lbox').classList.remove('on'); }
+
+/* ── Pills / filters (visual selection) ── */
+function pickPill(el){
+  el.parentElement.querySelectorAll('.pill').forEach(function(p){ p.classList.remove('on'); });
+  el.classList.add('on');
+}
+function pickFilter(el){
+  el.parentElement.querySelectorAll('.fpill').forEach(function(p){ p.classList.remove('on'); });
+  el.classList.add('on');
+}
+
+/* ── Swatch selection (shared state) ── */
+function pickSwatch(el){
+  document.querySelectorAll('#pdp .sw').forEach(function(s){ s.classList.remove('on'); });
+  el.classList.add('on');
+  var n = el.dataset.name;
+  document.getElementById('swname').textContent = n;
+  document.getElementById('speccolor').textContent = n.replace(/^Luna (\d)$/, 'Luna 0$1');
+  document.getElementById('smod-name').textContent = n;
+}
+
+/* ── Deep dive tabs ── */
+function ddTab(el, id){
+  document.querySelectorAll('.dtab').forEach(function(t){ t.classList.remove('on'); });
+  el.classList.add('on');
+  document.querySelectorAll('.dpanel').forEach(function(p){ p.classList.remove('on'); });
+  document.getElementById('dd-' + id).classList.add('on');
+}
+
+/* ── Rails ── */
+function railNav(id, d){
+  var r = document.getElementById(id);
+  var w = r.firstElementChild.offsetWidth + 16;
+  r.scrollBy({ left: d * w, behavior: 'smooth' });
+}
+
+/* ── Views (materials / collection) ── */
+function openView(name){
+  document.getElementById('view-' + name).classList.add('open');
+  document.body.style.overflow = 'hidden';
+  if (!location.hash.includes(name)) history.pushState({v:name}, '', '#' + name);
+}
+function closeView(name){
+  document.getElementById('view-' + name).classList.remove('open');
+  if (!document.querySelector('.view.open')) document.body.style.overflow = '';
+  if (location.hash === '#' + name) history.back();
+}
+window.addEventListener('popstate', function(){
+  var open = document.querySelectorAll('.view.open');
+  var h = location.hash.replace('#','');
+  open.forEach(function(v){
+    if ('view-' + h !== v.id) v.classList.remove('open');
+  });
+  if (h && document.getElementById('view-' + h)) document.getElementById('view-' + h).classList.add('open');
+  if (!document.querySelector('.view.open')) document.body.style.overflow = '';
+  closeSheet(); closeModal();
+});
+
+/* ── Materials grid build ── */
+var lunaSel = 7; /* Luna 8 = index 7 */
+(function(){
+  var g1 = document.getElementById('mgrid1');
+  for (var i = 1; i <= 16; i++){
+    g1.insertAdjacentHTML('beforeend',
+      '<div class="mtile' + (i - 1 === lunaSel ? ' on' : '') + '" data-i="' + (i - 1) + '" onclick="pickLuna(this)">' +
+      '<div class="imw"><img src="assets/luna-' + i + '.png" alt="Luna ' + i + '"></div>' +
+      '<div class="lr"><span class="nm">Luna ' + i + '</span>' +
+      '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" onclick="event.stopPropagation();openModal()"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>');
+  }
+  var g2 = document.getElementById('mgrid2');
+  for (var j = 0; j < 10; j++){
+    g2.insertAdjacentHTML('beforeend',
+      '<div class="mtile" onclick="pickLuna(this)" data-n="Luna 8">' +
+      '<div class="imw"><img src="assets/luna-8.png" alt="Luna 8"></div>' +
+      '<div class="lr"><span class="nm">Luna 8</span>' +
+      '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" onclick="event.stopPropagation();openModal()"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>');
+  }
+})();
+function pickLuna(el){
+  document.querySelectorAll('.mtile').forEach(function(t){ t.classList.remove('on'); });
+  el.classList.add('on');
+  var n = el.dataset.n || 'Luna ' + (parseInt(el.dataset.i, 10) + 1);
+  document.getElementById('swname').textContent = n;
+  document.getElementById('speccolor').textContent = n.replace(/^Luna (\d)$/, 'Luna 0$1');
+  document.getElementById('smod-name').textContent = n;
+  document.getElementById('mv-tab-sel').textContent = n.replace(/^Luna (\d)$/, 'Luna 0$1');
+}
+
+/* ── Filter sheet ── */
+var filters = ['Catifea', 'Gri', 'Albastru', 'Roșu', 'Easy Clean', 'Uz zilnic'];
+var applied = ['Galben', 'Gri', 'Uz extrem'];
+var chipColors = { 'Galben': '#ffe600', 'Gri': '#a8abb3', 'Maro / Bej': '#9e8e7c', 'Albastru': '#3b82f6', 'Roșu': '#ef4444', 'Roz': '#f48fb1', 'Verde': '#4caf50', 'Bej': '#d4c5a9', 'Negru': '#1d1e1f' };
+function chipHTML(f, rm){
+  var sq = chipColors[f] ? '<span class="csq" style="background:' + chipColors[f] + '"></span>' : '';
+  return '<span class="fchip">' + sq + f +
+    '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2" style="cursor:pointer" onclick="' + rm + '(\'' + f.replace(/'/g, "\\'") + '\')"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>';
+}
+function renderChips(){
+  document.getElementById('mv-chips').innerHTML = applied.map(function(f){ return chipHTML(f, 'rmApplied'); }).join('');
+  document.getElementById('fs-chips').innerHTML = filters.map(function(f){ return chipHTML(f, 'rmFilter'); }).join('');
+  document.getElementById('fcount').textContent = applied.length;
+}
+function rmApplied(f){ applied = applied.filter(function(x){ return x !== f; }); renderChips(); }
+function rmFilter(f){
+  filters = filters.filter(function(x){ return x !== f; });
+  document.querySelectorAll('[data-f]').forEach(function(el){ if (el.dataset.f === f) el.classList.remove('on'); });
+  renderChips();
+}
+function togCk(el){
+  el.classList.toggle('on');
+  var f = el.dataset.f;
+  if (el.classList.contains('on')){ if (filters.indexOf(f) < 0) filters.push(f); }
+  else { filters = filters.filter(function(x){ return x !== f; }); }
+  renderChips();
+}
+function togSec(el){ el.parentElement.classList.toggle('open'); }
+function openSheet(){
+  document.getElementById('fsheet').classList.add('on');
+  document.getElementById('dim').classList.add('on');
+}
+function closeSheet(){
+  document.getElementById('fsheet').classList.remove('on');
+  if (!document.getElementById('smodal').classList.contains('on')) document.getElementById('dim').classList.remove('on');
+}
+function applyFilters(){ applied = filters.slice(); renderChips(); closeSheet(); toast('Filtre aplicate'); }
+function resetFilters(){
+  filters = [];
+  document.querySelectorAll('#fsheet [data-f]').forEach(function(el){ el.classList.remove('on'); });
+  renderChips();
+}
+function clearFilters(){ applied = []; renderChips(); }
+renderChips();
+
+/* ── Swatch modal ── */
+function openModal(){
+  document.getElementById('smodal').classList.add('on');
+  document.getElementById('dim').classList.add('on');
+  document.body.style.overflow = 'hidden';
+  mheroTo(0);
+}
+function closeModal(){
+  document.getElementById('smodal').classList.remove('on');
+  if (!document.getElementById('fsheet').classList.contains('on')) document.getElementById('dim').classList.remove('on');
+  if (!document.querySelector('.view.open')) document.body.style.overflow = '';
+}
+/* modal hero slider */
+var mIdx = 0;
+function mheroTo(i){
+  mIdx = i;
+  document.getElementById('mhtrk').style.transform = 'translateX(-' + i * 100 + '%)';
+  var d = document.querySelectorAll('#mdots button');
+  d.forEach(function(b, k){ b.classList.toggle('on', k === i); });
+}
+(function(){
+  var sx = 0, dx = 0, mh = document.getElementById('mhero');
+  mh.addEventListener('touchstart', function(e){ sx = e.touches[0].clientX; dx = 0; }, {passive:true});
+  mh.addEventListener('touchmove', function(e){ dx = e.touches[0].clientX - sx; }, {passive:true});
+  mh.addEventListener('touchend', function(){
+    if (Math.abs(dx) > 44) mheroTo(Math.min(1, Math.max(0, mIdx + (dx < 0 ? 1 : -1))));
+  });
+})();
+
+/* ── Cart + feedback ── */
+function addToCart(btn){
+  var orig = btn.innerHTML;
+  btn.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg> Adăugat în coș';
+  toast('Produsul a fost adăugat în coș');
+  setTimeout(function(){ btn.innerHTML = orig; }, 1800);
+}
+function pressFeedback(el){
+  el.style.transition = 'transform .1s'; el.style.transform = 'scale(.97)';
+  setTimeout(function(){ el.style.transform = ''; }, 120);
+}
+var toastT;
+function toast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('on');
+  clearTimeout(toastT);
+  toastT = setTimeout(function(){ t.classList.remove('on'); }, 2200);
+}
+/* open view from hash on load */
+(function(){
+  var h = location.hash.replace('#','');
+  if (h && document.getElementById('view-' + h)) openView(h);
+})();
+function scrollToReviews(e){
+  e.preventDefault();
+  document.getElementById('testim-h').scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
