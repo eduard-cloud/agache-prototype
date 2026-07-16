@@ -97,7 +97,9 @@ h1{font-size:24px;font-weight:600;letter-spacing:-.4px;line-height:1.15;margin-t
 /* property pills */
 .sec-lbl{font-size:14px;color:var(--gray);display:flex;align-items:center;gap:5px}
 #props{margin-top:36px}
-.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.pills{display:flex;flex-wrap:nowrap;gap:8px;margin-top:12px;overflow-x:auto;scrollbar-width:none;margin-left:-15px;margin-right:-15px;padding-left:15px;padding-right:15px}
+.pills::-webkit-scrollbar{display:none}
+.pills .pill{flex:0 0 auto;white-space:nowrap}
 .pill{font-size:14px;padding:8px 16px;border-radius:18px;border:1px solid #c8cbd0;background:#fff;transition:all .15s}
 .pill.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 
