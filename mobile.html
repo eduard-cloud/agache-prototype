@@ -1083,7 +1083,7 @@ h1{font-size:24px;font-weight:600;letter-spacing:-.4px;line-height:1.15;margin-t
   <div class="mcard">
     <div class="st-hero" id="mhero">
       <div class="mh-trk" id="mhtrk">
-        <img src="assets/modal-hero.png" alt="Luna 08">
+        <img src="assets/modal-hero.png" alt="Luna 08" id="mslide1">
         <img src="assets/collection-hero.png" alt="Luna 08 drapat">
       </div>
       <button class="st-back" onclick="closeModal()" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
@@ -1247,7 +1247,7 @@ var lunaSel = 7; /* Luna 8 = index 7 */
       '<div class="mtile' + (i - 1 === lunaSel ? ' on' : '') + '" data-i="' + (i - 1) + '" onclick="pickLuna(this)">' +
       '<div class="imw"><img src="assets/luna-' + i + '.png" alt="Luna ' + i + '"></div>' +
       '<div class="lr"><span class="nm">Luna ' + i + '</span>' +
-      '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" onclick="event.stopPropagation();openModal()"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>');
+      '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" onclick="event.stopPropagation();openModalNamed(\'Luna ' + i + '\')"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>');
   }
   var g2 = document.getElementById('mgrid2');
   for (var j = 0; j < 10; j++){
@@ -1255,7 +1255,7 @@ var lunaSel = 7; /* Luna 8 = index 7 */
       '<div class="mtile" onclick="pickLuna(this)" data-n="Luna 8">' +
       '<div class="imw"><img src="assets/luna-8.png" alt="Luna 8"></div>' +
       '<div class="lr"><span class="nm">Luna 8</span>' +
-      '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" onclick="event.stopPropagation();openModal()"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>');
+      '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" onclick="event.stopPropagation();openModalNamed(\'Luna 8\')"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>');
   }
 })();
 function mvTab(el){
@@ -1318,7 +1318,18 @@ function clearFilters(){ applied = []; renderChips(); }
 renderChips();
 
 /* ── Swatch modal ── */
+function lunaAsset(name){
+  var m = /Luna (\d+)/.exec(name || '');
+  var n = m ? parseInt(m[1], 10) : 8;
+  return n === 8 ? 'assets/modal-hero.png' : 'assets/luna-' + n + '.png';
+}
+function openModalNamed(name){
+  document.getElementById('smod-name').textContent = name;
+  openModal();
+}
 function openModal(){
+  var name = document.getElementById('smod-name').textContent;
+  document.getElementById('mslide1').src = lunaAsset(name);
   document.getElementById('smodal').classList.add('on');
   document.getElementById('dim').classList.add('on');
   document.body.style.overflow = 'hidden';
