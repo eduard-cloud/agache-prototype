@@ -210,8 +210,8 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
 /* configureaza section */
 #confsec{padding:80px 0 0}
 #confsec .px{padding-bottom:24px}
-#confsec .wph{position:relative;margin-top:0}
-#confsec .wph img{width:100%;height:500px;object-fit:cover}
+#confsec .wph{position:relative;margin-top:0;border-radius:16px 16px 0 0;overflow:hidden}
+#confsec .wph img{width:100%;height:500px;object-fit:cover;display:block}
 #confsec .wbtn{position:absolute;left:16px;width:343px;top:420px;background:#fff;border-radius:9999px;padding:16px 24px;font-size:16px;letter-spacing:-.32px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:8px}
 
 /* testimonials */
@@ -807,7 +807,7 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
     </div>
     <div class="wph">
       <img src="assets/workshop.png" alt="Atelierul Agache">
-      <button class="wbtn" onclick="pressFeedback(this)">
+      <button class="wbtn" onclick="openView('materials')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.6"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
         Configurează
       </button>
