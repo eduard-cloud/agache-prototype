@@ -290,9 +290,12 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
 .mtile{position:relative}
 .mtile .imw{position:relative;aspect-ratio:1;overflow:hidden}
 .mtile img{width:100%;height:100%;object-fit:cover}
-.mtile.on .imw::after{content:"";position:absolute;inset:0;border:2px solid var(--ink);box-shadow:inset 0 0 0 6px #fff}
+.mtile.on .imw::after{content:"";position:absolute;inset:0;border:2px solid var(--ink);box-shadow:inset 0 0 0 4px #fff}
 .mtile .lr{display:flex;align-items:center;justify-content:space-between;margin-top:9px}
 .mtile .nm{font-size:12px}
+.mtile-heart{position:absolute;top:12px;right:12px;width:20px;height:20px;display:flex;align-items:center;justify-content:center;padding:0;z-index:2}
+.mtile-heart svg path{fill:none;stroke:#fff;stroke-width:1.4;transition:fill .15s,stroke .15s}
+.mtile-heart.on svg path{fill:#EB2F1E;stroke:#EB2F1E}
 #mv-sticky{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--hair);display:flex;align-items:center;justify-content:space-between;padding:12px 16px;margin-top:44px}
 #mv-sticky .nm{font-size:13px}
 #mv-sticky .pr{font-size:15px;font-weight:700;margin-top:2px}
@@ -1304,14 +1307,40 @@ window.addEventListener('popstate', function(){
   closeSheet(); closeModal(); closeSamplesModal();
 });
 
+/* ── Liked swatches (heart) / sample selection — shared state ── */
+var sampleSel = []; /* fabric names picked for the free sample order, via heart or the samples modal */
+function isLiked(name){ return sampleSel.indexOf(name) > -1; }
+function heartSVG(){
+  return '<svg width="16" height="15" viewBox="0 0 18 16" fill="none"><path d="M14.6667 9.66667C15.9083 8.45 17.1667 6.99167 17.1667 5.08333C17.1667 3.86776 16.6838 2.70197 15.8242 1.84243C14.9647 0.982886 13.7989 0.5 12.5833 0.5C11.1167 0.5 10.0833 0.916667 8.83333 2.16667C7.58333 0.916667 6.55 0.5 5.08333 0.5C3.86776 0.5 2.70197 0.982886 1.84243 1.84243C0.982886 2.70197 0.5 3.86776 0.5 5.08333C0.5 7 1.75 8.45833 3 9.66667L8.83333 15.5L14.6667 9.66667Z" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+}
+function setLiked(name, on){
+  var idx = sampleSel.indexOf(name);
+  if (on && idx === -1){
+    if (sampleSel.length >= 5){ toast('Poți alege maximum 5 mostre'); return; }
+    sampleSel.push(name);
+  } else if (!on && idx > -1){
+    sampleSel.splice(idx, 1);
+  } else {
+    return;
+  }
+  document.querySelectorAll('.mtile-heart[data-name="' + name + '"]').forEach(function(h){ h.classList.toggle('on', on); });
+  document.querySelectorAll('#smgrid .sm-tile[data-name="' + name + '"]').forEach(function(t){ t.classList.toggle('on', on); });
+  renderSampleTray();
+}
+function toggleHeart(el, name){
+  setLiked(name, !isLiked(name));
+}
+
 /* ── Materials grid build ── */
 var lunaSel = 7; /* Luna 8 = index 7 */
 (function(){
   var g1 = document.getElementById('mgrid1');
   for (var i = 1; i <= 16; i++){
+    var n1 = 'Luna ' + i;
     g1.insertAdjacentHTML('beforeend',
       '<div class="mtile' + (i - 1 === lunaSel ? ' on' : '') + '" data-i="' + (i - 1) + '" onclick="pickLuna(this)">' +
-      '<div class="imw"><img src="assets/luna-' + i + '.png" alt="Luna ' + i + '"></div>' +
+      '<div class="imw"><img src="assets/luna-' + i + '.png" alt="Luna ' + i + '">' +
+      '<button class="mtile-heart' + (isLiked(n1) ? ' on' : '') + '" data-name="' + n1 + '" onclick="event.stopPropagation();toggleHeart(this,\'' + n1 + '\')" aria-label="Salvează ' + n1 + '">' + heartSVG() + '</button></div>' +
       '<div class="lr"><span class="nm">Luna ' + i + '</span>' +
       '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" onclick="event.stopPropagation();openModalNamed(\'Luna ' + i + '\')"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>');
   }
@@ -1319,7 +1348,8 @@ var lunaSel = 7; /* Luna 8 = index 7 */
   for (var j = 0; j < 10; j++){
     g2.insertAdjacentHTML('beforeend',
       '<div class="mtile" onclick="pickLuna(this)" data-n="Luna 8">' +
-      '<div class="imw"><img src="assets/luna-8.png" alt="Luna 8"></div>' +
+      '<div class="imw"><img src="assets/luna-8.png" alt="Luna 8">' +
+      '<button class="mtile-heart' + (isLiked('Luna 8') ? ' on' : '') + '" data-name="Luna 8" onclick="event.stopPropagation();toggleHeart(this,\'Luna 8\')" aria-label="Salvează Luna 8">' + heartSVG() + '</button></div>' +
       '<div class="lr"><span class="nm">Luna 8</span>' +
       '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" onclick="event.stopPropagation();openModalNamed(\'Luna 8\')"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>');
   }
@@ -1408,37 +1438,24 @@ function closeModal(){
 }
 
 /* ── Samples modal (order up to 5 free fabric swatches) ── */
-var sampleSel = [];
+/* sampleSel / isLiked / setLiked are declared earlier, shared with the materials grid hearts */
 function buildSamplesGrid(){
   var g = document.getElementById('smgrid');
   if (g.childElementCount) return;
   for (var i = 1; i <= 16; i++){
     var name = 'Luna ' + i;
     g.insertAdjacentHTML('beforeend',
-      '<div class="sm-tile" data-name="' + name + '" onclick="toggleSample(this,\'' + name + '\')">' +
+      '<div class="sm-tile' + (isLiked(name) ? ' on' : '') + '" data-name="' + name + '" onclick="toggleSample(this,\'' + name + '\')">' +
       '<div class="imw"><img src="' + lunaAsset(name) + '" alt="' + name + '">' +
       '<div class="sm-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div></div>' +
       '<div class="nm">' + name + '</div></div>');
   }
 }
 function toggleSample(el, name){
-  var idx = sampleSel.indexOf(name);
-  if (idx > -1){
-    sampleSel.splice(idx, 1);
-    el.classList.remove('on');
-  } else {
-    if (sampleSel.length >= 5){ toast('Poți alege maximum 5 mostre'); return; }
-    sampleSel.push(name);
-    el.classList.add('on');
-  }
-  renderSampleTray();
+  setLiked(name, !isLiked(name));
 }
 function removeSample(name){
-  sampleSel = sampleSel.filter(function(n){ return n !== name; });
-  document.querySelectorAll('#smgrid .sm-tile').forEach(function(t){
-    if (t.dataset.name === name) t.classList.remove('on');
-  });
-  renderSampleTray();
+  setLiked(name, false);
 }
 function renderSampleTray(){
   var tray = document.getElementById('smtray');
@@ -1473,7 +1490,7 @@ function addSamplesToCart(){
     btn.innerHTML = orig;
     closeSamplesModal();
     sampleSel = [];
-    document.querySelectorAll('#smgrid .sm-tile.on').forEach(function(t){ t.classList.remove('on'); });
+    document.querySelectorAll('#smgrid .sm-tile.on, .mtile-heart.on').forEach(function(t){ t.classList.remove('on'); });
     renderSampleTray();
   }, 1400);
 }
