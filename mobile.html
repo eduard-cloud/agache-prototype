@@ -103,6 +103,7 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
 .pills .pill{flex:0 0 auto;white-space:nowrap}
 .pill{font-size:14px;letter-spacing:-.28px;padding:16px;border-radius:9999px;border:1px solid #c8cbd0;background:#fff;transition:all .15s}
 .pill.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pill.disabled{opacity:.35;pointer-events:none}
 
 /* swatches */
 #swatches{margin-top:16px}
@@ -533,7 +534,7 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
     </div>
     <div class="pills">
       <button class="pill" onclick="pickPill(this)">Impermeabil</button>
-      <button class="pill on" onclick="pickPill(this)">Easy Clean</button>
+      <button class="pill" onclick="pickPill(this)">Easy Clean</button>
       <button class="pill" onclick="pickPill(this)">Pet-Friendly</button>
       <button class="pill" onclick="pickPill(this)">Piele sensibila</button>
       <button class="pill" onclick="pickPill(this)">Standard</button>
@@ -544,11 +545,11 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
   <div id="swatches" class="px">
     <div class="sw-grid">
       <div class="sw-row">
-        <button class="sw on" data-name="Luna 8" onclick="pickSwatch(this)"><img src="assets/luna-8.png" alt="Luna 8"></button>
-        <button class="sw" data-name="Luna 14" onclick="pickSwatch(this)"><img src="assets/luna-14.png" alt="Luna 14"></button>
-        <button class="sw" data-name="Luna 13" onclick="pickSwatch(this)"><img src="assets/luna-13.png" alt="Luna 13"></button>
-        <button class="sw" data-name="Luna 10" onclick="pickSwatch(this)"><img src="assets/luna-10.png" alt="Luna 10"></button>
-        <button class="sw-plus" onclick="openView('materials')" aria-label="Mai multe materiale"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.6"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+        <button class="sw on" id="pdp-sw1" data-name="Luna 8" onclick="pickSwatch(this)"><img src="assets/luna-8.png" alt="Luna 8"></button>
+        <button class="sw" id="pdp-sw2" data-name="Luna 14" onclick="pickSwatch(this)"><img src="assets/luna-14.png" alt="Luna 14"></button>
+        <button class="sw" id="pdp-sw3" data-name="Luna 13" onclick="pickSwatch(this)"><img src="assets/luna-13.png" alt="Luna 13"></button>
+        <button class="sw" id="pdp-sw4" data-name="Luna 10" onclick="pickSwatch(this)"><img src="assets/luna-10.png" alt="Luna 10"></button>
+        <button class="sw-plus" onclick="openMaterialsWithPdpFilters()" aria-label="Mai multe materiale"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.6"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
       </div>
       <div class="sw-row" style="display:none"><!-- hidden per client request -->
         <button class="sw" data-name="Luna 5" onclick="pickSwatch(this)"><img src="assets/luna-5.png" alt="Luna 5"></button>
@@ -1409,15 +1410,91 @@ function openLightbox(){
 }
 function closeLightbox(){ document.getElementById('lbox').classList.remove('on'); }
 
-/* ── Pills / filters (visual selection) ── */
-function pickPill(el){
-  el.parentElement.querySelectorAll('.pill').forEach(function(p){ p.classList.remove('on'); });
-  el.classList.add('on');
-}
+/* ── PDP property pills: multi-select, AND cross-filtering against real collection data ── */
 function pickFilter(el){
   el.parentElement.querySelectorAll('.fpill').forEach(function(p){ p.classList.remove('on'); });
   el.classList.add('on');
 }
+var PDP_TO_FILTER_LABEL = {
+  'Impermeabil': 'Impermeabil', 'Easy Clean': 'Easy Clean', 'Pet-Friendly': 'Pet Friendly',
+  'Piele sensibila': 'Piele sensibilă (OEKO-TEX®)', 'Standard': 'Standard'
+};
+var PDP_DEFAULT_SW = [
+  { name: 'Luna 8', src: 'assets/luna-8.png' }, { name: 'Luna 14', src: 'assets/luna-14.png' },
+  { name: 'Luna 13', src: 'assets/luna-13.png' }, { name: 'Luna 10', src: 'assets/luna-10.png' }
+];
+function pdpActivePills(){
+  return Array.from(document.querySelectorAll('#props .pill.on'));
+}
+function pdpMatchingCollections(labels){
+  var filterLabels = labels.map(function(l){ return PDP_TO_FILTER_LABEL[l]; });
+  return COLLECTION_ORDER.filter(function(slug){
+    return filterLabels.every(function(f){ return propMatch(f, COLLECTIONS[slug]); });
+  });
+}
+function pickPill(el){
+  if (el.classList.contains('disabled')) return;
+  el.classList.toggle('on');
+  updatePdpProps();
+}
+function updatePdpProps(){
+  var pills = Array.from(document.querySelectorAll('#props .pill'));
+  var activeLabels = pdpActivePills().map(function(p){ return p.textContent.trim(); });
+  pills.forEach(function(p){
+    if (p.classList.contains('on')){ p.classList.remove('disabled'); return; }
+    var label = p.textContent.trim();
+    var wouldMatch = pdpMatchingCollections(activeLabels.concat([label]));
+    p.classList.toggle('disabled', wouldMatch.length === 0);
+  });
+  renderPdpSwatches(activeLabels);
+}
+function renderPdpSwatches(activeLabels){
+  var buttons = ['pdp-sw1', 'pdp-sw2', 'pdp-sw3', 'pdp-sw4'].map(function(id){ return document.getElementById(id); });
+  var picked;
+  if (!activeLabels.length){
+    picked = PDP_DEFAULT_SW.map(function(d){ return { name: d.name, src: d.src }; });
+  } else {
+    var cols = pdpMatchingCollections(activeLabels);
+    picked = [];
+    var round = 0;
+    while (picked.length < 4 && cols.length){
+      var addedThisRound = false;
+      for (var i = 0; i < cols.length && picked.length < 4; i++){
+        var c = COLLECTIONS[cols[i]];
+        if (c.colors[round]){
+          var name = c.name + ' ' + c.colors[round][0];
+          picked.push({ name: name, src: fabricAsset(name) });
+          addedThisRound = true;
+        }
+      }
+      if (!addedThisRound) break;
+      round++;
+    }
+  }
+  buttons.forEach(function(btn, i){
+    if (!picked[i]){ btn.style.display = 'none'; return; }
+    btn.style.display = '';
+    btn.dataset.name = picked[i].name;
+    btn.querySelector('img').src = picked[i].src;
+    btn.querySelector('img').alt = picked[i].name;
+    btn.classList.toggle('on', i === 0);
+  });
+  if (picked[0]){
+    document.getElementById('swname').textContent = picked[0].name;
+    document.getElementById('speccolor').textContent = picked[0].name.replace(/^Luna (\d)$/, 'Luna 0$1');
+    document.getElementById('smod-name').textContent = picked[0].name;
+  }
+}
+function openMaterialsWithPdpFilters(){
+  var activeLabels = pdpActivePills().map(function(p){ return p.textContent.trim(); });
+  if (activeLabels.length){
+    applied = activeLabels.map(function(l){ return PDP_TO_FILTER_LABEL[l]; });
+    filters = applied.slice();
+    renderChips();
+  }
+  openView('materials');
+}
+updatePdpProps();
 
 /* ── Swatch selection (shared state) ── */
 function pickSwatch(el){
@@ -1538,9 +1615,17 @@ var chipColors = { 'Galben': '#ffe600', 'Gri': '#a8abb3', 'Maro / Bej': '#9e8e7c
 var FILTER_CATEGORY = {
   'Catifea': 'material', 'Pluș': 'material', 'Microfibră': 'material', 'Țesătură texturată': 'material', 'Țesătură netedă': 'material',
   'Maro / Bej': 'culoare', 'Albastru': 'culoare', 'Roșu': 'culoare', 'Roz': 'culoare', 'Galben': 'culoare', 'Verde': 'culoare', 'Gri': 'culoare', 'Bej': 'culoare', 'Negru': 'culoare',
-  'Impermeabil': 'prop', 'Easy Clean': 'prop', 'Pet Friendly': 'prop', 'Piele sensibilă (OEKO-TEX®)': 'prop',
+  'Impermeabil': 'prop', 'Easy Clean': 'prop', 'Pet Friendly': 'prop', 'Piele sensibilă (OEKO-TEX®)': 'prop', 'Standard': 'prop',
   'Uz zilnic': 'rez', 'Uz intensiv': 'rez', 'Uz extrem': 'rez'
 };
+function propMatch(f, c){
+  if (f === 'Impermeabil') return c.waterproof;
+  if (f === 'Easy Clean') return c.easyClean;
+  if (f === 'Pet Friendly') return c.petFriendly;
+  if (f === 'Piele sensibilă (OEKO-TEX®)') return c.certifications === 'OEKO-TEX®';
+  if (f === 'Standard') return !c.waterproof && !c.easyClean && !c.petFriendly;
+  return false;
+}
 var MART_BUCKETS = { 'Uz zilnic': [40000, 55000], 'Uz intensiv': [55000, 75000], 'Uz extrem': [75000, Infinity] };
 function martRange(v){
   v = v || '';
@@ -1565,15 +1650,10 @@ function applyGridFilters(){
       var visible = true;
       if (visible && byCat.material.length) visible = byCat.material.some(function(f){ return (c.materialTypes || []).indexOf(f) > -1; });
       if (visible && byCat.culoare.length) visible = s && byCat.culoare.indexOf(colorFamilyRO(s.hex)) > -1;
-      if (visible && byCat.prop.length){
-        visible = byCat.prop.some(function(f){
-          if (f === 'Impermeabil') return c.waterproof;
-          if (f === 'Easy Clean') return c.easyClean;
-          if (f === 'Pet Friendly') return c.petFriendly;
-          if (f === 'Piele sensibilă (OEKO-TEX®)') return c.certifications === 'OEKO-TEX®';
-          return false;
-        });
-      }
+      /* properties AND together (a fabric can genuinely be waterproof AND easy-clean AND pet-friendly
+         at once, unlike color/material which are one-hot) -- so picking more properties narrows the
+         result, matching the PDP pills' cross-filtering behavior exactly. */
+      if (visible && byCat.prop.length) visible = byCat.prop.every(function(f){ return propMatch(f, c); });
       if (visible && byCat.rez.length) visible = byCat.rez.some(function(f){ return martRangeOverlaps(c.martindale, f); });
       tile.style.display = visible ? '' : 'none';
       if (visible) anyVisible = true;
