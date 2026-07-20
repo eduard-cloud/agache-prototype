@@ -1284,10 +1284,14 @@ var COLLECTION_ORDER = ['luna','manila','enjoylux','milton','piano','spello','ma
 var SWATCH_INDEX = {};
 /* order the main color groups sweep around the wheel, neutrals bookending it */
 var FAMILY_ORDER = ['Bej', 'Galben', 'Roșu', 'Roz', 'Albastru', 'Verde', 'Maro / Bej', 'Gri', 'Negru'];
+var HUE_BAND_WIDTH = 30; /* degrees -- groups hue-similar tones (e.g. all the muted teals) before
+  sorting by lightness. Without this, a "blue" family sort by lightness alone interleaves genuinely
+  teal-looking and genuinely blue-looking swatches whenever they land at similar lightness, since
+  colorFamilyRO's coarse 9-family buckets both call them "Albastru" despite a real visible hue gap. */
 function colorSortKey(hex){
   var rgb = hexToRGB(hex);
   var hsl = rgbToHSL(rgb.r, rgb.g, rgb.b);
-  return { family: colorFamilyRO(hex), lightness: hsl.l };
+  return { family: colorFamilyRO(hex), hueBand: Math.floor(hsl.h / HUE_BAND_WIDTH), lightness: hsl.l };
 }
 COLLECTION_ORDER.forEach(function(slug){
   var c = COLLECTIONS[slug];
@@ -1296,7 +1300,8 @@ COLLECTION_ORDER.forEach(function(slug){
     var ka = colorSortKey(a[1]), kb = colorSortKey(b[1]);
     var fi = FAMILY_ORDER.indexOf(ka.family) - FAMILY_ORDER.indexOf(kb.family);
     if (fi !== 0) return fi;
-    return kb.lightness - ka.lightness; /* lightest to darkest within a family */
+    if (ka.hueBand !== kb.hueBand) return ka.hueBand - kb.hueBand; /* keep visually-similar hues clustered together */
+    return kb.lightness - ka.lightness; /* lightest to darkest within that hue cluster */
   });
   c.colors.forEach(function(pair){
     var name = c.name + ' ' + pair[0];
