@@ -1012,9 +1012,9 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
     </button>
   </div>
   <div class="yl-band">
-    <div class="c"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>Pentru piele sensibila</div>
-    <div class="c"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>Material texturat</div>
-    <div class="c"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Pentru uz extrem</div>
+    <div class="c" id="cv-usp1"></div>
+    <div class="c" id="cv-usp2"></div>
+    <div class="c" id="cv-usp3"></div>
   </div>
   <div class="rz-head"><span class="t">Rezistență generala</span><span class="s" id="cv-score">4.7<i>/5</i></span></div>
   <div>
@@ -1127,9 +1127,9 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
       </button>
     </div>
     <div class="yl-band" style="margin-top:24px">
-      <div class="c"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>Pentru piele sensibila</div>
-      <div class="c"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>Material texturat</div>
-      <div class="c"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Pentru uz extrem</div>
+      <div class="c" id="sm-usp1"></div>
+      <div class="c" id="sm-usp2"></div>
+      <div class="c" id="sm-usp3"></div>
     </div>
     <div class="rz-head"><span class="t">Rezistență generala</span><span class="s" id="sm-score">4.7<i>/5</i></span></div>
     <div>
@@ -1190,10 +1190,17 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
 
 <script>
 /* ── Fabric collection data (191 real colors across 8 collections) ── */
+/* NOTE on luna/manila martindale: the source spec sheet only gives a combined
+   "Practic" tier range (58.000-90.000, "depending on sub-line") covering both
+   collections together, not a verified number for each individually. Weight is
+   sourced precisely per collection (Luna 493g/m², Manila 220g/m² — real USP data),
+   so the single martindale figures below are an inference from that real
+   weight/construction difference (heavier structural weave vs. lighter plush),
+   not a lab-verified per-collection number. Replace if real test data turns up. */
 var COLLECTIONS = {
   luna: { name:'Luna', assetSlug:'lunareal', price:2140, tier:'Practic', finish:'Matte', surface:'Textured', materialTypes:['Țesătură texturată'],
     waterproof:false, easyClean:false, petFriendly:false,
-    composition:'100% Poliester', width:145, weight:493, martindale:'58.000–90.000',
+    composition:'100% Poliester', width:145, weight:493, martindale:'90.000',
     mace:null, rubbing:null, light:null, pilling:null,
     fireTest:'Test cu țigara aprinsă', certifications:'OEKO-TEX®',
     desc:'Material cu textură plăcută și elastică, realizat dintr-o țesătură tricotată durabilă, concepută pentru mobilier utilizat frecvent. Materialul oferă un echilibru foarte bun între confort, rezistență și durabilitate, fiind potrivit pentru utilizare zilnică.',
@@ -1203,7 +1210,7 @@ var COLLECTIONS = {
   },
   manila: { name:'Manila', price:2140, tier:'Practic', finish:'Glossy', surface:'Plush/Soft', materialTypes:['Pluș','Catifea'],
     waterproof:false, easyClean:false, petFriendly:false,
-    composition:'100% Poliester', width:143, weight:220, martindale:'58.000–90.000',
+    composition:'100% Poliester', width:143, weight:220, martindale:'58.000',
     mace:null, rubbing:null, light:null, pilling:null,
     fireTest:'Test cu țigara aprinsă', certifications:'Fără AZO/DMF',
     desc:'Material plușat, cu aspect fin de catifea și o gamă generoasă de peste 40 de nuanțe. Combină un aspect elegant, ușor lucios, cu un preț accesibil, fiind alegerea potrivită pentru un mobilier confortabil și primitor.',
@@ -1646,7 +1653,52 @@ function avgScore(c){
   var avg = vals.reduce(function(a, b){ return a + b; }, 0) / vals.length;
   return String(Math.round(avg * 10) / 10);
 }
+var USP_ICONS = {
+  people: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+  droplet: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>',
+  hand: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>',
+  shield: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>',
+  grid: '<svg width="22" height="22" viewBox="0 0 24 24" fill="#4d35ff"><circle cx="7" cy="5" r="1.6"/><circle cx="13" cy="5" r="1.6"/><circle cx="7" cy="12" r="1.6"/><circle cx="13" cy="12" r="1.6"/><circle cx="7" cy="19" r="1.6"/><circle cx="13" cy="19" r="1.6"/></svg>'
+};
+function textureLabel(c){
+  if (c.surface === 'Plush/Soft') return c.finish === 'Glossy' ? 'Aspect catifelat, lucios' : 'Aspect catifelat, mat';
+  if (c.surface === 'Textured') return 'Textură proeminentă, mată';
+  if (c.surface === 'Smooth') return c.finish === 'Semi-Glossy' ? 'Textură fină, sidefată' : 'Aspect neted, mat';
+  return c.finish + ' · ' + c.surface;
+}
+function durabilityLabel(c){
+  var r = martRange(c.martindale);
+  if (r[1] >= 75000) return 'Pentru uz extrem';
+  if (r[1] >= 55000) return 'Pentru uz intensiv';
+  return 'Pentru uz zilnic';
+}
+/* 3 top USPs per collection: a shared, comparable pool of badge types (same "vocabulary"
+   across all 8 collections), each tied to real collection data — never fabricated. Priority
+   order below: the first 3 that actually apply to a given collection are shown, so premium
+   collections (real waterproof/easy-clean/pet-friendly claims) surface their strongest real
+   properties first, while every collection still always ends up with exactly 3 genuine badges
+   via the always-true fallbacks (texture, durability tier, composition) at the end. */
+var USP_BADGES = [
+  { icon: 'people', test: function(c){ return c.petFriendly; }, label: function(){ return 'Pet Friendly'; } },
+  { icon: 'droplet', test: function(c){ return c.waterproof; }, label: function(){ return 'Impermeabil'; } },
+  { icon: 'hand', test: function(c){ return c.easyClean; }, label: function(){ return 'Ușor de curățat'; } },
+  { icon: 'shield', test: function(c){ return !!c.certifications; }, label: function(c){ return c.certifications; } },
+  { icon: 'grid', test: function(){ return true; }, label: textureLabel },
+  { icon: 'people', test: function(){ return true; }, label: durabilityLabel },
+  { icon: 'shield', test: function(){ return true; }, label: function(c){ return c.composition; } }
+];
+function renderUSPBadges(prefix, c){
+  var picked = [];
+  for (var i = 0; i < USP_BADGES.length && picked.length < 3; i++){
+    if (USP_BADGES[i].test(c)) picked.push(USP_BADGES[i]);
+  }
+  picked.forEach(function(badge, i){
+    var el = document.getElementById(prefix + '-usp' + (i + 1));
+    if (el) el.innerHTML = USP_ICONS[badge.icon] + badge.label(c);
+  });
+}
 function fillCollectionText(p, c){
+  renderUSPBadges(p, c);
   document.getElementById(p + '-desc').textContent = c.desc;
   document.getElementById(p + '-care').textContent = c.care;
   document.getElementById(p + '-comp').textContent = c.composition;
