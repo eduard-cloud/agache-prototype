@@ -1319,16 +1319,22 @@ function colorFamilyRO(hex){
   var rgb = hexToRGB(hex);
   var hsl = rgbToHSL(rgb.r, rgb.g, rgb.b);
   var h = hsl.h, s = hsl.s, l = hsl.l;
-  if (l < 14) return 'Negru';
-  if (s < 12) return l > 55 ? 'Bej' : 'Gri';
-  if (h >= 15 && h < 50 && l < 45 && s < 65) return 'Maro / Bej';
-  if (h >= 15 && h < 50 && l >= 45) return 'Bej';
-  if (h < 15 || h >= 345) return 'Roșu';
+  if (l < 12) return 'Negru';
+  /* only truly achromatic colors fall outside hue grouping -- upholstery fabrics are mostly
+     muted/desaturated, so a flat cutoff here was splitting visually-identical hues (e.g. two
+     blue-grays at s=11 vs s=16) into different families. Hue wins whenever there's a real hue
+     signal. The cutoff itself scales with lightness: dark tones carry a weak, noisy hue
+     reading (a few RGB values apart can swing the measured hue a lot near black), so a dark
+     color needs comparatively more saturation before it reads as "colored" rather than neutral. */
+  var neutralCutoff = Math.max(6, 24 - l * 0.6);
+  if (s < neutralCutoff) return l > 60 ? 'Bej' : 'Gri';
+  if (h >= 20 && h < 50) return l < 45 ? 'Maro / Bej' : 'Bej';
   if (h >= 50 && h < 70) return 'Galben';
   if (h >= 70 && h < 170) return 'Verde';
   if (h >= 170 && h < 260) return 'Albastru';
-  if (h >= 260 && h < 345) return 'Roz';
-  return 'Gri';
+  if (h >= 260 && h < 330) return 'Roz';
+  /* remaining hues (330-360, 0-20) are red -- but pale/light versions read as pink, not red */
+  return l > 65 ? 'Roz' : 'Roșu';
 }
 var NAMED_COLORS = [
   ['Alb', '#FFFFFF'], ['Ivoriu', '#F5F0E6'], ['Crem', '#EDE6D6'], ['Bej deschis', '#E3D5C0'], ['Bej', '#D4C5A9'],
