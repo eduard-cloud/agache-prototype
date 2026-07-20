@@ -385,6 +385,34 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
 .st-dots button i{width:20px;height:3px;background:rgba(255,255,255,.75);border-radius:2px;display:block}
 .st-dots button.on i{background:var(--ink)}
 
+/* ══════════ Samples modal — order up to 5 free fabric swatches ══════════ */
+#samplesmodal{position:fixed;inset:0;z-index:105;display:none;align-items:flex-end;justify-content:center}
+#samplesmodal.on{display:flex}
+#samplesmodal .mbg{position:absolute;inset:0;background:rgba(10,10,14,.55)}
+#samplesmodal .mcard{position:relative;background:#fff;border-radius:20px 20px 0 0;max-width:480px;width:100%;height:92vh;height:92dvh;display:flex;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;animation:mslide .32s cubic-bezier(.32,.72,.35,1)}
+.sm-top{display:flex;align-items:center;justify-content:space-between;padding:24px 17px 0;flex-shrink:0}
+.sm-top .st-title{font-size:22px;font-weight:600;letter-spacing:-.3px}
+.sm-body{flex:1}
+.sm-tile{position:relative}
+.sm-tile .imw{position:relative;aspect-ratio:1;overflow:hidden;border-radius:4px}
+.sm-tile img{width:100%;height:100%;object-fit:cover}
+.sm-check{position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:#fff;border:1.5px solid #c8cbd0;display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s}
+.sm-check svg{opacity:0}
+.sm-tile.on .sm-check{background:var(--ink);border-color:var(--ink)}
+.sm-tile.on .sm-check svg{opacity:1}
+.sm-tile .nm{font-size:12px;margin-top:9px}
+.sm-sticky{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--hair);padding:14px 17px calc(14px + env(safe-area-inset-bottom));flex-shrink:0}
+.sm-tray{display:none;gap:8px;overflow-x:auto;padding-bottom:14px}
+.sm-tray.on{display:flex}
+.sm-tray-item{position:relative;width:52px;height:52px;flex:0 0 52px;border-radius:6px;overflow:hidden}
+.sm-tray-item img{width:100%;height:100%;object-fit:cover}
+.sm-tray-item .rm{position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:#fff;border:1px solid #e3e3e3;display:flex;align-items:center;justify-content:center}
+.sm-total{display:flex;align-items:baseline;justify-content:space-between;font-size:13px;color:var(--gray);margin-bottom:10px}
+.sm-total b{font-size:15px;color:var(--ink);font-weight:600}
+#sm-add-btn{width:100%;height:52px;background:var(--purple);color:#fff;border-radius:26px;font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .2s}
+#sm-add-btn:disabled{opacity:.4}
+.sm-shipnote{text-align:center;font-size:12px;color:var(--gray);margin-top:12px}
+
 /* ══════════ Lightbox ══════════ */
 #lbox{position:fixed;inset:0;background:#000;z-index:110;display:none;align-items:center;justify-content:center}
 #lbox.on{display:flex}
@@ -645,7 +673,7 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
     <img src="assets/fabrics-color.png" alt="Mostre de culori">
     <h2>Comanda mostrar gratuit</h2>
     <p>Nu ești sigur de culoare? Comandă un mostrar de culori gratuit – il expediem in mai putin de 24 de ore.</p>
-    <button onclick="toast('Mostrarul a fost comandat ✓')">
+    <button onclick="openSamplesModal()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
       Comanda mostrar
     </button>
@@ -991,7 +1019,7 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
   <div class="st-body">
     <div class="st-title-row"><span class="st-title">Colectia Luna</span></div>
     <div class="st-desc">Material cu textură plăcută și elastică, realizat dintr-o țesătură tricotată durabilă, concepută pentru mobilier utilizat frecvent. Materialul oferă un echilibru foarte bun între confort, rezistență și durabilitate, fiind potrivit pentru utilizare zilnică.</div>
-    <button class="st-chip" onclick="toast('Mostrarul a fost comandat ✓')">
+    <button class="st-chip" onclick="openSamplesModal()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
       <span>Comanda mostrar gratis</span>
     </button>
@@ -1106,7 +1134,7 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
     <div class="st-body">
       <div class="st-title-row"><span class="st-title" id="smod-name">Luna 08</span><span class="st-sub">bej deschis</span></div>
       <div class="st-desc">Material cu textură plăcută și elastică, realizat dintr-o țesătură tricotată durabilă, concepută pentru mobilier utilizat frecvent. Materialul oferă un echilibru foarte bun între confort, rezistență și durabilitate, fiind potrivit pentru utilizare zilnică.</div>
-      <button class="st-chip" onclick="toast('Mostrarul a fost comandat ✓')">
+      <button class="st-chip" onclick="openSamplesModal()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
         <span>Comanda mostrar gratis</span>
       </button>
@@ -1140,6 +1168,30 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
     </div>
     <div class="mt-h">Întretinere</div>
     <div class="mt-p">Aspirați regulat cu o perie moale și ștergeți imediat petele cu o cârpă curată și uscată, fără a freca. Folosiți doar produse de curățare delicate, pe bază de apă, și evitați expunerea directă la soare pentru a preveni decolorarea. Se recomandă curățarea profesională o dată pe an pentru a menține textura și culoarea țesăturii.</div>
+  </div>
+</div>
+
+<!-- ══════════ Samples modal ══════════ -->
+<div id="samplesmodal">
+  <div class="mbg" onclick="closeSamplesModal()"></div>
+  <div class="mcard">
+    <div class="sm-top">
+      <span class="st-title">Găsește mostra perfectă</span>
+      <button class="circ-btn" onclick="closeSamplesModal()" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="sm-body">
+      <div class="col-head"><span class="t">Colecția Luna</span></div>
+      <div class="mgrid" id="smgrid"></div>
+    </div>
+    <div class="sm-sticky">
+      <div class="sm-tray" id="smtray"><div id="smtray-row" style="display:flex;gap:8px"></div></div>
+      <div class="sm-total"><span>Mostre alese</span><b><span id="sm-count">0</span>/5</b></div>
+      <button id="sm-add-btn" disabled onclick="addSamplesToCart()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="21" r="1.6"/><circle cx="19" cy="21" r="1.6"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        Adaugă în coș
+      </button>
+      <div class="sm-shipnote">Livrare în 1-2 zile</div>
+    </div>
   </div>
 </div>
 
@@ -1249,7 +1301,7 @@ window.addEventListener('popstate', function(){
   });
   if (h && document.getElementById('view-' + h)) document.getElementById('view-' + h).classList.add('open');
   if (!document.querySelector('.view.open')) document.body.style.overflow = '';
-  closeSheet(); closeModal();
+  closeSheet(); closeModal(); closeSamplesModal();
 });
 
 /* ── Materials grid build ── */
@@ -1351,9 +1403,81 @@ function openModal(){
 }
 function closeModal(){
   document.getElementById('smodal').classList.remove('on');
-  if (!document.getElementById('fsheet').classList.contains('on')) document.getElementById('dim').classList.remove('on');
+  if (!document.getElementById('fsheet').classList.contains('on') && !document.getElementById('samplesmodal').classList.contains('on')) document.getElementById('dim').classList.remove('on');
   if (!document.querySelector('.view.open')) document.body.style.overflow = '';
 }
+
+/* ── Samples modal (order up to 5 free fabric swatches) ── */
+var sampleSel = [];
+function buildSamplesGrid(){
+  var g = document.getElementById('smgrid');
+  if (g.childElementCount) return;
+  for (var i = 1; i <= 16; i++){
+    var name = 'Luna ' + i;
+    g.insertAdjacentHTML('beforeend',
+      '<div class="sm-tile" data-name="' + name + '" onclick="toggleSample(this,\'' + name + '\')">' +
+      '<div class="imw"><img src="' + lunaAsset(name) + '" alt="' + name + '">' +
+      '<div class="sm-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div></div>' +
+      '<div class="nm">' + name + '</div></div>');
+  }
+}
+function toggleSample(el, name){
+  var idx = sampleSel.indexOf(name);
+  if (idx > -1){
+    sampleSel.splice(idx, 1);
+    el.classList.remove('on');
+  } else {
+    if (sampleSel.length >= 5){ toast('Poți alege maximum 5 mostre'); return; }
+    sampleSel.push(name);
+    el.classList.add('on');
+  }
+  renderSampleTray();
+}
+function removeSample(name){
+  sampleSel = sampleSel.filter(function(n){ return n !== name; });
+  document.querySelectorAll('#smgrid .sm-tile').forEach(function(t){
+    if (t.dataset.name === name) t.classList.remove('on');
+  });
+  renderSampleTray();
+}
+function renderSampleTray(){
+  var tray = document.getElementById('smtray');
+  var row = document.getElementById('smtray-row');
+  tray.classList.toggle('on', sampleSel.length > 0);
+  row.innerHTML = sampleSel.map(function(name){
+    return '<div class="sm-tray-item"><img src="' + lunaAsset(name) + '" alt="' + name + '">' +
+      '<button class="rm" onclick="event.stopPropagation();removeSample(\'' + name + '\')" aria-label="Elimină ' + name + '"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>';
+  }).join('');
+  document.getElementById('sm-count').textContent = sampleSel.length;
+  document.getElementById('sm-add-btn').disabled = sampleSel.length === 0;
+}
+function openSamplesModal(){
+  buildSamplesGrid();
+  document.getElementById('samplesmodal').classList.add('on');
+  document.getElementById('dim').classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+function closeSamplesModal(){
+  document.getElementById('samplesmodal').classList.remove('on');
+  if (!document.getElementById('fsheet').classList.contains('on') && !document.getElementById('smodal').classList.contains('on')) document.getElementById('dim').classList.remove('on');
+  if (!document.querySelector('.view.open')) document.body.style.overflow = '';
+}
+function addSamplesToCart(){
+  if (!sampleSel.length) return;
+  var btn = document.getElementById('sm-add-btn');
+  var orig = btn.innerHTML;
+  var count = sampleSel.length;
+  btn.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg> Adăugat în coș';
+  toast(count + (count === 1 ? ' mostră a fost adăugată în coș' : ' mostre au fost adăugate în coș'));
+  setTimeout(function(){
+    btn.innerHTML = orig;
+    closeSamplesModal();
+    sampleSel = [];
+    document.querySelectorAll('#smgrid .sm-tile.on').forEach(function(t){ t.classList.remove('on'); });
+    renderSampleTray();
+  }, 1400);
+}
+
 /* modal hero slider */
 var mIdx = 0;
 function mheroTo(i){
