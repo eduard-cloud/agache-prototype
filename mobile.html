@@ -978,23 +978,7 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
     <button class="mv-tab" onclick="mvTab(this)"><span class="a">Perne</span><span class="b">Maya 02</span></button>
   </div>
 
-  <div class="col-head">
-    <span class="t">Colectia Luna
-      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" onclick="event.stopPropagation();openView('collection')"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </span>
-    <span class="pr">pret<b>4.300 lei</b></span>
-  </div>
-  <div class="col-meta">TEXTURATĂ&nbsp;&nbsp;|&nbsp;&nbsp;90.000 MARTINDALE&nbsp;&nbsp;|&nbsp;&nbsp;PIELE SENSIBILĂ</div>
-  <div class="mgrid" id="mgrid1"></div>
-
-  <div class="col-head">
-    <span class="t">Colectia Luna
-      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" onclick="event.stopPropagation();openView('collection')"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </span>
-    <span class="pr">pret<b>4.300 lei</b></span>
-  </div>
-  <div class="col-meta">TEXTURATĂ&nbsp;&nbsp;|&nbsp;&nbsp;90.000 MARTINDALE&nbsp;&nbsp;|&nbsp;&nbsp;PIELE SENSIBILĂ</div>
-  <div class="mgrid" id="mgrid2"></div>
+  <div id="mv-collections"></div>
 
   <div id="mv-sticky">
     <div>
@@ -1012,16 +996,16 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
 <div class="view" id="view-collection">
   <div class="st-hero" id="chero">
     <div class="mh-trk" id="chtrk">
-      <img src="assets/collection-hero.png" alt="Colectia Luna">
-      <img src="assets/modal-hero.png" alt="Colectia Luna pliat">
-      <img src="assets/collection-zoom.png" alt="Colectia Luna textura">
+      <img src="assets/lunareal-hero.png" alt="Colectia Luna" id="chero1">
+      <img src="assets/lunareal-hero.png" alt="Colectia Luna pliat" id="chero2">
+      <img src="assets/collection-zoom.png" alt="Colectia Luna textura" id="chero3">
     </div>
     <button class="st-back" onclick="closeView('collection')" aria-label="Înapoi"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
     <div class="st-dots" id="cdots"><button class="on" onclick="cheroTo(0)" aria-label="Slide 1"><i></i></button><button onclick="cheroTo(1)" aria-label="Slide 2"><i></i></button><button onclick="cheroTo(2)" aria-label="Slide 3"><i></i></button></div>
   </div>
   <div class="st-body">
-    <div class="st-title-row"><span class="st-title">Colectia Luna</span></div>
-    <div class="st-desc">Material cu textură plăcută și elastică, realizat dintr-o țesătură tricotată durabilă, concepută pentru mobilier utilizat frecvent. Materialul oferă un echilibru foarte bun între confort, rezistență și durabilitate, fiind potrivit pentru utilizare zilnică.</div>
+    <div class="st-title-row"><span class="st-title" id="cv-title">Colectia Luna</span></div>
+    <div class="st-desc" id="cv-desc">Material cu textură plăcută și elastică, realizat dintr-o țesătură tricotată durabilă, concepută pentru mobilier utilizat frecvent. Materialul oferă un echilibru foarte bun între confort, rezistență și durabilitate, fiind potrivit pentru utilizare zilnică.</div>
     <button class="st-chip" onclick="openSamplesModal()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
       <span>Comanda mostrar gratis</span>
@@ -1032,30 +1016,29 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
     <div class="c"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>Material texturat</div>
     <div class="c"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Pentru uz extrem</div>
   </div>
-  <div class="rz-head"><span class="t">Rezistență generala</span><span class="s">4.7<i>/5</i></span></div>
+  <div class="rz-head"><span class="t">Rezistență generala</span><span class="s" id="cv-score">4.7<i>/5</i></span></div>
   <div>
-    <div class="rz-row"><span class="k">Martindale<em>test abraziune</em></span><span class="vv"><span class="v">90.000</span><span class="bar"><i style="width:95%"></i></span></span></div>
-    <div class="rz-row"><span class="k">MACE<em>test agățare</em></span><span class="vv"><span class="v">5<i>/5</i></span><span class="bar"><i style="width:100%"></i></span></span></div>
-    <div class="rz-row"><span class="k">Rezistenta culoare<em>la frecare</em></span><span class="vv"><span class="v">4.5<i>/5</i></span><span class="bar"><i style="width:90%"></i></span></span></div>
-    <div class="rz-row"><span class="k">Rezistenta culoare<em>la lumina</em></span><span class="vv"><span class="v">4<i>/5</i></span><span class="bar"><i style="width:80%"></i></span></span></div>
-    <div class="rz-row" style="border-bottom:none"><span class="k">Pilling<em>scamosare</em></span><span class="vv"><span class="v">4<i>/5</i></span><span class="bar"><i style="width:80%"></i></span></span></div>
+    <div class="rz-row"><span class="k">Martindale<em>test abraziune</em></span><span class="vv"><span class="v" id="cv-mart-v">90.000</span><span class="bar"><i id="cv-mart-bar" style="width:95%"></i></span></span></div>
+    <div class="rz-row"><span class="k">MACE<em>test agățare</em></span><span class="vv"><span class="v" id="cv-mace-v">5<i>/5</i></span><span class="bar"><i id="cv-mace-bar" style="width:100%"></i></span></span></div>
+    <div class="rz-row"><span class="k">Rezistenta culoare<em>la frecare</em></span><span class="vv"><span class="v" id="cv-rub-v">4.5<i>/5</i></span><span class="bar"><i id="cv-rub-bar" style="width:90%"></i></span></span></div>
+    <div class="rz-row"><span class="k">Rezistenta culoare<em>la lumina</em></span><span class="vv"><span class="v" id="cv-light-v">4<i>/5</i></span><span class="bar"><i id="cv-light-bar" style="width:80%"></i></span></span></div>
+    <div class="rz-row" style="border-bottom:none"><span class="k">Pilling<em>scamosare</em></span><span class="vv"><span class="v" id="cv-pill-v">4<i>/5</i></span><span class="bar"><i id="cv-pill-bar" style="width:80%"></i></span></span></div>
   </div>
   <button class="see-more" onclick="pressFeedback(this)">Vezi mai multe
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
   </button>
   <div class="ft-h">Features</div>
   <div>
-    <div class="ft-row"><span class="k">Certificari</span><span class="v">Pentru piele sensibila<br>(OEKO-TEX®)</span></div>
-    <div class="ft-row"><span class="k">Maintenance</span><span class="v">Pentru piele sensibila<br>(OEKO-TEX®)</span></div>
-    <div class="ft-row"><span class="k">Compozitie</span><span class="v">100% poliester</span></div>
-    <div class="ft-row"><span class="k">Culoare</span><span class="v">bej</span></div>
-    <div class="ft-row"><span class="k">Greutate (g/m²)</span><span class="v">350 – 390</span></div>
-    <div class="ft-row"><span class="k">Cod produs</span><span class="v">AGC331</span></div>
-    <div class="ft-row"><span class="k">Rezistență la foc</span><span class="v">BS 5852: Partea 1: 1979<br>sursa 0 (țigară)</span></div>
-    <div class="ft-row" style="border-bottom:none"><span class="k">Alunecare la cusătură</span><span class="v">urzeală 2,5 – 3,5 mm<br>băteală 2 mm</span></div>
+    <div class="ft-row"><span class="k">Certificari</span><span class="v" id="cv-cert">OEKO-TEX®</span></div>
+    <div class="ft-row"><span class="k">Maintenance</span><span class="v" id="cv-maint">Ușor de întreținut</span></div>
+    <div class="ft-row"><span class="k">Compozitie</span><span class="v" id="cv-comp">100% poliester</span></div>
+    <div class="ft-row"><span class="k">Culoare</span><span class="v" id="cv-color">21 nuanțe disponibile</span></div>
+    <div class="ft-row"><span class="k">Greutate (g/m²)</span><span class="v" id="cv-weight">350 – 390</span></div>
+    <div class="ft-row"><span class="k">Rezistență la foc</span><span class="v" id="cv-fire">BS 5852: Partea 1: 1979<br>sursa 0 (țigară)</span></div>
+    <div class="ft-row" style="border-bottom:none"><span class="k">Lățime rolă</span><span class="v" id="cv-width">145 cm</span></div>
   </div>
   <div class="mt-h">Întretinere</div>
-  <div class="mt-p">Aspirați regulat cu o perie moale și ștergeți imediat petele cu o cârpă curată și uscată, fără a freca. Folosiți doar produse de curățare delicate, pe bază de apă, și evitați expunerea directă la soare pentru a preveni decolorarea. Se recomandă curățarea profesională o dată pe an pentru a menține textura și culoarea țesăturii.</div>
+  <div class="mt-p" id="cv-care">Aspirați regulat cu o perie moale și ștergeți imediat petele cu o cârpă curată și uscată, fără a freca. Folosiți doar produse de curățare delicate, pe bază de apă, și evitați expunerea directă la soare pentru a preveni decolorarea. Se recomandă curățarea profesională o dată pe an pentru a menține textura și culoarea țesăturii.</div>
 </div>
 
 <!-- ══════════ Filter sheet ══════════ -->
@@ -1128,15 +1111,16 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
     <div class="st-hero" id="mhero">
       <div class="mh-trk" id="mhtrk">
         <video src="luna-33.mp4" muted loop playsinline autoplay id="mslide0"></video>
+        <img id="mslide0img" style="display:none" alt="">
         <img src="assets/modal-hero.png" alt="Luna 08" id="mslide1">
-        <img src="assets/collection-hero.png" alt="Luna 08 drapat">
+        <img src="assets/collection-hero.png" alt="Luna 08 drapat" id="mslide2">
       </div>
       <button class="st-back" onclick="closeModal()" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       <div class="st-dots" id="mdots"><button class="on" onclick="mheroTo(0)" aria-label="Slide 1"><i></i></button><button onclick="mheroTo(1)" aria-label="Slide 2"><i></i></button><button onclick="mheroTo(2)" aria-label="Slide 3"><i></i></button></div>
     </div>
     <div class="st-body">
-      <div class="st-title-row"><span class="st-title" id="smod-name">Luna 08</span><span class="st-sub">bej deschis</span></div>
-      <div class="st-desc">Material cu textură plăcută și elastică, realizat dintr-o țesătură tricotată durabilă, concepută pentru mobilier utilizat frecvent. Materialul oferă un echilibru foarte bun între confort, rezistență și durabilitate, fiind potrivit pentru utilizare zilnică.</div>
+      <div class="st-title-row"><span class="st-title" id="smod-name">Luna 08</span><span class="st-sub" id="smod-sub">bej deschis</span></div>
+      <div class="st-desc" id="sm-desc">Material cu textură plăcută și elastică, realizat dintr-o țesătură tricotată durabilă, concepută pentru mobilier utilizat frecvent. Materialul oferă un echilibru foarte bun între confort, rezistență și durabilitate, fiind potrivit pentru utilizare zilnică.</div>
       <button class="st-chip" onclick="openSamplesModal()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
         <span>Comanda mostrar gratis</span>
@@ -1147,30 +1131,29 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
       <div class="c"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>Material texturat</div>
       <div class="c"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Pentru uz extrem</div>
     </div>
-    <div class="rz-head"><span class="t">Rezistență generala</span><span class="s">4.7<i>/5</i></span></div>
+    <div class="rz-head"><span class="t">Rezistență generala</span><span class="s" id="sm-score">4.7<i>/5</i></span></div>
     <div>
-      <div class="rz-row"><span class="k">Martindale<em>test abraziune</em></span><span class="vv"><span class="v">90.000</span><span class="bar"><i style="width:95%"></i></span></span></div>
-      <div class="rz-row"><span class="k">MACE<em>test agățare</em></span><span class="vv"><span class="v">5<i>/5</i></span><span class="bar"><i style="width:100%"></i></span></span></div>
-      <div class="rz-row"><span class="k">Rezistenta culoare<em>la frecare</em></span><span class="vv"><span class="v">4.5<i>/5</i></span><span class="bar"><i style="width:90%"></i></span></span></div>
-      <div class="rz-row"><span class="k">Rezistenta culoare<em>la lumina</em></span><span class="vv"><span class="v">4<i>/5</i></span><span class="bar"><i style="width:80%"></i></span></span></div>
-      <div class="rz-row" style="border-bottom:none"><span class="k">Pilling<em>scamosare</em></span><span class="vv"><span class="v">4<i>/5</i></span><span class="bar"><i style="width:80%"></i></span></span></div>
+      <div class="rz-row"><span class="k">Martindale<em>test abraziune</em></span><span class="vv"><span class="v" id="sm-mart-v">90.000</span><span class="bar"><i id="sm-mart-bar" style="width:95%"></i></span></span></div>
+      <div class="rz-row"><span class="k">MACE<em>test agățare</em></span><span class="vv"><span class="v" id="sm-mace-v">5<i>/5</i></span><span class="bar"><i id="sm-mace-bar" style="width:100%"></i></span></span></div>
+      <div class="rz-row"><span class="k">Rezistenta culoare<em>la frecare</em></span><span class="vv"><span class="v" id="sm-rub-v">4.5<i>/5</i></span><span class="bar"><i id="sm-rub-bar" style="width:90%"></i></span></span></div>
+      <div class="rz-row"><span class="k">Rezistenta culoare<em>la lumina</em></span><span class="vv"><span class="v" id="sm-light-v">4<i>/5</i></span><span class="bar"><i id="sm-light-bar" style="width:80%"></i></span></span></div>
+      <div class="rz-row" style="border-bottom:none"><span class="k">Pilling<em>scamosare</em></span><span class="vv"><span class="v" id="sm-pill-v">4<i>/5</i></span><span class="bar"><i id="sm-pill-bar" style="width:80%"></i></span></span></div>
     </div>
     <button class="see-more" onclick="pressFeedback(this)">Vezi mai multe
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
     </button>
     <div class="ft-h">Features</div>
     <div>
-      <div class="ft-row"><span class="k">Certificari</span><span class="v">Pentru piele sensibila<br>(OEKO-TEX®)</span></div>
-      <div class="ft-row"><span class="k">Maintenance</span><span class="v">Pentru piele sensibila<br>(OEKO-TEX®)</span></div>
-      <div class="ft-row"><span class="k">Compozitie</span><span class="v">100% poliester</span></div>
-      <div class="ft-row"><span class="k">Culoare</span><span class="v">bej</span></div>
-      <div class="ft-row"><span class="k">Greutate (g/m²)</span><span class="v">350 – 390</span></div>
-      <div class="ft-row"><span class="k">Cod produs</span><span class="v">AGC331</span></div>
-      <div class="ft-row"><span class="k">Rezistență la foc</span><span class="v">BS 5852: Partea 1: 1979<br>sursa 0 (țigară)</span></div>
-      <div class="ft-row" style="border-bottom:none"><span class="k">Alunecare la cusătură</span><span class="v">urzeală 2,5 – 3,5 mm<br>băteală 2 mm</span></div>
+      <div class="ft-row"><span class="k">Certificari</span><span class="v" id="sm-cert">OEKO-TEX®</span></div>
+      <div class="ft-row"><span class="k">Maintenance</span><span class="v" id="sm-maint">Ușor de întreținut</span></div>
+      <div class="ft-row"><span class="k">Compozitie</span><span class="v" id="sm-comp">100% poliester</span></div>
+      <div class="ft-row"><span class="k">Culoare</span><span class="v" id="sm-color">bej</span></div>
+      <div class="ft-row"><span class="k">Greutate (g/m²)</span><span class="v" id="sm-weight">350 – 390</span></div>
+      <div class="ft-row"><span class="k">Rezistență la foc</span><span class="v" id="sm-fire">BS 5852: Partea 1: 1979<br>sursa 0 (țigară)</span></div>
+      <div class="ft-row" style="border-bottom:none"><span class="k">Lățime rolă</span><span class="v" id="sm-width">145 cm</span></div>
     </div>
     <div class="mt-h">Întretinere</div>
-    <div class="mt-p">Aspirați regulat cu o perie moale și ștergeți imediat petele cu o cârpă curată și uscată, fără a freca. Folosiți doar produse de curățare delicate, pe bază de apă, și evitați expunerea directă la soare pentru a preveni decolorarea. Se recomandă curățarea profesională o dată pe an pentru a menține textura și culoarea țesăturii.</div>
+    <div class="mt-p" id="sm-care">Aspirați regulat cu o perie moale și ștergeți imediat petele cu o cârpă curată și uscată, fără a freca. Folosiți doar produse de curățare delicate, pe bază de apă, și evitați expunerea directă la soare pentru a preveni decolorarea. Se recomandă curățarea profesională o dată pe an pentru a menține textura și culoarea țesăturii.</div>
   </div>
 </div>
 
@@ -1183,8 +1166,7 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
       <button class="circ-btn" onclick="closeSamplesModal()" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>
     <div class="sm-body">
-      <div class="col-head"><span class="t">Colecția Luna</span></div>
-      <div class="mgrid" id="smgrid"></div>
+      <div id="sm-collections"></div>
     </div>
     <div class="sm-sticky">
       <div class="sm-tray" id="smtray"><div id="smtray-row" style="display:flex;gap:8px"></div></div>
@@ -1207,6 +1189,100 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
 <div id="toast"></div>
 
 <script>
+/* ── Fabric collection data (191 real colors across 8 collections) ── */
+var COLLECTIONS = {
+  luna: { name:'Luna', assetSlug:'lunareal', price:2140, tier:'Practic', finish:'Matte', surface:'Textured',
+    waterproof:false, easyClean:false, petFriendly:false,
+    composition:'100% Poliester', width:145, weight:493, martindale:'58.000–90.000',
+    mace:null, rubbing:null, light:null, pilling:null,
+    fireTest:'Test cu țigara aprinsă', certifications:'OEKO-TEX®',
+    desc:'Material cu textură plăcută și elastică, realizat dintr-o țesătură tricotată durabilă, concepută pentru mobilier utilizat frecvent. Materialul oferă un echilibru foarte bun între confort, rezistență și durabilitate, fiind potrivit pentru utilizare zilnică.',
+    care:'Aspirați regulat cu o perie moale și ștergeți imediat petele cu o cârpă curată și uscată, fără a freca. Folosiți doar produse de curățare delicate, pe bază de apă, și evitați expunerea directă la soare pentru a preveni decolorarea.',
+    heroCode:'08',
+    colors:[['01','#CFD0CB'],['08','#342C2B'],['14','#645147'],['15','#7F7674'],['16','#0F6C89'],['17','#8E8A36'],['21','#C6BCA9'],['24','#3E1E30'],['27','#2F2321'],['30','#22303E'],['31','#929390'],['32','#35393C'],['33','#A0978E'],['34','#6A6461'],['35','#3C3B3C'],['36','#151514'],['41','#292526'],['60','#7C1C27'],['78','#6D2B48'],['85','#293E48'],['96','#202020']]
+  },
+  manila: { name:'Manila', price:2140, tier:'Practic', finish:'Glossy', surface:'Plush/Soft',
+    waterproof:false, easyClean:false, petFriendly:false,
+    composition:'100% Poliester', width:143, weight:220, martindale:'58.000–90.000',
+    mace:null, rubbing:null, light:null, pilling:null,
+    fireTest:'Test cu țigara aprinsă', certifications:'Fără AZO/DMF',
+    desc:'Material plușat, cu aspect fin de catifea și o gamă generoasă de peste 40 de nuanțe. Combină un aspect elegant, ușor lucios, cu un preț accesibil, fiind alegerea potrivită pentru un mobilier confortabil și primitor.',
+    care:'Aspirați regulat cu o perie moale, în sensul firului, pentru a menține aspectul plușat. Ștergeți imediat petele cu o cârpă curată și uscată, fără a freca, și evitați expunerea directă la soare pentru a preveni decolorarea.',
+    heroCode:'08',
+    colors:[['00','#EEEFE9'],['01','#F3EFE3'],['02','#ABA291'],['03','#908776'],['04','#30211C'],['05','#5A4C41'],['06','#43262A'],['07','#422D32'],['08','#8E8381'],['09','#CDB4BA'],['10','#ABCAC5'],['11','#8AB0A3'],['12','#4D6160'],['13','#CFCEC9'],['14','#C4C0B7'],['15','#94948A'],['16','#767573'],['17','#5B5C54'],['18','#2E2F29'],['19','#494947'],['20','#56626E'],['21','#857264'],['22','#453832'],['23','#982F33'],['25','#103440'],['26','#0E2944'],['27','#274452'],['28','#AF292A'],['29','#896157'],['30','#B98669'],['31','#955A2E'],['32','#D19B45'],['33','#AF862C'],['34','#53512B'],['35','#163629'],['36','#4D6F61'],['37','#0E5653'],['38','#516F6D'],['39','#32578E'],['40','#79733F'],['41','#7EAF5E']]
+  },
+  enjoylux: { name:'Enjoy Lux', price:2245, tier:'Confort', finish:'Matte', surface:'Smooth',
+    waterproof:true, easyClean:true, petFriendly:false,
+    composition:'92% PES / 8% PA', width:146, weight:467, martindale:'55.000',
+    mace:null, rubbing:'4-5/5', light:'5/5', pilling:'5/5',
+    fireTest:'BS 5852: Partea 1', certifications:'OEKO-TEX®',
+    desc:'Microfibră fină, cu finisaj mat și tehnologie hidrofobă care limitează absorbția lichidelor — apa, cafeaua sau vinul rămân la suprafață sub formă de picături, fiind ușor de îndepărtat. Certificată OEKO-TEX®, oferă un confort curat și durabil pentru uz zilnic.',
+    care:'Datorită tratamentului hidrofob, majoritatea petelor se îndepărtează ușor cu o cârpă umedă, fără a fi nevoie de produse speciale. Aspirați regulat pentru a menține textura și evitați expunerea prelungită la soare directă.',
+    heroCode:'04',
+    colors:[['01','#C7C1B9'],['02','#AE9C8C'],['03','#988C8C'],['04','#443930'],['05','#393132'],['06','#231F1F'],['07','#887E76'],['08','#423E3C'],['09','#473F3E'],['10','#827C23'],['11','#B49738'],['12','#BE8031'],['13','#9A3C2E'],['14','#5F303B'],['15','#2D282E'],['16','#6A154E'],['17','#264D56'],['18','#5F847F'],['19','#AE9295'],['20','#ACACAC'],['21','#87868B'],['22','#3E4749'],['23','#484848'],['24','#302F34'],['25','#242325']]
+  },
+  milton: { name:'Milton', price:2360, tier:'Premium', finish:'Semi-Glossy', surface:'Smooth',
+    waterproof:true, easyClean:false, petFriendly:false,
+    composition:'97% PES / 3% PA', width:140, weight:300, martindale:'90.000',
+    mace:null, rubbing:null, light:'4/5', pilling:'5/5',
+    fireTest:'BS 5852: Partea 1', certifications:null,
+    desc:'Țesătură tricotată cu o textură fină, ușor sidefată, care lasă umbre discrete în funcție de lumină. Beneficiază de o tehnologie hidrofobă avansată și este potrivită pentru un stil de viață activ, oferind rezistență sporită la uzura de zi cu zi.',
+    care:'Ștergeți petele imediat cu o cârpă curată, ușor umezită, fără a freca. Datorită finisajului hidrofob, lichidele nu pătrund imediat în material. Aspirați regulat cu o perie moale pentru a menține aspectul țesăturii și evitați expunerea prelungită la soare.',
+    heroCode:'01',
+    colors:[['01','#D3C2B8'],['02','#D1BFB5'],['03','#BDAA9A'],['04','#71605F'],['05','#463939'],['06','#2A2724'],['07','#8F4F2F'],['08','#88343B'],['09','#541F2E'],['10','#5A2454'],['11','#88733D'],['12','#265255'],['13','#243143'],['14','#6F6F6B'],['15','#4A4547'],['16','#272727'],['17','#47464A'],['18','#141C16'],['19','#1B292D'],['20','#1A1A32'],['21','#A2C2B3'],['22','#8E9EA5'],['23','#D7BDC2'],['24','#4E665A'],['25','#8599A6'],['26','#4F6772'],['27','#57522E'],['28','#AC6B41'],['29','#A99991'],['30','#C0B5AF'],['31','#E8E4E2'],['32','#AA8C84'],['33','#562E36']]
+  },
+  piano: { name:'Piano', price:2480, tier:'Lux', finish:'Glossy', surface:'Plush/Soft',
+    waterproof:true, easyClean:true, petFriendly:false,
+    composition:'100% Poliester', width:142, weight:310, martindale:'>60.000',
+    mace:null, rubbing:null, light:null, pilling:null,
+    fireTest:'BS 5852: Partea 1', certifications:null,
+    desc:'Catifea tricotată, extrem de moale la atingere, care combină eleganta aspectului catifelat cu un preț accesibil. Rezistă bine la lichide și se curăță ușor cu apă, fiind o alegere practică pentru mobilierul de zi cu zi.',
+    care:'Datorită tratamentului hidrofob, majoritatea petelor se îndepărtează ușor cu o cârpă umedă, fără a fi nevoie de produse speciale. Aspirați regulat pentru a menține textura și evitați expunerea prelungită la soare directă.',
+    heroCode:'04',
+    colors:[['01','#F3F1E6'],['02','#ECE3D6'],['03','#E1C8B0'],['04','#B7A6A0'],['05','#665452'],['06','#5F2534'],['07','#BD8910'],['08','#074B30'],['09','#537368'],['10','#114B54'],['11','#90ABB8'],['12','#1B1C32'],['13','#CEC3BB'],['14','#909396'],['15','#595353'],['16','#130F0E'],['17','#101010'],['18','#5A4947'],['19','#484848'],['20','#81605B'],['21','#774118'],['22','#8D7668'],['23','#7C622F'],['24','#3C4043'],['25','#585836'],['26','#27352A'],['28','#2E3740']]
+  },
+  spello: { name:'Spello', price:2480, tier:'Lux', finish:'Matte', surface:'Textured',
+    waterproof:true, easyClean:false, petFriendly:false,
+    composition:'100% Poliester', width:142, weight:430, martindale:'>60.000',
+    mace:null, rubbing:null, light:null, pilling:null,
+    fireTest:'BS 5852: Partea 1', certifications:null,
+    desc:'Țesătură groasă, cu o textură proeminentă și un aspect natural, mat. Oferă o rezistență bună la lichide, fiind potrivită pentru mobilierul folosit intens, cu un aer rustic-elegant.',
+    care:'Ștergeți petele imediat cu o cârpă curată, ușor umezită, fără a freca. Datorită finisajului hidrofob, lichidele nu pătrund imediat în material. Aspirați regulat cu o perie moale pentru a menține aspectul țesăturii și evitați expunerea prelungită la soare.',
+    heroCode:'04',
+    colors:[['04','#B0915B'],['05','#9F867F'],['06','#683C47'],['08','#5D636D'],['09','#273940'],['10','#6F7D70'],['13','#62625E']]
+  },
+  maya: { name:'Maya', price:2610, tier:'Special', finish:'Semi-Glossy', surface:'Plush/Soft',
+    waterproof:true, easyClean:true, petFriendly:true,
+    composition:'100% Poliester', width:140, weight:350, martindale:'45.000–50.000',
+    mace:'5/5', rubbing:null, light:'4/5', pilling:'4/5',
+    fireTest:'BS 5852: Partea 1', certifications:null,
+    desc:'Tricot fin, cu un aspect discret țesut și o senzație la atingere asemănătoare cașmerului. Este ușor de curățat, rezistent la lichide și potrivit pentru animale de companie, fiind alegerea ideală pentru camere de zi, dormitoare și camere pentru copii.',
+    care:'Datorită tratamentului hidrofob, majoritatea petelor se îndepărtează ușor cu o cârpă umedă, fără a fi nevoie de produse speciale. Aspirați regulat pentru a menține textura și evitați expunerea prelungită la soare directă.',
+    heroCode:'03',
+    colors:[['01','#C9C2B8'],['02','#DCD6C2'],['03','#DACCB8'],['04','#B5925C'],['05','#CB9541'],['06','#835D48'],['07','#383E1A'],['08','#20302E'],['09','#222632'],['10','#1D2B3A'],['11','#525658'],['12','#5C6173'],['13','#89A3A2'],['14','#6C827E'],['15','#B4988C'],['16','#78605C'],['17','#5A4E4E'],['18','#6D625F'],['19','#807875'],['20','#ABA9A5'],['21','#666665'],['22','#2C282A']]
+  },
+  zoya: { name:'Zoya', price:2610, tier:'Special', finish:'Matte', surface:'Plush/Soft',
+    waterproof:true, easyClean:true, petFriendly:true,
+    composition:'100% Poliester', width:140, weight:390, martindale:'45.000–50.000',
+    mace:'5/5', rubbing:null, light:'4/5', pilling:'4/5',
+    fireTest:'BS 5852: Partea 1', certifications:null,
+    desc:'Tricot cu aspect mat de catifea, rezistent la lichide și ușor de întreținut. Potrivit pentru gospodăriile cu animale de companie, oferă un echilibru excelent între confort, eleganță și durabilitate.',
+    care:'Datorită tratamentului hidrofob, majoritatea petelor se îndepărtează ușor cu o cârpă umedă, fără a fi nevoie de produse speciale. Aspirați regulat pentru a menține textura și evitați expunerea prelungită la soare directă.',
+    heroCode:'01',
+    colors:[['01','#BCBDB8'],['02','#AAA7A4'],['03','#8B787B'],['04','#483437'],['05','#4C4443'],['06','#1B2E2B'],['07','#4A5858'],['08','#576460'],['09','#2F3336'],['10','#585C5F'],['11','#676768'],['12','#A0A4A2'],['13','#876934'],['14','#41442F'],['15','#283748']]
+  }
+};
+var COLLECTION_ORDER = ['luna','manila','enjoylux','milton','piano','spello','maya','zoya'];
+var SWATCH_INDEX = {};
+COLLECTION_ORDER.forEach(function(slug){
+  var c = COLLECTIONS[slug];
+  c.slug = slug;
+  c.colors.forEach(function(pair){
+    var name = c.name + ' ' + pair[0];
+    SWATCH_INDEX[name] = { slug:slug, code:pair[0], hex:pair[1], collection:c, name:name };
+  });
+});
+
 /* ── Announcement rotation ── */
 var annMsgs = ['10% reducere la comenzi', 'Transport gratuit în România', 'Retur gratuit în 14 zile'];
 var annIdx = 0;
@@ -1295,6 +1371,7 @@ function closeView(name){
   document.getElementById('view-' + name).classList.remove('open');
   if (!document.querySelector('.view.open')) document.body.style.overflow = '';
   if (location.hash === '#' + name) history.back();
+  if (name === 'materials') renderCollectionDetail('luna'); /* reset the shared collection-detail view back to Luna's guide, so the PDP's own "Vezi ghidul de țesături" (always Luna) never shows a stale other-collection view left over from browsing the materials grid */
 }
 window.addEventListener('popstate', function(){
   var open = document.querySelectorAll('.view.open');
@@ -1324,36 +1401,38 @@ function setLiked(name, on){
     return;
   }
   document.querySelectorAll('.mtile-heart[data-name="' + name + '"]').forEach(function(h){ h.classList.toggle('on', on); });
-  document.querySelectorAll('#smgrid .sm-tile[data-name="' + name + '"]').forEach(function(t){ t.classList.toggle('on', on); });
+  document.querySelectorAll('#sm-collections .sm-tile[data-name="' + name + '"]').forEach(function(t){ t.classList.toggle('on', on); });
   renderSampleTray();
 }
 function toggleHeart(el, name){
   setLiked(name, !isLiked(name));
 }
 
-/* ── Materials grid build ── */
-var lunaSel = 7; /* Luna 8 = index 7 */
-(function(){
-  var g1 = document.getElementById('mgrid1');
-  for (var i = 1; i <= 16; i++){
-    var n1 = 'Luna ' + i;
-    g1.insertAdjacentHTML('beforeend',
-      '<div class="mtile' + (i - 1 === lunaSel ? ' on' : '') + '" data-i="' + (i - 1) + '" onclick="pickLuna(this)">' +
-      '<div class="imw"><img src="assets/luna-' + i + '.png" alt="Luna ' + i + '">' +
-      '<button class="mtile-heart' + (isLiked(n1) ? ' on' : '') + '" data-name="' + n1 + '" onclick="event.stopPropagation();toggleHeart(this,\'' + n1 + '\')" aria-label="Salvează ' + n1 + '">' + heartSVG() + '</button></div>' +
-      '<div class="lr"><span class="nm">Luna ' + i + '</span>' +
-      '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" onclick="event.stopPropagation();openModalNamed(\'Luna ' + i + '\')"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>');
-  }
-  var g2 = document.getElementById('mgrid2');
-  for (var j = 0; j < 10; j++){
-    g2.insertAdjacentHTML('beforeend',
-      '<div class="mtile" onclick="pickLuna(this)" data-n="Luna 8">' +
-      '<div class="imw"><img src="assets/luna-8.png" alt="Luna 8">' +
-      '<button class="mtile-heart' + (isLiked('Luna 8') ? ' on' : '') + '" data-name="Luna 8" onclick="event.stopPropagation();toggleHeart(this,\'Luna 8\')" aria-label="Salvează Luna 8">' + heartSVG() + '</button></div>' +
-      '<div class="lr"><span class="nm">Luna 8</span>' +
-      '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" onclick="event.stopPropagation();openModalNamed(\'Luna 8\')"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>');
-  }
-})();
+/* ── Materials grid build (data-driven, 8 collections stacked) ── */
+var DEFAULT_SWATCH_NAME = 'Luna 08';
+function renderMaterialsGrid(){
+  var wrap = document.getElementById('mv-collections');
+  if (wrap.childElementCount) return;
+  COLLECTION_ORDER.forEach(function(slug){
+    var c = COLLECTIONS[slug];
+    var tilesHTML = c.colors.map(function(pair){
+      var code = pair[0], name = c.name + ' ' + code;
+      var onCls = name === DEFAULT_SWATCH_NAME ? ' on' : '';
+      return '<div class="mtile' + onCls + '" data-name="' + name + '" onclick="pickLuna(this)">' +
+        '<div class="imw"><img src="' + fabricAsset(name) + '" alt="' + name + '">' +
+        '<button class="mtile-heart' + (isLiked(name) ? ' on' : '') + '" data-name="' + name + '" onclick="event.stopPropagation();toggleHeart(this,\'' + name + '\')" aria-label="Salvează ' + name + '">' + heartSVG() + '</button></div>' +
+        '<div class="lr"><span class="nm">' + name + '</span>' +
+        '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" onclick="event.stopPropagation();openModalNamed(\'' + name + '\')"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>';
+    }).join('');
+    wrap.insertAdjacentHTML('beforeend',
+      '<div class="col-head"><span class="t">Colectia ' + c.name +
+      '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" onclick="event.stopPropagation();showCollectionDetail(\'' + slug + '\')"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+      '<span class="pr">pret<b>' + c.price.toLocaleString('ro-RO') + ' lei</b></span></div>' +
+      '<div class="col-meta">' + c.finish.toUpperCase() + '&nbsp;&nbsp;|&nbsp;&nbsp;' + c.martindale + ' MARTINDALE&nbsp;&nbsp;|&nbsp;&nbsp;' + c.surface.toUpperCase() + '</div>' +
+      '<div class="mgrid">' + tilesHTML + '</div>');
+  });
+}
+renderMaterialsGrid();
 function mvTab(el){
   document.querySelectorAll('.mv-tab').forEach(function(t){ t.classList.remove('on'); });
   el.classList.add('on');
@@ -1361,7 +1440,7 @@ function mvTab(el){
 function pickLuna(el){
   document.querySelectorAll('.mtile').forEach(function(t){ t.classList.remove('on'); });
   el.classList.add('on');
-  var n = el.dataset.n || 'Luna ' + (parseInt(el.dataset.i, 10) + 1);
+  var n = el.dataset.name;
   document.getElementById('swname').textContent = n;
   document.getElementById('speccolor').textContent = n.replace(/^Luna (\d)$/, 'Luna 0$1');
   document.getElementById('smod-name').textContent = n;
@@ -1413,11 +1492,88 @@ function resetFilters(){
 function clearFilters(){ applied = []; renderChips(); }
 renderChips();
 
-/* ── Swatch modal ── */
-function lunaAsset(name){
-  var m = /Luna (\d+)/.exec(name || '');
-  var n = m ? parseInt(m[1], 10) : 8;
-  return n === 8 ? 'assets/modal-hero.png' : 'assets/luna-' + n + '.png';
+/* ── Collection / swatch content rendering (data-driven across all 8 collections) ── */
+function fabricAsset(name){
+  var s = SWATCH_INDEX[name];
+  if (s) return 'assets/' + (s.collection.assetSlug || s.slug) + '-' + s.code + '.png';
+  /* legacy fallback: the untouched PDP swatch strip + hidden "Vazute recent" rows still use
+     old unpadded "Luna N" names that predate the real catalog — resolve them exactly like the
+     old lunaAsset() did, so that no-touch zone keeps rendering identically. */
+  var m = /^Luna (\d+)$/.exec(name || '');
+  if (m) return parseInt(m[1], 10) === 8 ? 'assets/modal-hero.png' : 'assets/luna-' + m[1] + '.png';
+  return 'assets/modal-hero.png';
+}
+function martPercent(v){
+  var nums = (v || '').match(/[\d.]+/g);
+  if (!nums) return 0;
+  var vals = nums.map(function(n){ return parseInt(n.replace(/\./g, ''), 10); });
+  return Math.min(100, Math.round((Math.max.apply(null, vals) / 90000) * 100));
+}
+function ratingPercent(v){
+  var m = /([\d.]+)/.exec(v || '');
+  return m ? Math.min(100, (parseFloat(m[1]) / 5) * 100) : 0;
+}
+function avgScore(c){
+  var vals = [c.mace, c.rubbing, c.light, c.pilling].map(function(v){
+    var m = v && /([\d.]+)/.exec(v);
+    return m ? parseFloat(m[1]) : null;
+  }).filter(function(v){ return v !== null; });
+  if (!vals.length) return '—';
+  var avg = vals.reduce(function(a, b){ return a + b; }, 0) / vals.length;
+  return String(Math.round(avg * 10) / 10);
+}
+function fillCollectionText(p, c){
+  document.getElementById(p + '-desc').textContent = c.desc;
+  document.getElementById(p + '-care').textContent = c.care;
+  document.getElementById(p + '-comp').textContent = c.composition;
+  document.getElementById(p + '-weight').textContent = c.weight + ' g/m²';
+  document.getElementById(p + '-width').textContent = c.width + ' cm';
+  document.getElementById(p + '-fire').innerHTML = c.fireTest === 'BS 5852: Partea 1' ? 'BS 5852: Partea 1: 1979<br>sursa 0 (țigară)' : c.fireTest;
+  document.getElementById(p + '-cert').textContent = c.certifications || '—';
+  document.getElementById(p + '-maint').textContent = c.easyClean ? 'Ușor de întreținut, curățare cu apă' : (c.waterproof ? 'Rezistent la lichide, curățare delicată' : 'Necesită curățare delicată, la uscat');
+  document.getElementById(p + '-mart-v').textContent = c.martindale;
+  document.getElementById(p + '-mart-bar').style.width = martPercent(c.martindale) + '%';
+  [['mace', c.mace], ['rub', c.rubbing], ['light', c.light], ['pill', c.pilling]].forEach(function(pair){
+    var vEl = document.getElementById(p + '-' + pair[0] + '-v');
+    var bEl = document.getElementById(p + '-' + pair[0] + '-bar');
+    if (pair[1]){
+      vEl.innerHTML = pair[1].replace(/\/5$/, '<i>/5</i>');
+      bEl.style.width = ratingPercent(pair[1]) + '%';
+    } else {
+      vEl.textContent = '—';
+      bEl.style.width = '0%';
+    }
+  });
+  document.getElementById(p + '-score').innerHTML = avgScore(c) + '<i>/5</i>';
+}
+var currentCollectionSlug = 'luna';
+function renderCollectionDetail(slug){
+  var c = COLLECTIONS[slug];
+  currentCollectionSlug = slug;
+  document.getElementById('cv-title').textContent = 'Colectia ' + c.name;
+  var heroSrc = 'assets/' + (c.assetSlug || c.slug) + '-hero.png';
+  document.getElementById('chero1').src = heroSrc;
+  document.getElementById('chero2').src = heroSrc;
+  document.getElementById('cv-color').textContent = c.colors.length + ' nuanțe disponibile';
+  fillCollectionText('cv', c);
+}
+function showCollectionDetail(slug){
+  renderCollectionDetail(slug);
+  openView('collection');
+}
+function renderSwatchModal(name){
+  var s = SWATCH_INDEX[name];
+  var c = s ? s.collection : COLLECTIONS.luna;
+  var isLunaVideo = c.slug === 'luna';
+  document.getElementById('smod-sub').textContent = s ? s.hex : '';
+  document.getElementById('mslide1').src = fabricAsset(name);
+  document.getElementById('mslide2').src = 'assets/' + (c.assetSlug || c.slug) + '-hero.png';
+  document.getElementById('mslide0').style.display = isLunaVideo ? '' : 'none';
+  var altImg = document.getElementById('mslide0img');
+  altImg.style.display = isLunaVideo ? 'none' : '';
+  if (!isLunaVideo) altImg.src = fabricAsset(name);
+  document.getElementById('sm-color').textContent = s ? s.hex : '—';
+  fillCollectionText('sm', c);
 }
 function openModalNamed(name){
   document.getElementById('smod-name').textContent = name;
@@ -1425,7 +1581,7 @@ function openModalNamed(name){
 }
 function openModal(){
   var name = document.getElementById('smod-name').textContent;
-  document.getElementById('mslide1').src = lunaAsset(name);
+  renderSwatchModal(name);
   document.getElementById('smodal').classList.add('on');
   document.getElementById('dim').classList.add('on');
   document.body.style.overflow = 'hidden';
@@ -1440,16 +1596,20 @@ function closeModal(){
 /* ── Samples modal (order up to 5 free fabric swatches) ── */
 /* sampleSel / isLiked / setLiked are declared earlier, shared with the materials grid hearts */
 function buildSamplesGrid(){
-  var g = document.getElementById('smgrid');
-  if (g.childElementCount) return;
-  for (var i = 1; i <= 16; i++){
-    var name = 'Luna ' + i;
-    g.insertAdjacentHTML('beforeend',
-      '<div class="sm-tile' + (isLiked(name) ? ' on' : '') + '" data-name="' + name + '" onclick="toggleSample(this,\'' + name + '\')">' +
-      '<div class="imw"><img src="' + lunaAsset(name) + '" alt="' + name + '">' +
-      '<div class="sm-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div></div>' +
-      '<div class="nm">' + name + '</div></div>');
-  }
+  var wrap = document.getElementById('sm-collections');
+  if (wrap.childElementCount) return;
+  COLLECTION_ORDER.forEach(function(slug){
+    var c = COLLECTIONS[slug];
+    var tilesHTML = c.colors.map(function(pair){
+      var code = pair[0], name = c.name + ' ' + code;
+      return '<div class="sm-tile' + (isLiked(name) ? ' on' : '') + '" data-name="' + name + '" onclick="toggleSample(this,\'' + name + '\')">' +
+        '<div class="imw"><img src="' + fabricAsset(name) + '" alt="' + name + '">' +
+        '<div class="sm-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div></div>' +
+        '<div class="nm">' + name + '</div></div>';
+    }).join('');
+    wrap.insertAdjacentHTML('beforeend',
+      '<div class="col-head"><span class="t">Colecția ' + c.name + '</span></div><div class="mgrid">' + tilesHTML + '</div>');
+  });
 }
 function toggleSample(el, name){
   setLiked(name, !isLiked(name));
@@ -1462,7 +1622,7 @@ function renderSampleTray(){
   var row = document.getElementById('smtray-row');
   tray.classList.toggle('on', sampleSel.length > 0);
   row.innerHTML = sampleSel.map(function(name){
-    return '<div class="sm-tray-item"><img src="' + lunaAsset(name) + '" alt="' + name + '">' +
+    return '<div class="sm-tray-item"><img src="' + fabricAsset(name) + '" alt="' + name + '">' +
       '<button class="rm" onclick="event.stopPropagation();removeSample(\'' + name + '\')" aria-label="Elimină ' + name + '"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>';
   }).join('');
   document.getElementById('sm-count').textContent = sampleSel.length;
@@ -1490,7 +1650,7 @@ function addSamplesToCart(){
     btn.innerHTML = orig;
     closeSamplesModal();
     sampleSel = [];
-    document.querySelectorAll('#smgrid .sm-tile.on, .mtile-heart.on').forEach(function(t){ t.classList.remove('on'); });
+    document.querySelectorAll('#sm-collections .sm-tile.on, .mtile-heart.on').forEach(function(t){ t.classList.remove('on'); });
     renderSampleTray();
   }, 1400);
 }
