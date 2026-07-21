@@ -298,14 +298,18 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
 #mv-measure img{width:100%;height:100%}
 #mv-3d{position:absolute;right:20px;top:80px;z-index:2;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.85);box-shadow:0 1px 4px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
 #mv-sofa{width:100%;height:220px;object-fit:contain;margin-top:16px}
-#mv-filterrow{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 0}
-#mv-filterbtn{display:flex;align-items:center;gap:8px;border:1px solid #d9dbe0;border-radius:20px;height:40px;padding:0 14px 0 6px;font-size:15px;font-weight:600}
-#mv-filterbtn .cntb{width:28px;height:28px;border-radius:50%;background:var(--ink);color:#fff;font-size:13px;font-weight:500;display:flex;align-items:center;justify-content:center}
-#mv-clear{font-size:13px;text-decoration:underline}
-.chiprow{display:flex;flex-wrap:wrap;gap:8px;padding:16px 20px 0}
+#mv-filtergroup{padding:16px 16px 0}
+#mv-filterrow{display:flex;align-items:center;justify-content:space-between;max-height:40px;opacity:1;overflow:hidden;margin-bottom:16px;transition:max-height .28s cubic-bezier(.4,0,.2,1),opacity .2s ease,margin-bottom .28s cubic-bezier(.4,0,.2,1)}
+#mv-filterrow.mv-hide{max-height:0;opacity:0;margin-bottom:0}
+#mv-filterbtn{display:flex;align-items:center;gap:6px;border:1px solid #363944;border-radius:20px;height:36px;padding:8px 12px;font-size:16px;font-weight:500;color:#000}
+#mv-filterbtn .cntb{width:16px;height:16px;border-radius:999px;background:#000;color:#fff;font-size:12px;font-weight:400;display:flex;align-items:center;justify-content:center}
+#mv-filterbtn .mv-filterbtn-div{width:1px;height:20px;background:#d9dbe0}
+#mv-clear{font-size:13px;text-decoration:underline;color:#363944}
+.mv-divider{height:1px;background:#e3e3e3;margin-bottom:16px}
+.chiprow{display:flex;flex-wrap:wrap;gap:8px}
 .fchip{display:flex;align-items:center;gap:7px;background:var(--chipbg);border-radius:8px;height:30px;padding:0 10px;font-size:13px}
 .fchip .csq{width:16px;height:16px;border-radius:3px}
-.mv-tabs{display:flex;margin-top:22px;border-bottom:1px solid var(--hair)}
+.mv-tabs{display:flex;margin-top:16px;border-bottom:1px solid var(--hair)}
 .mv-tab{flex:1;text-align:center;padding:6px 0 12px;position:relative;color:var(--gray2)}
 .mv-tab .a{font-size:15px;font-weight:600;display:block}
 .mv-tab .b{font-size:12px;display:block;margin-top:3px}
@@ -1054,14 +1058,19 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
       <button id="mv-3d" onclick="pressFeedback(this)" aria-label="Vizualizare 3D">3D</button>
       <img id="mv-sofa" src="assets/sofa-3d.png" alt="Canapea Boston colțar">
     </div>
-    <div id="mv-filterrow">
-      <button id="mv-filterbtn" onclick="openSheet()">
-        <span class="cntb" id="fcount">3</span> Filtre
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.7"><line x1="4" y1="7" x2="20" y2="7"/><circle cx="9" cy="7" r="2.2" fill="#fff"/><line x1="4" y1="16" x2="20" y2="16"/><circle cx="15" cy="16" r="2.2" fill="#fff"/></svg>
-      </button>
-      <button id="mv-clear" onclick="clearFilters()">Sterge filtrele</button>
+    <div id="mv-filtergroup">
+      <div id="mv-filterrow">
+        <button id="mv-filterbtn" onclick="openSheet()">
+          <span class="cntb" id="fcount">3</span>
+          <span class="mv-filterbtn-div"></span>
+          Filtre
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.7"><line x1="4" y1="7" x2="20" y2="7"/><circle cx="9" cy="7" r="2.2" fill="#fff"/><line x1="4" y1="16" x2="20" y2="16"/><circle cx="15" cy="16" r="2.2" fill="#fff"/></svg>
+        </button>
+        <button id="mv-clear" onclick="clearFilters()">Sterge filtrele</button>
+      </div>
+      <div class="mv-divider"></div>
+      <div class="chiprow" id="mv-chips"></div>
     </div>
-    <div class="chiprow" id="mv-chips"></div>
     <div class="mv-tabs">
       <button class="mv-tab on" onclick="mvTab(this)"><span class="a">General</span><span class="b" id="mv-tab-sel">Luna 02</span></button>
       <button class="mv-tab" onclick="mvTab(this)"><span class="a">Perne</span><span class="b">Maya 02</span></button>
@@ -1702,6 +1711,17 @@ function renderMaterialsGrid(){
   });
 }
 renderMaterialsGrid();
+(function(){
+  var container = document.getElementById('view-materials');
+  var filterRow = document.getElementById('mv-filterrow');
+  var lastY = 0;
+  container.addEventListener('scroll', function(){
+    var y = container.scrollTop;
+    if (y > lastY && y > 40) filterRow.classList.add('mv-hide');
+    else if (y < lastY) filterRow.classList.remove('mv-hide');
+    lastY = y;
+  }, { passive: true });
+})();
 function mvTab(el){
   document.querySelectorAll('.mv-tab').forEach(function(t){ t.classList.remove('on'); });
   el.classList.add('on');
