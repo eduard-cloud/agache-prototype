@@ -290,11 +290,13 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
 .stile .sd{font-size:12px;color:var(--gray);margin-top:4px;display:block}
 
 /* ══════════ Materials view ══════════ */
+#mv-stickyhead{position:sticky;top:0;z-index:5;background:#fff}
 #mv-top{position:relative;padding-top:32px}
 .circ-btn{width:32px;height:32px;border-radius:50%;background:#fff;border:1px solid #e3e3e3;display:flex;align-items:center;justify-content:center}
-#mv-close{position:absolute;left:20px;top:32px;z-index:2}
+#mv-close{position:absolute;left:20px;top:32px;z-index:2;width:36px;height:36px;border:none;background:rgba(255,255,255,.9);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
 #mv-measure{position:absolute;right:20px;top:32px;z-index:2;width:40px;height:40px;padding:0;border-radius:50%;overflow:hidden;border:none}
 #mv-measure img{width:100%;height:100%}
+#mv-3d{position:absolute;right:20px;top:80px;z-index:2;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.85);box-shadow:0 1px 4px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
 #mv-sofa{width:100%;height:220px;object-fit:contain;margin-top:16px}
 #mv-filterrow{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 0}
 #mv-filterbtn{display:flex;align-items:center;gap:8px;border:1px solid #d9dbe0;border-radius:20px;height:40px;padding:0 14px 0 6px;font-size:15px;font-weight:600}
@@ -1045,22 +1047,25 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
 
 <!-- ══════════ Materials view ══════════ -->
 <div class="view" id="view-materials">
-  <div id="mv-top">
-    <button class="circ-btn" id="mv-close" onclick="closeView('materials')" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <button id="mv-measure" aria-label="Dimensiuni"><img src="assets/btn-measure.png" alt=""></button>
-    <img id="mv-sofa" src="assets/sofa-3d.png" alt="Canapea Boston colțar">
-  </div>
-  <div id="mv-filterrow">
-    <button id="mv-filterbtn" onclick="openSheet()">
-      <span class="cntb" id="fcount">3</span> Filtre
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.7"><line x1="4" y1="7" x2="20" y2="7"/><circle cx="9" cy="7" r="2.2" fill="#fff"/><line x1="4" y1="16" x2="20" y2="16"/><circle cx="15" cy="16" r="2.2" fill="#fff"/></svg>
-    </button>
-    <button id="mv-clear" onclick="clearFilters()">Sterge filtrele</button>
-  </div>
-  <div class="chiprow" id="mv-chips"></div>
-  <div class="mv-tabs">
-    <button class="mv-tab on" onclick="mvTab(this)"><span class="a">General</span><span class="b" id="mv-tab-sel">Luna 02</span></button>
-    <button class="mv-tab" onclick="mvTab(this)"><span class="a">Perne</span><span class="b">Maya 02</span></button>
+  <div id="mv-stickyhead">
+    <div id="mv-top">
+      <button class="circ-btn" id="mv-close" onclick="closeView('materials')" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      <button id="mv-measure" aria-label="Dimensiuni"><img src="assets/btn-measure.png" alt=""></button>
+      <button id="mv-3d" onclick="pressFeedback(this)" aria-label="Vizualizare 3D">3D</button>
+      <img id="mv-sofa" src="assets/sofa-3d.png" alt="Canapea Boston colțar">
+    </div>
+    <div id="mv-filterrow">
+      <button id="mv-filterbtn" onclick="openSheet()">
+        <span class="cntb" id="fcount">3</span> Filtre
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.7"><line x1="4" y1="7" x2="20" y2="7"/><circle cx="9" cy="7" r="2.2" fill="#fff"/><line x1="4" y1="16" x2="20" y2="16"/><circle cx="15" cy="16" r="2.2" fill="#fff"/></svg>
+      </button>
+      <button id="mv-clear" onclick="clearFilters()">Sterge filtrele</button>
+    </div>
+    <div class="chiprow" id="mv-chips"></div>
+    <div class="mv-tabs">
+      <button class="mv-tab on" onclick="mvTab(this)"><span class="a">General</span><span class="b" id="mv-tab-sel">Luna 02</span></button>
+      <button class="mv-tab" onclick="mvTab(this)"><span class="a">Perne</span><span class="b">Maya 02</span></button>
+    </div>
   </div>
 
   <div id="mv-collections"></div>
