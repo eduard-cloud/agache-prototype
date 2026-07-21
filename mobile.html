@@ -1837,6 +1837,12 @@ function expandChipRow(){
   wrap.querySelectorAll('.fchip').forEach(function(c){ c.style.display = ''; });
   var more = wrap.querySelector('.fchip-more');
   if (more) more.remove();
+  var less = document.createElement('button');
+  less.type = 'button';
+  less.className = 'fchip-more';
+  less.textContent = 'Vezi mai puțin';
+  less.onclick = collapseChipRow;
+  wrap.appendChild(less);
 }
 function rmApplied(f){ applied = applied.filter(function(x){ return x !== f; }); renderChips(); }
 function rmFilter(f){
