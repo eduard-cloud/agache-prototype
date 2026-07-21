@@ -1058,7 +1058,7 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
       <button class="circ-btn" id="mv-close" onclick="closeView('materials')" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       <button id="mv-measure" aria-label="Dimensiuni"><img src="assets/btn-measure.png" alt=""></button>
       <button id="mv-3d" onclick="pressFeedback(this)" aria-label="Vizualizare 3D">3D</button>
-      <img id="mv-sofa" src="assets/sofa-3d.png" alt="Canapea Boston colțar">
+      <img id="mv-sofa" src="assets/sofa-boston-manila.jpg" alt="Canapea Boston">
     </div>
     <div id="mv-filtergroup">
       <div id="mv-filterrow">
@@ -1803,6 +1803,7 @@ function renderChips(){
   document.getElementById('fcount').textContent = applied.length;
   applyGridFilters();
   collapseChipRow();
+  document.querySelector('.mv-divider').style.display = applied.length ? '' : 'none';
 }
 /* ── Applied-filter chip row: collapse past 2 rows behind a "+N alte" link ── */
 function collapseChipRow(){
