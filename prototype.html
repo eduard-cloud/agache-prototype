@@ -34,7 +34,7 @@ img{display:block}
 #header .cart-btn{display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;background:#ededed;cursor:pointer;border:none;flex-shrink:0}
 
 /* ── Hero ─────────────────────────────────────────────── */
-#hero-wrapper{position:relative;background:#f5f5f7;height:900px;overflow:visible}
+#hero-wrapper{position:relative;background:#f5f5f7;min-height:980px;overflow:visible;padding-bottom:40px}
 #breadcrumb{position:absolute;top:20px;left:50px;font-size:13px;color:#707173;letter-spacing:.26px;z-index:6;display:flex;align-items:center;gap:6px}
 #breadcrumb a{color:#707173}
 
@@ -48,66 +48,98 @@ img{display:block}
 #hero-prev{left:calc(12.5% + 12px)}
 #hero-next{left:calc(12.5% + 940px)}
 
-/* ── Product Card ─────────────────────────────────────── */
-#product-card{position:absolute;top:58px;left:calc(62.5% + 3px);width:487px;background:#fff;border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:20px;z-index:10;box-shadow:0 4px 32px rgba(0,0,0,.1)}
+/* ── Product Card (Figma 47:8771) ─────────────────────── */
+#product-card{position:absolute;top:58px;left:calc(62.5% + 3px);width:507px;background:#fff;border-radius:16px;padding:40px;display:flex;flex-direction:column;gap:32px;z-index:10}
 
-.pc-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.pc-title{font-size:22px;font-weight:500;letter-spacing:-.44px;line-height:1.2;flex:1}
-.pc-icons-row{display:flex;gap:8px;flex-shrink:0}
-.pc-icon-btn{width:32px;height:32px;border-radius:50%;border:1px solid #e5e7eb;display:flex;align-items:center;justify-content:center;transition:background .2s}
-.pc-icon-btn:hover{background:#f5f5f7}
+.pc-block{display:flex;flex-direction:column;gap:32px;width:100%}
+.pc-head{display:flex;flex-direction:column;gap:16px;width:100%}
+.pc-tag-row{display:flex;align-items:center;justify-content:space-between;width:100%}
+.pc-tag{font-size:12px;font-weight:500;letter-spacing:.84px;color:#707173;line-height:1.2}
+.pc-icons-row{display:flex;gap:12px;align-items:center}
+.pc-icon-btn{width:20px;height:20px;padding:0;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:.85;transition:opacity .2s}
+.pc-icon-btn:hover{opacity:1}
+.pc-icon-btn img{width:20px;height:20px;display:block}
+
+.pc-title-block{display:flex;flex-direction:column;gap:12px;width:100%}
+.pc-title{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;color:#000}
+.pc-desc{font-size:14px;font-weight:400;letter-spacing:-.28px;line-height:1.2;color:#363944}
 
 .pc-rating{display:flex;align-items:center;gap:8px}
 .pc-stars{display:flex;gap:1px}
 .star-icon{width:14px;height:14px;fill:#f5a623}
-.pc-rating-score{font-size:13px;color:#363944;letter-spacing:.26px}
-.pc-rating-count{font-size:13px;color:#363944;letter-spacing:.26px;text-decoration:underline;cursor:pointer}
+.pc-rating-score{font-size:13px;color:#363944;line-height:1.2}
+.pc-rating-count{font-size:13px;color:#000;text-decoration:underline;cursor:pointer;line-height:1.2}
 
-.pc-price-row1{display:flex;align-items:center;gap:10px}
-.pc-old-price{font-size:14px;color:#707173;text-decoration:line-through;letter-spacing:.28px}
-.pc-discount{font-size:14px;color:#eb2f1e;font-weight:500}
-.pc-current-price{font-size:24px;font-weight:700;letter-spacing:-.48px;color:#121212;margin-top:4px}
+.pc-price-block{display:flex;flex-direction:column;gap:8px;width:100%}
+.pc-old-price{font-size:14px;color:#363944;text-decoration:line-through;letter-spacing:-.28px;line-height:1.2}
+.pc-price-row{display:flex;align-items:center;gap:12px}
+.pc-current-price{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;color:#000}
+.pc-current-price sup{font-size:15.48px;font-weight:500;vertical-align:baseline;position:relative;top:-.05em}
+.pc-discount-badge{background:#fa7800;color:#fff;font-size:14px;font-weight:400;letter-spacing:-.28px;border-radius:9999px;padding:6px 8px;line-height:1.2;white-space:nowrap}
 
-.pc-type-selector{display:flex;align-items:center;gap:12px;padding:12px 0;cursor:pointer;border-top:1px solid #f0f0f0;border-bottom:1px solid #f0f0f0}
-.pc-type-thumb{width:92px;height:48px;object-fit:cover;border-radius:2px;flex-shrink:0;background:#f5f5f7}
-.pc-type-info{flex:1}
-.pc-type-name{font-size:14px;font-weight:500;color:#121212;line-height:1.3}
-.pc-type-dims{font-size:14px;color:#707173;letter-spacing:.28px}
-.pc-type-chevron{flex-shrink:0;color:#707173}
+.pc-type-wrap{display:flex;flex-direction:column;gap:4px;width:100%}
+.pc-type-selector{display:flex;align-items:center;gap:32px;background:#f2f2f2;border-radius:12px 12px 2px 2px;padding:4px 8px 4px 4px;cursor:pointer;width:100%}
+.pc-type-inner{display:flex;align-items:center;gap:16px;flex:1;min-width:0}
+.pc-type-thumb{width:92px;height:48px;object-fit:cover;border-radius:8px 8px 2px 2px;flex-shrink:0;background:#fff}
+.pc-type-info{display:flex;flex-direction:column;gap:8px;flex:1;min-width:0}
+.pc-type-name{font-size:14px;font-weight:400;color:#363944;text-decoration:underline;line-height:1.2;letter-spacing:-.28px}
+.pc-type-dims{font-size:14px;color:#707173;letter-spacing:-.28px;line-height:1.2}
+.pc-type-chevron{width:24px;height:24px;flex-shrink:0}
+.pc-type-chevron img{width:24px;height:24px;display:block}
 
-.pc-material-pills{display:flex;flex-wrap:wrap;gap:8px}
-.pill{font-size:13px;padding:8px 14px;border-radius:999px;border:1px solid #c8cbd0;background:#fff;color:#121212;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;letter-spacing:.1px}
-.pill.active{background:#121212;color:#fff;border-color:#121212}
-.pill:hover:not(.active){background:#f5f5f5}
+.pc-config-block{display:flex;flex-direction:column;gap:16px;width:100%}
+.pc-props-block{display:flex;flex-direction:column;gap:12px;width:100%}
+.pc-props-label{display:flex;align-items:center;gap:4px;font-size:14px;color:#707173;letter-spacing:-.28px;line-height:1.2}
+.pc-props-label img{width:12px;height:12px;display:block}
+.pc-material-pills{display:flex;flex-wrap:wrap;gap:4px}
+.pill{font-size:14px;padding:16px;border-radius:999px;border:1px solid #c8cbd0;background:#fff;color:#363944;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .15s;letter-spacing:-.28px;line-height:1.2;white-space:nowrap}
+.pill.on{background:#121212;color:#fff;border-color:#121212}
+.pill:hover:not(.on){background:#fafafa}
 
-.pc-swatches-section{display:flex;flex-direction:column;gap:10px}
-.pc-swatches-row{display:flex;gap:8px;align-items:center}
-.swatch-btn{width:60px;height:60px;border-radius:2px;overflow:hidden;border:2px solid transparent;flex-shrink:0;cursor:pointer;transition:border-color .2s;position:relative;padding:0}
-.swatch-btn.active{border-color:#111032;box-shadow:0 0 0 1px #111032}
-.swatch-btn img{width:100%;height:100%;object-fit:cover}
-.swatch-info-overlay{position:absolute;top:4px;right:4px;width:14px;height:14px;background:rgba(255,255,255,.9);border-radius:50%;display:flex;align-items:center;justify-content:center}
-.swatch-more{width:60px;height:60px;border-radius:2px;background:#f0f0f0;border:1px solid #e0e0e0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;color:#707173;cursor:pointer;flex-shrink:0}
-.pc-swatch-label{display:flex;align-items:center;justify-content:space-between}
-.swatch-label-left{display:flex;align-items:center;gap:4px;font-size:14px;font-weight:500;color:#121212}
-.swatch-label-right{display:flex;align-items:center;gap:4px;font-size:12px;color:#4d35ff;cursor:pointer}
-.swatch-label-right span{text-decoration:underline}
+.pc-swatches-block{display:flex;flex-direction:column;gap:12px;width:100%}
+.pc-swatches-row{display:flex;align-items:flex-start;justify-content:space-between;width:100%}
+.swatch-btn{width:66px;height:66px;overflow:hidden;border:none;background:none;padding:0;cursor:pointer;position:relative;flex-shrink:0}
+.swatch-btn img{width:100%;height:100%;object-fit:cover;display:block}
+.swatch-btn.on::after{content:"";position:absolute;inset:0;border:1px solid #000;pointer-events:none}
+.swatch-plus{width:66px;height:66px;background:#f2f2f2;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;padding:0}
+.swatch-plus img{width:32px;height:32px;display:block}
+.pc-swatch-label{display:flex;align-items:center;justify-content:space-between;width:100%}
+.swatch-label-left{display:flex;align-items:center;gap:4px;font-size:14px;font-weight:500;color:#000;letter-spacing:-.28px;background:none;border:none;cursor:pointer;font-family:inherit;padding:0}
+.swatch-label-left img{width:12px;height:12px;display:block}
+.swatch-guide{display:flex;align-items:center;gap:8px;background:#f2f2f2;border-radius:999px;padding:8px 12px 8px 8px;border:none;cursor:pointer;font-family:inherit}
+.swatch-guide img{width:12px;height:12px;display:block}
+.swatch-guide span{font-size:12px;color:#363944;text-decoration:underline;line-height:1.2}
 
-.pc-buttons{display:flex;gap:8px}
-.btn-purple{flex:1;background:#4d35ff;color:#fff;border-radius:9999px;padding:14px 20px;font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s;cursor:pointer}
+.pc-buttons{display:flex;gap:8px;width:100%}
+.btn-purple{flex:1;background:#4d35ff;color:#fff;border-radius:9999px;padding:16px 24px;font-size:16px;font-weight:500;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s;cursor:pointer;border:none;letter-spacing:-.32px;line-height:1.2}
 .btn-purple:hover{background:#3d28cc}
-.btn-outline{flex-shrink:0;background:#fff;color:#363944;border:1.5px solid #363944;border-radius:9999px;padding:14px 20px;font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;cursor:pointer;white-space:nowrap}
+.btn-purple img{width:16px;height:16px;display:block}
+.btn-outline{flex-shrink:0;background:#fff;color:#363944;border:1px solid #363944;border-radius:9999px;padding:16px 24px;font-size:16px;font-weight:500;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s;cursor:pointer;white-space:nowrap;letter-spacing:-.32px;line-height:1.2}
 .btn-outline:hover{background:#f5f5f7}
+.btn-outline img{width:16px;height:16px;display:block}
 
-.pc-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.info-badge{display:flex;align-items:flex-start;gap:10px}
-.badge-icon{width:22px;height:22px;flex-shrink:0;color:#121212;margin-top:1px}
-.badge-label{font-size:12px;color:#707173;letter-spacing:.24px;line-height:1.3}
-.badge-value{font-size:12px;font-weight:600;color:#121212;line-height:1.3}
+.pc-meta-block{display:flex;flex-direction:column;gap:24px;width:100%}
+.pc-divider{height:1px;background:#ececec;width:100%;border:none;margin:0}
+.pc-info-grid{display:flex;flex-direction:column;gap:16px;width:100%}
+.pc-info-row{display:flex;gap:16px;width:100%}
+.info-badge{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
+.badge-icon{width:24px;height:24px;flex-shrink:0}
+.badge-icon img{width:24px;height:24px;display:block}
+.badge-text{font-size:14px;color:#363944;letter-spacing:-.28px;line-height:1.2}
+.badge-text .l1{display:block}
+.badge-text .l2{display:block;font-weight:600;color:#363944}
 
-.pc-promise{background:#feffbe;border-radius:8px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:16px}
-.promise-title{font-size:13px;color:#121212;letter-spacing:.26px;line-height:1.5;flex-shrink:0}
-.promise-items{display:flex;flex-direction:column;gap:7px}
-.promise-item{display:flex;align-items:center;gap:8px;font-size:12px;color:#121212;letter-spacing:.1px}
+.pc-specs{display:grid;grid-template-columns:24px 73px 1fr;column-gap:8px;row-gap:8px;align-items:center;width:100%}
+.pc-specs .sp-icon{width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+.pc-specs .sp-icon svg{width:20px;height:20px;stroke:#363944}
+.pc-specs .sp-k{font-size:14px;color:#363944;letter-spacing:-.28px;line-height:1.2;opacity:.5}
+.pc-specs .sp-v{font-size:14px;font-weight:600;color:#363944;letter-spacing:-.28px;line-height:1.2}
+
+.pc-promise{background:#feffbe;border-radius:8px;padding:16px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;width:100%}
+.promise-title{font-size:13px;color:#000;line-height:1.2;flex-shrink:0}
+.promise-items{display:flex;flex-direction:column;gap:8px}
+.promise-item{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:500;color:#000;letter-spacing:-.32px;line-height:1.2;white-space:nowrap}
+.promise-item img{width:16px;height:16px;display:block;flex-shrink:0}
 
 /* ── Hero thumbnail strip ──────────────────────────────── */
 #hero-thumbnails{position:absolute;top:719px;left:calc(12.5% + 135px);z-index:8;background:#fff;border-radius:12px;padding:8px;display:flex;gap:4px;align-items:center;box-shadow:0 2px 12px rgba(0,0,0,.12)}
@@ -272,7 +304,7 @@ img{display:block}
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
     <a href="#">Canapele</a>
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-    <span style="color:#121212">Boston Sofa</span>
+    <span style="color:#121212">Canapea Boston</span>
   </div>
 
   <!-- Carousel -->
@@ -297,166 +329,147 @@ img{display:block}
   <!-- ─── PRODUCT CARD ──────────────────────── -->
   <div id="product-card">
 
-    <!-- Title + icons -->
-    <div class="pc-title-row">
-      <span class="pc-title">Canapea Colecția Boston</span>
-      <div class="pc-icons-row">
-        <button class="pc-icon-btn" title="Distribuie">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-        </button>
-        <button class="pc-icon-btn" title="Salvează">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-        </button>
-      </div>
-    </div>
-
-    <!-- Rating -->
-    <div class="pc-rating">
-      <div class="pc-stars">
-        <svg class="star-icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg class="star-icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg class="star-icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg class="star-icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg class="star-icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-      </div>
-      <span class="pc-rating-score">4.9/5</span>
-      <span class="pc-rating-count">21 recenzii</span>
-    </div>
-
-    <!-- Price -->
-    <div>
-      <div class="pc-price-row1">
-        <span class="pc-old-price">4.745,00 lei</span>
-        <span class="pc-discount">-20%</span>
-      </div>
-      <div class="pc-current-price">4.271,00 lei</div>
-    </div>
-
-    <!-- Sofa type selector -->
-    <div class="pc-type-selector">
-      <img class="pc-type-thumb" src="https://www.figma.com/api/mcp/asset/02610d7e-0c1c-437a-a17a-52e01a25ddc6" alt="3 locuri">
-      <div class="pc-type-info">
-        <div class="pc-type-name">Canapea cu 3 locuri</div>
-        <div class="pc-type-dims">245 × 100 cm</div>
-      </div>
-      <div class="pc-type-chevron">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-      </div>
-    </div>
-
-    <!-- Material pills -->
-    <div class="pc-material-pills">
-      <button class="pill active" onclick="selectPill(this)">Fibre naturale</button>
-      <button class="pill" onclick="selectPill(this)">Piele</button>
-      <button class="pill" onclick="selectPill(this)">Catifea</button>
-      <button class="pill" onclick="selectPill(this)">Cord</button>
-      <button class="pill" onclick="selectPill(this)">Melanj</button>
-      <button class="pill" onclick="selectPill(this)">Stofă buclată</button>
-    </div>
-
-    <!-- Swatches -->
-    <div class="pc-swatches-section">
-      <div class="pc-swatches-row">
-        <button class="swatch-btn" onclick="selectSwatch(this,'Luna 21')" title="Luna 21">
-          <img src="https://www.figma.com/api/mcp/asset/b9a95d93-166e-4ee5-87c1-f33a4df74bfb" alt="Luna 21">
-        </button>
-        <button class="swatch-btn" onclick="selectSwatch(this,'Luna 34')" title="Luna 34">
-          <img src="https://www.figma.com/api/mcp/asset/4a955a1a-ebc9-464a-95e5-2382d933faf2" alt="Luna 34">
-        </button>
-        <button class="swatch-btn active" onclick="selectSwatch(this,'Passion Grey')" title="Passion Grey">
-          <img src="https://www.figma.com/api/mcp/asset/cd1efc0f-b361-4875-af5e-bf379e793eb1" alt="Luna 08">
-          <div class="swatch-info-overlay">
-            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <div class="pc-block">
+      <div class="pc-head">
+        <div class="pc-tag-row">
+          <span class="pc-tag">CONFIGURABILA</span>
+          <div class="pc-icons-row">
+            <button class="pc-icon-btn" title="Distribuie" aria-label="Distribuie"><img src="assets/desktop/share.svg" alt=""></button>
+            <button class="pc-icon-btn" title="Favorite" aria-label="Favorite"><img src="assets/desktop/heart.svg" alt=""></button>
           </div>
-        </button>
-        <button class="swatch-btn" onclick="selectSwatch(this,'Luna 36')" title="Luna 36">
-          <img src="https://www.figma.com/api/mcp/asset/d7b88457-fcf7-44a7-91b6-83c5b722d382" alt="Luna 36">
-        </button>
-        <button class="swatch-btn" onclick="selectSwatch(this,'Manila 02')" title="Manila 02">
-          <img src="https://www.figma.com/api/mcp/asset/3fa25a0c-45ef-4eef-9073-f76ed2d50acb" alt="Manila 02">
-        </button>
-        <div class="swatch-more">+50</div>
-      </div>
-      <div class="pc-swatch-label">
-        <div class="swatch-label-left">
-          <span id="swatch-name">Passion Grey</span>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#707173" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         </div>
-        <div class="swatch-label-right">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="2"><circle cx="9" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="15" cy="12" r="1"/></svg>
-          <span>Vezi ghidul de țesături</span>
+
+        <div class="pc-title-block">
+          <h1 class="pc-title">Canapea Colecția Boston</h1>
+          <p class="pc-desc">Canapea cu 3 locuri – extensibila, modulara<br>si cu spatiu de depozitare.</p>
+        </div>
+
+        <div class="pc-rating">
+          <div class="pc-stars">
+            <svg class="star-icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg class="star-icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg class="star-icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg class="star-icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg class="star-icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <span class="pc-rating-score">4.9/5</span>
+          <a class="pc-rating-count" href="#reviews">180 reviews</a>
+        </div>
+      </div>
+
+      <div class="pc-price-block">
+        <div class="pc-old-price">4.745,00 lei</div>
+        <div class="pc-price-row">
+          <div class="pc-current-price">4.271,<sup>00</sup> lei</div>
+          <span class="pc-discount-badge">-383 lei</span>
         </div>
       </div>
     </div>
 
-    <!-- CTA buttons -->
+    <div class="pc-type-wrap">
+      <button class="pc-type-selector" type="button">
+        <span class="pc-type-inner">
+          <img class="pc-type-thumb" src="assets/desktop/type-thumb.png" alt="Canapea cu 3 locuri">
+          <span class="pc-type-info">
+            <span class="pc-type-name">Canapea cu 3 locuri</span>
+            <span class="pc-type-dims">245 x 100 cm</span>
+          </span>
+        </span>
+        <span class="pc-type-chevron"><img src="assets/desktop/chevron-right.svg" alt=""></span>
+      </button>
+    </div>
+
+    <div class="pc-config-block">
+      <div class="pc-props-block">
+        <div class="pc-props-label">
+          Alege din proprietatile speciale
+          <img src="assets/info.svg" alt="">
+        </div>
+        <div class="pc-material-pills">
+          <button class="pill" onclick="selectPill(this)">Impermeabil</button>
+          <button class="pill on" onclick="selectPill(this)">Easy Clean</button>
+          <button class="pill" onclick="selectPill(this)">Pet-Friendly</button>
+          <button class="pill" onclick="selectPill(this)">Piele sensibila</button>
+          <button class="pill" onclick="selectPill(this)">Standard</button>
+        </div>
+      </div>
+
+      <div class="pc-swatches-block">
+        <div class="pc-swatches-row">
+          <button class="swatch-btn on" onclick="selectSwatch(this,'Luna 8')" title="Luna 8"><img src="assets/desktop/luna-8.png" alt="Luna 8"></button>
+          <button class="swatch-btn" onclick="selectSwatch(this,'Luna 9')" title="Luna 9"><img src="assets/desktop/luna-9.png" alt="Luna 9"></button>
+          <button class="swatch-btn" onclick="selectSwatch(this,'Luna 14')" title="Luna 14"><img src="assets/desktop/luna-14.png" alt="Luna 14"></button>
+          <button class="swatch-btn" onclick="selectSwatch(this,'Luna 34')" title="Luna 34"><img src="assets/desktop/luna-34.png" alt="Luna 34"></button>
+          <button class="swatch-btn" onclick="selectSwatch(this,'Luna 22')" title="Luna 22"><img src="assets/desktop/luna-22.png" alt="Luna 22"></button>
+          <button class="swatch-plus" type="button" aria-label="Mai multe materiale"><img src="assets/desktop/plus.svg" alt=""></button>
+        </div>
+        <div class="pc-swatch-label">
+          <button class="swatch-label-left" type="button">
+            <span id="swatch-name">Luna 8</span>
+            <img src="assets/info.svg" alt="">
+          </button>
+          <button class="swatch-guide" type="button">
+            <img src="assets/desktop/grip.svg" alt="">
+            <span>Vezi ghidul de țesături</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div class="pc-buttons">
-      <button class="btn-purple">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <button class="btn-purple" type="button">
+        <img src="assets/desktop/cart.svg" alt="">
         Adaugă în coș
       </button>
-      <button class="btn-outline">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.42C1.6 2.3 2.4 1.39 3.5 1.38h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l1.69-1.69a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      <button class="btn-outline" type="button">
+        <img src="assets/desktop/phone.svg" alt="">
         Sună-ne
       </button>
     </div>
 
-    <!-- Info grid 2×2 -->
-    <div class="pc-info-grid">
-      <div class="info-badge">
-        <div class="badge-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="22" height="22"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+    <div class="pc-meta-block">
+      <hr class="pc-divider">
+      <div class="pc-info-grid">
+        <div class="pc-info-row">
+          <div class="info-badge">
+            <div class="badge-icon"><img src="assets/desktop/sofa.svg" alt=""></div>
+            <div class="badge-text"><span class="l1">Durată producție</span><span class="l2">6 săptămâni</span></div>
+          </div>
+          <div class="info-badge">
+            <div class="badge-icon"><img src="assets/desktop/car.svg" alt=""></div>
+            <div class="badge-text"><span class="l1">Transport gratuit</span><span class="l2">12 – 23 iulie</span></div>
+          </div>
         </div>
-        <div>
-          <div class="badge-label">Durată producție</div>
-          <div class="badge-value">6 săptămâni</div>
-        </div>
-      </div>
-      <div class="info-badge">
-        <div class="badge-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="22" height="22"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-        </div>
-        <div>
-          <div class="badge-label">Transport gratuit</div>
-          <div class="badge-value">12 - 23 iulie</div>
-        </div>
-      </div>
-      <div class="info-badge">
-        <div class="badge-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="22" height="22"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
-        </div>
-        <div>
-          <div class="badge-label">Retur</div>
-          <div class="badge-value">Gratuit în 14 zile</div>
+        <div class="pc-info-row">
+          <div class="info-badge">
+            <div class="badge-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#363944" stroke-width="1.5"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+            </div>
+            <div class="badge-text"><span class="l1">Retur</span><span class="l2">Gratuit în 14 zile</span></div>
+          </div>
+          <div class="info-badge">
+            <div class="badge-icon"><img src="assets/desktop/hand.svg" alt=""></div>
+            <div class="badge-text"><span class="l1">Produs în</span><span class="l2">România</span></div>
+          </div>
         </div>
       </div>
-      <div class="info-badge">
-        <div class="badge-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="22" height="22"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
-        </div>
-        <div>
-          <div class="badge-label">Produs în</div>
-          <div class="badge-value">România</div>
-        </div>
+      <hr class="pc-divider">
+      <div class="pc-specs">
+        <div class="sp-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
+        <span class="sp-k">Dimensiuni:</span><span class="sp-v">245 × 100 × 68cm</span>
+        <div class="sp-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M5 9V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2"/><line x1="5" y1="21" x2="5" y2="17"/><line x1="19" y1="21" x2="19" y2="17"/></svg></div>
+        <span class="sp-k">Extensibil:</span><span class="sp-v">150 × 210cm</span>
+        <div class="sp-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div>
+        <span class="sp-k">Culoare:</span><span class="sp-v" id="spec-color">Luna 08</span>
       </div>
     </div>
 
-    <!-- Promisiunea noastră -->
     <div class="pc-promise">
       <div class="promise-title">Promisiunea<br>noastră</div>
       <div class="promise-items">
-        <div class="promise-item">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-          <span>10 ani garanție structurală</span>
-        </div>
-        <div class="promise-item">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
-          <span>Fabricat în România</span>
-        </div>
-        <div class="promise-item">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-          <span>Retur gratuit 14 zile</span>
-        </div>
+        <div class="promise-item"><img src="assets/desktop/shield.svg" alt="">10 ani garanție structurală</div>
+        <div class="promise-item"><img src="assets/desktop/hand-promise.svg" alt="">Fabricat în România</div>
+        <div class="promise-item"><img src="assets/desktop/send.svg" alt="">Retur gratuit 14 zile</div>
       </div>
     </div>
 
@@ -844,15 +857,16 @@ setInterval(function() { heroNav(1); }, 5500);
 
 // ── Material pills ────────────────────────────
 function selectPill(el) {
-  el.closest('.pc-material-pills').querySelectorAll('.pill').forEach(function(p) { p.classList.remove('active'); });
-  el.classList.add('active');
+  el.closest('.pc-material-pills').querySelectorAll('.pill').forEach(function(p) { p.classList.remove('on'); });
+  el.classList.add('on');
 }
 
 // ── Swatches ──────────────────────────────────
 function selectSwatch(el, name) {
-  el.closest('.pc-swatches-row').querySelectorAll('.swatch-btn').forEach(function(s) { s.classList.remove('active'); });
-  el.classList.add('active');
+  el.closest('.pc-swatches-row').querySelectorAll('.swatch-btn').forEach(function(s) { s.classList.remove('on'); });
+  el.classList.add('on');
   document.getElementById('swatch-name').textContent = name;
+  document.getElementById('spec-color').textContent = name.replace(/^Luna (\d)$/, 'Luna 0$1');
 }
 
 // ── Deep Dive tabs ────────────────────────────
