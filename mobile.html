@@ -309,6 +309,7 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
 .chiprow{display:flex;flex-wrap:wrap;gap:8px}
 .fchip{display:flex;align-items:center;gap:7px;background:var(--chipbg);border-radius:8px;height:30px;padding:0 10px;font-size:13px}
 .fchip .csq{width:16px;height:16px;border-radius:3px}
+.fchip-more{display:flex;align-items:center;height:30px;font-size:13px;text-decoration:underline;color:var(--ink);white-space:nowrap}
 .mv-tabs{display:flex;margin-top:16px;border-bottom:1px solid var(--hair)}
 .mv-tab{flex:1;text-align:center;padding:6px 0 12px;position:relative;color:var(--gray2)}
 .mv-tab .a{font-size:15px;font-weight:600;display:block}
@@ -1799,6 +1800,43 @@ function renderChips(){
   document.getElementById('fs-chips').innerHTML = filters.map(function(f){ return chipHTML(f, 'rmFilter'); }).join('');
   document.getElementById('fcount').textContent = applied.length;
   applyGridFilters();
+  collapseChipRow();
+}
+/* ── Applied-filter chip row: collapse past 2 rows behind a "+N alte" link ── */
+function collapseChipRow(){
+  var wrap = document.getElementById('mv-chips');
+  var existingMore = wrap.querySelector('.fchip-more');
+  if (existingMore) existingMore.remove();
+  var chips = Array.prototype.slice.call(wrap.querySelectorAll('.fchip'));
+  chips.forEach(function(c){ c.style.display = ''; });
+  if (!chips.length) return;
+  var rows = [];
+  chips.forEach(function(c){
+    var top = c.offsetTop;
+    var row = rows.filter(function(r){ return Math.abs(r.top - top) < 2; })[0];
+    if (!row) { row = { top: top, chips: [] }; rows.push(row); }
+    row.chips.push(c);
+  });
+  if (rows.length <= 2) return;
+  var hidden = [];
+  for (var i = 2; i < rows.length; i++) hidden = hidden.concat(rows[i].chips);
+  hidden.forEach(function(c){ c.style.display = 'none'; });
+  var more = document.createElement('button');
+  more.type = 'button';
+  more.className = 'fchip-more';
+  more.textContent = '+' + hidden.length + ' alte';
+  more.onclick = expandChipRow;
+  wrap.appendChild(more);
+  if (more.offsetTop > rows[1].top + 2) {
+    var last = rows[1].chips[rows[1].chips.length - 1];
+    if (last) { last.style.display = 'none'; hidden.unshift(last); more.textContent = '+' + hidden.length + ' alte'; }
+  }
+}
+function expandChipRow(){
+  var wrap = document.getElementById('mv-chips');
+  wrap.querySelectorAll('.fchip').forEach(function(c){ c.style.display = ''; });
+  var more = wrap.querySelector('.fchip-more');
+  if (more) more.remove();
 }
 function rmApplied(f){ applied = applied.filter(function(x){ return x !== f; }); renderChips(); }
 function rmFilter(f){
