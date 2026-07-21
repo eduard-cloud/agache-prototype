@@ -180,6 +180,22 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
 #deep .dspecs{margin-top:48px;display:flex;flex-direction:column;gap:16px;font-size:16px;font-weight:500;letter-spacing:-.32px;line-height:1.2}
 .dpanel{display:none}.dpanel.on{display:block}
 
+/* comfort metrics */
+#comfort{padding:56px 0}
+#comfort h2{font-size:26px;font-weight:600;letter-spacing:-.52px;line-height:1.15;text-align:center;padding:0 24px}
+.cf-grid{display:flex;flex-direction:column;gap:36px;margin-top:40px;padding:0 32px}
+.cf-item{text-align:center}
+.cf-title{font-size:13px;font-weight:600;letter-spacing:.2px;text-transform:uppercase}
+.cf-desc{font-size:14px;color:#363944;letter-spacing:-.1px;line-height:1.35;margin-top:6px}
+.cf-scale{max-width:230px;margin:16px auto 0}
+.cf-dashes{display:flex;gap:8px}
+.cf-dash{flex:1;height:3px;border-radius:2px;background:var(--hair)}
+.cf-dash.on{background:var(--ink)}
+.cf-track{position:relative;height:2px;background:var(--hair);border-radius:2px}
+.cf-seg{position:absolute;top:-1px;height:4px;background:var(--ink);border-radius:1px}
+.cf-tick{position:absolute;top:-5px;width:2px;height:12px;background:var(--ink)}
+.cf-endlabels{display:flex;justify-content:space-between;margin-top:10px;font-size:13px;font-weight:600;letter-spacing:-.1px}
+
 /* video */
 #vidsec{position:relative;height:320px;background:#111;overflow:hidden}
 #vidsec video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -260,6 +276,18 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
 #recent .pcard,#locs .pcard{flex:0 0 160px;scroll-snap-align:start}
 #locs{padding:80px 0 40px}
 #locs .pcard .n{font-size:14px}
+
+/* ══════════ Shape (forma) view ══════════ */
+.shape-head{display:flex;align-items:center;justify-content:space-between;padding:24px 20px 4px}
+.shape-title{font-size:24px;font-weight:600;letter-spacing:-.4px}
+.shape-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px 14px;padding:24px 20px 32px}
+.stile{display:flex;flex-direction:column;align-items:stretch;text-align:left}
+.stile .simg{width:100%;aspect-ratio:1/1;border-radius:2px;border:1px solid transparent;overflow:hidden;display:flex;align-items:center;justify-content:center;transition:border-color .15s}
+.stile .simg img{width:100%;height:100%;object-fit:contain}
+.stile.on .simg{border-color:var(--ink)}
+.stile .stx{margin-top:12px}
+.stile .sn{font-size:13px;font-weight:400;letter-spacing:-.2px;line-height:1.3;display:block}
+.stile .sd{font-size:12px;color:var(--gray);margin-top:4px;display:block}
 
 /* ══════════ Materials view ══════════ */
 #mv-top{position:relative;padding-top:32px}
@@ -517,9 +545,9 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
   </div>
 
   <!-- Type selector -->
-  <button id="typesel" onclick="pressFeedback(this)">
+  <button id="typesel" onclick="pressFeedback(this);openView('shape')">
     <span class="t-i-wrap">
-      <img src="assets/type-thumb.png" alt="Canapea cu 3 locuri">
+      <img id="typesel-img" src="assets/shape-3seat.jpg" alt="Canapea cu 3 locuri">
       <span class="t-i">
         <span class="t-n">Canapea cu 3 locuri</span>
         <span class="t-d" style="display:block">245 x 100 cm</span>
@@ -763,6 +791,58 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
           <div>Garanție mecanisme: 3 ani</div>
           <div>Garanție tapițerie: 2 ani</div>
           <div>Service la domiciliu: Gratuit</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comfort metrics -->
+  <div id="comfort">
+    <h2>Gândită pentru un confort desăvârșit</h2>
+    <div class="cf-grid">
+      <div class="cf-item">
+        <div class="cf-title">Duritatea șezutului</div>
+        <div class="cf-desc">Cât de moi sau ferme sunt pernele?</div>
+        <div class="cf-scale">
+          <div class="cf-dashes">
+            <div class="cf-dash"></div>
+            <div class="cf-dash"></div>
+            <div class="cf-dash"></div>
+            <div class="cf-dash"></div>
+            <div class="cf-dash on"></div>
+          </div>
+          <div class="cf-endlabels"><span>Moale</span><span>Ferm</span></div>
+        </div>
+      </div>
+
+      <div class="cf-item">
+        <div class="cf-title">Adâncimi multiple de șezut</div>
+        <div class="cf-desc">Adâncime șezut 70 cm și adâncime totală 85 cm.</div>
+        <div class="cf-scale">
+          <div class="cf-track">
+            <div class="cf-seg" style="left:36%;width:16%"></div>
+            <div class="cf-seg" style="left:56%;width:16%"></div>
+            <div class="cf-tick" style="left:36%"></div>
+            <div class="cf-tick" style="left:52%"></div>
+            <div class="cf-tick" style="left:56%"></div>
+            <div class="cf-tick" style="left:72%"></div>
+          </div>
+          <div class="cf-endlabels"><span>Redusă</span><span>Mare</span></div>
+        </div>
+      </div>
+
+      <div class="cf-item">
+        <div class="cf-title">Înălțimea șezutului</div>
+        <div class="cf-desc">Șezutul se află la 44 cm față de sol.</div>
+        <div class="cf-scale">
+          <div class="cf-dashes">
+            <div class="cf-dash"></div>
+            <div class="cf-dash"></div>
+            <div class="cf-dash"></div>
+            <div class="cf-dash on"></div>
+            <div class="cf-dash"></div>
+          </div>
+          <div class="cf-endlabels"><span>Redusă</span><span>Înaltă</span></div>
         </div>
       </div>
     </div>
@@ -1041,6 +1121,32 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
   </div>
   <div class="mt-h">Întretinere</div>
   <div class="mt-p" id="cv-care">Aspirați regulat cu o perie moale și ștergeți imediat petele cu o cârpă curată și uscată, fără a freca. Folosiți doar produse de curățare delicate, pe bază de apă, și evitați expunerea directă la soare pentru a preveni decolorarea. Se recomandă curățarea profesională o dată pe an pentru a menține textura și culoarea țesăturii.</div>
+</div>
+
+<!-- ══════════ Shape (forma) view ══════════ -->
+<div class="view" id="view-shape">
+  <div class="shape-head">
+    <span class="shape-title">Alege forma dorită</span>
+    <button class="circ-btn" onclick="closeView('shape')" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="shape-grid" id="shape-grid">
+    <button class="stile on" data-name="Canapea 3 locuri" data-dim="245 x 100 cm" onclick="pickShape(this)">
+      <span class="simg"><img src="assets/shape-3seat.jpg" alt="Canapea 3 locuri"></span>
+      <span class="stx"><span class="sn">Canapea 3 locuri</span><span class="sd">245 x 100 cm</span></span>
+    </button>
+    <button class="stile" data-name="Coltar 2 locuri cu insula pe stanga" data-dim="255 x 170 cm" onclick="pickShape(this)">
+      <span class="simg"><img src="assets/shape-corner-left.jpg" alt="Coltar 2 locuri cu insula pe stanga"></span>
+      <span class="stx"><span class="sn">Coltar 2 locuri cu insula pe stanga</span><span class="sd">255 x 170 cm</span></span>
+    </button>
+    <button class="stile" data-name="Coltar 2 locuri cu insula pe dreapta" data-dim="255 x 170 cm" onclick="pickShape(this)">
+      <span class="simg"><img src="assets/shape-corner-right.jpg" alt="Coltar 2 locuri cu insula pe dreapta"></span>
+      <span class="stx"><span class="sn">Coltar 2 locuri cu insula pe dreapta</span><span class="sd">255 x 170 cm</span></span>
+    </button>
+    <button class="stile" data-name="Coltar 4 locuri" data-dim="255 x 255 cm" onclick="pickShape(this)">
+      <span class="simg"><img src="assets/shape-corner-4seat.jpg" alt="Coltar 4 locuri"></span>
+      <span class="stx"><span class="sn">Coltar 4 locuri</span><span class="sd">255 x 255 cm</span></span>
+    </button>
+  </div>
 </div>
 
 <!-- ══════════ Filter sheet ══════════ -->
@@ -1915,6 +2021,15 @@ function addToCart(btn){
   btn.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg> Adăugat în coș';
   toast('Produsul a fost adăugat în coș');
   setTimeout(function(){ btn.innerHTML = orig; }, 1800);
+}
+function pickShape(el){
+  document.querySelectorAll('#shape-grid .stile').forEach(function(t){ t.classList.remove('on'); });
+  el.classList.add('on');
+  document.querySelector('#typesel .t-n').textContent = el.dataset.name;
+  document.querySelector('#typesel .t-d').textContent = el.dataset.dim;
+  document.getElementById('typesel-img').src = el.querySelector('img').src;
+  document.getElementById('typesel-img').alt = el.dataset.name;
+  closeView('shape');
 }
 function pressFeedback(el){
   el.style.transition = 'transform .1s'; el.style.transform = 'scale(.97)';
