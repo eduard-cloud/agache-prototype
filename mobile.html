@@ -356,6 +356,7 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
 
 /* ══════════ Collection view ══════════ */
 #view-collection{z-index:106} /* must outrank #samplesmodal (105) so its info icon can open the collection view on top of the sheet */
+#view-swatch{z-index:106}
 .st-hero{position:relative;height:373px}
 .st-hero img{width:100%;height:100%;object-fit:cover}
 .st-back{position:absolute;left:20px;top:32px;width:32px;height:32px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;z-index:2}
@@ -1160,6 +1161,50 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
   <div class="mt-p" id="cv-care">Aspirați regulat cu o perie moale și ștergeți imediat petele cu o cârpă curată și uscată, fără a freca. Folosiți doar produse de curățare delicate, pe bază de apă, și evitați expunerea directă la soare pentru a preveni decolorarea. Se recomandă curățarea profesională o dată pe an pentru a menține textura și culoarea țesăturii.</div>
 </div>
 
+<!-- ══════════ Individual swatch view (materials grid → info icon) ══════════ -->
+<div class="view" id="view-swatch">
+  <div class="st-hero">
+    <img src="assets/modal-hero.png" alt="" id="vsw-img">
+    <button class="st-back" onclick="closeView('swatch')" aria-label="Înapoi"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
+  </div>
+  <div class="st-body">
+    <div class="st-title-row"><span class="st-title" id="vsw-name">Luna 08</span><span class="st-sub" id="vsw-sub">bej deschis</span></div>
+    <div class="st-desc" id="vsw-desc">Material cu textură plăcută și elastică, realizat dintr-o țesătură tricotată durabilă, concepută pentru mobilier utilizat frecvent.</div>
+    <button class="st-chip" onclick="openSamplesModal()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+      <span>Comanda mostrar gratis</span>
+    </button>
+  </div>
+  <div class="yl-band">
+    <div class="c" id="vsw-usp1"></div>
+    <div class="c" id="vsw-usp2"></div>
+    <div class="c" id="vsw-usp3"></div>
+  </div>
+  <div class="rz-head"><span class="t">Rezistență generala</span><span class="s" id="vsw-score">4.7<i>/5</i></span></div>
+  <div>
+    <div class="rz-row"><span class="k">Martindale<em>test abraziune</em></span><span class="vv"><span class="v" id="vsw-mart-v">90.000</span><span class="bar"><i id="vsw-mart-bar" style="width:95%"></i></span></span></div>
+    <div class="rz-row"><span class="k">MACE<em>test agățare</em></span><span class="vv"><span class="v" id="vsw-mace-v">5<i>/5</i></span><span class="bar"><i id="vsw-mace-bar" style="width:100%"></i></span></span></div>
+    <div class="rz-row"><span class="k">Rezistenta culoare<em>la frecare</em></span><span class="vv"><span class="v" id="vsw-rub-v">4.5<i>/5</i></span><span class="bar"><i id="vsw-rub-bar" style="width:90%"></i></span></span></div>
+    <div class="rz-row"><span class="k">Rezistenta culoare<em>la lumina</em></span><span class="vv"><span class="v" id="vsw-light-v">4<i>/5</i></span><span class="bar"><i id="vsw-light-bar" style="width:80%"></i></span></span></div>
+    <div class="rz-row" style="border-bottom:none"><span class="k">Pilling<em>scamosare</em></span><span class="vv"><span class="v" id="vsw-pill-v">4<i>/5</i></span><span class="bar"><i id="vsw-pill-bar" style="width:80%"></i></span></span></div>
+  </div>
+  <button class="see-more" onclick="pressFeedback(this)">Vezi mai multe
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+  </button>
+  <div class="ft-h">Features</div>
+  <div>
+    <div class="ft-row"><span class="k">Certificari</span><span class="v" id="vsw-cert">OEKO-TEX®</span></div>
+    <div class="ft-row"><span class="k">Maintenance</span><span class="v" id="vsw-maint">Ușor de întreținut</span></div>
+    <div class="ft-row"><span class="k">Compozitie</span><span class="v" id="vsw-comp">100% poliester</span></div>
+    <div class="ft-row"><span class="k">Culoare</span><span class="v" id="vsw-color">bej</span></div>
+    <div class="ft-row"><span class="k">Greutate (g/m²)</span><span class="v" id="vsw-weight">350 – 390</span></div>
+    <div class="ft-row"><span class="k">Rezistență la foc</span><span class="v" id="vsw-fire">BS 5852: Partea 1: 1979<br>sursa 0 (țigară)</span></div>
+    <div class="ft-row" style="border-bottom:none"><span class="k">Lățime rolă</span><span class="v" id="vsw-width">145 cm</span></div>
+  </div>
+  <div class="mt-h">Întretinere</div>
+  <div class="mt-p" id="vsw-care">Aspirați regulat cu o perie moale și ștergeți imediat petele cu o cârpă curată și uscată, fără a freca. Folosiți doar produse de curățare delicate, pe bază de apă, și evitați expunerea directă la soare pentru a preveni decolorarea. Se recomandă curățarea profesională o dată pe an pentru a menține textura și culoarea țesăturii.</div>
+</div>
+
 <!-- ══════════ Shape (forma) view ══════════ -->
 <div class="view" id="view-shape">
   <div class="shape-head">
@@ -1769,7 +1814,7 @@ function renderMaterialsGrid(){
         '<div class="imw"><img src="' + fabricAsset(name) + '" alt="' + name + '">' +
         '<button class="mtile-heart' + (isLiked(name) ? ' on' : '') + '" data-name="' + name + '" onclick="event.stopPropagation();toggleHeart(this,\'' + name + '\')" aria-label="Salvează ' + name + '">' + heartSVG() + '</button></div>' +
         '<div class="lr"><span class="nm">' + name + '</span>' +
-        '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" onclick="event.stopPropagation();openModalNamed(\'' + name + '\')"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>';
+        '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" onclick="event.stopPropagation();openSwatchView(\'' + name + '\')"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>';
     }).join('');
     wrap.insertAdjacentHTML('beforeend',
       '<div class="collection-section" data-slug="' + slug + '">' +
@@ -2082,6 +2127,20 @@ function renderSwatchModal(name){
   document.getElementById('mslide1').src = fabricAsset(name);
   document.getElementById('sm-color').textContent = s ? s.hex : '—';
   fillCollectionText('sm', c);
+}
+/* Full-screen swatch view, opened from the materials grid's info icon (slides in from the right, back arrow) — the PDP swatch selector keeps the bottom-sheet #smodal via openModal()/openModalNamed() above */
+function renderSwatchView(name){
+  var s = SWATCH_INDEX[name];
+  var c = s ? s.collection : COLLECTIONS.luna;
+  document.getElementById('vsw-name').textContent = name;
+  document.getElementById('vsw-sub').textContent = s ? nearestColorName(s.hex) : '';
+  document.getElementById('vsw-img').src = fabricAsset(name);
+  document.getElementById('vsw-color').textContent = s ? s.hex : '—';
+  fillCollectionText('vsw', c);
+}
+function openSwatchView(name){
+  renderSwatchView(name);
+  openView('swatch');
 }
 function openModalNamed(name){
   document.getElementById('smod-name').textContent = name;
