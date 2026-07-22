@@ -1668,7 +1668,7 @@ function openView(name){
   if (name === 'materials') setTimeout(maybeShowHeartTip, 500);
 }
 function maybeShowHeartTip(){
-  if (localStorage.getItem('ht_seen')) return;
+  if (sessionStorage.getItem('ht_seen')) return;
   requestAnimationFrame(function(){
     document.getElementById('mv-hearttip').classList.add('on');
     document.getElementById('mv-ht-dim').classList.add('on');
@@ -1677,7 +1677,7 @@ function maybeShowHeartTip(){
 function closeHeartTip(){
   document.getElementById('mv-hearttip').classList.remove('on');
   document.getElementById('mv-ht-dim').classList.remove('on');
-  localStorage.setItem('ht_seen', '1');
+  sessionStorage.setItem('ht_seen', '1');
 }
 (function(){
   var sheet = document.getElementById('mv-hearttip');
