@@ -339,11 +339,15 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
 #mv-sticky .pr{font-size:15px;font-weight:700;margin-top:2px}
 #mv-sticky .pr s{font-size:13px;font-weight:400;color:var(--gray2);margin-left:6px}
 #mv-sticky .bb{height:44px;background:#000;color:#fff;border-radius:22px;padding:0 18px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:8px}
-#mv-hearttip{position:absolute;left:12px;right:12px;bottom:0;z-index:6;background:#fff;border-radius:14px;box-shadow:0 6px 24px rgba(0,0,0,.16);padding:14px;display:flex;align-items:flex-start;gap:10px;transform:translateY(140%);transition:transform .35s cubic-bezier(.32,.72,.35,1)}
+#mv-ht-dim{position:absolute;inset:0;z-index:5;background:rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:opacity .3s}
+#mv-ht-dim.on{opacity:1;pointer-events:auto}
+#mv-hearttip{position:absolute;left:0;right:0;bottom:0;z-index:6;background:#fff;border-radius:24px 24px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.14);padding:12px 28px 32px;display:flex;flex-direction:column;align-items:center;text-align:center;transform:translateY(105%);transition:transform .4s cubic-bezier(.32,.72,.35,1)}
 #mv-hearttip.on{transform:translateY(0)}
-#mv-hearttip .mv-ht-icon{flex:0 0 32px;width:32px;height:32px;border-radius:50%;background:var(--chipbg);display:flex;align-items:center;justify-content:center}
-#mv-hearttip .mv-ht-text{flex:1;font-size:13px;line-height:1.4;color:var(--ink);padding-top:5px}
-#mv-hearttip .mv-ht-close{flex:0 0 auto;width:22px;height:22px;margin-top:2px;display:flex;align-items:center;justify-content:center}
+.mv-ht-handle{width:36px;height:4px;border-radius:2px;background:#d9dbe0;margin-bottom:24px}
+.mv-ht-icon{width:56px;height:56px;border-radius:50%;background:var(--chipbg);display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.mv-ht-title{font-size:19px;font-weight:600;letter-spacing:-.4px;margin-bottom:8px}
+.mv-ht-text{font-size:15px;line-height:1.45;color:var(--gray);max-width:290px;margin-bottom:24px}
+.mv-ht-cta{width:100%;height:50px;background:#000;color:#fff;border-radius:9999px;font-size:16px;font-weight:500}
 
 /* ══════════ Collection view ══════════ */
 #view-collection{z-index:106} /* must outrank #samplesmodal (105) so its info icon can open the collection view on top of the sheet */
@@ -1098,10 +1102,13 @@ h1{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-t
     </button>
   </div>
 
+  <div id="mv-ht-dim" onclick="closeHeartTip()"></div>
   <div id="mv-hearttip">
-    <span class="mv-ht-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.54985 0.025936C4.26768 -0.0459082 4.99245 0.0316079 5.67808 0.257226L5.71905 0.270461L5.75749 0.289997C6.15453 0.492295 6.48603 0.799848 6.71796 1.17797L6.81123 1.34371L6.83014 1.38215L6.84401 1.42249C7.07088 2.11447 7.14841 2.84614 7.07341 3.5697V12.4286C7.14904 13.1534 7.07152 13.8857 6.84401 14.5776L6.83014 14.6179L6.81123 14.6564C6.57994 15.1101 6.21125 15.4788 5.75749 15.7101L5.71905 15.729L5.67808 15.7429C4.99239 15.9685 4.26762 16.046 3.54986 15.9735C2.83266 16.0454 2.10789 15.9678 1.42276 15.7429L1.38179 15.729L1.34398 15.7101C0.890211 15.4788 0.520889 15.1101 0.290238 14.6564L0.270071 14.6179L0.257466 14.5776C0.0299455 13.885 -0.0475619 13.1533 0.0280579 12.4286V3.5697C-0.04757 2.84621 0.0299486 2.11453 0.257466 1.42249L0.270071 1.38215L0.290238 1.34371C0.520905 0.889954 0.890227 0.520642 1.34398 0.289997L1.38179 0.270461L1.42276 0.257226C2.10782 0.031615 2.83259 -0.0459066 3.54985 0.025936ZM5.28748 1.30086C4.74673 1.12944 4.17638 1.07271 3.61294 1.13637L3.55054 1.14394L3.48815 1.13637C2.92472 1.07272 2.35374 1.12944 1.81296 1.30086C1.59743 1.41934 1.4197 1.59705 1.30121 1.81259C1.12979 2.35333 1.07306 2.92429 1.13673 3.48774L1.14051 3.51925V12.4809L1.13673 12.5118C1.07307 13.0759 1.12979 13.6462 1.30121 14.1863C1.4197 14.4025 1.59741 14.5796 1.81296 14.6987C2.35371 14.8695 2.92406 14.9268 3.48815 14.8638L3.55054 14.8562L3.61294 14.8638C4.177 14.9268 4.74672 14.8695 5.28748 14.6987C5.50364 14.5796 5.68074 14.4025 5.79923 14.1863C5.97065 13.6462 6.02801 13.0759 5.96435 12.5118L5.96119 12.4809V3.51925L5.96435 3.48774C6.028 2.92432 5.97065 2.35336 5.79923 1.81259C5.68075 1.59707 5.50366 1.41934 5.28748 1.30086Z" fill="#121212"/><path d="M4.29201 12.6353C4.59892 12.6353 4.84787 12.8842 4.84787 13.1917C4.84787 13.4986 4.59892 13.7476 4.29201 13.7476H2.80844C2.50153 13.7476 2.25195 13.4986 2.25195 13.1917C2.25195 12.8842 2.50153 12.6353 2.80844 12.6353H4.29201Z" fill="#121212"/><path d="M10.327 0.987017C10.811 0.830093 11.3322 0.830093 11.8162 0.987017L11.8565 1.00025L11.895 1.01979C12.5397 1.34497 13.1075 1.80252 13.5645 2.36089C14.0511 2.75855 14.4607 3.24066 14.7733 3.78454L14.905 4.02969L14.9246 4.06687L14.9378 4.10784C15.0947 4.59184 15.0947 5.11367 14.9378 5.59767L14.9246 5.63801L14.905 5.67645C14.576 6.32873 14.1122 6.90223 13.545 7.3616L5.96075 14.9456V6.46231C5.92167 6.00478 5.96768 5.54409 6.09688 5.10356L6.11326 5.04558L6.14225 4.99265C6.36284 4.58931 6.65652 4.23071 7.00757 3.93451L8.56549 2.37663C9.02431 1.81069 9.5978 1.34811 10.2483 1.01976L10.2854 1.00023L10.327 0.987017ZM11.433 2.03381C11.1967 1.96512 10.9459 1.96512 10.7095 2.03381C10.206 2.29472 9.76291 2.65835 9.40935 3.10203L9.38981 3.1266L7.7606 4.75512L7.74044 4.77214C7.50283 4.96877 7.30243 5.20698 7.14801 5.47357C7.06798 5.77167 7.04151 6.08236 7.0705 6.38991L7.07302 6.41575V12.2604L12.7767 6.55756L12.7987 6.53614L12.8227 6.5166C13.2657 6.16242 13.6288 5.71938 13.8897 5.21584C13.959 4.97887 13.959 4.72742 13.8897 4.49046C13.6281 3.98691 13.2651 3.54387 12.8221 3.19032L12.7735 3.15125L12.7345 3.10209C12.3803 2.65779 11.9366 2.29472 11.433 2.03381Z" fill="#121212"/><path d="M12.4227 8.9271C13.1493 8.85022 13.8842 8.92836 14.578 9.15713L14.6183 9.17037L14.6568 9.18991C15.0538 9.39157 15.386 9.69911 15.6172 10.076L15.7105 10.2424L15.7301 10.2808L15.7433 10.3211C15.9689 11.0062 16.0464 11.7316 15.9746 12.4488C16.0464 13.1666 15.9689 13.892 15.7433 14.5776L15.7301 14.618L15.7105 14.6558C15.4799 15.1095 15.1105 15.4782 14.6568 15.7095L14.6183 15.729L14.578 15.7429C13.8866 15.9698 13.1549 16.0473 12.4314 15.9723H3.55078V14.86H12.4812L12.5127 14.8625C13.0762 14.9262 13.6465 14.8694 14.1873 14.6987C14.4035 14.5795 14.5806 14.4018 14.699 14.1857C14.8698 13.6449 14.9278 13.0746 14.8642 12.5112L14.8572 12.4494L14.8642 12.3876C14.9278 11.8236 14.8711 11.2533 14.6997 10.7131C14.5806 10.4963 14.4028 10.3186 14.186 10.2001C13.6459 10.0287 13.0762 9.97262 12.5128 10.0357L12.4813 10.0394H10.5962V8.92711L12.4227 8.9271Z" fill="#121212"/></svg></span>
-    <span class="mv-ht-text">Apasă pe <svg width="12" height="12" viewBox="0 0 24 24" fill="#121212" style="vertical-align:-2px"><path d="M12 21s-7.5-4.6-10.2-9.3C0.1 8.9 1 5.4 4.2 4.2c2.2-0.8 4.4 0 5.8 1.8C11.4 4.2 13.6 3.4 15.8 4.2c3.2 1.2 4.1 4.7 2.4 7.5C19.5 16.4 12 21 12 21z"/></svg> pentru a adăuga o țesătură în geanta ta de mostre online.</span>
-    <button class="mv-ht-close" onclick="closeHeartTip()" aria-label="Închide"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="mv-ht-handle"></div>
+    <div class="mv-ht-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="#121212"><path d="M12 21s-7.5-4.6-10.2-9.3C0.1 8.9 1 5.4 4.2 4.2c2.2-0.8 4.4 0 5.8 1.8C11.4 4.2 13.6 3.4 15.8 4.2c3.2 1.2 4.1 4.7 2.4 7.5C19.5 16.4 12 21 12 21z"/></svg></div>
+    <div class="mv-ht-title">Salvează materialele care îți plac</div>
+    <div class="mv-ht-text">Apasă pe inimă pentru a adăuga o țesătură în geanta ta de mostre online.</div>
+    <button class="mv-ht-cta" onclick="closeHeartTip()">Am înțeles</button>
   </div>
 </div>
 
@@ -1661,13 +1668,14 @@ function openView(name){
 }
 function maybeShowHeartTip(){
   if (localStorage.getItem('ht_seen')) return;
-  var tip = document.getElementById('mv-hearttip');
-  var sticky = document.getElementById('mv-sticky');
-  tip.style.bottom = (sticky.offsetHeight + 12) + 'px';
-  requestAnimationFrame(function(){ tip.classList.add('on'); });
+  requestAnimationFrame(function(){
+    document.getElementById('mv-hearttip').classList.add('on');
+    document.getElementById('mv-ht-dim').classList.add('on');
+  });
 }
 function closeHeartTip(){
   document.getElementById('mv-hearttip').classList.remove('on');
+  document.getElementById('mv-ht-dim').classList.remove('on');
   localStorage.setItem('ht_seen', '1');
 }
 function closeView(name){
