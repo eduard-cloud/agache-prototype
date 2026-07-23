@@ -66,7 +66,7 @@ img,video{display:block;max-width:100%}
 
 /* hero progress bar (v2, per Figma 736:7427) */
 #hero-progress{display:flex;width:100%}
-#hero-progress .hp-seg{flex:1;height:4px;background:#f2f2f2}
+#hero-progress .hp-seg{flex:1;height:4px;background:#f2f2f2;transition:background-color .3s ease}
 #hero-progress .hp-seg.on{background:#363944}
 #thumbs button{width:48px;height:48px;flex:0 0 48px;border:2px solid transparent;padding:0;overflow:hidden;border-radius:2px}
 #thumbs button.on{border-color:var(--ink)}
@@ -244,10 +244,12 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
 
 /* testimonials */
 #testim{background:var(--graysec);padding:40px 0 80px}
-.score-badge{width:fit-content;margin:0 auto;background:#fff;border:1px solid #000;border-radius:16px;padding:24px 20px;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,.05)}
-.score-badge .big{font-size:48px;font-weight:500;letter-spacing:-1.44px;line-height:1.05}
-.score-badge .stars{justify-content:center;margin-top:16px}
-.score-badge .cnt{font-size:18px;font-weight:500;letter-spacing:-.54px;color:var(--ink);margin-top:8px}
+.score-badge{width:fit-content;margin:0 auto;background:#1e1e1e;border:1px solid #000;border-radius:16px;padding:24px 20px;display:flex;align-items:center;gap:16px}
+.score-badge .big{font-size:48px;font-weight:500;letter-spacing:-1.44px;line-height:1.05;color:#000}
+.score-badge .sb-col{display:flex;flex-direction:column;gap:8px}
+.score-badge .stars{display:flex;gap:1px}
+.score-badge .stars .star{width:20px;height:20px;fill:#ffc800}
+.score-badge .cnt{font-size:18px;font-weight:500;letter-spacing:-.54px;color:#000}
 #testim .filters{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;margin-top:24px;padding:0 16px}
 #testim .filters::-webkit-scrollbar{display:none}
 #testim .rail{gap:8px;margin-top:48px}
@@ -889,27 +891,22 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
   <div id="testim" style="margin-top:0">
     <div class="score-badge">
       <div class="big">4.9</div>
-      <div class="stars">
-        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <div class="sb-col">
+        <div class="stars">
+          <svg class="star" width="20" height="20" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="star" width="20" height="20" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="star" width="20" height="20" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="star" width="20" height="20" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="star" width="20" height="20" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <div class="cnt">21 recenzii</div>
       </div>
-      <div class="cnt">21 recenzii</div>
     </div>
     <div class="px" id="testim-h" style="margin-top:40px">
       <div class="eyebrow">TESTIMONIALE</div>
       <h2>30.000 de clienți fericiți în peste 30 de ani de activitate.</h2>
     </div>
-    <div class="filters">
-      <button class="fpill on" onclick="pickFilter(this)">Review-uri cu poze</button>
-      <button class="fpill" onclick="pickFilter(this)">Asamblare</button>
-      <button class="fpill" onclick="pickFilter(this)">Transport și retur</button>
-      <button class="fpill" onclick="pickFilter(this)">Calitate</button>
-      <button class="fpill" onclick="pickFilter(this)">Garanție</button>
-    </div>
-    <div class="rail" id="rvrail">
+    <div class="rail" id="rvrail" style="margin-top:24px">
       <div class="rvcard">
         <div class="rp">
           <img src="assets/review-1.png" alt="Canapea Boston la client">
