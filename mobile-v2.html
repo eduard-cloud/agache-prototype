@@ -166,20 +166,32 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
 #mostrar button{margin-top:24px;background:transparent;border:1px solid var(--purple);color:var(--purple);border-radius:9999px;padding:16px 24px;font-size:16px;letter-spacing:-.48px;line-height:1.2;font-weight:500;display:flex;align-items:center;gap:8px}
 
 /* deep dive */
-#deep{background:var(--blue);margin-top:0;padding:80px 0}
 .eyebrow{font-size:12px;letter-spacing:.84px;font-weight:500;color:#363944;line-height:1.2}
 #deep h2,#construit h2,#confsec h2,#testim h2{font-size:32px;font-weight:500;letter-spacing:-.64px;line-height:1.1;margin-top:16px;margin-bottom:-2px}
 #construit h2{margin-top:0}
-#deep .tabs{display:flex;gap:4px;margin-top:24px;overflow-x:auto;scrollbar-width:none;padding-right:16px}
-#deep .tabs::-webkit-scrollbar{display:none}
-.dtab{flex:0 0 auto;font-size:14px;letter-spacing:-.28px;padding:16px;border-radius:9999px;border:1px solid #c8cbd0;background:#fff;white-space:nowrap}
-.dtab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-#deep .dimg{margin-top:48px}
-#deep .dimg img{width:calc(100% - 32px);margin:0 16px}
-#deep h3{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-top:48px;margin-bottom:-4px}
-#deep .dbody{font-size:16px;font-weight:500;letter-spacing:-.32px;line-height:1.2;margin-top:24px}
-#deep .dspecs{margin-top:48px;display:flex;flex-direction:column;gap:16px;font-size:16px;font-weight:500;letter-spacing:-.32px;line-height:1.2}
 .dpanel{display:none}.dpanel.on{display:block}
+
+/* deep dive (v2 redesign per Figma 755:8869) */
+#deep{background:#fff;padding:64px 16px 32px;display:flex;flex-direction:column;gap:32px}
+#deep h2{font-size:28px;letter-spacing:-.84px;line-height:1.1;color:#000;margin-bottom:0}
+#deep .ddpanel{display:flex;flex-direction:column;gap:32px;width:100%}
+#deep .ddimg{width:100%;aspect-ratio:331/316;border-radius:10px;overflow:hidden;mix-blend-mode:multiply}
+#deep .ddimg img{width:100%;height:100%;object-fit:cover}
+#deep .dddesc{font-size:16px;font-weight:500;letter-spacing:-.48px;line-height:1.2;color:#363944}
+#deep .dddesc .more{text-decoration:underline;cursor:pointer}
+#deep .ddlist{display:flex;flex-direction:column;width:100%}
+#deep .drow{display:flex;align-items:center;justify-content:space-between;width:100%;padding:12px 0;border-top:1px solid #f2f2f2;border-bottom:1px solid #f2f2f2;margin-bottom:-1px;text-align:left;background:none}
+#deep .drow span{font-size:18px;font-weight:500;letter-spacing:-.54px;line-height:1.2;color:#363944}
+#deep .drow.on span{color:#000}
+#deep .drow img{width:24px;height:24px}
+#deep .dpanel h3{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-top:0;margin-bottom:-4px}
+#deep .dpanel .dbody{font-size:16px;font-weight:500;letter-spacing:-.32px;line-height:1.2;margin-top:24px}
+#deep .dpanel .dspecs{margin-top:48px;display:flex;flex-direction:column;gap:16px;font-size:16px;font-weight:500;letter-spacing:-.32px;line-height:1.2}
+#deep .ddpromise{background:#efeeff;display:flex;align-items:flex-start;justify-content:space-between;padding:24px 16px;width:100%}
+#deep .ddp-label{font-size:13px;line-height:1.2;color:#000}
+#deep .ddp-items{display:flex;flex-direction:column;gap:16px}
+#deep .ddp-item{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:500;letter-spacing:-.48px;line-height:1.2;color:#000}
+#deep .ddp-item img{width:16px;height:16px}
 
 /* comfort metrics */
 #comfort{padding:56px 0}
@@ -714,22 +726,24 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
   </div>
 
   <!-- Deep dive -->
+  <!-- Deep dive (v2, redesigned per Figma 755:8869) -->
   <div id="deep">
-    <div class="px">
+    <div>
       <div class="eyebrow">DEEP DIVE</div>
-      <h2>Descoperă canapeaua ta și toate detaliile ei</h2>
+      <h2>Descoperă<br>canapeaua Boston</h2>
     </div>
-    <div class="tabs px">
-      <button class="dtab on" onclick="ddTab(this,'general')">Informații generale</button>
-      <button class="dtab" onclick="ddTab(this,'tehnic')">Detalii tehnice</button>
-      <button class="dtab" onclick="ddTab(this,'curatare')">Curățare și întreținere</button>
-      <button class="dtab" onclick="ddTab(this,'transport')">Transport și retur</button>
-      <button class="dtab" onclick="ddTab(this,'garantie')">Garanție</button>
-    </div>
-
-    <div class="dpanel on" id="dd-general">
-      <div class="dimg"><img src="assets/diagram.png" alt="Dimensiuni canapea"></div>
-      <div class="px">
+    <div class="ddpanel">
+      <div class="ddimg"><img src="assets/v2/deep/hero-diagram.jpg" alt="Dimensiuni canapea"></div>
+      <p class="dddesc">Canapea 3 locuri este alegerea perfectă pentru cei care caută confort zilnic, spațiu de depozitare generos. <span class="more">Vezi mai mult</span></p>
+      <div class="ddlist">
+        <button class="drow on" onclick="ddRow(this,'general')"><span>Informații generale</span><img src="assets/v2/deep/chevron-right.svg" alt=""></button>
+        <button class="drow" onclick="ddRow(this,'tehnic')"><span>Detalii tehnice</span><img src="assets/v2/deep/chevron-right.svg" alt=""></button>
+        <button class="drow" onclick="ddRow(this,'asamblare')"><span>Instructiuni de asamblare</span><img src="assets/v2/deep/chevron-right.svg" alt=""></button>
+        <button class="drow" onclick="ddRow(this,'curatare')"><span>Curățare și întreținere</span><img src="assets/v2/deep/chevron-right.svg" alt=""></button>
+        <button class="drow" onclick="ddRow(this,'transport')"><span>Transport și retur</span><img src="assets/v2/deep/chevron-right.svg" alt=""></button>
+        <button class="drow" onclick="ddRow(this,'garantie')"><span>Garanție</span><img src="assets/v2/deep/chevron-right.svg" alt=""></button>
+      </div>
+      <div class="dpanel on" id="dd-general">
         <h3>Aici gasesti un subtitlu</h3>
         <div class="dbody">Canapea 3 locuri este alegerea perfectă pentru cei care caută confort zilnic, spațiu de depozitare generos și un design modern. Boston se potrivește perfect atât în decoruri contemporane, cât și clasice.<br>Este extensibil, modular si se poate configura pe o mulțime de alte dimensiuni.</div>
         <div class="dspecs">
@@ -741,10 +755,7 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
           <div>Ladă de depozitare: Da, două.</div>
         </div>
       </div>
-    </div>
-    <div class="dpanel" id="dd-tehnic">
-      <div class="dimg"><img src="assets/diagram.png" alt="Detalii tehnice"></div>
-      <div class="px">
+      <div class="dpanel" id="dd-tehnic">
         <h3>Specificații tehnice</h3>
         <div class="dbody">Structura din lemn masiv de fag garantează durabilitate și stabilitate pe termen lung. Mecanismul de extensie a fost conceput pentru utilizare zilnică intensivă.</div>
         <div class="dspecs">
@@ -755,10 +766,17 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
           <div>Mecanism extensie: Acțiune ușoară</div>
         </div>
       </div>
-    </div>
-    <div class="dpanel" id="dd-curatare">
-      <div class="dimg"><img src="assets/collection-hero.png" alt="Curățare" style="border-radius:8px"></div>
-      <div class="px">
+      <div class="dpanel" id="dd-asamblare">
+        <h3>Instrucțiuni de asamblare</h3>
+        <div class="dbody">Canapeaua se livrează parțial asamblată. Montajul complet durează aproximativ 20-30 de minute și necesită doar o persoană — toate accesoriile necesare sunt incluse în pachet.</div>
+        <div class="dspecs">
+          <div>Manual inclus: Da</div>
+          <div>Unelte necesare: Cheie inbus (inclusă)</div>
+          <div>Timp estimat: 20-30 minute</div>
+          <div>Persoane necesare: 1</div>
+        </div>
+      </div>
+      <div class="dpanel" id="dd-curatare">
         <h3>Ghid de curățare</h3>
         <div class="dbody">Menține frumusețea canapeei tale cu câteva reguli simple de îngrijire. Materialele noastre sunt tratate special pentru a rezista la uzura de zi cu zi.</div>
         <div class="dspecs">
@@ -768,10 +786,7 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
           <div>Soare: Evitați expunerea directă prelungită</div>
         </div>
       </div>
-    </div>
-    <div class="dpanel" id="dd-transport">
-      <div class="dimg"><img src="assets/video-poster.png" alt="Transport" style="border-radius:8px"></div>
-      <div class="px">
+      <div class="dpanel" id="dd-transport">
         <h3>Transport și retur</h3>
         <div class="dbody">Livrăm gratuit în toată România. Canapeaua este ambalată cu grijă și transportată de echipe specializate care asigură și asamblarea la domiciliu.</div>
         <div class="dspecs">
@@ -781,10 +796,7 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
           <div>Retur: Gratuit în 14 zile</div>
         </div>
       </div>
-    </div>
-    <div class="dpanel" id="dd-garantie">
-      <div class="dimg"><img src="assets/construit-1.png" alt="Garanție" style="border-radius:8px"></div>
-      <div class="px">
+      <div class="dpanel" id="dd-garantie">
         <h3>Garanție extinsă</h3>
         <div class="dbody">Oferim una dintre cele mai lungi garanții din industrie — 10 ani pentru structura de lemn solid, dovedind că suntem convinși de calitatea produselor noastre.</div>
         <div class="dspecs">
@@ -793,6 +805,14 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
           <div>Garanție tapițerie: 2 ani</div>
           <div>Service la domiciliu: Gratuit</div>
         </div>
+      </div>
+    </div>
+    <div class="ddpromise">
+      <div class="ddp-label">Promisiunea<br>noastră</div>
+      <div class="ddp-items">
+        <div class="ddp-item"><img src="assets/v2/deep/shield-check.svg" alt="">10 ani garanție structurală</div>
+        <div class="ddp-item"><img src="assets/v2/deep/hand.svg" alt="">Fabricat în România</div>
+        <div class="ddp-item"><img src="assets/v2/deep/send-horizontal.svg" alt="">Retur gratuit 14 zile</div>
       </div>
     </div>
   </div>
@@ -1676,9 +1696,9 @@ function pickSwatch(el){
   document.getElementById('smod-name').textContent = n;
 }
 
-/* ── Deep dive tabs ── */
-function ddTab(el, id){
-  document.querySelectorAll('.dtab').forEach(function(t){ t.classList.remove('on'); });
+/* ── Deep dive row list (v2) ── */
+function ddRow(el, id){
+  document.querySelectorAll('.drow').forEach(function(t){ t.classList.remove('on'); });
   el.classList.add('on');
   document.querySelectorAll('.dpanel').forEach(function(p){ p.classList.remove('on'); });
   document.getElementById('dd-' + id).classList.add('on');
