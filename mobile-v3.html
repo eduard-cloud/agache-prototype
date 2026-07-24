@@ -75,7 +75,6 @@ img,video{display:block;max-width:100%}
 .cfg-sec .cfg-sec-sub{font-size:14px;line-height:1.5;color:var(--gray);margin-top:6px}
 
 /* ── section 2a: household needs ── */
-.cfg-sub-sec{border-top:1px solid var(--hair);padding-top:28px;margin-top:8px}
 .cfg-needs-row{display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:20px 0 4px;scroll-snap-type:x proximity}
 .cfg-needs-row::-webkit-scrollbar{display:none}
 .cfg-needs-tile{flex:0 0 auto;width:92px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center}
@@ -152,6 +151,7 @@ img,video{display:block;max-width:100%}
     <div class="cfg-handle" id="cfg-handle"><div class="hbar"></div></div>
     <div class="cfg-chips" id="cfg-chips">
       <button class="cfg-chip on" data-sec="config" onclick="scrollCfgTo('config')">Configurație</button>
+      <button class="cfg-chip" data-sec="needs" onclick="scrollCfgTo('needs')">Nevoi</button>
       <button class="cfg-chip" data-sec="material" onclick="scrollCfgTo('material')">Material</button>
       <button class="cfg-chip" data-sec="color" onclick="scrollCfgTo('color')">Culoare</button>
       <button class="cfg-chip" data-sec="summary" onclick="scrollCfgTo('summary')">Sumar</button>
@@ -181,18 +181,18 @@ img,video{display:block;max-width:100%}
         </div>
       </section>
 
-      <section class="cfg-sec" id="sec-material">
+      <section class="cfg-sec" id="sec-needs">
         <h3>Nevoi de lifestyle</h3>
         <p class="cfg-sec-sub">Îți recomandăm materiale potrivite nevoilor tale.</p>
         <div class="cfg-needs-row" id="cfg-needs"></div>
         <div class="cfg-needs-label" id="cfg-needs-label"></div>
+      </section>
 
-        <div class="cfg-sub-sec">
-          <h3>Alege materialul</h3>
-          <p class="cfg-sec-sub">8 colecții de țesături, fiecare cu proprietăți proprii.</p>
-          <div class="cfg-mat-filters" id="cfg-mat-filters"></div>
-          <div class="cfg-mat-row" id="cfg-materials"></div>
-        </div>
+      <section class="cfg-sec" id="sec-material">
+        <h3>Alege materialul</h3>
+        <p class="cfg-sec-sub">8 colecții de țesături, fiecare cu proprietăți proprii.</p>
+        <div class="cfg-mat-filters" id="cfg-mat-filters"></div>
+        <div class="cfg-mat-row" id="cfg-materials"></div>
         <div class="cfg-mat-detail" id="cfg-mat-detail">
           <strong id="cfg-mat-detail-name"></strong>
           <span class="cfg-mat-detail-texture" id="cfg-mat-detail-texture"></span>
