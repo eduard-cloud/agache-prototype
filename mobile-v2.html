@@ -51,14 +51,16 @@ img,video{display:block;max-width:100%}
 #hero .sl img,#hero .sl video{width:100%;height:100%;object-fit:cover}
 #hero,.st-hero{touch-action:pan-y}
 #hero img,.mh-trk img{-webkit-user-drag:none;user-select:none}
-#hero-heart{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:20px;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 .8px 1.6px rgba(0,0,0,.15);z-index:3;padding:0}
+#hero-heart{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:20px;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 .8px 1.6px rgba(0,0,0,.15);z-index:3;padding:0;cursor:pointer}
 #hero-heart img{width:16px;height:16px}
+#hero-heart svg path{transition:fill .15s,stroke .15s}
+#hero-heart.on svg path{fill:#e0303f;stroke:#e0303f}
 .hero-arr{position:absolute;top:173px;width:24px;height:24px;padding:0;z-index:3}
 .hero-arr img{width:24px;height:24px}
 #hero-prev{left:16px}
 #hero-prev img{transform:rotate(180deg)}
 #hero-next{right:16px}
-#hero-conf{position:absolute;left:16px;top:316px;padding:8px 12px;background:#fff;border-radius:9999px;display:flex;align-items:center;gap:8px;font-size:13px;line-height:1.2;color:#363944;z-index:3}
+#hero-conf{display:none;position:absolute;left:16px;top:316px;padding:8px 12px;background:#fff;border-radius:9999px;align-items:center;gap:8px;font-size:13px;line-height:1.2;color:#363944;z-index:3}
 #hero-conf img{width:14px;height:14px}
 
 /* thumbnails (hidden per v2 hero redesign) */
@@ -94,7 +96,7 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
 #typesel .t-i-wrap{display:flex;align-items:center;gap:12px;flex:1}
 #typesel img{width:67px;height:31px;object-fit:cover;transform:scale(1.2);transform-origin:left center}
 #typesel .t-i{flex:1;text-align:left;display:flex;flex-direction:column;gap:8px}
-#typesel .t-n{font-size:14px;letter-spacing:-.28px;line-height:1.2;color:var(--ink)}
+#typesel .t-n{font-size:16px;font-weight:500;letter-spacing:-.32px;line-height:1.2;color:var(--ink)}
 #typesel .t-d{font-size:14px;letter-spacing:-.28px;line-height:1.2;color:var(--gray)}
 #typesel .t-change{font-size:16px;font-weight:500;letter-spacing:-.48px;line-height:1.2;color:#000;text-decoration:underline}
 
@@ -104,17 +106,17 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
 .sec-lbl{font-size:14px;letter-spacing:-.28px;color:var(--gray);display:flex;align-items:center;gap:4px}
 
 /* swatches */
-.sw{width:66px;height:66px;flex:0 0 66px;padding:0;position:relative;overflow:hidden}
+.sw{width:80px;height:80px;flex:0 0 80px;padding:0;position:relative;overflow:hidden}
 .sw img{width:100%;height:100%;object-fit:cover}
 .sw.on::after{content:"";position:absolute;inset:0;border:1.5px solid #111032;box-shadow:inset 0 0 0 4px #fff}
-.sw-plus{width:66px;height:66px;flex:0 0 66px;border:1px solid #707173;display:flex;align-items:center;justify-content:center}
+.sw-plus{width:80px;height:80px;flex:0 0 80px;border:1px solid #707173;display:flex;align-items:center;justify-content:center}
 #swatches{margin-top:12px}
 #swatches .sw-row{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px}
 #swatches .sw-row::-webkit-scrollbar{display:none}
-#swatches .sw{width:79px;height:50px;flex:0 0 79px}
+#swatches .sw{width:101px;height:64px;flex:0 0 101px}
 #swatches .sw.on::after{content:none}
 #swatches .sw.on{border-bottom:1.5px solid #000}
-#swatches .sw-plus{width:50px;height:50px;flex:0 0 50px;border-color:#000}
+#swatches .sw-plus{width:64px;height:64px;flex:0 0 64px;border-color:#000}
 .sw-lbl-row{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
 .sw-name{font-size:16px;font-weight:500;letter-spacing:-.32px;line-height:1.2;display:flex;align-items:center;gap:4px;color:#000}
 .sw-all{font-size:16px;font-weight:500;letter-spacing:-.48px;line-height:1.2;color:#000;text-decoration:underline}
@@ -244,7 +246,7 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
 
 /* testimonials */
 #testim{background:var(--graysec);padding:40px 0 80px}
-.score-badge{width:fit-content;margin:0 auto;background:#1e1e1e;border:1px solid #000;border-radius:16px;padding:24px 20px;display:flex;align-items:center;gap:16px}
+.score-badge{width:fit-content;margin:0 auto;background:#fff;border:1px solid #e5e5e5;border-radius:16px;padding:24px 20px;display:flex;align-items:center;gap:16px}
 .score-badge .big{font-size:48px;font-weight:500;letter-spacing:-1.44px;line-height:1.05;color:#000}
 .score-badge .sb-col{display:flex;flex-direction:column;gap:8px}
 .score-badge .stars{display:flex;gap:1px}
@@ -299,8 +301,24 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
 .stile .simg img{width:100%;height:100%;object-fit:contain}
 .stile.on .simg{border-color:var(--ink)}
 .stile .stx{margin-top:12px}
-.stile .sn{font-size:13px;font-weight:400;letter-spacing:-.2px;line-height:1.3;display:block}
-.stile .sd{font-size:12px;color:var(--gray);margin-top:4px;display:block}
+.stile .sn{font-size:16px;font-weight:400;letter-spacing:-.2px;line-height:1.3;display:block}
+.stile .sd{font-size:14px;color:var(--gray);margin-top:4px;display:block}
+
+/* ══════════ Info (deep-dive) view ══════════ */
+.info-topbar{position:sticky;top:0;z-index:5;background:#fff}
+.info-head{display:flex;align-items:center;justify-content:space-between;padding:24px 20px 20px}
+.info-title{font-size:22px;font-weight:600;letter-spacing:-.4px}
+.info-nav{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding:0 20px 20px;border-bottom:1px solid var(--hair)}
+.info-nav::-webkit-scrollbar{display:none}
+.info-chip{flex:0 0 auto;background:#fff;border:1px solid #c8cbd0;border-radius:9999px;padding:16px;font-size:14px;letter-spacing:-.28px;white-space:nowrap;color:var(--ink);transition:all .15s}
+.info-chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.info-body{padding:0 20px 56px}
+.info-sec{padding-top:36px;scroll-margin-top:12px;border-top:1px solid var(--hair)}
+.info-sec:first-child{padding-top:28px;border-top:none}
+.info-sec h3{font-size:22px;font-weight:600;letter-spacing:-.4px;line-height:1.15}
+.info-sec p{font-size:15px;line-height:1.6;color:var(--gray);margin-top:14px;white-space:pre-line}
+.info-sec .info-list{margin-top:16px;display:flex;flex-direction:column;gap:10px}
+.info-sec .info-list div{font-size:15px;line-height:1.5;color:var(--slate)}
 
 /* ══════════ Materials view ══════════ */
 #mv-stickyhead{position:sticky;top:0;z-index:5;background:#fff}
@@ -348,6 +366,10 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
 .mtile.on .imw::after{content:"";position:absolute;inset:0;border:2px solid var(--ink);box-shadow:inset 0 0 0 4px #fff}
 .mtile .lr{display:flex;align-items:center;justify-content:space-between;margin-top:9px}
 .mtile .nm{font-size:12px}
+.info-i{position:relative;flex:0 0 auto;width:18px;height:18px;display:flex;align-items:center;justify-content:center;padding:0;border-radius:50%}
+.info-i::before{content:'';position:absolute;top:50%;left:50%;width:44px;height:44px;transform:translate(-50%,-50%)}
+.info-i svg{width:16px;height:16px;pointer-events:none}
+.info-i:active{background:rgba(0,0,0,.08)}
 .mtile-heart{position:absolute;top:12px;right:12px;width:20px;height:20px;display:flex;align-items:center;justify-content:center;padding:0;z-index:2}
 .mtile-heart svg path{fill:none;stroke:#fff;stroke-width:1.4;transition:fill .15s,stroke .15s}
 .mtile-heart.on svg path{fill:#fff;stroke:#fff}
@@ -533,7 +555,7 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
       <div class="sl"><img src="assets/v2/hero/slide-5.png" alt="Canapea Boston"></div>
       <div class="sl"><video src="hero-video.mp4" muted loop playsinline autoplay poster="assets/video-poster.png"></video></div>
     </div>
-    <button id="hero-heart" aria-label="Favorite"><img src="assets/v2/hero/heart.svg" alt=""></button>
+    <button id="hero-heart" aria-label="Favorite" onclick="toggleFavorite(this)"><svg width="16" height="15" viewBox="0 0 18 16" fill="none" stroke="#121212" stroke-width="1.4"><path d="M14.6667 9.66667C15.9083 8.45 17.1667 6.99167 17.1667 5.08333C17.1667 3.86776 16.6838 2.70197 15.8242 1.84243C14.9647 0.982886 13.7989 0.5 12.5833 0.5C11.1167 0.5 10.0833 0.916667 8.83333 2.16667C7.58333 0.916667 6.55 0.5 5.08333 0.5C3.86776 0.5 2.70197 0.982886 1.84243 1.84243C0.982886 2.70197 0.5 3.86776 0.5 5.08333C0.5 7 1.75 8.45833 3 9.66667L8.83333 15.5L14.6667 9.66667Z" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <button class="hero-arr" id="hero-prev" onclick="heroNav(-1)" aria-label="Anterior"><img src="assets/v2/hero/arrow-circle.svg" alt=""></button>
     <button class="hero-arr" id="hero-next" onclick="heroNav(1)" aria-label="Următor"><img src="assets/v2/hero/arrow-circle.svg" alt=""></button>
     <button id="hero-conf" onclick="openView('materials')"><img src="assets/pencil-ruler.svg" alt="">Configurează</button>
@@ -739,12 +761,12 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
       <div class="ddimg"><img src="assets/v2/deep/hero-diagram.jpg" alt="Dimensiuni canapea"></div>
       <p class="dddesc">Canapea 3 locuri este alegerea perfectă pentru cei care caută confort zilnic, spațiu de depozitare generos. <span class="more">Vezi mai mult</span></p>
       <div class="ddlist">
-        <button class="drow on"><span>Informații generale</span><img src="assets/v2/deep/chevron-right.svg" alt=""></button>
-        <button class="drow"><span>Detalii tehnice</span><img src="assets/v2/deep/chevron-right.svg" alt=""></button>
-        <button class="drow"><span>Instructiuni de asamblare</span><img src="assets/v2/deep/chevron-right.svg" alt=""></button>
-        <button class="drow"><span>Curățare și întreținere</span><img src="assets/v2/deep/chevron-right.svg" alt=""></button>
-        <button class="drow"><span>Transport și retur</span><img src="assets/v2/deep/chevron-right.svg" alt=""></button>
-        <button class="drow"><span>Garanție</span><img src="assets/v2/deep/chevron-right.svg" alt=""></button>
+        <button class="drow on" onclick="openInfo('generale')"><span>Informații generale</span><img src="assets/v2/deep/chevron-right.svg" alt=""></button>
+        <button class="drow" onclick="openInfo('tehnice')"><span>Detalii tehnice</span><img src="assets/v2/deep/chevron-right.svg" alt=""></button>
+        <button class="drow" onclick="openInfo('asamblare')"><span>Instructiuni de asamblare</span><img src="assets/v2/deep/chevron-right.svg" alt=""></button>
+        <button class="drow" onclick="openInfo('curatare')"><span>Curățare și întreținere</span><img src="assets/v2/deep/chevron-right.svg" alt=""></button>
+        <button class="drow" onclick="openInfo('transport')"><span>Transport și retur</span><img src="assets/v2/deep/chevron-right.svg" alt=""></button>
+        <button class="drow" onclick="openInfo('garantie')"><span>Garanție</span><img src="assets/v2/deep/chevron-right.svg" alt=""></button>
       </div>
     </div>
     <div class="ddpromise">
@@ -753,58 +775,6 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
         <div class="ddp-item"><img src="assets/v2/deep/shield-check.svg" alt="">10 ani garanție structurală</div>
         <div class="ddp-item"><img src="assets/v2/deep/hand.svg" alt="">Fabricat în România</div>
         <div class="ddp-item"><img src="assets/v2/deep/send-horizontal.svg" alt="">Retur gratuit 14 zile</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Comfort metrics -->
-  <div id="comfort">
-    <h2>Gândită pentru un confort desăvârșit</h2>
-    <div class="cf-grid">
-      <div class="cf-item">
-        <div class="cf-title">Duritatea șezutului</div>
-        <div class="cf-desc">Cât de moi sau ferme sunt pernele?</div>
-        <div class="cf-scale">
-          <div class="cf-dashes">
-            <div class="cf-dash"></div>
-            <div class="cf-dash"></div>
-            <div class="cf-dash"></div>
-            <div class="cf-dash"></div>
-            <div class="cf-dash on"></div>
-          </div>
-          <div class="cf-endlabels"><span>Moale</span><span>Ferm</span></div>
-        </div>
-      </div>
-
-      <div class="cf-item">
-        <div class="cf-title">Adâncimi multiple de șezut</div>
-        <div class="cf-desc">Adâncime șezut 70 cm și adâncime totală 85 cm.</div>
-        <div class="cf-scale">
-          <div class="cf-track">
-            <div class="cf-seg" style="left:36%;width:16%"></div>
-            <div class="cf-seg" style="left:56%;width:16%"></div>
-            <div class="cf-tick" style="left:36%"></div>
-            <div class="cf-tick" style="left:52%"></div>
-            <div class="cf-tick" style="left:56%"></div>
-            <div class="cf-tick" style="left:72%"></div>
-          </div>
-          <div class="cf-endlabels"><span>Redusă</span><span>Mare</span></div>
-        </div>
-      </div>
-
-      <div class="cf-item">
-        <div class="cf-title">Înălțimea șezutului</div>
-        <div class="cf-desc">Șezutul se află la 44 cm față de sol.</div>
-        <div class="cf-scale">
-          <div class="cf-dashes">
-            <div class="cf-dash"></div>
-            <div class="cf-dash"></div>
-            <div class="cf-dash"></div>
-            <div class="cf-dash on"></div>
-            <div class="cf-dash"></div>
-          </div>
-          <div class="cf-endlabels"><span>Redusă</span><span>Înaltă</span></div>
-        </div>
       </div>
     </div>
   </div>
@@ -949,6 +919,58 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
     <div class="rail-nav">
       <button class="rn-prev" onclick="railNav('rvrail',-1)" aria-label="Anterior"><img src="assets/arrow-left-40.svg" alt=""></button>
       <button class="rn-next" onclick="railNav('rvrail',1)" aria-label="Următor"><img src="assets/arrow-right-40.svg" alt=""></button>
+    </div>
+  </div>
+
+  <!-- Comfort metrics -->
+  <div id="comfort">
+    <h2>Gândită pentru un confort desăvârșit</h2>
+    <div class="cf-grid">
+      <div class="cf-item">
+        <div class="cf-title">Duritatea șezutului</div>
+        <div class="cf-desc">Cât de moi sau ferme sunt pernele?</div>
+        <div class="cf-scale">
+          <div class="cf-dashes">
+            <div class="cf-dash"></div>
+            <div class="cf-dash"></div>
+            <div class="cf-dash"></div>
+            <div class="cf-dash"></div>
+            <div class="cf-dash on"></div>
+          </div>
+          <div class="cf-endlabels"><span>Moale</span><span>Ferm</span></div>
+        </div>
+      </div>
+
+      <div class="cf-item">
+        <div class="cf-title">Adâncimi multiple de șezut</div>
+        <div class="cf-desc">Adâncime șezut 70 cm și adâncime totală 85 cm.</div>
+        <div class="cf-scale">
+          <div class="cf-track">
+            <div class="cf-seg" style="left:36%;width:16%"></div>
+            <div class="cf-seg" style="left:56%;width:16%"></div>
+            <div class="cf-tick" style="left:36%"></div>
+            <div class="cf-tick" style="left:52%"></div>
+            <div class="cf-tick" style="left:56%"></div>
+            <div class="cf-tick" style="left:72%"></div>
+          </div>
+          <div class="cf-endlabels"><span>Redusă</span><span>Mare</span></div>
+        </div>
+      </div>
+
+      <div class="cf-item">
+        <div class="cf-title">Înălțimea șezutului</div>
+        <div class="cf-desc">Șezutul se află la 44 cm față de sol.</div>
+        <div class="cf-scale">
+          <div class="cf-dashes">
+            <div class="cf-dash"></div>
+            <div class="cf-dash"></div>
+            <div class="cf-dash"></div>
+            <div class="cf-dash on"></div>
+            <div class="cf-dash"></div>
+          </div>
+          <div class="cf-endlabels"><span>Redusă</span><span>Înaltă</span></div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1157,6 +1179,89 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
       <span class="simg"><img src="assets/shape-corner-4seat.jpg" alt="Coltar 4 locuri"></span>
       <span class="stx"><span class="sn">Coltar 4 locuri</span><span class="sd">255 x 255 cm</span></span>
     </button>
+  </div>
+</div>
+
+<!-- ══════════ Info (deep-dive) view ══════════ -->
+<div class="view" id="view-info">
+  <div class="info-topbar">
+    <div class="info-head">
+      <span class="info-title">Descoperă canapeaua Boston</span>
+      <button class="circ-btn" onclick="closeView('info')" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="info-nav" id="info-nav">
+      <button class="info-chip on" data-sec="generale" onclick="scrollInfoTo('generale')">Informații generale</button>
+      <button class="info-chip" data-sec="tehnice" onclick="scrollInfoTo('tehnice')">Detalii tehnice</button>
+      <button class="info-chip" data-sec="asamblare" onclick="scrollInfoTo('asamblare')">Asamblare</button>
+      <button class="info-chip" data-sec="curatare" onclick="scrollInfoTo('curatare')">Curățare</button>
+      <button class="info-chip" data-sec="transport" onclick="scrollInfoTo('transport')">Transport și retur</button>
+      <button class="info-chip" data-sec="garantie" onclick="scrollInfoTo('garantie')">Garanție</button>
+    </div>
+  </div>
+  <div class="info-body">
+    <section class="info-sec" id="info-generale">
+      <h3>Informații generale</h3>
+      <p>Canapea 3 locuri este alegerea perfectă pentru cei care caută confort zilnic, spațiu de depozitare generos și un design modern. Boston se potrivește perfect atât în decoruri contemporane, cât și clasice. Este extensibil, modular si se poate configura pe o mulțime de alte dimensiuni.</p>
+      <div class="info-list">
+        <div>Lungime: 245 cm</div>
+        <div>Lățime: 100 cm</div>
+        <div>Înălțime spătar: 68cm (fără perne)</div>
+        <div>Înălțime șezut: 35cm</div>
+        <div>Suprafața de dormit: 150 x 210 cm</div>
+        <div>Adâncime șezut: 80 cm</div>
+        <div>Ladă de depozitare: Da, două.</div>
+      </div>
+    </section>
+    <section class="info-sec" id="info-tehnice">
+      <h3>Detalii tehnice</h3>
+      <p>Șezutul confortabil este prevăzut cu umplutură de spumă de înaltă densitate de 12 cm, iar pernele din fața spătarului oferă stabilitate.
+
+Structura produsului este pe arc sinusoidal, conferind un plus de confort și elasticitate.
+
+Extensibil prin plierea spătarului, ce asigură o prelungire confortabilă atunci când este folosit ca pat.
+
+Prevăzut cu ladă de depozitare încăpătoare.
+
+Cadru de lemn și PAL.</p>
+    </section>
+    <section class="info-sec" id="info-asamblare">
+      <h3>Instrucțiuni de asamblare</h3>
+      <p>Canapeaua Boston este livrată parțial asamblată, ambalată în cutii separate pentru fiecare modul.
+
+Montajul durează în medie 20-30 de minute și necesită doar o cheie inbus, inclusă în pachet.
+
+Fixează mai întâi picioarele pe structura de bază, apoi atașează modulele și spătarul conform ghidului ilustrat din cutie.
+
+Pentru configurațiile modulare (coltar), unește modulele cu ajutorul conectorilor metalici furnizați, asigurându-te că sunt bine strânși înainte de utilizare.</p>
+    </section>
+    <section class="info-sec" id="info-curatare">
+      <h3>Curățare și întreținere</h3>
+      <p>Material elegant cu aspect de catifea, plăcut la atingere și foarte rezistent la uzură. Textura sa oferă mobilierului un aspect rafinat și este concepută pentru utilizare zilnică intensă. Materialul este potrivit atât pentru locuințe, cât și pentru spații comerciale, fiind recomandat în special pentru familii cu animale de companie sau copii.</p>
+      <div class="info-list">
+        <div>✔ Rezistent la gheruțele pisicilor</div>
+        <div>✔ Părul de animale se curăță foarte ușor</div>
+        <div>✔ Rezistență ridicată la uzură</div>
+        <div>✔ Rezistent la scămoșare (pilling)</div>
+        <div>✔ Ușor de curățat și întreținut</div>
+      </div>
+      <p>Întreținere: spălare la max. 30°C, program delicat. Nu se curăță chimic, nu se calcă, nu se usucă în uscător și nu se folosește înălbitor. Curățare recomandată cu lavetă din microfibră umedă, uscare întins sau agățat, la umbră.</p>
+    </section>
+    <section class="info-sec" id="info-transport">
+      <h3>Transport și retur</h3>
+      <p>Pentru produsele personalizate realizate la comandă, termenul de livrare este de aproximativ 14 - 21 zile lucrătoare. Livrarea se face prin curier, până în fața casei sau a blocului, ori cu ridicare din showroom-urile Agache, în funcție de opțiunea aleasă de tine. Ne ocupăm de ambalarea corespunzătoare a produselor și trimitem toate documentele necesare împreună cu ele. Livrăm doar pe teritoriul României.
+
+Ai 14 zile calendaristice pentru retur, fără să explici motivul. Termenul începe din ziua în care primești produsul. Rambursarea se face în maximum 14 zile, în contul IBAN oferit. Costul transportului de retur este suportat de client.</p>
+    </section>
+    <section class="info-sec" id="info-garantie">
+      <h3>Garanție</h3>
+      <p>Durata garanției: 24 de luni (2 ani) pentru persoane fizice, conform legislației din România.
+
+Ce acoperă: defecte de fabricație - probleme legate de structură, tapițerie sau execuție.
+
+Ce nu acoperă: deteriorări cauzate de utilizare necorespunzătoare (lovituri, zgârieturi, umiditate excesivă etc.).
+
+Păstrează factura și certificatul de garanție și anunță problema cât mai repede, ideal cu poze și detalii clare. Dacă defectul este confirmat, produsul poate fi reparat, înlocuit sau soluționat printr-o variantă stabilită de comun acord, fără costuri suplimentare pentru client.</p>
+    </section>
   </div>
 </div>
 
@@ -1682,6 +1787,54 @@ function closeHeartTip(){
   sheet.addEventListener('pointerup', endDrag);
   sheet.addEventListener('pointercancel', endDrag);
 })();
+/* ── Info (deep-dive) view ── */
+function openInfo(sec){
+  openView('info');
+  scrollInfoTo(sec, true);
+}
+function scrollInfoTo(sec, instant){
+  var view = document.getElementById('view-info');
+  var target = document.getElementById('info-' + sec);
+  if (!target) return;
+  var top = target.offsetTop - document.querySelector('#view-info .info-topbar').offsetHeight;
+  view.scrollTo({ top: Math.max(0, top), behavior: instant ? 'auto' : 'smooth' });
+  setActiveInfoChip(sec, instant);
+}
+function setActiveInfoChip(sec, instant){
+  var chips = document.querySelectorAll('.info-chip');
+  var active;
+  chips.forEach(function(c){
+    var on = c.dataset.sec === sec;
+    c.classList.toggle('on', on);
+    if (on) active = c;
+  });
+  if (active){
+    var nav = document.getElementById('info-nav');
+    nav.scrollTo({ left: Math.max(0, active.offsetLeft - 20), behavior: instant ? 'auto' : 'smooth' });
+  }
+}
+(function(){
+  var view = document.getElementById('view-info');
+  var sections = Array.prototype.slice.call(document.querySelectorAll('.info-sec'));
+  var lastSec = '';
+  view.addEventListener('scroll', function(){
+    /* pick whichever section occupies the most visible area below the sticky topbar --
+       robust even when the last sections are shorter than one viewport and can't scroll
+       far enough for a simple "top has passed the header" check to ever select them */
+    var topbarH = document.querySelector('#view-info .info-topbar').offsetHeight;
+    var viewRect = view.getBoundingClientRect();
+    var winTop = viewRect.top + topbarH;
+    var winBottom = viewRect.bottom;
+    var current = sections[0], bestArea = -1;
+    sections.forEach(function(s){
+      var r = s.getBoundingClientRect();
+      var area = Math.min(r.bottom, winBottom) - Math.max(r.top, winTop);
+      if (area > bestArea){ bestArea = area; current = s; }
+    });
+    var sec = current.id.replace('info-', '');
+    if (sec !== lastSec){ lastSec = sec; setActiveInfoChip(sec, false); }
+  });
+})();
 function closeView(name){
   document.getElementById('view-' + name).classList.remove('open');
   if (!document.querySelector('.view.open')) document.body.style.overflow = '';
@@ -1737,12 +1890,12 @@ function renderMaterialsGrid(){
         '<div class="imw"><img src="' + fabricAsset(name) + '" alt="' + name + '">' +
         '<button class="mtile-heart' + (isLiked(name) ? ' on' : '') + '" data-name="' + name + '" onclick="event.stopPropagation();toggleHeart(this,\'' + name + '\')" aria-label="Salvează ' + name + '">' + heartSVG() + '</button></div>' +
         '<div class="lr"><span class="nm">' + name + '</span>' +
-        '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" onclick="event.stopPropagation();openSwatchView(\'' + name + '\')"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>';
+        '<button type="button" class="info-i" aria-label="Detalii ' + name + '" onclick="event.stopPropagation();openSwatchView(\'' + name + '\')"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>';
     }).join('');
     wrap.insertAdjacentHTML('beforeend',
       '<div class="collection-section" data-slug="' + slug + '">' +
       '<div class="col-head"><span class="t">Colectia ' + c.name +
-      '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" onclick="event.stopPropagation();showCollectionDetail(\'' + slug + '\')"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+      '<button type="button" class="info-i" aria-label="Detalii colecția ' + c.name + '" onclick="event.stopPropagation();showCollectionDetail(\'' + slug + '\')"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span>' +
       '<span class="pr">pret<b>' + c.price.toLocaleString('ro-RO') + ' lei</b></span></div>' +
       '<div class="col-meta">' + c.finish.toUpperCase() + '&nbsp;&nbsp;|&nbsp;&nbsp;' + c.martindale + ' MARTINDALE&nbsp;&nbsp;|&nbsp;&nbsp;' + c.surface.toUpperCase() + '</div>' +
       '<div class="mgrid">' + tilesHTML + '</div></div>');
@@ -2098,7 +2251,7 @@ function buildSamplesGrid(){
     }).join('');
     wrap.insertAdjacentHTML('beforeend',
       '<div class="col-head"><span class="t">Colecția ' + c.name +
-      '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" onclick="event.stopPropagation();showCollectionDetail(\'' + slug + '\')"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div><div class="mgrid">' + tilesHTML + '</div>');
+      '<button type="button" class="info-i" aria-label="Detalii colecția ' + c.name + '" onclick="event.stopPropagation();showCollectionDetail(\'' + slug + '\')"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></div><div class="mgrid">' + tilesHTML + '</div>');
   });
 }
 function toggleSample(el, name){
@@ -2175,6 +2328,10 @@ function pickShape(el){
 function pressFeedback(el){
   el.style.transition = 'transform .1s'; el.style.transform = 'scale(.97)';
   setTimeout(function(){ el.style.transform = ''; }, 120);
+}
+function toggleFavorite(btn){
+  var on = btn.classList.toggle('on');
+  toast(on ? 'Adăugat la favorite' : 'Eliminat din favorite');
 }
 var toastT;
 function toast(msg){
