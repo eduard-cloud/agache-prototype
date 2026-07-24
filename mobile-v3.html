@@ -863,6 +863,11 @@ function setActiveCfgChip(sec, instant){
   renderColors();
   updatePreview();
   updateSummary();
+
+  var hashSec = location.hash.replace('#', '');
+  if (['config','needs','material','color','summary'].indexOf(hashSec) > -1){
+    scrollCfgTo(hashSec, true);
+  }
 })();
 </script>
 </body>
