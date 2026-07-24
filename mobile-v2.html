@@ -1741,8 +1741,17 @@ function railNav(id, d){
 }
 
 /* ── Views (materials / collection) ── */
+/* whichever overlay (view / samples sheet / swatch modal) was opened most recently
+   renders on top, no matter which one it was opened from over which other one */
+var overlayZTop = 100;
+function bringToFront(el){
+  overlayZTop += 1;
+  el.style.zIndex = overlayZTop;
+}
 function openView(name){
-  document.getElementById('view-' + name).classList.add('open');
+  var el = document.getElementById('view-' + name);
+  el.classList.add('open');
+  bringToFront(el);
   document.body.style.overflow = 'hidden';
   if (!location.hash.includes(name)) history.pushState({v:name}, '', '#' + name);
   if (name === 'materials') setTimeout(maybeShowHeartTip, 500);
@@ -2225,7 +2234,9 @@ function openModalNamed(name){
 function openModal(){
   var name = document.getElementById('smod-name').textContent;
   renderSwatchModal(name);
-  document.getElementById('smodal').classList.add('on');
+  var sm = document.getElementById('smodal');
+  sm.classList.add('on');
+  bringToFront(sm);
   document.getElementById('dim').classList.add('on');
   document.body.style.overflow = 'hidden';
 }
@@ -2273,7 +2284,9 @@ function renderSampleTray(){
 }
 function openSamplesModal(){
   buildSamplesGrid();
-  document.getElementById('samplesmodal').classList.add('on');
+  var sm = document.getElementById('samplesmodal');
+  sm.classList.add('on');
+  bringToFront(sm);
   document.getElementById('dim').classList.add('on');
   document.body.style.overflow = 'hidden';
 }
