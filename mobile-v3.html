@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Configurator Boston – Agache</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --purple:#4d35ff; --ink:#121212; --gray:#707173; --gray2:#b6b9be;
+  --hair:#ececec; --chipbg:#f2f2f2; --graysec:#f5f5f7;
+  --yellow:#feffbe; --yellow2:#ffffe0; --lav:#f6f5ff; --lavchip:#ebe8ff;
+  --blue:#eefbff; --cream:#f9f2df; --orange:#fa7800;
+  --red:#eb2f1e; --slate:#363944;
+}
+html,body{height:100%;-webkit-text-size-adjust:100%}
+body{font-family:'DM Sans',sans-serif;color:var(--ink);background:#fff;overflow-x:hidden}
+button{cursor:pointer;border:none;background:none;font-family:inherit;color:inherit}
+a{text-decoration:none;color:inherit}
+img,video{display:block;max-width:100%}
+
+/* ══ shared components reused verbatim from mobile-v2.html ══ */
+.circ-btn{width:32px;height:32px;border-radius:50%;background:#fff;border:1px solid #e3e3e3;display:flex;align-items:center;justify-content:center}
+.hbar{width:134px;height:5px;background:#d9d9d9;border-radius:3px;margin:16px auto 8px}
+.cfg-shape-row{display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:20px 0 4px;scroll-snap-type:x proximity}
+.cfg-shape-row::-webkit-scrollbar{display:none}
+.cfg-shape-tile{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start}
+.cfg-shape-imw{position:relative;width:92px;height:92px;border-radius:4px;border:1px solid var(--hair);overflow:hidden;display:flex;align-items:center;justify-content:center;transition:box-shadow .15s;scroll-snap-align:start}
+.cfg-shape-imw img{width:100%;height:100%;object-fit:contain}
+.cfg-shape-tile.on .cfg-shape-imw{box-shadow:inset 0 0 0 2px var(--ink)}
+.cfg-shape-check{display:none;position:absolute;right:6px;bottom:6px;width:20px;height:20px;border-radius:50%;background:var(--ink);align-items:center;justify-content:center}
+.cfg-shape-tile.on .cfg-shape-check{display:flex}
+.cfg-shape-label{margin-top:14px}
+.cfg-shape-label strong{font-size:15px;font-weight:600;display:block}
+.cfg-shape-label span{font-size:13px;color:var(--gray);margin-top:2px;display:block}
+.fchip{display:flex;align-items:center;gap:7px;background:var(--chipbg);border-radius:8px;height:30px;padding:0 10px;font-size:13px}
+.rz-row{display:flex;align-items:center;justify-content:space-between;padding:20px 17px;border-bottom:1px solid var(--hair)}
+.rz-row .k{font-size:15px;font-weight:600}
+.rz-row .k em{display:block;font-style:normal;font-weight:400;font-size:13px;color:var(--gray);margin-top:3px}
+.rz-row .vv{display:flex;align-items:center;gap:10px}
+.rz-row .v{font-size:14px;font-weight:600}
+.rz-row .v i{font-style:normal;color:var(--gray2);font-weight:400}
+.ig{display:flex;gap:8px;color:var(--slate)}
+#toast{position:fixed;left:50%;bottom:34px;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;font-size:14px;padding:12px 22px;border-radius:22px;transition:transform .3s;z-index:120;white-space:nowrap}
+#toast.on{transform:translateX(-50%) translateY(0)}
+
+/* ══ #cfg shell ══ */
+#cfg{position:fixed;inset:0;max-width:480px;margin:0 auto;display:flex;flex-direction:column;height:100dvh;background:#fff;overflow:hidden}
+
+/* ── preview zone ── */
+#cfg-preview{position:relative;flex:1 1 auto;min-height:120px;overflow:hidden;background:var(--graysec)}
+#cfg-shape-img{width:100%;height:100%;object-fit:contain;background:var(--graysec)}
+#cfg-close{position:absolute;left:20px;top:20px;z-index:2;background:rgba(255,255,255,.9);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);border:none}
+#cfg-measure{position:absolute;right:20px;top:20px;z-index:2;width:40px;height:40px;padding:0;border-radius:50%;overflow:hidden;border:none}
+#cfg-measure img{width:100%;height:100%}
+#cfg-3d{position:absolute;right:20px;top:68px;z-index:2;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.85);box-shadow:0 1px 4px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
+#cfg-fabric-pill{position:absolute;left:16px;bottom:16px;z-index:2;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.92);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);border-radius:9999px;padding:6px 14px 6px 6px;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+#cfg-fabric-pill .cfg-fabric-thumb{width:32px;height:32px;border-radius:50%;overflow:hidden;flex:0 0 auto}
+#cfg-fabric-pill .cfg-fabric-thumb img{width:100%;height:100%;object-fit:cover}
+#cfg-fabric-pill span#cfg-fabric-name{font-size:13px;font-weight:500;white-space:nowrap}
+
+/* ── bottom sheet ── */
+#cfg-sheet{position:relative;flex:0 0 auto;height:var(--sheet-h);background:#fff;border-radius:24px 24px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.14);display:flex;flex-direction:column;overflow:hidden;z-index:3}
+#cfg-sheet.dragging{transition:none}
+.cfg-handle{flex:0 0 auto;display:flex;justify-content:center;touch-action:none;padding-top:4px}
+.cfg-chips{flex:0 0 auto;display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding:0 20px 16px;border-bottom:1px solid var(--hair)}
+.cfg-chips::-webkit-scrollbar{display:none}
+.cfg-chip{flex:0 0 auto;background:#fff;border:1px solid #c8cbd0;border-radius:9999px;padding:10px 16px;font-size:14px;letter-spacing:-.28px;white-space:nowrap;color:var(--ink);transition:all .15s}
+.cfg-chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.cfg-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 20px}
+.cfg-sec{padding-top:28px;padding-bottom:20px;scroll-margin-top:8px;border-top:1px solid var(--hair)}
+.cfg-sec:first-child{border-top:none}
+.cfg-sec h3{font-size:20px;font-weight:600;letter-spacing:-.4px;line-height:1.15}
+.cfg-sec .cfg-sec-sub{font-size:14px;line-height:1.5;color:var(--gray);margin-top:6px}
+
+/* ── section 2a: household needs ── */
+.cfg-sub-sec{border-top:1px solid var(--hair);padding-top:28px;margin-top:8px}
+.cfg-needs-row{display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:20px 0 4px;scroll-snap-type:x proximity}
+.cfg-needs-row::-webkit-scrollbar{display:none}
+.cfg-needs-tile{flex:0 0 auto;width:92px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center}
+.cfg-needs-imw{position:relative;width:92px;height:92px;border-radius:4px;border:1px solid var(--hair);color:var(--ink);overflow:hidden;display:flex;align-items:center;justify-content:center;transition:box-shadow .15s;scroll-snap-align:start}
+.cfg-needs-imw svg{height:50px;width:auto;max-width:70%}
+.cfg-needs-tile.on .cfg-needs-imw{box-shadow:inset 0 0 0 2px var(--ink)}
+.cfg-needs-check{display:none;position:absolute;right:6px;bottom:6px;width:20px;height:20px;border-radius:50%;background:var(--ink);align-items:center;justify-content:center}
+.cfg-needs-tile.on .cfg-needs-check{display:flex}
+.cfg-needs-tile-name{display:block;font-size:12px;margin-top:6px;color:var(--ink);text-align:center}
+.cfg-needs-label{margin-top:14px;font-size:13px;color:var(--gray)}
+
+/* ── section 2b: material ── */
+.cfg-mat-filters{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.cfg-fchip.on{background:var(--ink);color:#fff}
+.cfg-mat-row{display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:20px 0 4px;scroll-snap-type:x proximity}
+.cfg-mat-row::-webkit-scrollbar{display:none}
+.cfg-mat-tile{flex:0 0 auto;width:92px;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;text-align:left}
+.cfg-mat-imw{position:relative;width:92px;height:92px;border-radius:4px;border:1px solid var(--hair);overflow:hidden;display:flex;align-items:center;justify-content:center;transition:box-shadow .15s;scroll-snap-align:start}
+.cfg-mat-imw img{width:100%;height:100%;object-fit:cover}
+.cfg-mat-tile.on .cfg-mat-imw{box-shadow:inset 0 0 0 2px var(--ink)}
+.cfg-mat-check{display:none;position:absolute;right:6px;bottom:6px;width:20px;height:20px;border-radius:50%;background:var(--ink);align-items:center;justify-content:center}
+.cfg-mat-tile.on .cfg-mat-check{display:flex}
+.cfg-mat-tile-name{display:block;font-size:12px;margin-top:6px;color:var(--ink)}
+.cfg-mat-detail{margin-top:14px}
+.cfg-mat-detail strong{font-size:15px;font-weight:600;display:block}
+.cfg-mat-detail-texture{font-size:13px;color:var(--gray);margin-top:2px;display:block}
+.cfg-mat-detail-badges{display:flex;flex-direction:column;gap:4px;margin-top:10px}
+.cfg-badge{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--slate)}
+.cfg-badge svg{flex:0 0 auto;width:14px;height:14px}
+.cfg-mat-detail-foot{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+.cfg-mat-detail-foot span:first-child{font-size:11px;color:var(--gray)}
+.cfg-mat-detail-foot span:last-child{font-size:14px;font-weight:700}
+.cfg-mat-empty{padding:24px 0;font-size:13px;color:var(--gray)}
+
+/* ── section 3: color ── */
+.cfg-color-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px 10px;margin-top:18px}
+.mtile{position:relative}
+.mtile .imw{position:relative;aspect-ratio:1;overflow:hidden}
+.mtile img{width:100%;height:100%;object-fit:cover}
+.mtile.on .imw::after{content:"";position:absolute;inset:0;border:2px solid var(--ink);box-shadow:inset 0 0 0 4px #fff}
+.mtile .lr{display:flex;align-items:center;justify-content:space-between;margin-top:9px}
+.mtile .nm{font-size:12px}
+.info-i{position:relative;flex:0 0 auto;width:18px;height:18px;display:flex;align-items:center;justify-content:center;padding:0;border-radius:50%}
+.info-i::before{content:'';position:absolute;top:50%;left:50%;width:44px;height:44px;transform:translate(-50%,-50%)}
+.info-i svg{width:16px;height:16px;pointer-events:none}
+.info-i:active{background:rgba(0,0,0,.08)}
+
+/* ── section 4: summary ── */
+.cfg-samples-btn{display:block;width:100%;height:48px;border:1px solid var(--ink);border-radius:24px;font-size:14px;font-weight:500;margin-top:20px}
+#cfg-sum-color-sw{width:32px;height:32px;border-radius:50%;flex:0 0 auto}
+
+/* ── cta bar ── */
+.cfg-cta{flex:0 0 auto;background:#fff;border-top:1px solid var(--hair);display:flex;align-items:center;justify-content:space-between;padding:12px 16px}
+.cfg-cta .nm{font-size:13px}
+.cfg-cta .pr{font-size:15px;font-weight:700;margin-top:2px}
+.cfg-cta .bb{height:44px;background:#000;color:#fff;border-radius:22px;padding:0 18px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:8px}
+</style>
+</head>
+<body>
+
+<div id="cfg">
+  <div id="cfg-preview">
+    <button class="circ-btn" id="cfg-close" onclick="location.href='index.html'" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <button id="cfg-measure" aria-label="Dimensiuni"><img src="assets/btn-measure.png" alt=""></button>
+    <button id="cfg-3d" onclick="pressFeedback(this)" aria-label="Vizualizare 3D">3D</button>
+    <img id="cfg-shape-img" src="assets/shape-3seat.jpg" alt="Canapea Boston">
+    <div id="cfg-fabric-pill">
+      <span class="cfg-fabric-thumb"><img id="cfg-fabric-thumb-img" src="" alt=""></span>
+      <span id="cfg-fabric-name"></span>
+    </div>
+  </div>
+
+  <div id="cfg-sheet">
+    <div class="cfg-handle" id="cfg-handle"><div class="hbar"></div></div>
+    <div class="cfg-chips" id="cfg-chips">
+      <button class="cfg-chip on" data-sec="config" onclick="scrollCfgTo('config')">Configurație</button>
+      <button class="cfg-chip" data-sec="material" onclick="scrollCfgTo('material')">Material</button>
+      <button class="cfg-chip" data-sec="color" onclick="scrollCfgTo('color')">Culoare</button>
+      <button class="cfg-chip" data-sec="summary" onclick="scrollCfgTo('summary')">Sumar</button>
+    </div>
+    <div class="cfg-scroll" id="cfg-scroll">
+
+      <section class="cfg-sec" id="sec-config">
+        <h3>Alege forma</h3>
+        <p class="cfg-sec-sub">Selectează configurația canapelei Boston.</p>
+        <div class="cfg-shape-row" id="shape-grid">
+          <button class="cfg-shape-tile on" data-name="Canapea 3 locuri" data-dim="245 x 100 cm" onclick="pickCfgShape(this)">
+            <span class="cfg-shape-imw"><img src="assets/shape-3seat.jpg" alt="Canapea 3 locuri"><span class="cfg-shape-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span></span>
+          </button>
+          <button class="cfg-shape-tile" data-name="Coltar 2 locuri cu insula pe stanga" data-dim="255 x 170 cm" onclick="pickCfgShape(this)">
+            <span class="cfg-shape-imw"><img src="assets/shape-corner-left.jpg" alt="Coltar 2 locuri cu insula pe stanga"><span class="cfg-shape-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span></span>
+          </button>
+          <button class="cfg-shape-tile" data-name="Coltar 2 locuri cu insula pe dreapta" data-dim="255 x 170 cm" onclick="pickCfgShape(this)">
+            <span class="cfg-shape-imw"><img src="assets/shape-corner-right.jpg" alt="Coltar 2 locuri cu insula pe dreapta"><span class="cfg-shape-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span></span>
+          </button>
+          <button class="cfg-shape-tile" data-name="Coltar 4 locuri" data-dim="255 x 255 cm" onclick="pickCfgShape(this)">
+            <span class="cfg-shape-imw"><img src="assets/shape-corner-4seat.jpg" alt="Coltar 4 locuri"><span class="cfg-shape-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span></span>
+          </button>
+        </div>
+        <div class="cfg-shape-label">
+          <strong id="cfg-shape-sel-name">Canapea 3 locuri</strong>
+          <span id="cfg-shape-sel-dim">245 x 100 cm</span>
+        </div>
+      </section>
+
+      <section class="cfg-sec" id="sec-material">
+        <h3>Nevoi de lifestyle</h3>
+        <p class="cfg-sec-sub">Îți recomandăm materiale potrivite nevoilor tale.</p>
+        <div class="cfg-needs-row" id="cfg-needs"></div>
+        <div class="cfg-needs-label" id="cfg-needs-label"></div>
+
+        <div class="cfg-sub-sec">
+          <h3>Alege materialul</h3>
+          <p class="cfg-sec-sub">8 colecții de țesături, fiecare cu proprietăți proprii.</p>
+          <div class="cfg-mat-filters" id="cfg-mat-filters"></div>
+          <div class="cfg-mat-row" id="cfg-materials"></div>
+        </div>
+        <div class="cfg-mat-detail" id="cfg-mat-detail">
+          <strong id="cfg-mat-detail-name"></strong>
+          <span class="cfg-mat-detail-texture" id="cfg-mat-detail-texture"></span>
+          <div class="cfg-mat-detail-badges">
+            <span id="cfgmat-usp1" class="cfg-badge"></span>
+            <span id="cfgmat-usp2" class="cfg-badge"></span>
+            <span id="cfgmat-usp3" class="cfg-badge"></span>
+          </div>
+          <div class="cfg-mat-detail-foot">
+            <span id="cfg-mat-detail-durability"></span>
+            <span id="cfg-mat-detail-price"></span>
+          </div>
+        </div>
+      </section>
+
+      <section class="cfg-sec" id="sec-color">
+        <h3>Alege culoarea</h3>
+        <p class="cfg-sec-sub" id="cfg-color-sub"></p>
+        <div class="cfg-color-grid" id="cfg-colors"></div>
+      </section>
+
+      <section class="cfg-sec" id="sec-summary">
+        <h3>Sumar comandă</h3>
+        <div id="cfg-summary-body" style="margin-top:8px">
+          <div class="rz-row">
+            <div class="k">Formă<em id="cfg-sum-shape-dim"></em></div>
+            <div class="vv"><div class="v" id="cfg-sum-shape-name"></div></div>
+          </div>
+          <div class="rz-row">
+            <div class="k">Material<em id="cfg-sum-mat-texture"></em></div>
+            <div class="vv"><div class="v" id="cfg-sum-mat-name"></div></div>
+          </div>
+          <div class="rz-row">
+            <div class="k">Culoare<em id="cfg-sum-color-hex"></em></div>
+            <div class="vv"><span id="cfg-sum-color-sw"><img id="cfg-sum-color-img" style="width:100%;height:100%;object-fit:cover;border-radius:50%" alt=""></span><div class="v" id="cfg-sum-color-name"></div></div>
+          </div>
+          <div class="rz-row">
+            <div class="k">Preț total</div>
+            <div class="vv"><div class="v" id="cfg-sum-price"></div></div>
+          </div>
+        </div>
+        <button class="cfg-samples-btn" onclick="toast('Mostrele au fost adăugate în coș')">Comandă mostre</button>
+      </section>
+
+    </div>
+
+    <div class="cfg-cta" id="cfg-cta">
+      <div>
+        <div class="nm">Canapea Boston</div>
+        <div class="pr" id="cfg-price">—</div>
+      </div>
+      <button class="bb" onclick="addToCart(this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="21" r="1.6"/><circle cx="19" cy="21" r="1.6"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        Adaugă în coș
+      </button>
+    </div>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+/* ══════════ Data (copied verbatim from mobile-v2.html:1427-1530) ══════════ */
+var COLLECTIONS = {
+  luna: { name:'Luna', assetSlug:'lunareal', price:2140, tier:'Practic', finish:'Matte', surface:'Textured', materialTypes:['Țesătură texturată'],
+    waterproof:false, easyClean:false, petFriendly:false,
+    composition:'100% Poliester', width:145, weight:493, martindale:'90.000',
+    mace:null, rubbing:null, light:null, pilling:null,
+    fireTest:'Test cu țigara aprinsă', certifications:'OEKO-TEX®',
+    desc:'Material cu textură plăcută și elastică, realizat dintr-o țesătură tricotată durabilă, concepută pentru mobilier utilizat frecvent. Materialul oferă un echilibru foarte bun între confort, rezistență și durabilitate, fiind potrivit pentru utilizare zilnică.',
+    care:'Aspirați regulat cu o perie moale și ștergeți imediat petele cu o cârpă curată și uscată, fără a freca. Folosiți doar produse de curățare delicate, pe bază de apă, și evitați expunerea directă la soare pentru a preveni decolorarea.',
+    heroCode:'08',
+    colors:[['01','#CFD0CB'],['08','#342C2B'],['14','#645147'],['15','#7F7674'],['16','#0F6C89'],['17','#8E8A36'],['21','#C6BCA9'],['24','#3E1E30'],['27','#2F2321'],['30','#22303E'],['31','#929390'],['32','#35393C'],['33','#A0978E'],['34','#6A6461'],['35','#3C3B3C'],['36','#151514'],['41','#292526'],['60','#7C1C27'],['78','#6D2B48'],['85','#293E48'],['96','#202020']]
+  },
+  manila: { name:'Manila', price:2140, tier:'Practic', finish:'Glossy', surface:'Plush/Soft', materialTypes:['Pluș','Catifea'],
+    waterproof:false, easyClean:false, petFriendly:false,
+    composition:'100% Poliester', width:143, weight:220, martindale:'58.000',
+    mace:null, rubbing:null, light:null, pilling:null,
+    fireTest:'Test cu țigara aprinsă', certifications:'Fără AZO/DMF',
+    desc:'Material plușat, cu aspect fin de catifea și o gamă generoasă de peste 40 de nuanțe. Combină un aspect elegant, ușor lucios, cu un preț accesibil, fiind alegerea potrivită pentru un mobilier confortabil și primitor.',
+    care:'Aspirați regulat cu o perie moale, în sensul firului, pentru a menține aspectul plușat. Ștergeți imediat petele cu o cârpă curată și uscată, fără a freca, și evitați expunerea directă la soare pentru a preveni decolorarea.',
+    heroCode:'08',
+    colors:[['00','#EEEFE9'],['01','#F3EFE3'],['02','#ABA291'],['03','#908776'],['04','#30211C'],['05','#5A4C41'],['06','#43262A'],['07','#422D32'],['08','#8E8381'],['09','#CDB4BA'],['10','#ABCAC5'],['11','#8AB0A3'],['12','#4D6160'],['13','#CFCEC9'],['14','#C4C0B7'],['15','#94948A'],['16','#767573'],['17','#5B5C54'],['18','#2E2F29'],['19','#494947'],['20','#56626E'],['21','#857264'],['22','#453832'],['23','#982F33'],['25','#103440'],['26','#0E2944'],['27','#274452'],['28','#AF292A'],['29','#896157'],['30','#B98669'],['31','#955A2E'],['32','#D19B45'],['33','#AF862C'],['34','#53512B'],['35','#163629'],['36','#4D6F61'],['37','#0E5653'],['38','#516F6D'],['39','#32578E'],['40','#79733F'],['41','#7EAF5E']]
+  },
+  enjoylux: { name:'Enjoy Lux', price:2245, tier:'Confort', finish:'Matte', surface:'Smooth', materialTypes:['Microfibră','Țesătură netedă'],
+    waterproof:true, easyClean:true, petFriendly:false,
+    composition:'92% PES / 8% PA', width:146, weight:467, martindale:'55.000',
+    mace:null, rubbing:'4-5/5', light:'5/5', pilling:'5/5',
+    fireTest:'BS 5852: Partea 1', certifications:'OEKO-TEX®',
+    desc:'Microfibră fină, cu finisaj mat și tehnologie hidrofobă care limitează absorbția lichidelor — apa, cafeaua sau vinul rămân la suprafață sub formă de picături, fiind ușor de îndepărtat. Certificată OEKO-TEX®, oferă un confort curat și durabil pentru uz zilnic.',
+    care:'Datorită tratamentului hidrofob, majoritatea petelor se îndepărtează ușor cu o cârpă umedă, fără a fi nevoie de produse speciale. Aspirați regulat pentru a menține textura și evitați expunerea prelungită la soare directă.',
+    heroCode:'04',
+    colors:[['01','#C7C1B9'],['02','#AE9C8C'],['03','#988C8C'],['04','#443930'],['05','#393132'],['06','#231F1F'],['07','#887E76'],['08','#423E3C'],['09','#473F3E'],['10','#827C23'],['11','#B49738'],['12','#BE8031'],['13','#9A3C2E'],['14','#5F303B'],['15','#2D282E'],['16','#6A154E'],['17','#264D56'],['18','#5F847F'],['19','#AE9295'],['20','#ACACAC'],['21','#87868B'],['22','#3E4749'],['23','#484848'],['24','#302F34'],['25','#242325']]
+  },
+  milton: { name:'Milton', price:2360, tier:'Premium', finish:'Semi-Glossy', surface:'Smooth', materialTypes:['Țesătură netedă'],
+    waterproof:true, easyClean:false, petFriendly:false,
+    composition:'97% PES / 3% PA', width:140, weight:300, martindale:'90.000',
+    mace:null, rubbing:null, light:'4/5', pilling:'5/5',
+    fireTest:'BS 5852: Partea 1', certifications:null,
+    desc:'Țesătură tricotată cu o textură fină, ușor sidefată, care lasă umbre discrete în funcție de lumină. Beneficiază de o tehnologie hidrofobă avansată și este potrivită pentru un stil de viață activ, oferind rezistență sporită la uzura de zi cu zi.',
+    care:'Ștergeți petele imediat cu o cârpă curată, ușor umezită, fără a freca. Datorită finisajului hidrofob, lichidele nu pătrund imediat în material. Aspirați regulat cu o perie moale pentru a menține aspectul țesăturii și evitați expunerea prelungită la soare.',
+    heroCode:'01',
+    colors:[['01','#D3C2B8'],['02','#D1BFB5'],['03','#BDAA9A'],['04','#71605F'],['05','#463939'],['06','#2A2724'],['07','#8F4F2F'],['08','#88343B'],['09','#541F2E'],['10','#5A2454'],['11','#88733D'],['12','#265255'],['13','#243143'],['14','#6F6F6B'],['15','#4A4547'],['16','#272727'],['17','#47464A'],['18','#141C16'],['19','#1B292D'],['20','#1A1A32'],['21','#A2C2B3'],['22','#8E9EA5'],['23','#D7BDC2'],['24','#4E665A'],['25','#8599A6'],['26','#4F6772'],['27','#57522E'],['28','#AC6B41'],['29','#A99991'],['30','#C0B5AF'],['31','#E8E4E2'],['32','#AA8C84'],['33','#562E36']]
+  },
+  piano: { name:'Piano', price:2480, tier:'Lux', finish:'Glossy', surface:'Plush/Soft', materialTypes:['Catifea','Pluș'],
+    waterproof:true, easyClean:true, petFriendly:false,
+    composition:'100% Poliester', width:142, weight:310, martindale:'>60.000',
+    mace:null, rubbing:null, light:null, pilling:null,
+    fireTest:'BS 5852: Partea 1', certifications:null,
+    desc:'Catifea tricotată, extrem de moale la atingere, care combină eleganta aspectului catifelat cu un preț accesibil. Rezistă bine la lichide și se curăță ușor cu apă, fiind o alegere practică pentru mobilierul de zi cu zi.',
+    care:'Datorită tratamentului hidrofob, majoritatea petelor se îndepărtează ușor cu o cârpă umedă, fără a fi nevoie de produse speciale. Aspirați regulat pentru a menține textura și evitați expunerea prelungită la soare directă.',
+    heroCode:'04',
+    colors:[['01','#F3F1E6'],['02','#ECE3D6'],['03','#E1C8B0'],['04','#B7A6A0'],['05','#665452'],['06','#5F2534'],['07','#BD8910'],['08','#074B30'],['09','#537368'],['10','#114B54'],['11','#90ABB8'],['12','#1B1C32'],['13','#CEC3BB'],['14','#909396'],['15','#595353'],['16','#130F0E'],['17','#101010'],['18','#5A4947'],['19','#484848'],['20','#81605B'],['21','#774118'],['22','#8D7668'],['23','#7C622F'],['24','#3C4043'],['25','#585836'],['26','#27352A'],['28','#2E3740']]
+  },
+  spello: { name:'Spello', price:2480, tier:'Lux', finish:'Matte', surface:'Textured', materialTypes:['Țesătură texturată'],
+    waterproof:true, easyClean:false, petFriendly:false,
+    composition:'100% Poliester', width:142, weight:430, martindale:'>60.000',
+    mace:null, rubbing:null, light:null, pilling:null,
+    fireTest:'BS 5852: Partea 1', certifications:null,
+    desc:'Țesătură groasă, cu o textură proeminentă și un aspect natural, mat. Oferă o rezistență bună la lichide, fiind potrivită pentru mobilierul folosit intens, cu un aer rustic-elegant.',
+    care:'Ștergeți petele imediat cu o cârpă curată, ușor umezită, fără a freca. Datorită finisajului hidrofob, lichidele nu pătrund imediat în material. Aspirați regulat cu o perie moale pentru a menține aspectul țesăturii și evitați expunerea prelungită la soare.',
+    heroCode:'04',
+    colors:[['04','#B0915B'],['05','#9F867F'],['06','#683C47'],['08','#5D636D'],['09','#273940'],['10','#6F7D70'],['13','#62625E']]
+  },
+  maya: { name:'Maya', price:2610, tier:'Special', finish:'Semi-Glossy', surface:'Plush/Soft', materialTypes:['Catifea','Pluș'],
+    waterproof:true, easyClean:true, petFriendly:true,
+    composition:'100% Poliester', width:140, weight:350, martindale:'45.000–50.000',
+    mace:'5/5', rubbing:null, light:'4/5', pilling:'4/5',
+    fireTest:'BS 5852: Partea 1', certifications:null,
+    desc:'Tricot fin, cu un aspect discret țesut și o senzație la atingere asemănătoare cașmerului. Este ușor de curățat, rezistent la lichide și potrivit pentru animale de companie, fiind alegerea ideală pentru camere de zi, dormitoare și camere pentru copii.',
+    care:'Datorită tratamentului hidrofob, majoritatea petelor se îndepărtează ușor cu o cârpă umedă, fără a fi nevoie de produse speciale. Aspirați regulat pentru a menține textura și evitați expunerea prelungită la soare directă.',
+    heroCode:'03',
+    colors:[['01','#C9C2B8'],['02','#DCD6C2'],['03','#DACCB8'],['04','#B5925C'],['05','#CB9541'],['06','#835D48'],['07','#383E1A'],['08','#20302E'],['09','#222632'],['10','#1D2B3A'],['11','#525658'],['12','#5C6173'],['13','#89A3A2'],['14','#6C827E'],['15','#B4988C'],['16','#78605C'],['17','#5A4E4E'],['18','#6D625F'],['19','#807875'],['20','#ABA9A5'],['21','#666665'],['22','#2C282A']]
+  },
+  zoya: { name:'Zoya', price:2610, tier:'Special', finish:'Matte', surface:'Plush/Soft', materialTypes:['Catifea','Pluș'],
+    waterproof:true, easyClean:true, petFriendly:true,
+    composition:'100% Poliester', width:140, weight:390, martindale:'45.000–50.000',
+    mace:'5/5', rubbing:null, light:'4/5', pilling:'4/5',
+    fireTest:'BS 5852: Partea 1', certifications:null,
+    desc:'Tricot cu aspect mat de catifea, rezistent la lichide și ușor de întreținut. Potrivit pentru gospodăriile cu animale de companie, oferă un echilibru excelent între confort, eleganță și durabilitate.',
+    care:'Datorită tratamentului hidrofob, majoritatea petelor se îndepărtează ușor cu o cârpă umedă, fără a fi nevoie de produse speciale. Aspirați regulat pentru a menține textura și evitați expunerea prelungită la soare directă.',
+    heroCode:'01',
+    colors:[['01','#BCBDB8'],['02','#AAA7A4'],['03','#8B787B'],['04','#483437'],['05','#4C4443'],['06','#1B2E2B'],['07','#4A5858'],['08','#576460'],['09','#2F3336'],['10','#585C5F'],['11','#676768'],['12','#A0A4A2'],['13','#876934'],['14','#41442F'],['15','#283748']]
+  }
+};
+var COLLECTION_ORDER = ['luna','manila','enjoylux','milton','piano','spello','maya','zoya'];
+var SWATCH_INDEX = {};
+/* order the main color groups sweep around the wheel, neutrals bookending it */
+var FAMILY_ORDER = ['Bej', 'Galben', 'Roșu', 'Roz', 'Albastru', 'Verde', 'Maro / Bej', 'Gri', 'Negru'];
+/* Straight lightest-to-darkest, computed directly off the hex bytes (perceived-luminance
+   weighting, not HSL lightness) -- no family/hue grouping. Simpler and matches what's asked:
+   the whole collection reads as one continuous light-to-dark run. */
+function hexLuminance(hex){
+  var rgb = hexToRGB(hex);
+  return 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
+}
+COLLECTION_ORDER.forEach(function(slug){
+  var c = COLLECTIONS[slug];
+  c.slug = slug;
+  c.colors.sort(function(a, b){
+    return hexLuminance(b[1]) - hexLuminance(a[1]); /* lightest first */
+  });
+  c.colors.forEach(function(pair){
+    var name = c.name + ' ' + pair[0];
+    SWATCH_INDEX[name] = { slug:slug, code:pair[0], hex:pair[1], collection:c, name:name };
+  });
+});
+
+/* ══════════ Color helpers (copied verbatim from mobile-v2.html:1533-1597) ══════════ */
+function hexToRGB(hex){
+  hex = (hex || '').replace('#', '');
+  return { r: parseInt(hex.slice(0, 2), 16), g: parseInt(hex.slice(2, 4), 16), b: parseInt(hex.slice(4, 6), 16) };
+}
+function rgbToHSL(r, g, b){
+  r /= 255; g /= 255; b /= 255;
+  var max = Math.max(r, g, b), min = Math.min(r, g, b);
+  var h = 0, s = 0, l = (max + min) / 2;
+  if (max !== min){
+    var d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    if (max === r) h = (g - b) / d + (g < b ? 6 : 0);
+    else if (max === g) h = (b - r) / d + 2;
+    else h = (r - g) / d + 4;
+    h *= 60;
+  }
+  return { h: h, s: s * 100, l: l * 100 };
+}
+function colorFamilyRO(hex){
+  var rgb = hexToRGB(hex);
+  var hsl = rgbToHSL(rgb.r, rgb.g, rgb.b);
+  var h = hsl.h, s = hsl.s, l = hsl.l;
+  if (l < 12) return 'Negru';
+  /* only truly achromatic colors fall outside hue grouping -- upholstery fabrics are mostly
+     muted/desaturated, so a flat cutoff here was splitting visually-identical hues (e.g. two
+     blue-grays at s=11 vs s=16) into different families. Hue wins whenever there's a real hue
+     signal. The cutoff itself scales with lightness: dark tones carry a weak, noisy hue
+     reading (a few RGB values apart can swing the measured hue a lot near black), so a dark
+     color needs comparatively more saturation before it reads as "colored" rather than neutral. */
+  var neutralCutoff = Math.max(6, 24 - l * 0.6);
+  if (s < neutralCutoff) return l > 60 ? 'Bej' : 'Gri';
+  if (h >= 20 && h < 50) return l < 45 ? 'Maro / Bej' : 'Bej';
+  if (h >= 50 && h < 70) return 'Galben';
+  if (h >= 70 && h < 170) return 'Verde';
+  if (h >= 170 && h < 260) return 'Albastru';
+  if (h >= 260 && h < 330) return 'Roz';
+  /* remaining hues (330-360, 0-20) are red -- but pale/light versions read as pink, not red */
+  return l > 65 ? 'Roz' : 'Roșu';
+}
+var NAMED_COLORS = [
+  ['Alb', '#FFFFFF'], ['Ivoriu', '#F5F0E6'], ['Crem', '#EDE6D6'], ['Bej deschis', '#E3D5C0'], ['Bej', '#D4C5A9'],
+  ['Nisipiu', '#C6B598'], ['Bej închis', '#B0A183'], ['Camel', '#B98669'], ['Maro deschis', '#A67C52'], ['Maro', '#6B4423'],
+  ['Maro închis', '#4A2E1E'], ['Ciocolatiu', '#3B2417'], ['Antracit', '#3C3C3C'], ['Gri deschis', '#C9C9C9'], ['Gri', '#8E8E8E'],
+  ['Gri închis', '#5A5A5A'], ['Negru', '#151515'], ['Roșu', '#B22222'], ['Bordo', '#5C1A24'], ['Vișiniu', '#7C1C27'],
+  ['Rubiniu', '#9A3C2E'], ['Terracota', '#B0664B'], ['Cărămiziu', '#B25A3D'], ['Roz pudrat', '#E7C9CB'], ['Roz', '#E0A7B0'],
+  ['Roz vechi', '#A97C8A'], ['Prună', '#5C2A4A'], ['Fucsia', '#8B2E63'], ['Galben pastel', '#EDE1A0'], ['Galben', '#E5C13A'],
+  ['Muștar', '#B49738'], ['Ocru', '#8E7B2E'], ['Auriu', '#C9A227'], ['Verde crud', '#8FBF7F'], ['Verde salvie', '#8FA688'],
+  ['Verde oliv', '#6B6E3A'], ['Verde pădure', '#2F5233'], ['Verde smarald', '#1F6B4E'], ['Mentă', '#A9D3C4'], ['Petrol', '#1F5C63'],
+  ['Turcoaz', '#2E8C8C'], ['Albastru bebe', '#A9CBE0'], ['Albastru deschis', '#7CA9C9'], ['Albastru', '#3B6E9E'], ['Bleumarin', '#1B2A4A'],
+  ['Indigo', '#2A2E52'], ['Gri-albăstrui', '#7C8894'], ['Gri-verzui', '#7C8B7A']
+];
+function nearestColorName(hex){
+  var rgb = hexToRGB(hex);
+  var best = null, bestDist = Infinity;
+  NAMED_COLORS.forEach(function(entry){
+    var ref = hexToRGB(entry[1]);
+    var dist = Math.pow(rgb.r - ref.r, 2) + Math.pow(rgb.g - ref.g, 2) + Math.pow(rgb.b - ref.b, 2);
+    if (dist < bestDist){ bestDist = dist; best = entry[0]; }
+  });
+  return best || hex;
+}
+
+/* ══════════ fabricAsset (copied verbatim from mobile-v2.html:2099-2109) ══════════ */
+function fabricAsset(name){
+  var s = SWATCH_INDEX[name];
+  if (s) return 'assets/' + (s.collection.assetSlug || s.slug) + '-' + s.code + '.png';
+  /* legacy fallback: the untouched PDP swatch strip + hidden "Vazute recent" rows still use
+     old unpadded "Luna N" names that predate the real catalog — resolve them exactly like the
+     old lunaAsset() did, so that no-touch zone keeps rendering identically. */
+  var m = /^Luna (\d+)$/.exec(name || '');
+  if (m) return parseInt(m[1], 10) === 8 ? 'assets/modal-hero.png' : 'assets/luna-' + m[1] + '.png';
+  return 'assets/modal-hero.png';
+}
+
+/* ══════════ Property/label/badge helpers (copied verbatim from mobile-v2.html:2109-2193, incl. martRange dependency) ══════════ */
+function martRange(v){
+  v = v || '';
+  var nums = v.match(/[\d.]+/g);
+  if (!nums) return [0, 0];
+  var vals = nums.map(function(n){ return parseInt(n.replace(/\./g, ''), 10); });
+  return [Math.min.apply(null, vals), v.indexOf('>') > -1 ? Infinity : Math.max.apply(null, vals)];
+}
+function martPercent(v){
+  var nums = (v || '').match(/[\d.]+/g);
+  if (!nums) return 0;
+  var vals = nums.map(function(n){ return parseInt(n.replace(/\./g, ''), 10); });
+  return Math.min(100, Math.round((Math.max.apply(null, vals) / 90000) * 100));
+}
+function ratingPercent(v){
+  var m = /([\d.]+)/.exec(v || '');
+  return m ? Math.min(100, (parseFloat(m[1]) / 5) * 100) : 0;
+}
+function avgScore(c){
+  var vals = [c.mace, c.rubbing, c.light, c.pilling].map(function(v){
+    var m = v && /([\d.]+)/.exec(v);
+    return m ? parseFloat(m[1]) : null;
+  }).filter(function(v){ return v !== null; });
+  if (!vals.length) return '—';
+  var avg = vals.reduce(function(a, b){ return a + b; }, 0) / vals.length;
+  return String(Math.round(avg * 10) / 10);
+}
+var USP_ICONS = {
+  people: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+  droplet: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>',
+  hand: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>',
+  shield: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>',
+  grid: '<svg width="22" height="22" viewBox="0 0 24 24" fill="#4d35ff"><circle cx="7" cy="5" r="1.6"/><circle cx="13" cy="5" r="1.6"/><circle cx="7" cy="12" r="1.6"/><circle cx="13" cy="12" r="1.6"/><circle cx="7" cy="19" r="1.6"/><circle cx="13" cy="19" r="1.6"/></svg>'
+};
+function textureLabel(c){
+  if (c.surface === 'Plush/Soft') return c.finish === 'Glossy' ? 'Aspect catifelat, lucios' : 'Aspect catifelat, mat';
+  if (c.surface === 'Textured') return 'Textură proeminentă, mată';
+  if (c.surface === 'Smooth') return c.finish === 'Semi-Glossy' ? 'Textură fină, sidefată' : 'Aspect neted, mat';
+  return c.finish + ' · ' + c.surface;
+}
+function durabilityLabel(c){
+  var r = martRange(c.martindale);
+  if (r[1] >= 75000) return 'Pentru uz extrem';
+  if (r[1] >= 55000) return 'Pentru uz intensiv';
+  return 'Pentru uz zilnic';
+}
+/* 3 top USPs per collection: a shared, comparable pool of badge types (same "vocabulary"
+   across all 8 collections), each tied to real collection data — never fabricated. Priority
+   order below: the first 3 that actually apply to a given collection are shown, so premium
+   collections (real waterproof/easy-clean/pet-friendly claims) surface their strongest real
+   properties first, while every collection still always ends up with exactly 3 genuine badges
+   via the always-true fallbacks (texture, durability tier, composition) at the end. */
+var USP_BADGES = [
+  { icon: 'people', test: function(c){ return c.petFriendly; }, label: function(){ return 'Pet Friendly'; } },
+  { icon: 'droplet', test: function(c){ return c.waterproof; }, label: function(){ return 'Impermeabil'; } },
+  { icon: 'hand', test: function(c){ return c.easyClean; }, label: function(){ return 'Ușor de curățat'; } },
+  { icon: 'shield', test: function(c){ return !!c.certifications; }, label: function(c){ return c.certifications; } },
+  { icon: 'grid', test: function(){ return true; }, label: textureLabel },
+  { icon: 'people', test: function(){ return true; }, label: durabilityLabel },
+  { icon: 'shield', test: function(){ return true; }, label: function(c){ return c.composition; } }
+];
+function renderUSPBadges(prefix, c){
+  var picked = [];
+  for (var i = 0; i < USP_BADGES.length && picked.length < 3; i++){
+    if (USP_BADGES[i].test(c)) picked.push(USP_BADGES[i]);
+  }
+  picked.forEach(function(badge, i){
+    var el = document.getElementById(prefix + '-usp' + (i + 1));
+    if (el) el.innerHTML = USP_ICONS[badge.icon] + badge.label(c);
+  });
+}
+function fillCollectionText(p, c){
+  renderUSPBadges(p, c);
+  document.getElementById(p + '-desc').textContent = c.desc;
+  document.getElementById(p + '-care').textContent = c.care;
+  document.getElementById(p + '-comp').textContent = c.composition;
+  document.getElementById(p + '-weight').textContent = c.weight + ' g/m²';
+  document.getElementById(p + '-width').textContent = c.width + ' cm';
+  document.getElementById(p + '-fire').innerHTML = c.fireTest === 'BS 5852: Partea 1' ? 'BS 5852: Partea 1: 1979<br>sursa 0 (țigară)' : c.fireTest;
+  document.getElementById(p + '-cert').textContent = c.certifications || '—';
+  document.getElementById(p + '-maint').textContent = c.easyClean ? 'Ușor de întreținut, curățare cu apă' : (c.waterproof ? 'Rezistent la lichide, curățare delicată' : 'Necesită curățare delicată, la uscat');
+  document.getElementById(p + '-mart-v').textContent = c.martindale;
+  document.getElementById(p + '-mart-bar').style.width = martPercent(c.martindale) + '%';
+  [['mace', c.mace], ['rub', c.rubbing], ['light', c.light], ['pill', c.pilling]].forEach(function(pair){
+    var vEl = document.getElementById(p + '-' + pair[0] + '-v');
+    var bEl = document.getElementById(p + '-' + pair[0] + '-bar');
+    if (pair[1]){
+      vEl.innerHTML = pair[1].replace(/\/5$/, '<i>/5</i>');
+      bEl.style.width = ratingPercent(pair[1]) + '%';
+    } else {
+      vEl.textContent = '—';
+      bEl.style.width = '0%';
+    }
+  });
+  document.getElementById(p + '-score').innerHTML = avgScore(c) + '<i>/5</i>';
+}
+
+/* ══════════ Cart + feedback (copied verbatim from mobile-v2.html:2330-2359) ══════════ */
+function addToCart(btn){
+  var orig = btn.innerHTML;
+  btn.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg> Adăugat în coș';
+  toast('Produsul a fost adăugat în coș');
+  setTimeout(function(){ btn.innerHTML = orig; }, 1800);
+}
+function pressFeedback(el){
+  el.style.transition = 'transform .1s'; el.style.transform = 'scale(.97)';
+  setTimeout(function(){ el.style.transform = ''; }, 120);
+}
+var toastT;
+function toast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('on');
+  clearTimeout(toastT);
+  toastT = setTimeout(function(){ t.classList.remove('on'); }, 2200);
+}
+
+/* ══════════ v3-specific: configurator state + rendering ══════════ */
+var sel = { shapeEl: null, collectionSlug: 'luna', colorName: null, needs: [] };
+var activeMaterialFilter = null;
+var MATERIAL_FILTERS = [
+  { label:'Catifea', stem:'Catifea' },
+  { label:'Pluș', stem:'Pluș' },
+  { label:'Microfibră', stem:'Microfibr' },
+  { label:'Țesături', stem:'Țesătur' }
+];
+var LUNA_SOFA_CODES = ['5','6','8','10','13','14'];
+
+var NEED_ICON_BABY = '<svg width="34" height="34" viewBox="0 0 93 93" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.325 17.919C0.425 18.219 2.525 25.119 3.725 28.219C4.425 29.919 6.625 36.719 6.925 40.219C7.325 44.619 12.125 51.219 21.425 52.019C22.425 52.219 23.425 52.219 24.425 52.219C28.425 52.219 35.425 51.119 39.725 44.319C42.125 40.519 44.125 39.219 48.925 37.519C52.225 36.319 54.425 34.319 54.725 32.319C54.925 30.919 54.325 29.519 53.225 28.619C51.525 27.219 48.425 27.819 45.425 28.419C44.425 28.719 43.325 28.819 42.225 28.819L41.625 28.619C40.325 28.319 39.225 28.019 40.325 22.719C41.725 15.919 42.925 8.91903 43.025 8.31903C43.525 6.21903 42.325 4.01903 40.325 3.31903C38.925 2.91903 37.025 3.51903 36.125 6.31903L32.525 18.919C32.225 19.819 31.425 20.519 31.225 20.419C31.025 20.319 30.725 19.819 30.625 18.219L30.225 3.91903C30.125 1.81903 28.425 0.119028 26.325 0.0190276C24.425 -0.180972 22.725 1.21903 22.525 3.11903L21.025 17.919C20.925 18.719 20.525 19.019 20.425 19.019C20.325 19.019 19.925 18.719 19.625 17.519L16.625 5.31903C16.225 3.31903 14.325 1.81903 12.325 2.01903C10.925 2.21903 9.325 3.41903 9.425 6.21903V6.31903L11.225 20.419C11.325 21.619 11.025 22.819 10.525 23.919C10.325 23.619 10.125 23.419 10.025 23.119L7.225 15.819C6.625 13.519 4.325 12.219 2.025 12.819C0.525 13.419 -0.575 15.219 0.325 17.919Z" fill="currentColor"/><path d="M65.6251 43.719C66.3251 40.819 64.9251 39.419 63.5251 39.119C61.3251 38.719 59.2251 40.019 58.6251 42.119C58.4251 42.719 55.9251 49.419 53.7251 56.019C52.0251 61.119 50.9251 60.819 49.6251 60.419C49.4251 60.319 49.2251 60.319 49.0251 60.219C48.1251 59.619 47.2251 59.019 46.5251 58.219C44.2251 56.219 41.8251 54.119 39.6251 54.419C38.2251 54.519 37.0251 55.519 36.4251 56.819C35.6251 58.819 36.5251 61.519 38.8251 64.219C42.0251 68.119 43.1251 70.219 43.3251 74.719C43.7251 86.119 54.2251 90.319 55.2251 90.719C57.6251 91.919 60.3251 92.519 63.0251 92.519C68.0251 92.519 72.0251 90.219 73.7251 87.819C75.8251 84.919 81.1251 80.219 82.5251 79.119C85.1251 77.119 90.4251 72.219 90.6251 72.019C92.8251 70.119 92.7251 68.019 91.6251 66.719C89.9251 65.019 87.3251 65.019 85.6251 66.719L79.4251 71.619C79.1251 71.819 78.8251 71.919 78.5251 72.019C78.6251 70.819 79.0251 69.619 79.7251 68.619L88.4251 57.419L88.5251 57.319C90.0251 54.919 89.3251 53.119 88.2251 52.219C86.5251 51.019 84.2251 51.319 82.8251 52.819L74.0251 61.819C73.2251 62.619 72.6251 62.719 72.6251 62.719C72.4251 62.319 72.5251 61.819 72.7251 61.519L78.9251 47.919C79.7251 46.219 78.9251 44.219 77.2251 43.419C75.3251 42.419 73.0251 43.019 71.9251 44.819L64.3251 56.919C63.4251 58.319 62.8251 58.519 62.7251 58.519C62.2251 57.919 62.1251 57.219 62.3251 56.519L65.6251 43.719ZM61.6251 60.719C62.5251 61.119 64.3251 61.319 66.3251 58.219L73.9251 46.119C74.4251 45.419 75.3251 45.219 76.0251 45.619C76.5251 45.819 76.8251 46.419 76.6251 46.919L70.4251 60.519C69.7251 62.319 70.0251 64.019 71.2251 64.819C71.7251 65.119 73.5251 66.019 75.8251 63.519L84.6251 54.519C85.1251 53.919 85.9251 53.819 86.6251 54.119C87.1251 54.519 86.6251 55.519 86.4251 55.919L77.8251 67.119C76.9251 68.319 75.1251 72.219 76.7251 73.919C77.3251 74.619 78.5251 75.119 80.8251 73.719L80.9251 73.619L87.2251 68.619C87.8251 67.919 88.9251 67.719 89.7251 68.319C90.1251 68.819 89.6251 69.519 88.9251 70.119C88.8251 70.219 83.4251 75.119 80.9251 77.119C79.2251 78.419 73.8251 83.319 71.6251 86.319C69.9251 88.619 64.0251 92.119 56.1251 88.419H56.0251C55.7251 88.319 46.2251 84.819 45.8251 74.719C45.6251 69.419 44.2251 66.819 40.8251 62.719C38.8251 60.319 38.5251 58.519 38.8251 57.719C38.9251 57.519 39.0251 57.119 40.0251 56.919H40.2251C41.3251 56.919 43.5251 58.919 44.9251 60.119C46.6251 61.619 47.6251 62.419 48.6251 62.619L49.1251 62.719C52.0251 63.519 54.1251 62.719 56.2251 56.619C58.5251 49.819 61.1251 42.819 61.1251 42.719V42.619C61.3251 41.819 62.1251 41.219 63.0251 41.319C63.6251 41.419 63.3251 42.619 63.3251 42.919L60.0251 55.619C59.4251 57.619 60.0251 60.019 61.6251 60.719Z" fill="currentColor"/></svg>';
+
+var NEED_ICON_CAT = '<svg width="34" height="34" viewBox="0 0 71 91" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M25.1868 86.5518C24.6974 85.5672 23.9208 83.7774 23.2653 81.333C21.8168 81.529 18.2044 82.3087 18.0959 85.2148C18.0697 85.9248 18.2852 86.4867 18.7543 86.9327C19.9634 88.0834 22.5815 88.2376 23.9245 88.1904C24.1789 87.6936 24.568 87.2671 25.085 86.9409C25.2129 86.8601 25.2571 86.6933 25.1868 86.5518Z" fill="currentColor"/><path d="M46.5794 81.333C45.924 83.7774 45.1473 85.5672 44.658 86.5518C44.5884 86.6925 44.6318 86.8601 44.7605 86.9409C45.2775 87.2671 45.6666 87.6936 45.921 88.1904C47.2655 88.2361 49.8873 88.079 51.0927 86.9319C51.5611 86.4852 51.7758 85.9241 51.7496 85.2148C51.6411 82.3087 48.028 81.529 46.5794 81.333Z" fill="currentColor"/><path d="M39.1468 41.09C39.1034 40.7818 38.4382 40.1301 37.4902 39.8106C37.2269 39.7215 36.9253 39.6587 36.65 39.6587C36.3769 39.6587 36.1285 39.7208 35.9676 39.8809C35.8958 39.952 35.6781 40.1682 35.7574 40.7107C35.8689 41.4709 36.4435 42.2348 36.6994 42.4136C37.0944 42.4114 38.3881 41.9924 38.9642 41.3953C39.1004 41.2546 39.1535 41.1402 39.1468 41.09Z" fill="currentColor"/><path d="M22.7949 13.8764C24.8652 13.5375 28.5644 13.2285 33.7077 13.928C33.3538 10.6456 32.4155 7.57042 30.9505 4.94641C27.8529 7.03993 25.3553 10.2124 22.7949 13.8764Z" fill="currentColor"/><path d="M6.58105 62.2677C5.75652 57.6279 7.26568 53.836 8.59676 50.4907C9.54775 48.1024 10.4449 45.8465 10.4449 43.5262C10.4449 38.0313 7.81562 34.6479 7.78943 34.6142C7.00081 33.4245 4.58929 30.4085 2.4434 30.0882C1.78048 29.9909 1.19237 30.1585 0.651412 30.6067C0.249618 30.9397 0.0386197 31.3362 0.00494981 31.8181C-0.086333 33.123 1.10932 34.7429 1.57846 35.2562C1.68844 35.3729 4.50998 38.4204 4.08724 44.0216C3.94358 45.9348 3.21032 47.4858 2.43517 49.1289C0.949203 52.2782 -0.901145 56.1981 0.506257 64.9373C2.08425 74.7382 11.4243 79.895 15.8014 81.8014C14.5189 79.6473 12.8444 75.8546 12.584 70.4898C11.0936 70.1569 7.72209 68.6934 6.58105 62.2677Z" fill="currentColor"/><path d="M65.4441 32.2101C66.9645 27.2315 67.4433 22.2596 66.8545 17.3954C63.982 18.3112 61.1463 20.309 58.0449 23.5675C62.1788 26.8866 64.3868 30.2266 65.4441 32.2101Z" fill="currentColor"/><path d="M69.8519 13.4006C64.7812 13.786 59.5407 16.1788 53.8849 20.6845C54.9601 21.3273 55.9463 21.9864 56.8524 22.6524C60.491 18.802 63.8273 16.5783 67.3005 15.7134C67.5048 15.6617 67.7218 15.6999 67.8983 15.8181C68.0734 15.9356 68.1916 16.1219 68.2223 16.3306C69.0977 22.291 68.4408 28.4062 66.2702 34.5057C66.0113 35.1589 65.085 35.0369 64.8583 34.5012C64.8216 34.3972 61.0334 24.0411 45.7757 18.5184C30.4282 12.9637 21.4204 15.6977 21.3306 15.7261C20.438 15.9131 20.0138 15.1911 20.4859 14.591C23.713 9.86977 26.7193 5.7583 30.8158 3.25625C30.9856 3.153 31.1884 3.12157 31.3822 3.16721C31.5752 3.21435 31.7413 3.33556 31.8446 3.50541C33.7062 6.55665 34.8659 10.2312 35.234 14.1593C35.7481 14.2446 36.2703 14.3374 36.8098 14.4436C36.5614 8.68384 34.8584 3.93564 31.582 0C28.2105 2.71005 10.6161 17.6722 12.8989 32.9127C14.1103 41.0025 18.0347 45.491 21.8072 47.9789C24.1125 49.4207 26.7829 50.4555 29.8715 51.0256C30.2831 51.0638 30.5861 51.4274 30.5487 51.8382C30.5053 52.3103 30.1701 52.4787 29.7376 52.5161C29.6598 52.5093 25.8184 52.1135 21.6366 49.5576C20.346 50.5797 15.6808 54.9051 14.328 64.9283C13.0635 74.296 16.4388 80.1815 17.8282 82.1501C19.2753 80.5938 21.6314 80.0521 22.9071 79.868C22.7829 79.3046 22.6647 78.7217 22.5614 78.1029C21.8821 74.0154 22.0152 70.5579 22.1544 68.8609C22.1903 68.4277 22.004 68.0274 21.6793 67.8411C20.4343 67.1243 19.6187 65.9795 19.2558 64.4367C19.1615 64.0342 19.4107 63.6316 19.8132 63.5366C20.2098 63.4423 20.6176 63.6915 20.7126 64.094C20.9805 65.2336 21.5401 66.0356 22.4253 66.5437C23.2498 67.0181 23.7287 67.9758 23.6464 68.9836C23.5117 70.6118 23.3837 73.9286 24.0369 77.8568C24.6939 81.8044 25.8783 84.581 26.5255 85.8844C26.9385 86.7157 26.6617 87.7138 25.8813 88.2054C25.3306 88.5526 25.0665 89.0344 25.0762 89.6779C25.0934 90.8803 26.0841 90.9925 26.3871 90.9978H32.0855C33.237 90.9978 34.1746 90.061 34.1746 88.9087V66.097C34.1746 65.684 34.509 65.3488 34.9228 65.3488C35.3365 65.3488 35.671 65.684 35.671 66.097V88.911C35.671 90.0625 36.6078 91 37.7593 91H43.4645C43.7608 90.9948 44.7514 90.8825 44.7686 89.6794C44.7783 89.0367 44.5142 88.5556 43.9635 88.2076C43.1839 87.7168 42.907 86.7194 43.3186 85.8874C43.9665 84.5825 45.1509 81.8059 45.8079 77.859C46.4611 73.9309 46.3331 70.6133 46.1985 68.9859C46.1162 67.978 46.595 67.0203 47.4203 66.5452C48.3047 66.0371 48.8644 65.2358 49.1322 64.0955C49.2273 63.693 49.635 63.4438 50.0316 63.5381C50.4341 63.6324 50.6833 64.0357 50.589 64.4382C50.2261 65.981 49.4106 67.1265 48.1663 67.8426C47.8408 68.0296 47.6545 68.43 47.6904 68.8632C47.8303 70.5601 47.9628 74.0169 47.2834 78.1052C47.1801 78.724 47.0619 79.3068 46.9377 79.8702C48.5845 80.1074 52.0263 80.9469 52.9841 83.7872C54.3974 82.3738 57.1015 78.81 57.9687 71.6159C59.0334 62.7727 53.861 57.2635 52.7514 56.1951C50.9459 56.4929 49.1674 56.6118 47.5116 56.6118C42.4663 56.6118 38.5569 55.5688 38.4708 55.5449C38.0728 55.4356 37.8386 55.0233 37.9486 54.6253C38.0586 54.2272 38.4701 53.9953 38.8681 54.1023C39.0485 54.1524 57.0402 58.9373 64.9077 47.3937C72.1325 36.7922 70.3039 17.2876 69.8519 13.4006ZM50.2201 37.0511C51.5939 37.0511 52.7072 38.1645 52.7072 39.5382C52.7072 40.9119 51.5939 42.0253 50.2201 42.0253C48.8464 42.0253 47.7331 40.9119 47.7331 39.5382C47.7331 38.1645 48.8464 37.0511 50.2201 37.0511ZM20.01 33.7799C20.2135 33.4207 20.6707 33.2928 21.0291 33.4978L24.9438 35.7133C25.3037 35.9168 25.4301 36.3732 25.2266 36.7331C25.0889 36.9763 24.836 37.1125 24.5749 37.1125C24.4499 37.1125 24.3235 37.081 24.2075 37.0152L20.2928 34.7997C19.9322 34.5962 19.8065 34.1398 20.01 33.7799ZM19.9621 39.9347C19.5723 39.9347 19.2438 39.6332 19.2161 39.2381C19.1877 38.8259 19.499 38.4682 19.9112 38.4398L23.918 38.1615C24.3213 38.133 24.6871 38.4435 24.7163 38.8558C24.7447 39.2681 24.4335 39.6257 24.0212 39.6542L20.0152 39.9325C19.9973 39.934 19.9801 39.9347 19.9621 39.9347ZM25.7144 41.9557L21.9509 44.1712C21.8319 44.2415 21.701 44.2744 21.5723 44.2744C21.3157 44.2744 21.0657 44.1427 20.9273 43.9055C20.7178 43.5494 20.836 43.0907 21.1922 42.8812L24.9557 40.6658C25.3126 40.4555 25.7713 40.576 25.9793 40.9306C26.1896 41.2875 26.0713 41.7462 25.7144 41.9557ZM25.9741 33.0234C25.9741 31.6497 27.0874 30.5364 28.4612 30.5364C29.8349 30.5364 30.9482 31.6497 30.9482 33.0234C30.9482 34.3972 29.8349 35.5105 28.4612 35.5105C27.0874 35.5105 25.9741 34.3972 25.9741 33.0234ZM39.6725 47.7708C37.4278 47.0765 36.3788 45.5883 35.9665 44.3687C35.2318 44.772 34.1596 45.2097 32.9168 45.2097C32.1229 45.2097 31.2655 45.0309 30.3946 44.5498C27.6127 43.0129 28.2068 39.6736 28.9101 38.1226C29.0814 37.7469 29.5236 37.5771 29.9007 37.7499C30.2763 37.9205 30.4432 38.3627 30.2741 38.7383C30.215 38.8708 28.8525 41.9879 31.1181 43.2396C32.735 44.1323 34.3459 43.5516 35.2557 43.0541C34.8457 42.5445 34.506 41.8868 34.3556 41.3107C34.0967 40.3178 34.295 39.4327 34.9131 38.8184C35.6104 38.1263 36.723 37.9707 37.9703 38.3927C39.1397 38.7877 40.4708 39.7365 40.6295 40.8857C40.6886 41.313 40.6003 41.9617 39.8423 42.6231C39.2183 43.1685 38.2045 43.6294 37.362 43.815C37.5902 44.5707 38.2411 45.7619 40.1154 46.3417C42.9504 47.2187 45.1861 44.2078 45.2086 44.1771C45.4517 43.8427 45.9171 43.7686 46.2531 44.0103C46.5868 44.252 46.6631 44.7181 46.4222 45.0533C46.3227 45.1917 44.2553 48.0073 41.2011 48.0073C40.7155 48.0073 40.2045 47.9355 39.6725 47.7708ZM48.6062 53.286C48.4917 53.3488 48.3675 53.3795 48.2456 53.3795C47.9815 53.3795 47.7263 53.2396 47.5894 52.9927L45.1599 48.5887C44.9602 48.2273 45.0918 47.7716 45.454 47.5726C45.8169 47.3728 46.271 47.5045 46.4708 47.8666L48.9003 52.2706C49.0993 52.6313 48.9676 53.0862 48.6062 53.286ZM53.2953 50.8917C53.1479 51.0795 52.9287 51.1775 52.7065 51.1775C52.5449 51.1775 52.3817 51.1251 52.2448 51.0174L47.7817 47.5082C47.4562 47.2531 47.4001 46.7824 47.656 46.4577C47.9111 46.133 48.381 46.0761 48.7065 46.332L53.1696 49.8412C53.4951 50.0963 53.5512 50.5669 53.2953 50.8917ZM55.1494 46.1337L49.537 45.3885C49.127 45.3339 48.8397 44.9568 48.895 44.5475C48.9504 44.1382 49.3238 43.8524 49.736 43.9055L55.2482 44.644C55.6582 44.6987 55.9455 45.0758 55.8901 45.485C55.84 45.8606 55.5183 46.1337 55.1494 46.1337Z" fill="currentColor"/></svg>';
+
+var NEED_ICON_WINE = '<svg width="34" height="34" viewBox="0 0 91 91" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M74.9156 76.2559C75.0231 76.4529 75.135 76.6544 75.2425 76.8513C75.2649 76.8961 75.2872 76.9454 75.2962 76.9946C75.5111 77.9124 75.3857 78.7138 75.0365 79.3854C74.6649 80.0972 74.0471 80.6435 73.3218 81.0151C72.6189 81.3732 71.813 81.5658 71.0384 81.5792C70.0758 81.5971 69.1491 81.333 68.5089 80.7688C68.3522 80.639 68.2716 80.4286 68.3163 80.2137C68.3298 80.1465 68.2671 79.9271 68.1328 79.5779C64.3317 81.6912 61.1798 83.9073 59.0889 85.8683C57.0966 87.7398 56.1027 89.2889 56.5235 90.1575C57.0115 91.1559 59.2994 91.2364 62.608 90.5604C66.1359 89.844 70.7161 88.2277 75.5068 85.8818C80.2973 83.5402 84.385 80.9167 87.1207 78.5706C89.6817 76.3723 91.0247 74.5143 90.5368 73.5159C90.1115 72.6428 88.249 72.4772 85.5179 72.9159C82.6615 73.3726 78.9454 74.5187 74.916 76.2424L74.9156 76.2559ZM52.3961 26.537C45.0938 26.725 37.6256 27.6742 34.8004 28.5741C39.0716 32.8811 50.7571 33.3959 59.3532 32.3796C61.8066 32.0886 64.0005 31.6722 65.6883 31.1887C67.1971 30.7544 68.2806 30.2798 68.7552 29.8097C68.791 29.6396 68.8268 29.4695 68.8626 29.2949C67.5239 26.9488 60.0875 26.34 52.4005 26.537L52.3961 26.537ZM68.339 31.3992C67.1436 35.3973 65.026 38.5358 63.2798 41.1236C61.1218 44.3203 59.4966 46.729 60.6383 49.0884C62.6037 53.1493 64.2871 56.8116 65.8765 60.2724C68.6524 66.3165 71.1506 71.7522 74.2174 77.3213C74.3428 77.9213 74.2577 78.4406 74.0383 78.866C73.7831 79.3585 73.3354 79.748 72.8116 80.0166C72.2609 80.2987 71.6297 80.4509 71.0207 80.4599C70.3805 80.4733 69.7761 80.3255 69.3553 80.0122C69.2791 79.7167 69.1359 79.3092 68.9344 78.7988C68.9344 78.7093 68.912 78.6198 68.8672 78.5392C68.8449 78.4989 68.818 78.4586 68.7867 78.4272C67.9718 76.4215 66.4495 73.189 64.708 69.643C61.0053 62.108 56.3044 53.0502 55.4178 51.7161C53.5464 48.8911 50.0721 48.4925 45.9173 48.0135C41.767 47.5344 36.9003 46.9747 32.45 43.7467C27.5072 40.1605 24.4135 35.2356 22.4615 30.5476C20.7423 26.4196 19.905 22.4753 19.4708 19.7935C20.7557 20.0174 22.9137 19.6771 25.6403 18.8623C27.1849 18.4011 28.9354 17.7922 30.8337 17.0535C31.6038 18.8623 31.8366 21.1143 32.0515 23.1648C32.2888 25.4571 32.4992 27.5211 33.4081 28.6851C37.4599 33.8876 50.2427 34.5949 59.4968 33.498C61.995 33.2025 64.247 32.7727 66.0066 32.2668C66.9244 32.0027 67.7168 31.7117 68.3481 31.3983L68.339 31.3992ZM34.0622 27.6385C33.5339 26.6401 33.3548 24.9298 33.1623 23.0494C32.9429 20.9138 32.7012 18.5723 31.8908 16.6336C34.3442 15.6486 37.0081 14.4622 39.7572 13.1146C45.0939 10.5044 49.7502 7.78232 52.9643 5.49449C55.2969 3.83349 56.8907 2.33363 57.4996 1.17854C63.0333 6.82872 70.9313 15.1387 69.0952 27.8976C66.5074 25.7979 59.5185 25.2203 52.3683 25.4083C44.6675 25.6098 36.7256 26.6619 34.0608 27.6334L34.0622 27.6385ZM31.3939 15.6268C33.8429 14.6418 36.5112 13.4599 39.2647 12.1122C44.5389 9.53341 49.1369 6.84259 52.3114 4.58616C55.2439 2.49535 56.9273 0.905986 56.6632 0.301506C56.6587 0.292553 56.6542 0.283598 56.6497 0.274643C56.3363 -0.298432 54.0486 0.0507891 50.5967 1.08501C46.8628 2.20429 41.9155 4.18317 36.6458 6.76201C34.546 7.78727 32.5447 8.83493 30.6956 9.8691C29.1824 10.7153 27.772 11.5526 26.496 12.354C26.8721 12.4748 27.2661 12.6002 27.687 12.7211C29.4555 13.2315 30.6148 14.2836 31.3939 15.6268ZM0.241504 26.0586C0.134053 24.4021 0.71608 22.7007 2.40842 22.0516C3.05761 21.8008 3.65302 21.8501 4.17246 22.1098C4.53063 22.2888 4.83955 22.5575 5.09922 22.8888C5.34099 23.1977 5.54246 23.5738 5.69916 23.9812C6.16031 25.1766 6.20509 26.681 5.70364 27.6928C4.93357 29.2419 4.06499 29.9134 3.23678 29.9985C2.38165 30.088 1.63847 29.5776 1.10116 28.7584C0.626584 28.0331 0.308699 27.0481 0.246027 26.0541L0.241504 26.0586ZM25.0499 13.0349C25.0365 13.0304 25.0231 13.0259 25.0096 13.0215C21.3473 11.6515 19.9415 10.1964 18.661 8.86667C17.9267 8.10556 17.2328 7.3847 16.1449 6.77139C14.3629 5.76403 12.6169 5.05664 10.8484 4.94924C9.10233 4.84179 7.30242 5.32532 5.36382 6.69082C3.81915 7.77877 1.45074 11.3605 0.452332 14.378C0.14341 15.3138 -0.0312056 16.1823 0.00462304 16.8808C0.0359634 17.4673 0.215044 17.915 0.5956 18.1434C0.980638 18.3762 1.594 18.4344 2.48492 18.2553C3.24156 18.1031 3.94889 16.6883 4.74146 15.1034C5.23842 14.1139 5.76224 13.0663 6.38458 12.1619C7.95607 9.88749 10.0783 8.5175 13.6018 10.9531C15.997 12.6096 16.897 14.5259 17.6446 16.1197C18.0878 17.0688 18.4729 17.8927 19.0907 18.3807C19.1623 18.4389 19.2205 18.5105 19.2608 18.5956C19.5921 19.1597 21.871 18.8105 25.3094 17.7808C26.8003 17.3331 28.4837 16.751 30.3059 16.0481C29.6523 14.996 28.721 14.1812 27.3779 13.7962C26.5093 13.5454 25.7392 13.2902 25.0452 13.0351L25.0499 13.0349Z" fill="currentColor"/></svg>';
+
+var NEED_DEFS = [
+  { key:'baby', label:'Copil mic', svg: NEED_ICON_BABY, test:function(c){ return c.easyClean; } },
+  { key:'cat', label:'Animal de companie', svg: NEED_ICON_CAT, test:function(c){ return c.petFriendly; } },
+  { key:'wine', label:'Pahar de vin', svg: NEED_ICON_WINE, test:function(c){ return c.waterproof; } }
+];
+
+function formatPrice(n){
+  return n.toLocaleString('ro-RO', { minimumFractionDigits:2, maximumFractionDigits:2 });
+}
+
+function previewBaseSrc(){
+  if (sel.collectionSlug === 'luna' && sel.shapeEl && sel.shapeEl.dataset.name === 'Canapea 3 locuri'){
+    var swInfo = SWATCH_INDEX[sel.colorName];
+    if (swInfo){
+      var code = String(parseInt(swInfo.code, 10));
+      if (LUNA_SOFA_CODES.indexOf(code) > -1) return 'assets/v2/luna-' + code + '-sofa.png';
+    }
+  }
+  return sel.shapeEl ? sel.shapeEl.querySelector('img').src : 'assets/shape-3seat.jpg';
+}
+
+function updatePreview(){
+  var img = document.getElementById('cfg-shape-img');
+  img.src = previewBaseSrc();
+  img.alt = sel.shapeEl ? sel.shapeEl.dataset.name : 'Canapea Boston';
+  var swInfo = SWATCH_INDEX[sel.colorName];
+  if (swInfo){
+    document.getElementById('cfg-fabric-thumb-img').src = fabricAsset(sel.colorName);
+    document.getElementById('cfg-fabric-name').textContent = swInfo.collection.name + ' · ' + nearestColorName(swInfo.hex);
+  }
+}
+
+function updateSummary(){
+  var c = COLLECTIONS[sel.collectionSlug];
+  var swInfo = SWATCH_INDEX[sel.colorName];
+  if (sel.shapeEl){
+    document.getElementById('cfg-sum-shape-name').textContent = sel.shapeEl.dataset.name;
+    document.getElementById('cfg-sum-shape-dim').textContent = sel.shapeEl.dataset.dim;
+  }
+  document.getElementById('cfg-sum-mat-name').textContent = c.name;
+  document.getElementById('cfg-sum-mat-texture').textContent = textureLabel(c) + ' · ' + durabilityLabel(c);
+  if (swInfo){
+    document.getElementById('cfg-sum-color-name').textContent = nearestColorName(swInfo.hex) + ' (' + sel.colorName + ')';
+    document.getElementById('cfg-sum-color-hex').textContent = swInfo.hex;
+    document.getElementById('cfg-sum-color-img').src = fabricAsset(sel.colorName);
+  }
+  var priceStr = formatPrice(c.price) + ' lei';
+  document.getElementById('cfg-sum-price').textContent = priceStr;
+  document.getElementById('cfg-price').textContent = priceStr;
+}
+
+function pickCfgShape(el){
+  document.querySelectorAll('#shape-grid .cfg-shape-tile').forEach(function(t){ t.classList.remove('on'); });
+  el.classList.add('on');
+  sel.shapeEl = el;
+  document.getElementById('cfg-shape-sel-name').textContent = el.dataset.name;
+  document.getElementById('cfg-shape-sel-dim').textContent = el.dataset.dim;
+  updatePreview();
+  updateSummary();
+  pressFeedback(el);
+}
+
+function renderNeeds(){
+  var row = document.getElementById('cfg-needs');
+  row.innerHTML = '';
+  NEED_DEFS.forEach(function(n){
+    var tile = document.createElement('button');
+    tile.className = 'cfg-needs-tile' + (sel.needs.indexOf(n.key) > -1 ? ' on' : '');
+    tile.dataset.key = n.key;
+    tile.innerHTML =
+      '<span class="cfg-needs-imw">' + n.svg +
+        '<span class="cfg-needs-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>' +
+      '</span>' +
+      '<span class="cfg-needs-tile-name">' + n.label + '</span>';
+    tile.onclick = function(){ toggleNeed(n.key, tile); };
+    row.appendChild(tile);
+  });
+  updateNeedsLabel();
+}
+
+function toggleNeed(key, tile){
+  var idx = sel.needs.indexOf(key);
+  if (idx > -1) sel.needs.splice(idx, 1); else sel.needs.push(key);
+  tile.classList.toggle('on');
+  updateNeedsLabel();
+  renderMaterials();
+  pressFeedback(tile);
+}
+
+function updateNeedsLabel(){
+  var label = document.getElementById('cfg-needs-label');
+  if (!sel.needs.length){
+    label.textContent = 'Alege una sau mai multe opțiuni pentru recomandări personalizate.';
+    return;
+  }
+  var names = sel.needs.map(function(key){
+    return NEED_DEFS.filter(function(n){ return n.key === key; })[0].label;
+  });
+  label.textContent = 'Recomandăm materiale potrivite pentru: ' + names.join(', ') + '.';
+}
+
+function renderMaterialFilters(){
+  var wrap = document.getElementById('cfg-mat-filters');
+  wrap.innerHTML = '';
+  MATERIAL_FILTERS.forEach(function(f){
+    var chip = document.createElement('button');
+    chip.className = 'fchip cfg-fchip' + (activeMaterialFilter === f.label ? ' on' : '');
+    chip.textContent = f.label;
+    chip.onclick = function(){
+      activeMaterialFilter = activeMaterialFilter === f.label ? null : f.label;
+      renderMaterialFilters();
+      renderMaterials();
+    };
+    wrap.appendChild(chip);
+  });
+}
+
+function renderMaterials(){
+  var row = document.getElementById('cfg-materials');
+  row.innerHTML = '';
+  var filter = MATERIAL_FILTERS.filter(function(f){ return f.label === activeMaterialFilter; })[0];
+  var needFilters = NEED_DEFS.filter(function(n){ return sel.needs.indexOf(n.key) > -1; });
+  COLLECTION_ORDER.forEach(function(slug){
+    var c = COLLECTIONS[slug];
+    if (filter && !c.materialTypes.some(function(t){ return t.indexOf(filter.stem) > -1; })) return;
+    if (needFilters.length && !needFilters.every(function(n){ return n.test(c); })) return;
+    var firstColor = c.name + ' ' + c.colors[0][0];
+    var tile = document.createElement('button');
+    tile.className = 'cfg-mat-tile' + (slug === sel.collectionSlug ? ' on' : '');
+    tile.dataset.slug = slug;
+    tile.innerHTML =
+      '<span class="cfg-mat-imw"><img src="' + fabricAsset(firstColor) + '" alt="' + c.name + '">' +
+        '<span class="cfg-mat-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>' +
+      '</span>' +
+      '<span class="cfg-mat-tile-name">' + c.name + '</span>';
+    tile.onclick = function(){ pickMaterial(tile); };
+    row.appendChild(tile);
+  });
+  if (!row.children.length){
+    row.innerHTML = '<div class="cfg-mat-empty">Niciun material nu corespunde tuturor criteriilor selectate. Încearcă mai puține opțiuni.</div>';
+  }
+  updateMaterialDetail(COLLECTIONS[sel.collectionSlug]);
+}
+
+function updateMaterialDetail(c){
+  document.getElementById('cfg-mat-detail-name').textContent = c.name;
+  document.getElementById('cfg-mat-detail-texture').textContent = textureLabel(c);
+  document.getElementById('cfg-mat-detail-durability').textContent = durabilityLabel(c) + ' · ' + avgScore(c) + '/5';
+  document.getElementById('cfg-mat-detail-price').textContent = formatPrice(c.price) + ' lei';
+  renderUSPBadges('cfgmat', c);
+}
+
+function pickMaterial(el){
+  document.querySelectorAll('.cfg-mat-tile').forEach(function(t){ t.classList.remove('on'); });
+  el.classList.add('on');
+  sel.collectionSlug = el.dataset.slug;
+  var c = COLLECTIONS[sel.collectionSlug];
+  sel.colorName = c.name + ' ' + c.colors[0][0];
+  updateMaterialDetail(c);
+  renderColors();
+  updatePreview();
+  updateSummary();
+  pressFeedback(el);
+}
+
+function renderColors(){
+  var grid = document.getElementById('cfg-colors');
+  grid.innerHTML = '';
+  var c = COLLECTIONS[sel.collectionSlug];
+  document.getElementById('cfg-color-sub').textContent = c.colors.length + ' nuanțe disponibile pentru ' + c.name + '.';
+  c.colors.forEach(function(pair){
+    var name = c.name + ' ' + pair[0];
+    var friendly = nearestColorName(pair[1]);
+    var tile = document.createElement('div');
+    tile.className = 'mtile' + (name === sel.colorName ? ' on' : '');
+    tile.dataset.name = name;
+    tile.innerHTML =
+      '<div class="imw"><img src="' + fabricAsset(name) + '" alt="' + name + '"></div>' +
+      '<div class="lr"><span class="nm">' + friendly + '</span>' +
+      '<button type="button" class="info-i" aria-label="Detalii ' + name + '"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>';
+    tile.onclick = function(){ pickColor(tile); };
+    tile.querySelector('.info-i').onclick = function(e){ e.stopPropagation(); showSwatchInfo(name); };
+    grid.appendChild(tile);
+  });
+}
+
+function showSwatchInfo(name){
+  var s = SWATCH_INDEX[name];
+  if (!s) return;
+  toast(nearestColorName(s.hex) + ' · ' + name + ' (' + s.hex + ')');
+}
+
+function pickColor(el){
+  document.querySelectorAll('#cfg-colors .mtile').forEach(function(t){ t.classList.remove('on'); });
+  el.classList.add('on');
+  sel.colorName = el.dataset.name;
+  updatePreview();
+  updateSummary();
+  pressFeedback(el);
+}
+
+/* ══════════ Chip scroll-spy (adapted from mobile-v2.html:1804-1846) ══════════ */
+function scrollCfgTo(sec, instant){
+  var scroll = document.getElementById('cfg-scroll');
+  var target = document.getElementById('sec-' + sec);
+  if (!target) return;
+  var top = target.offsetTop;
+  scroll.scrollTo({ top: Math.max(0, top), behavior: instant ? 'auto' : 'smooth' });
+  setActiveCfgChip(sec, instant);
+}
+function setActiveCfgChip(sec, instant){
+  var chips = document.querySelectorAll('.cfg-chip');
+  var active;
+  chips.forEach(function(c){
+    var on = c.dataset.sec === sec;
+    c.classList.toggle('on', on);
+    if (on) active = c;
+  });
+  if (active){
+    var nav = document.getElementById('cfg-chips');
+    nav.scrollTo({ left: Math.max(0, active.offsetLeft - 20), behavior: instant ? 'auto' : 'smooth' });
+  }
+}
+(function(){
+  var scroll = document.getElementById('cfg-scroll');
+  var lastSec = '';
+  scroll.addEventListener('scroll', function(){
+    var sections = Array.prototype.slice.call(document.querySelectorAll('.cfg-sec'));
+    var scrollRect = scroll.getBoundingClientRect();
+    var winTop = scrollRect.top;
+    var winBottom = scrollRect.bottom;
+    var current = sections[0], bestArea = -1;
+    sections.forEach(function(s){
+      var r = s.getBoundingClientRect();
+      var area = Math.min(r.bottom, winBottom) - Math.max(r.top, winTop);
+      if (area > bestArea){ bestArea = area; current = s; }
+    });
+    var sec = current.id.replace('sec-', '');
+    if (sec !== lastSec){ lastSec = sec; setActiveCfgChip(sec, false); }
+  });
+})();
+
+/* ══════════ Free-drag resize (adapted from mobile-v2.html:1773-1800) ══════════ */
+(function(){
+  var cfgEl = document.getElementById('cfg');
+  var sheet = document.getElementById('cfg-sheet');
+  var handle = document.getElementById('cfg-handle');
+  var startY = 0, startH = 0, dragging = false;
+
+  function minMax(){
+    var total = cfgEl.clientHeight;
+    return { min: total * 0.4, max: total - 120 };
+  }
+  function setSheetH(px){
+    var mm = minMax();
+    px = Math.max(mm.min, Math.min(mm.max, px));
+    cfgEl.style.setProperty('--sheet-h', px + 'px');
+  }
+
+  handle.addEventListener('pointerdown', function(e){
+    startY = e.clientY;
+    startH = sheet.getBoundingClientRect().height;
+    dragging = true;
+    sheet.classList.add('dragging');
+    handle.setPointerCapture(e.pointerId);
+  });
+  handle.addEventListener('pointermove', function(e){
+    if (!dragging) return;
+    var dy = e.clientY - startY;
+    setSheetH(startH - dy);
+  });
+  function endDrag(){
+    if (!dragging) return;
+    dragging = false;
+    sheet.classList.remove('dragging');
+  }
+  handle.addEventListener('pointerup', endDrag);
+  handle.addEventListener('pointercancel', endDrag);
+
+  window.addEventListener('resize', function(){ setSheetH(sheet.getBoundingClientRect().height); });
+
+  setSheetH(cfgEl.clientHeight * 0.46);
+})();
+
+/* ══════════ Init ══════════ */
+(function(){
+  sel.shapeEl = document.querySelector('#shape-grid .cfg-shape-tile[data-name="Canapea 3 locuri"]');
+  sel.collectionSlug = 'luna';
+  sel.colorName = 'Luna ' + COLLECTIONS.luna.colors[0][0];
+  renderNeeds();
+  renderMaterialFilters();
+  renderMaterials();
+  renderColors();
+  updatePreview();
+  updateSummary();
+})();
+</script>
+</body>
+</html>
