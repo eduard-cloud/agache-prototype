@@ -137,10 +137,10 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
 #ctas{margin-top:40px;display:flex;flex-direction:column;gap:8px}
 .btn-buy{background:var(--red);color:#fff;border-radius:9999px;font-size:16px;font-weight:500;letter-spacing:-.48px;line-height:1.2;padding:20px 24px;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;transition:transform .1s,background .2s}
 .btn-buy:active{transform:scale(.97)}
-.ctas-row2{display:flex;gap:8px}
-.btn-call{background:#fff;border:1px solid var(--slate);color:#000;border-radius:9999px;font-size:16px;font-weight:500;letter-spacing:-.48px;line-height:1.2;padding:16px 24px;display:flex;align-items:center;justify-content:center;gap:8px;flex:1}
+.ctas-row2{display:flex;gap:4px}
+.btn-call{background:#fff;border:1px solid var(--slate);color:#000;border-radius:9999px;font-size:16px;font-weight:500;letter-spacing:-.48px;line-height:1.2;padding:20px 16px;display:flex;align-items:center;justify-content:center;gap:8px;flex:1;white-space:nowrap}
 .btn-call:active{background:var(--graysec)}
-.btn-samples{background:#fff;border:1px solid var(--slate);color:#000;border-radius:9999px;font-size:16px;font-weight:500;letter-spacing:-.48px;line-height:1.2;padding:16px 24px;display:flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}
+.btn-samples{background:#fff;border:1px solid var(--slate);color:#000;border-radius:9999px;font-size:16px;font-weight:500;letter-spacing:-.48px;line-height:1.2;padding:20px 16px;display:flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}
 .btn-samples:active{background:var(--graysec)}
 
 /* benefits + specs (v4 CTA design) */
@@ -239,7 +239,7 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
 #confsec .wbtn{position:absolute;left:20px;width:335px;top:420px;background:#fff;border-radius:9999px;padding:16px 24px;font-size:16px;letter-spacing:-.32px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:8px}
 
 /* testimonials */
-#testim{background:var(--graysec);padding:40px 0 80px}
+#testim{background:#EBFDFF;padding:40px 0 80px}
 .score-badge{width:fit-content;margin:0 auto;background:#fff;border:1px solid #e5e5e5;border-radius:16px;padding:24px 20px;display:flex;align-items:center;gap:16px}
 .score-badge .big{font-size:48px;font-weight:500;letter-spacing:-1.44px;line-height:1.05;color:#000}
 .score-badge .sb-col{display:flex;flex-direction:column;gap:8px}
@@ -820,21 +820,6 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
     </div>
   </div>
 
-  <!-- Configureaza -->
-  <div id="confsec">
-    <div class="px">
-      <div class="eyebrow">CONFIGUREAZĂ-ȚI CANAPEAUA</div>
-      <h2>Vrei să îți creezi<br>o canapea unică?</h2>
-    </div>
-    <div class="wph">
-      <img src="assets/workshop.png" alt="Atelierul Agache">
-      <button class="wbtn" onclick="location.href='mobile-v3.html'">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.6"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-        Configurează
-      </button>
-    </div>
-  </div>
-
   <!-- Testimonials -->
   <div id="testim" style="margin-top:0">
     <div class="score-badge">
@@ -896,6 +881,21 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
     <div class="rail-nav">
       <button class="rn-prev" onclick="railNav('rvrail',-1)" aria-label="Anterior"><img src="assets/arrow-left-40.svg" alt=""></button>
       <button class="rn-next" onclick="railNav('rvrail',1)" aria-label="Următor"><img src="assets/arrow-right-40.svg" alt=""></button>
+    </div>
+  </div>
+
+  <!-- Configureaza -->
+  <div id="confsec">
+    <div class="px">
+      <div class="eyebrow">CONFIGUREAZĂ-ȚI CANAPEAUA</div>
+      <h2>Vrei să îți creezi<br>o canapea unică?</h2>
+    </div>
+    <div class="wph">
+      <img src="assets/workshop.png" alt="Atelierul Agache">
+      <button class="wbtn" onclick="location.href='mobile-v3.html'">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.6"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        Configurează
+      </button>
     </div>
   </div>
 
