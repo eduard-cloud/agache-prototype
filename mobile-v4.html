@@ -602,7 +602,6 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
       <div class="sizesel-lbl">Alege dimensiunea</div>
       <button id="typesel" onclick="pressFeedback(this);location.href='mobile-v3.html#config'">
         <span class="t-i-wrap">
-          <img id="typesel-img" src="assets/v2/typesel-3seat.png" alt="Canapea cu 3 locuri">
           <span class="t-i">
             <span class="t-n">Canapea cu 3 locuri</span>
             <span class="t-d" style="display:block">245 x 100 cm</span>
@@ -2324,8 +2323,6 @@ function pickShape(el){
   el.classList.add('on');
   document.querySelector('#typesel .t-n').textContent = el.dataset.name;
   document.querySelector('#typesel .t-d').textContent = el.dataset.dim;
-  document.getElementById('typesel-img').src = el.querySelector('img').src;
-  document.getElementById('typesel-img').alt = el.dataset.name;
   closeView('shape');
 }
 function pressFeedback(el){
