@@ -695,7 +695,7 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
     <!-- Benefits + specs (v4 redesign per Figma 791:11262) -->
     <div id="bsgroup">
       <div class="speclist">
-        <button class="spec-row" onclick="openInfo('transport')">
+        <button class="spec-row" onclick="openSpecInfo('productie')">
           <div class="sr-main">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#363944" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 9V6C20 5.46957 19.7893 4.96086 19.4142 4.58579C19.0391 4.21071 18.5304 4 18 4H6C5.46957 4 4.96086 4.21071 4.58579 4.58579C4.21071 4.96086 4 5.46957 4 6V9M20 9C20.5304 9 21.0391 9.21071 21.4142 9.58579C21.7893 9.96086 22 10.4696 22 11V16C22 16.5304 21.7893 17.0391 21.4142 17.4142C21.0391 17.7893 20.5304 18 20 18M20 9C19.4696 9 18.9609 9.21071 18.5858 9.58579C18.2107 9.96086 18 10.4696 18 11V13H6V11C6 10.4696 5.78929 9.96086 5.41421 9.58579C5.03914 9.21071 4.53043 9 4 9M4 9C3.46957 9 2.96086 9.21071 2.58579 9.58579C2.21071 9.96086 2 10.4696 2 11V16C2 16.5304 2.21071 17.0391 2.58579 17.4142C2.96086 17.7893 3.46957 18 4 18M4 18H20M4 18V20M20 18V20M12 4V13"/></svg>
             <div class="sr-text">
@@ -705,7 +705,7 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
           </div>
           <svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="#000" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
-        <button class="spec-row" onclick="openInfo('transport')">
+        <button class="spec-row" onclick="openSpecInfo('transport')">
           <div class="sr-main">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#363944" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17H21C21.6 17 22 16.6 22 16V13C22 12.1 21.3 11.3 20.5 11.1C18.7 10.6 16 10 16 10C16 10 14.7 8.6 13.8 7.7C13.3 7.3 12.7 7 12 7H5C4.4 7 3.9 7.4 3.6 7.9L2.2 10.8C2.06758 11.1862 2 11.5917 2 12V16C2 16.6 2.4 17 3 17H5M19 17C19 18.1046 18.1046 19 17 19C15.8954 19 15 18.1046 15 17M19 17C19 15.8954 18.1046 15 17 15C15.8954 15 15 15.8954 15 17M5 17C5 18.1046 5.89543 19 7 19C8.10457 19 9 18.1046 9 17M5 17C5 15.8954 5.89543 15 7 15C8.10457 15 9 15.8954 9 17M9 17H15"/></svg>
             <div class="sr-text">
@@ -715,7 +715,7 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
           </div>
           <svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="#000" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
-        <button class="spec-row" onclick="openInfo('generale')">
+        <button class="spec-row" onclick="openSpecInfo('dimensiuni')">
           <div class="sr-dual">
             <div class="sr-item">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#363944" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
@@ -1253,6 +1253,50 @@ Ce acoperă: defecte de fabricație - probleme legate de structură, tapițerie 
 Ce nu acoperă: deteriorări cauzate de utilizare necorespunzătoare (lovituri, zgârieturi, umiditate excesivă etc.).
 
 Păstrează factura și certificatul de garanție și anunță problema cât mai repede, ideal cu poze și detalii clare. Dacă defectul este confirmat, produsul poate fi reparat, înlocuit sau soluționat printr-o variantă stabilită de comun acord, fără costuri suplimentare pentru client.</p>
+    </section>
+  </div>
+</div>
+
+<!-- ══════════ Spec info (under-CTA rows, v4 per Figma 791:11262) ══════════ -->
+<div class="view" id="view-specinfo">
+  <div class="info-topbar">
+    <div class="info-head">
+      <span class="info-title">Canapea Boston</span>
+      <button class="circ-btn" onclick="closeView('specinfo')" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="info-nav" id="specinfo-nav">
+      <button class="info-chip on" data-sec="productie" onclick="scrollSpecInfoTo('productie')">Durata producției</button>
+      <button class="info-chip" data-sec="transport" onclick="scrollSpecInfoTo('transport')">Transport și retur</button>
+      <button class="info-chip" data-sec="dimensiuni" onclick="scrollSpecInfoTo('dimensiuni')">Dimensiuni</button>
+      <button class="info-chip" data-sec="extensibil" onclick="scrollSpecInfoTo('extensibil')">Extensibil</button>
+    </div>
+  </div>
+  <div class="info-body">
+    <section class="info-sec" id="specinfo-productie">
+      <h3>Durata producției</h3>
+      <p>Canapea Boston este realizată la comandă, personalizată cu materialul și culoarea alese de tine. Timpul de producție este de 6-7 săptămâni de la confirmarea comenzii, după care produsul este pregătit pentru livrare.</p>
+    </section>
+    <section class="info-sec" id="specinfo-transport">
+      <h3>Transport și retur</h3>
+      <p>Transportul este gratuit pe teritoriul României. Pentru comanda ta, livrarea va fi în perioada 12 – 23 iulie, prin curier până în fața casei sau a blocului, ori cu ridicare din showroom-urile Agache.
+
+Ai 14 zile calendaristice pentru retur, fără să explici motivul. Termenul începe din ziua în care primești produsul. Rambursarea se face în maximum 14 zile, în contul IBAN oferit. Costul transportului de retur este suportat de client.</p>
+    </section>
+    <section class="info-sec" id="specinfo-dimensiuni">
+      <h3>Dimensiuni</h3>
+      <p>Dimensiunile canapelei Boston în configurația aleasă:</p>
+      <div class="info-list">
+        <div>Dimensiuni: 245 × 100 × 68cm</div>
+        <div>Lungime: 245 cm</div>
+        <div>Lățime: 100 cm</div>
+        <div>Înălțime spătar: 68cm (fără perne)</div>
+        <div>Înălțime șezut: 35cm</div>
+        <div>Adâncime șezut: 80 cm</div>
+      </div>
+    </section>
+    <section class="info-sec" id="specinfo-extensibil">
+      <h3>Extensibil</h3>
+      <p>Extensibil prin plierea spătarului, ce asigură o prelungire confortabilă atunci când este folosit ca pat. Suprafața de dormit rezultată este de 150 x 210 cm.</p>
     </section>
   </div>
 </div>
@@ -1825,6 +1869,51 @@ function setActiveInfoChip(sec, instant){
     });
     var sec = current.id.replace('info-', '');
     if (sec !== lastSec){ lastSec = sec; setActiveInfoChip(sec, false); }
+  });
+})();
+/* ── Spec info (under-CTA rows) view — separate from the deep-dive info modal ── */
+function openSpecInfo(sec){
+  openView('specinfo');
+  scrollSpecInfoTo(sec, true);
+}
+function scrollSpecInfoTo(sec, instant){
+  var view = document.getElementById('view-specinfo');
+  var target = document.getElementById('specinfo-' + sec);
+  if (!target) return;
+  var top = target.offsetTop - document.querySelector('#view-specinfo .info-topbar').offsetHeight;
+  view.scrollTo({ top: Math.max(0, top), behavior: instant ? 'auto' : 'smooth' });
+  setActiveSpecInfoChip(sec, instant);
+}
+function setActiveSpecInfoChip(sec, instant){
+  var chips = document.querySelectorAll('#specinfo-nav .info-chip');
+  var active;
+  chips.forEach(function(c){
+    var on = c.dataset.sec === sec;
+    c.classList.toggle('on', on);
+    if (on) active = c;
+  });
+  if (active){
+    var nav = document.getElementById('specinfo-nav');
+    nav.scrollTo({ left: Math.max(0, active.offsetLeft - 20), behavior: instant ? 'auto' : 'smooth' });
+  }
+}
+(function(){
+  var view = document.getElementById('view-specinfo');
+  var sections = Array.prototype.slice.call(view.querySelectorAll('.info-sec'));
+  var lastSec = '';
+  view.addEventListener('scroll', function(){
+    var topbarH = document.querySelector('#view-specinfo .info-topbar').offsetHeight;
+    var viewRect = view.getBoundingClientRect();
+    var winTop = viewRect.top + topbarH;
+    var winBottom = viewRect.bottom;
+    var current = sections[0], bestArea = -1;
+    sections.forEach(function(s){
+      var r = s.getBoundingClientRect();
+      var area = Math.min(r.bottom, winBottom) - Math.max(r.top, winTop);
+      if (area > bestArea){ bestArea = area; current = s; }
+    });
+    var sec = current.id.replace('specinfo-', '');
+    if (sec !== lastSec){ lastSec = sec; setActiveSpecInfoChip(sec, false); }
   });
 })();
 function closeView(name){
