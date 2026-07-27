@@ -146,7 +146,7 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
 /* benefits + specs (v4 CTA design) */
 #bsgroup{margin-top:24px}
 .speclist{display:flex;flex-direction:column;width:100%}
-.spec-row{display:flex;align-items:center;justify-content:space-between;width:100%;padding:12px 0;border-top:1px solid #f2f2f2;border-bottom:1px solid #f2f2f2;margin-bottom:-1px;background:none}
+.spec-row{display:flex;align-items:center;justify-content:space-between;width:100%;padding:12px 0;border-top:1px solid #f2f2f2;border-bottom:1px solid #f2f2f2;margin-bottom:-1px;background:none;text-align:left}
 .speclist .spec-row:last-child{margin-bottom:0}
 .spec-row .sr-main{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
 .spec-row .sr-main svg{flex:0 0 24px}
@@ -695,7 +695,7 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
     <!-- Benefits + specs (v4 redesign per Figma 791:11262) -->
     <div id="bsgroup">
       <div class="speclist">
-        <div class="spec-row">
+        <button class="spec-row" onclick="openInfo('transport')">
           <div class="sr-main">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#363944" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 9V6C20 5.46957 19.7893 4.96086 19.4142 4.58579C19.0391 4.21071 18.5304 4 18 4H6C5.46957 4 4.96086 4.21071 4.58579 4.58579C4.21071 4.96086 4 5.46957 4 6V9M20 9C20.5304 9 21.0391 9.21071 21.4142 9.58579C21.7893 9.96086 22 10.4696 22 11V16C22 16.5304 21.7893 17.0391 21.4142 17.4142C21.0391 17.7893 20.5304 18 20 18M20 9C19.4696 9 18.9609 9.21071 18.5858 9.58579C18.2107 9.96086 18 10.4696 18 11V13H6V11C6 10.4696 5.78929 9.96086 5.41421 9.58579C5.03914 9.21071 4.53043 9 4 9M4 9C3.46957 9 2.96086 9.21071 2.58579 9.58579C2.21071 9.96086 2 10.4696 2 11V16C2 16.5304 2.21071 17.0391 2.58579 17.4142C2.96086 17.7893 3.46957 18 4 18M4 18H20M4 18V20M20 18V20M12 4V13"/></svg>
             <div class="sr-text">
@@ -704,8 +704,8 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
             </div>
           </div>
           <svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="#000" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="spec-row">
+        </button>
+        <button class="spec-row" onclick="openInfo('transport')">
           <div class="sr-main">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#363944" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17H21C21.6 17 22 16.6 22 16V13C22 12.1 21.3 11.3 20.5 11.1C18.7 10.6 16 10 16 10C16 10 14.7 8.6 13.8 7.7C13.3 7.3 12.7 7 12 7H5C4.4 7 3.9 7.4 3.6 7.9L2.2 10.8C2.06758 11.1862 2 11.5917 2 12V16C2 16.6 2.4 17 3 17H5M19 17C19 18.1046 18.1046 19 17 19C15.8954 19 15 18.1046 15 17M19 17C19 15.8954 18.1046 15 17 15C15.8954 15 15 15.8954 15 17M5 17C5 18.1046 5.89543 19 7 19C8.10457 19 9 18.1046 9 17M5 17C5 15.8954 5.89543 15 7 15C8.10457 15 9 15.8954 9 17M9 17H15"/></svg>
             <div class="sr-text">
@@ -714,8 +714,8 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
             </div>
           </div>
           <svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="#000" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="spec-row">
+        </button>
+        <button class="spec-row" onclick="openInfo('generale')">
           <div class="sr-dual">
             <div class="sr-item">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#363944" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
@@ -733,7 +733,7 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
             </div>
           </div>
           <svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="#000" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
+        </button>
       </div>
     </div>
   </div>
