@@ -141,7 +141,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-col-head .t{font-size:17px;font-weight:600;display:flex;align-items:center;gap:6px}
 .cfg-col-mattype-link{font-size:13px;font-weight:500;text-decoration:underline;color:var(--ink);background:none;border:none;padding:0;white-space:nowrap}
 .cfg-col-usps{display:flex;flex-direction:column;gap:4px;margin-top:8px}
-.cfg-col-kpis{display:flex;align-items:center;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;column-gap:10px;margin-top:6px;-webkit-mask-image:linear-gradient(to right,#000 92%,transparent 100%);mask-image:linear-gradient(to right,#000 92%,transparent 100%)}
+.cfg-col-kpis{display:flex;align-items:center;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;column-gap:10px;margin-top:4px;-webkit-mask-image:linear-gradient(to right,#000 92%,transparent 100%);mask-image:linear-gradient(to right,#000 92%,transparent 100%)}
 .cfg-col-kpis::-webkit-scrollbar{display:none}
 .cfg-col-kpis .kpi{font-size:13px;font-weight:500;text-transform:uppercase;letter-spacing:.3px;color:var(--slate);white-space:nowrap;flex:0 0 auto}
 .cfg-col-kpis .kpi-sep{color:var(--gray2);flex:0 0 auto}
@@ -556,18 +556,48 @@ var COLLECTION_ORDER = ['luna','manila','enjoylux','milton','piano','spello','ma
 var SWATCH_INDEX = {};
 /* order the main color groups sweep around the wheel, neutrals bookending it */
 var FAMILY_ORDER = ['Bej', 'Galben', 'Roșu', 'Roz', 'Albastru', 'Verde', 'Maro / Bej', 'Gri', 'Negru'];
-/* Straight lightest-to-darkest, computed directly off the hex bytes (perceived-luminance
-   weighting, not HSL lightness) -- no family/hue grouping. Simpler and matches what's asked:
-   the whole collection reads as one continuous light-to-dark run. */
 function hexLuminance(hex){
   var rgb = hexToRGB(hex);
   return 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
+}
+/* Pure luminance sort put saturated and neutral colors next to each other whenever they
+   happened to match in brightness (a neon orange beside a mid grey) because it ignores hue
+   and intensity entirely. Group by hue family first (like a car configurator's color grid),
+   then sort by lightness within each group, so brightness never overrides hue/intensity.
+   Starts from beige -- the dominant tone across these fabric collections -- and fans out
+   through the warm families before the cool ones, ending on the true neutrals.
+   colorFamilyRO() (used by the color filter) has a cutoff tuned to keep the "Gri" filter
+   chip strict; nearly every muted upholstery tone has *some* hue undertone, so sorting uses
+   a much lower, fixed saturation cutoff to keep those undertones grouped instead of dumping
+   them all into one brightness-only "Gri" pile. */
+var COLOR_SORT_FAMILY_ORDER = ['Bej', 'Galben', 'Maro / Bej', 'Roșu', 'Roz', 'Verde', 'Albastru', 'Gri', 'Negru'];
+function sortColorFamily(hex){
+  var rgb = hexToRGB(hex);
+  var hsl = rgbToHSL(rgb.r, rgb.g, rgb.b);
+  var h = hsl.h, s = hsl.s, l = hsl.l;
+  /* HSL saturation is numerically unstable near white, same as it is near black (a few RGB
+     points apart reads as 30%+ "saturated" from the formula alone) -- Ivoriu (#F3F1E6) was
+     landing in "Galben" instead of with the other creams for exactly this reason. */
+  if (l > 88) return 'Bej';
+  if (s < 6) return l < 15 ? 'Negru' : 'Gri';
+  if (h >= 20 && h < 50) return l < 45 ? 'Maro / Bej' : 'Bej';
+  if (h >= 50 && h < 70) return 'Galben';
+  if (h >= 70 && h < 170) return 'Verde';
+  if (h >= 170 && h < 260) return 'Albastru';
+  if (h >= 260 && h < 330) return 'Roz';
+  return l > 65 ? 'Roz' : 'Roșu';
+}
+function colorSortFamilyIndex(hex){
+  var idx = COLOR_SORT_FAMILY_ORDER.indexOf(sortColorFamily(hex));
+  return idx === -1 ? COLOR_SORT_FAMILY_ORDER.length : idx;
 }
 COLLECTION_ORDER.forEach(function(slug){
   var c = COLLECTIONS[slug];
   c.slug = slug;
   c.colors.sort(function(a, b){
-    return hexLuminance(b[1]) - hexLuminance(a[1]); /* lightest first */
+    var fa = colorSortFamilyIndex(a[1]), fb = colorSortFamilyIndex(b[1]);
+    if (fa !== fb) return fa - fb;
+    return hexLuminance(b[1]) - hexLuminance(a[1]); /* lightest first within the same family */
   });
   c.colors.forEach(function(pair){
     var name = c.name + ' ' + pair[0];
