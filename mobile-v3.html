@@ -147,7 +147,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
     <button class="circ-btn" id="cfg-close" onclick="closeConfigurator()" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <button id="cfg-measure" aria-label="Dimensiuni"><img src="assets/btn-measure.png" alt=""></button>
     <button id="cfg-3d" onclick="pressFeedback(this)" aria-label="Vizualizare 3D">3D</button>
-    <img id="cfg-shape-img" src="assets/shape-3seat.jpg" alt="Canapea Boston">
+    <img id="cfg-shape-img" src="assets/shape-3seat.png" alt="Canapea Boston">
     <div id="cfg-fabric-pill">
       <span class="cfg-fabric-thumb"><img id="cfg-fabric-thumb-img" src="" alt=""></span>
       <span id="cfg-fabric-name"></span>
@@ -170,16 +170,16 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
         <p class="cfg-sec-sub">Selectează configurația canapelei Boston.</p>
         <div class="cfg-shape-row" id="shape-grid">
           <button class="cfg-shape-tile on" data-name="Canapea 3 locuri" data-dim="245 x 100 cm" onclick="pickCfgShape(this)">
-            <span class="cfg-shape-imw"><img src="assets/shape-3seat.jpg" alt="Canapea 3 locuri"><span class="cfg-shape-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span></span>
+            <span class="cfg-shape-imw"><img src="assets/shape-3seat.png" alt="Canapea 3 locuri"><span class="cfg-shape-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span></span>
           </button>
           <button class="cfg-shape-tile" data-name="Coltar 2 locuri cu insula pe stanga" data-dim="255 x 170 cm" onclick="pickCfgShape(this)">
-            <span class="cfg-shape-imw"><img src="assets/shape-corner-left.jpg" alt="Coltar 2 locuri cu insula pe stanga"><span class="cfg-shape-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span></span>
+            <span class="cfg-shape-imw"><img src="assets/shape-corner-left.png" alt="Coltar 2 locuri cu insula pe stanga"><span class="cfg-shape-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span></span>
           </button>
           <button class="cfg-shape-tile" data-name="Coltar 2 locuri cu insula pe dreapta" data-dim="255 x 170 cm" onclick="pickCfgShape(this)">
-            <span class="cfg-shape-imw"><img src="assets/shape-corner-right.jpg" alt="Coltar 2 locuri cu insula pe dreapta"><span class="cfg-shape-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span></span>
+            <span class="cfg-shape-imw"><img src="assets/shape-corner-right.png" alt="Coltar 2 locuri cu insula pe dreapta"><span class="cfg-shape-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span></span>
           </button>
           <button class="cfg-shape-tile" data-name="Coltar 4 locuri" data-dim="255 x 255 cm" onclick="pickCfgShape(this)">
-            <span class="cfg-shape-imw"><img src="assets/shape-corner-4seat.jpg" alt="Coltar 4 locuri"><span class="cfg-shape-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span></span>
+            <span class="cfg-shape-imw"><img src="assets/shape-corner-4seat.png" alt="Coltar 4 locuri"><span class="cfg-shape-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span></span>
           </button>
         </div>
         <div class="cfg-shape-label">
@@ -593,7 +593,7 @@ function previewBaseSrc(){
       if (LUNA_SOFA_CODES.indexOf(code) > -1) return 'assets/v2/luna-' + code + '-sofa.png';
     }
   }
-  return sel.shapeEl ? sel.shapeEl.querySelector('img').src : 'assets/shape-3seat.jpg';
+  return sel.shapeEl ? sel.shapeEl.querySelector('img').src : 'assets/shape-3seat.png';
 }
 
 function updatePreview(){
