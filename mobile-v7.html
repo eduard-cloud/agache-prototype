@@ -256,7 +256,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
       <!-- Nevoi de lifestyle chip removed per request, kept in markup below for easy restore -->
       <button class="cfg-chip" data-sec="needs" onclick="scrollCfgTo('needs')" style="display:none">Nevoi</button>
       <button class="cfg-chip" data-sec="color" onclick="scrollCfgTo('color')">Materiale</button>
-      <button class="cfg-chip" type="button" id="cfg-nav-filter-chip" onclick="openFilterSheet()">Filtre<span class="nav-cnt" id="cfg-nav-filter-cnt">0</span></button>
+      <button class="cfg-chip" type="button" id="cfg-nav-filter-chip" onclick="openFilterSheetFromNav()">Filtre<span class="nav-cnt" id="cfg-nav-filter-cnt">0</span></button>
       <button class="cfg-chip" data-sec="colors-grid" onclick="scrollCfgTo('colors-grid', false, 'cfg-fabric-sections')">Culoare</button>
       <button class="cfg-chip" data-sec="summary" onclick="scrollCfgTo('summary')">Sumar</button>
     </div>
@@ -1222,6 +1222,15 @@ function setActiveCfgChip(sec, instant){
     nav.scrollTo({ left: Math.max(0, active.offsetLeft - 20), behavior: instant ? 'auto' : 'smooth' });
   }
 }
+/* Materiale and Culoare both live inside the single sec-color section (fabric-type chips
+   up top, the color grids further down), so the scroll-spy below needs a sub-split within
+   that one section instead of just picking whichever .cfg-sec is on screen. */
+function resolveColorSec(){
+  var scroll = document.getElementById('cfg-scroll');
+  var grid = document.getElementById('cfg-fabric-sections');
+  var probe = scroll.scrollTop + scroll.clientHeight * 0.35;
+  return probe >= grid.offsetTop ? 'colors-grid' : 'color';
+}
 (function(){
   var scroll = document.getElementById('cfg-scroll');
   var lastSec = '';
@@ -1237,9 +1246,18 @@ function setActiveCfgChip(sec, instant){
       if (area > bestArea){ bestArea = area; current = s; }
     });
     var sec = current.id.replace('sec-', '');
+    if (sec === 'color') sec = resolveColorSec();
     if (sec !== lastSec){ lastSec = sec; setActiveCfgChip(sec, false); }
   });
 })();
+/* Filtre in the top nav: scroll to the in-section Filtre row first so the sheet doesn't pop
+   up out of nowhere, then open it -- both finish in well under a second. */
+function openFilterSheetFromNav(){
+  var scroll = document.getElementById('cfg-scroll');
+  var target = document.getElementById('cfg-filter-btn');
+  if (target) scroll.scrollTo({ top: Math.max(0, target.offsetTop - 90), behavior: 'smooth' });
+  setTimeout(openFilterSheet, 350);
+}
 
 /* ══════════ Free-drag resize (adapted from mobile-v2.html:1773-1800) ══════════ */
 (function(){
