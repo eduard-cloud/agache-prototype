@@ -137,11 +137,10 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 
 .cfg-col-section{padding-top:28px;border-top:1px solid var(--hair);margin-top:24px}
 .cfg-col-section:first-of-type{border-top:none;margin-top:0}
-.cfg-col-mattype{font-size:11px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--gray);margin-bottom:4px}
 .cfg-col-head{display:flex;align-items:baseline;justify-content:space-between}
 .cfg-col-head .t{font-size:17px;font-weight:600;display:flex;align-items:center;gap:6px}
 .cfg-col-head .info-i-inline{position:relative;width:18px;height:18px;display:flex;align-items:center;justify-content:center;padding:0;border-radius:50%}
-.cfg-col-head .pr{font-size:14px;font-weight:700}
+.cfg-col-mattype-link{font-size:13px;font-weight:500;text-decoration:underline;color:var(--ink);background:none;border:none;padding:0;white-space:nowrap}
 .cfg-col-usps{display:flex;flex-direction:column;gap:4px;margin-top:8px}
 .cfg-col-empty{padding:16px 0;font-size:13px;color:var(--gray)}
 
@@ -1026,10 +1025,9 @@ function renderFabricSections(){
         '<div class="lr"><span class="nm">' + friendly + '</span></div></div>';
     }).join('');
     section.innerHTML =
-      '<div class="cfg-col-mattype">Material ' + materialTypeLabel(c) + '</div>' +
       '<div class="cfg-col-head"><span class="t">' + c.name +
         '<button type="button" class="info-i-inline" aria-label="Detalii colecția ' + c.name + '"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span>' +
-        '<span class="pr">' + formatPrice(c.price) + ' lei</span></div>' +
+        '<button type="button" class="cfg-col-mattype-link">Material ' + materialTypeLabel(c) + '</button></div>' +
       '<div class="cfg-col-usps">' +
         '<span id="colusp-' + slug + '-usp1" class="cfg-badge"></span>' +
         '<span id="colusp-' + slug + '-usp2" class="cfg-badge"></span>' +
@@ -1039,6 +1037,7 @@ function renderFabricSections(){
     wrap.appendChild(section);
     renderUSPBadges('colusp-' + slug, c);
     section.querySelector('.info-i-inline').onclick = function(){ showCollectionDetail(slug); };
+    section.querySelector('.cfg-col-mattype-link').onclick = function(){ showCollectionDetail(slug); };
     section.querySelectorAll('.mtile').forEach(function(tile){
       tile.onclick = function(){ pickFabricSwatch(tile, slug); };
       tile.querySelector('.info-i').onclick = function(e){ e.stopPropagation(); showSwatchInfo(tile.dataset.name); };
