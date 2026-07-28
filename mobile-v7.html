@@ -73,8 +73,10 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-handle{flex:0 0 auto;display:flex;justify-content:center;touch-action:none;padding-top:4px}
 .cfg-chips{flex:0 0 auto;display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding:0 20px 16px;border-bottom:1px solid var(--hair)}
 .cfg-chips::-webkit-scrollbar{display:none}
-.cfg-chip{flex:0 0 auto;background:#fff;border:1px solid #c8cbd0;border-radius:9999px;padding:10px 16px;font-size:14px;letter-spacing:-.28px;white-space:nowrap;color:var(--ink);transition:all .15s}
+.cfg-chip{flex:0 0 auto;display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #c8cbd0;border-radius:9999px;padding:10px 16px;font-size:14px;letter-spacing:-.28px;white-space:nowrap;color:var(--ink);transition:all .15s}
 .cfg-chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.cfg-chip .nav-cnt{display:none;width:18px;height:18px;border-radius:999px;background:#000;color:#fff;font-size:11px;font-weight:400;align-items:center;justify-content:center;flex:0 0 auto}
+.cfg-chip.has-count .nav-cnt{display:flex}
 .cfg-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 20px}
 .cfg-sec{padding-top:28px;padding-bottom:20px;scroll-margin-top:8px;border-top:1px solid var(--hair)}
 .cfg-sec:first-child{border-top:none}
@@ -254,7 +256,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
       <!-- Nevoi de lifestyle chip removed per request, kept in markup below for easy restore -->
       <button class="cfg-chip" data-sec="needs" onclick="scrollCfgTo('needs')" style="display:none">Nevoi</button>
       <button class="cfg-chip" data-sec="color" onclick="scrollCfgTo('color')">Materiale</button>
-      <button class="cfg-chip" type="button" onclick="openFilterSheet()">Filtre</button>
+      <button class="cfg-chip" type="button" id="cfg-nav-filter-chip" onclick="openFilterSheet()">Filtre<span class="nav-cnt" id="cfg-nav-filter-cnt">0</span></button>
       <button class="cfg-chip" data-sec="colors-grid" onclick="scrollCfgTo('colors-grid', false, 'cfg-fabric-sections')">Culoare</button>
       <button class="cfg-chip" data-sec="summary" onclick="scrollCfgTo('summary')">Sumar</button>
     </div>
@@ -458,6 +460,8 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
       <button class="circ-btn" onclick="closeFilterSheet()" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>
     <div class="fsheet-body">
+      <div class="fsheet-group-h" id="fsheet-material-h" style="display:none">Material</div>
+      <div class="cfg-filter-pills" id="fsheet-material"></div>
       <div class="fsheet-group-h">Culoare</div>
       <div class="cfg-filter-pills" id="fsheet-culoare"></div>
       <div class="fsheet-group-h">Proprietăți</div>
@@ -1013,7 +1017,30 @@ function makeFsheetPill(opt){
   };
   return pill;
 }
+function renderFsheetMaterialPill(){
+  var wrap = document.getElementById('fsheet-material');
+  var head = document.getElementById('fsheet-material-h');
+  wrap.innerHTML = '';
+  var pillDef = FABRIC_PILLS.filter(function(p){ return p.key === activeFabricPill; })[0];
+  if (!pillDef){ head.style.display = 'none'; return; }
+  head.style.display = '';
+  var pill = document.createElement('button');
+  pill.type = 'button';
+  pill.className = 'fchip cfg-fpill on';
+  pill.textContent = pillDef.label;
+  /* single-select, unlike Culoare/Proprietăți below -- the top fabric-type chips only ever
+     allow one material at a time, so the sheet surfaces just that one active choice instead
+     of all 3 as pickable options. */
+  pill.onclick = function(){
+    activeFabricPill = null;
+    renderFabricPillRow();
+    renderFsheetMaterialPill();
+    applyFabricFilters();
+  };
+  wrap.appendChild(pill);
+}
 function renderFsheetPills(){
+  renderFsheetMaterialPill();
   var culWrap = document.getElementById('fsheet-culoare');
   culWrap.innerHTML = '';
   FILTER_GROUPS[0].options.forEach(function(opt){ culWrap.appendChild(makeFsheetPill(opt)); });
@@ -1035,10 +1062,15 @@ function resetSheetFilters(){
 }
 
 function applyFabricFilters(){
+  renderFsheetMaterialPill();
+  var totalFilters = appliedFilters.length + (activeFabricPill ? 1 : 0);
   var btn = document.getElementById('cfg-filter-btn');
   var cnt = document.getElementById('cfg-filter-cnt');
-  cnt.textContent = appliedFilters.length;
-  btn.classList.toggle('has-count', appliedFilters.length > 0);
+  cnt.textContent = totalFilters;
+  btn.classList.toggle('has-count', totalFilters > 0);
+  var navChip = document.getElementById('cfg-nav-filter-chip');
+  document.getElementById('cfg-nav-filter-cnt').textContent = totalFilters;
+  navChip.classList.toggle('has-count', totalFilters > 0);
 
   var byCat = { culoare: [], prop: [], rez: [] };
   appliedFilters.forEach(function(f){
