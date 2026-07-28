@@ -254,6 +254,8 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
       <!-- Nevoi de lifestyle chip removed per request, kept in markup below for easy restore -->
       <button class="cfg-chip" data-sec="needs" onclick="scrollCfgTo('needs')" style="display:none">Nevoi</button>
       <button class="cfg-chip" data-sec="color" onclick="scrollCfgTo('color')">Materiale</button>
+      <button class="cfg-chip" type="button" onclick="openFilterSheet()">Filtre</button>
+      <button class="cfg-chip" data-sec="colors-grid" onclick="scrollCfgTo('colors-grid', false, 'cfg-fabric-sections')">Culoare</button>
       <button class="cfg-chip" data-sec="summary" onclick="scrollCfgTo('summary')">Sumar</button>
     </div>
     <div class="cfg-scroll" id="cfg-scroll">
@@ -1167,9 +1169,9 @@ function pickFabricSwatch(el, slug){
 }
 
 /* ══════════ Chip scroll-spy (adapted from mobile-v2.html:1804-1846) ══════════ */
-function scrollCfgTo(sec, instant){
+function scrollCfgTo(sec, instant, targetId){
   var scroll = document.getElementById('cfg-scroll');
-  var target = document.getElementById('sec-' + sec);
+  var target = document.getElementById(targetId || ('sec-' + sec));
   if (!target) return;
   var top = target.offsetTop;
   scroll.scrollTo({ top: Math.max(0, top), behavior: instant ? 'auto' : 'smooth' });
