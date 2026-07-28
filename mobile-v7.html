@@ -1167,6 +1167,14 @@ function setActiveCfgChip(sec, instant){
   }
 })();
 
+/* The entrance animation's fill-mode leaves body's transform:translateX(0) applied forever,
+   which makes position:fixed children (like #toast) fixed relative to body instead of the
+   viewport, so they can peek into view even when meant to be off-screen. Dropping the class
+   once the animation ends removes that lingering transform and restores normal fixed behavior. */
+document.documentElement.addEventListener('animationend', function(e){
+  if (e.animationName === 'pushInR') document.documentElement.classList.remove('enter-r');
+});
+
 /* Cross-page push transition, mirrors the PDP's pushTo() on the way in/out */
 function closeConfigurator(){
   var origin = sessionStorage.getItem('pdpOrigin');
