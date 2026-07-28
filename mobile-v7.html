@@ -139,10 +139,9 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-col-section:first-of-type{border-top:none;margin-top:0}
 .cfg-col-head{display:flex;align-items:baseline;justify-content:space-between}
 .cfg-col-head .t{font-size:17px;font-weight:600;display:flex;align-items:center;gap:6px}
-.cfg-col-head .info-i-inline{position:relative;width:18px;height:18px;display:flex;align-items:center;justify-content:center;padding:0;border-radius:50%}
 .cfg-col-mattype-link{font-size:13px;font-weight:500;text-decoration:underline;color:var(--ink);background:none;border:none;padding:0;white-space:nowrap}
 .cfg-col-usps{display:flex;flex-direction:column;gap:4px;margin-top:8px}
-.cfg-col-kpis{display:flex;align-items:center;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;column-gap:10px;margin-top:8px;-webkit-mask-image:linear-gradient(to right,#000 92%,transparent 100%);mask-image:linear-gradient(to right,#000 92%,transparent 100%)}
+.cfg-col-kpis{display:flex;align-items:center;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;column-gap:10px;margin-top:12px;-webkit-mask-image:linear-gradient(to right,#000 92%,transparent 100%);mask-image:linear-gradient(to right,#000 92%,transparent 100%)}
 .cfg-col-kpis::-webkit-scrollbar{display:none}
 .cfg-col-kpis .kpi{font-size:13px;font-weight:500;text-transform:uppercase;letter-spacing:.3px;color:var(--slate);white-space:nowrap;flex:0 0 auto}
 .cfg-col-kpis .kpi-sep{color:var(--gray2);flex:0 0 auto}
@@ -718,18 +717,24 @@ function renderUSPBadges(prefix, c){
     if (el) el.innerHTML = USP_ICONS[badge.icon] + badge.label(c);
   });
 }
-/* Collection-header KPI row: plain uppercase text, no icons, always leads with the
-   Martindale rub count, then the next 2 most relevant care/property claims. */
+function martindaleValue(c){
+  var nums = (c.martindale || '').match(/[\d.]+/g) || [];
+  return nums[nums.length - 1] || c.martindale;
+}
+/* Collection-header KPI row: plain uppercase text, no icons, always leads with a single
+   Martindale rub count (no range, no >/< sign), then every other claim that applies —
+   the row scrolls horizontally rather than capping at 3, so a 4-USP collection stays
+   swipeable in one line instead of silently dropping one (e.g. Pet Friendly). */
 var COLLECTION_KPI_POOL = [
-  { test: function(){ return true; }, label: function(c){ return c.martindale + ' Martindale'; } },
+  { test: function(){ return true; }, label: function(c){ return martindaleValue(c) + ' Martindale'; } },
   { test: function(c){ return c.petFriendly; }, label: function(){ return 'Pet Friendly'; } },
   { test: function(c){ return c.waterproof; }, label: function(){ return 'Impermeabil'; } },
-  { test: function(c){ return c.easyClean; }, label: function(){ return 'Ușor de curățat'; } },
+  { test: function(c){ return c.easyClean; }, label: function(){ return 'Easy Clean'; } },
   { test: function(c){ return !!c.certifications; }, label: function(){ return 'Piele sensibilă'; } }
 ];
 function collectionKPIs(c){
   var picked = [];
-  for (var i = 0; i < COLLECTION_KPI_POOL.length && picked.length < 3; i++){
+  for (var i = 0; i < COLLECTION_KPI_POOL.length; i++){
     if (COLLECTION_KPI_POOL[i].test(c)) picked.push(COLLECTION_KPI_POOL[i].label(c));
   }
   return picked;
@@ -1047,8 +1052,7 @@ function renderFabricSections(){
         '<div class="lr"><span class="nm">' + friendly + '</span></div></div>';
     }).join('');
     section.innerHTML =
-      '<div class="cfg-col-head"><span class="t">Colecția ' + c.name +
-        '<button type="button" class="info-i-inline" aria-label="Detalii colecția ' + c.name + '"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span>' +
+      '<div class="cfg-col-head"><span class="t">Colecția ' + c.name + '</span>' +
         '<button type="button" class="cfg-col-mattype-link">Material ' + materialTypeLabel(c) + '</button></div>' +
       '<div class="cfg-col-kpis">' +
         collectionKPIs(c).map(function(text, i){
@@ -1057,7 +1061,6 @@ function renderFabricSections(){
       '</div>' +
       '<div class="cfg-color-grid">' + swatchesHTML + '</div>';
     wrap.appendChild(section);
-    section.querySelector('.info-i-inline').onclick = function(){ showCollectionDetail(slug); };
     section.querySelector('.cfg-col-mattype-link').onclick = function(){ showCollectionDetail(slug); };
     section.querySelectorAll('.mtile').forEach(function(tile){
       tile.onclick = function(){ pickFabricSwatch(tile, slug); };
