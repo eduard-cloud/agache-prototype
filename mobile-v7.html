@@ -143,17 +143,53 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .swm-title{font-size:20px;font-weight:600;letter-spacing:-.4px}
 .swm-sub{font-size:13px;color:var(--gray)}
 .swm-desc{font-size:14px;line-height:1.5;color:var(--slate);margin-top:8px}
-.rz-head{display:flex;align-items:center;justify-content:space-between;margin-top:24px;padding-bottom:12px;border-bottom:1px solid var(--hair)}
-.rz-head .t{font-size:15px;font-weight:600}
-.rz-head .s{font-size:14px;font-weight:600}
-.rz-head .s i{font-style:normal;color:var(--gray2);font-weight:400}
-.bar{position:relative;width:64px;height:4px;border-radius:2px;background:var(--hair);overflow:hidden;flex:0 0 auto}
-.bar i{position:absolute;left:0;top:0;height:100%;background:var(--ink);border-radius:2px;font-style:normal}
-.swm-feat-h,.mt-h{font-size:15px;font-weight:600;margin-top:24px;padding-bottom:12px;border-bottom:1px solid var(--hair)}
-.ft-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--hair);font-size:13px}
-.ft-row .k{color:var(--gray)}
-.ft-row .v{font-weight:500;text-align:right}
-.mt-p{font-size:13px;line-height:1.6;color:var(--slate);margin-top:12px}
+.swm-body .rz-head{display:flex;align-items:center;justify-content:space-between;margin-top:24px;padding-bottom:12px;border-bottom:1px solid var(--hair)}
+.swm-body .rz-head .t{font-size:15px;font-weight:600}
+.swm-body .rz-head .s{font-size:14px;font-weight:600}
+.swm-body .rz-head .s i{font-style:normal;color:var(--gray2);font-weight:400}
+.swm-body .bar{position:relative;width:64px;height:4px;border-radius:2px;background:var(--hair);overflow:hidden;flex:0 0 auto}
+.swm-body .bar i{position:absolute;left:0;top:0;height:100%;background:var(--ink);border-radius:2px;font-style:normal}
+.swm-feat-h,.swm-body .mt-h{font-size:15px;font-weight:600;margin-top:24px;padding-bottom:12px;border-bottom:1px solid var(--hair)}
+.swm-body .ft-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--hair);font-size:13px}
+.swm-body .ft-row .k{color:var(--gray)}
+.swm-body .ft-row .v{font-weight:500;text-align:right}
+.swm-body .mt-p{font-size:13px;line-height:1.6;color:var(--slate);margin-top:12px}
+
+/* ── collection detail modal (exact copy of mobile-v2.html's "Collection view": st-hero/mh-trk/st-dots/st-body/yl-band/rz-head/rz-row/ft-h/ft-row/mt-h/mt-p) ── */
+.colm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:70;align-items:flex-end}
+.colm-overlay.open{display:flex}
+.colm-sheet{background:#fff;border-radius:24px 24px 0 0;width:100%;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 -8px 30px rgba(0,0,0,.14)}
+.st-hero{position:relative;height:373px;touch-action:pan-y}
+.st-hero img{width:100%;height:100%;object-fit:cover}
+.mh-trk{display:flex;height:100%;transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.mh-trk img{flex:0 0 100%;width:100%;height:100%;object-fit:cover;-webkit-user-drag:none;user-select:none}
+.colm-close{position:absolute;right:16px;top:16px;z-index:2}
+.st-dots{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:2}
+.st-dots button{width:20px;height:12px;padding:0;display:flex;align-items:center}
+.st-dots button i{width:20px;height:3px;background:rgba(255,255,255,.75);border-radius:2px;display:block}
+.st-dots button.on i{background:var(--ink)}
+.st-body{padding:22px 17px 0}
+.st-title-row{display:flex;align-items:baseline;justify-content:space-between}
+.st-title{font-size:28px;font-weight:600;letter-spacing:-.4px}
+.st-desc{font-size:14px;line-height:17.5px;margin-top:14px;color:var(--ink)}
+.st-chip{margin-top:20px;display:inline-flex;align-items:center;gap:8px;background:var(--lavchip);border-radius:8px;height:34px;padding:0 14px;color:var(--purple);font-size:14px}
+.st-chip span{text-decoration:underline}
+.yl-band{margin-top:28px;background:var(--yellow2);display:flex;padding:22px 0}
+.yl-band .c{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--purple);font-size:14px;font-weight:500;text-align:center;line-height:19px;padding:0 6px}
+.yl-band .c+.c{border-left:1px solid rgba(77,53,255,.35)}
+.see-more{display:flex;align-items:center;gap:6px;justify-content:center;margin:26px auto 0;font-size:15px;text-decoration:underline}
+.ft-h{font-size:22px;font-weight:600;padding:44px 17px 0}
+#collection-modal .rz-head{display:flex;align-items:baseline;justify-content:space-between;padding:34px 17px 0}
+#collection-modal .rz-head .t{font-size:22px;font-weight:600;letter-spacing:-.3px}
+#collection-modal .rz-head .s{font-size:22px;font-weight:700}
+#collection-modal .rz-head .s i{font-style:normal;color:var(--gray2);font-weight:400}
+#collection-modal .bar{width:60px;height:6px;background:#dcdcdc;border-radius:3px;overflow:hidden}
+#collection-modal .bar i{display:block;height:100%;background:var(--ink);border-radius:3px}
+#collection-modal .ft-row{display:flex;justify-content:space-between;gap:20px;padding:18px 17px;border-bottom:1px solid var(--hair)}
+#collection-modal .ft-row .k{font-size:15px}
+#collection-modal .ft-row .v{font-size:14px;text-align:right;line-height:18px;color:var(--ink)}
+#collection-modal .mt-h{font-size:24px;font-weight:600;padding:48px 17px 0}
+#collection-modal .mt-p{font-size:14px;line-height:17.5px;padding:16px 17px 60px}
 
 /* ── section 4: summary ── */
 .cfg-samples-btn{display:block;width:100%;height:48px;border:1px solid var(--ink);border-radius:24px;font-size:14px;font-weight:500;margin-top:20px}
@@ -314,6 +350,60 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
   </div>
 </div>
 
+<div class="colm-overlay" id="collection-modal" onclick="if(event.target===this) closeCollectionModal()">
+  <div class="colm-sheet">
+    <div class="st-hero" id="colm-hero">
+      <div class="mh-trk" id="colm-trk">
+        <img src="" alt="" id="colm-hero1">
+        <img src="" alt="" id="colm-hero2">
+        <img src="assets/collection-zoom.png" alt="" id="colm-hero3">
+      </div>
+      <button class="circ-btn colm-close" onclick="closeCollectionModal()" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      <div class="st-dots" id="colm-dots">
+        <button class="on" onclick="colmHeroTo(0)" aria-label="Slide 1"><i></i></button>
+        <button onclick="colmHeroTo(1)" aria-label="Slide 2"><i></i></button>
+        <button onclick="colmHeroTo(2)" aria-label="Slide 3"><i></i></button>
+      </div>
+    </div>
+    <div class="st-body">
+      <div class="st-title-row"><span class="st-title" id="colm-title"></span></div>
+      <div class="st-desc" id="colm-desc"></div>
+      <button class="st-chip" onclick="toast('Mostrele au fost adăugate în coș')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        <span>Comanda mostrar gratis</span>
+      </button>
+    </div>
+    <div class="yl-band">
+      <div class="c" id="colm-usp1"></div>
+      <div class="c" id="colm-usp2"></div>
+      <div class="c" id="colm-usp3"></div>
+    </div>
+    <div class="rz-head"><span class="t">Rezistență generală</span><span class="s" id="colm-score"></span></div>
+    <div>
+      <div class="rz-row"><div class="k">Martindale<em>test abraziune</em></div><div class="vv"><div class="v" id="colm-mart-v"></div><span class="bar"><i id="colm-mart-bar"></i></span></div></div>
+      <div class="rz-row"><div class="k">MACE<em>test agățare</em></div><div class="vv"><div class="v" id="colm-mace-v"></div><span class="bar"><i id="colm-mace-bar"></i></span></div></div>
+      <div class="rz-row"><div class="k">Rezistență culoare<em>la frecare</em></div><div class="vv"><div class="v" id="colm-rub-v"></div><span class="bar"><i id="colm-rub-bar"></i></span></div></div>
+      <div class="rz-row"><div class="k">Rezistență culoare<em>la lumină</em></div><div class="vv"><div class="v" id="colm-light-v"></div><span class="bar"><i id="colm-light-bar"></i></span></div></div>
+      <div class="rz-row" style="border-bottom:none"><div class="k">Pilling<em>scămoșare</em></div><div class="vv"><div class="v" id="colm-pill-v"></div><span class="bar"><i id="colm-pill-bar"></i></span></div></div>
+    </div>
+    <button class="see-more" onclick="pressFeedback(this)">Vezi mai multe
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="ft-h">Features</div>
+    <div>
+      <div class="ft-row"><span class="k">Certificări</span><span class="v" id="colm-cert"></span></div>
+      <div class="ft-row"><span class="k">Întreținere</span><span class="v" id="colm-maint"></span></div>
+      <div class="ft-row"><span class="k">Compoziție</span><span class="v" id="colm-comp"></span></div>
+      <div class="ft-row"><span class="k">Culoare</span><span class="v" id="colm-color"></span></div>
+      <div class="ft-row"><span class="k">Greutate (g/m²)</span><span class="v" id="colm-weight"></span></div>
+      <div class="ft-row"><span class="k">Rezistență la foc</span><span class="v" id="colm-fire"></span></div>
+      <div class="ft-row" style="border-bottom:none"><span class="k">Lățime rolă</span><span class="v" id="colm-width"></span></div>
+    </div>
+    <div class="mt-h">Întreținere</div>
+    <p class="mt-p" id="colm-care"></p>
+  </div>
+</div>
+
 <script>
 /* ══════════ Data (copied verbatim from mobile-v2.html:1427-1530) ══════════ */
 var COLLECTIONS = {
@@ -321,7 +411,7 @@ var COLLECTIONS = {
     waterproof:false, easyClean:false, petFriendly:false,
     composition:'100% Poliester', width:145, weight:493, martindale:'90.000',
     mace:null, rubbing:null, light:null, pilling:null,
-    fireTest:'Test cu țigara aprinsă', certifications:'OEKO-TEX®',
+    fireTest:'Test cu țigara aprinsă', certifications:'Piele sensibilă (OEKO-TEX®)',
     desc:'Material cu textură plăcută și elastică, realizat dintr-o țesătură tricotată durabilă, concepută pentru mobilier utilizat frecvent. Materialul oferă un echilibru foarte bun între confort, rezistență și durabilitate, fiind potrivit pentru utilizare zilnică.',
     care:'Aspirați regulat cu o perie moale și ștergeți imediat petele cu o cârpă curată și uscată, fără a freca. Folosiți doar produse de curățare delicate, pe bază de apă, și evitați expunerea directă la soare pentru a preveni decolorarea.',
     heroCode:'08',
@@ -341,7 +431,7 @@ var COLLECTIONS = {
     waterproof:true, easyClean:true, petFriendly:false,
     composition:'92% PES / 8% PA', width:146, weight:467, martindale:'55.000',
     mace:null, rubbing:'4-5/5', light:'5/5', pilling:'5/5',
-    fireTest:'BS 5852: Partea 1', certifications:'OEKO-TEX®',
+    fireTest:'BS 5852: Partea 1', certifications:'Piele sensibilă (OEKO-TEX®)',
     desc:'Microfibră fină, cu finisaj mat și tehnologie hidrofobă care limitează absorbția lichidelor — apa, cafeaua sau vinul rămân la suprafață sub formă de picături, fiind ușor de îndepărtat. Certificată OEKO-TEX®, oferă un confort curat și durabil pentru uz zilnic.',
     care:'Datorită tratamentului hidrofob, majoritatea petelor se îndepărtează ușor cu o cârpă umedă, fără a fi nevoie de produse speciale. Aspirați regulat pentru a menține textura și evitați expunerea prelungită la soare directă.',
     heroCode:'04',
@@ -750,7 +840,7 @@ function propMatch(f, c){
   if (f === 'Impermeabil') return c.waterproof;
   if (f === 'Easy Clean') return c.easyClean;
   if (f === 'Pet Friendly') return c.petFriendly;
-  if (f === 'Piele sensibilă (OEKO-TEX®)') return c.certifications === 'OEKO-TEX®';
+  if (f === 'Piele sensibilă (OEKO-TEX®)') return c.certifications === 'Piele sensibilă (OEKO-TEX®)';
   return false;
 }
 function totalColorCount(){
@@ -855,9 +945,7 @@ function renderFabricSections(){
       '<div class="cfg-color-grid">' + swatchesHTML + '</div>';
     wrap.appendChild(section);
     renderUSPBadges('colusp-' + slug, c);
-    section.querySelector('.info-i-inline').onclick = function(){
-      toast(c.name + ' · ' + textureLabel(c) + ' · ' + durabilityLabel(c) + ' · ' + formatPrice(c.price) + ' lei');
-    };
+    section.querySelector('.info-i-inline').onclick = function(){ showCollectionDetail(slug); };
     section.querySelectorAll('.mtile').forEach(function(tile){
       tile.onclick = function(){ pickFabricSwatch(tile, slug); };
       tile.querySelector('.info-i').onclick = function(e){ e.stopPropagation(); showSwatchInfo(tile.dataset.name); };
@@ -881,6 +969,42 @@ function showSwatchInfo(name){
 }
 function closeSwatchModal(){
   document.getElementById('swatch-modal').classList.remove('open');
+}
+
+/* ══════════ Collection detail modal (exact copy of mobile-v2.html's "Collection view", incl. the chero1/chero2/chero3 hero slider and bindSwipe helper) ══════════ */
+function bindSwipe(el, onSwipe){
+  var sx = 0, dx = 0, active = false;
+  el.addEventListener('pointerdown', function(e){ sx = e.clientX; dx = 0; active = true; }, { passive:true });
+  el.addEventListener('pointermove', function(e){ if (active) dx = e.clientX - sx; }, { passive:true });
+  function end(){ if (active && Math.abs(dx) > 40) onSwipe(dx < 0 ? 1 : -1); active = false; }
+  el.addEventListener('pointerup', end);
+  el.addEventListener('pointercancel', function(){ active = false; });
+  el.addEventListener('pointerleave', end);
+}
+var colmIdx = 0;
+function colmHeroTo(i){
+  colmIdx = i;
+  document.getElementById('colm-trk').style.transform = 'translateX(-' + (i * 100) + '%)';
+  document.querySelectorAll('#colm-dots button').forEach(function(b, k){ b.classList.toggle('on', k === i); });
+}
+bindSwipe(document.getElementById('colm-hero'), function(d){
+  colmHeroTo(Math.min(2, Math.max(0, colmIdx + d)));
+});
+
+function showCollectionDetail(slug){
+  var c = COLLECTIONS[slug];
+  var heroSrc = 'assets/' + (c.assetSlug || c.slug) + '-hero.png';
+  document.getElementById('colm-title').textContent = 'Colecția ' + c.name;
+  document.getElementById('colm-hero1').src = heroSrc;
+  document.getElementById('colm-hero2').src = heroSrc;
+  document.getElementById('colm-color').textContent = c.colors.length + ' nuanțe disponibile';
+  fillCollectionText('colm', c);
+  colmHeroTo(0);
+  document.querySelector('.colm-sheet').scrollTop = 0;
+  document.getElementById('collection-modal').classList.add('open');
+}
+function closeCollectionModal(){
+  document.getElementById('collection-modal').classList.remove('open');
 }
 
 function pickFabricSwatch(el, slug){
