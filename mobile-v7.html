@@ -141,7 +141,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-col-head .t{font-size:17px;font-weight:600;display:flex;align-items:center;gap:6px}
 .cfg-col-mattype-link{font-size:13px;font-weight:500;text-decoration:underline;color:var(--ink);background:none;border:none;padding:0;white-space:nowrap}
 .cfg-col-usps{display:flex;flex-direction:column;gap:4px;margin-top:8px}
-.cfg-col-kpis{display:flex;align-items:center;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;column-gap:10px;margin-top:12px;-webkit-mask-image:linear-gradient(to right,#000 92%,transparent 100%);mask-image:linear-gradient(to right,#000 92%,transparent 100%)}
+.cfg-col-kpis{display:flex;align-items:center;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;column-gap:10px;margin-top:6px;-webkit-mask-image:linear-gradient(to right,#000 92%,transparent 100%);mask-image:linear-gradient(to right,#000 92%,transparent 100%)}
 .cfg-col-kpis::-webkit-scrollbar{display:none}
 .cfg-col-kpis .kpi{font-size:13px;font-weight:500;text-transform:uppercase;letter-spacing:.3px;color:var(--slate);white-space:nowrap;flex:0 0 auto}
 .cfg-col-kpis .kpi-sep{color:var(--gray2);flex:0 0 auto}
@@ -222,6 +222,8 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 
 /* ── section 4: summary ── */
 .cfg-samples-btn{display:block;width:100%;height:48px;border:1px solid var(--ink);border-radius:24px;font-size:14px;font-weight:500;margin-top:20px}
+.cfg-samples-hint{margin-top:14px;font-size:14px;color:var(--ink);line-height:1.4;text-align:center}
+.cfg-samples-hint-cta{font-weight:700;text-decoration:underline;background:none;border:none;padding:0;font-size:14px;color:var(--ink)}
 #cfg-sum-color-sw{width:32px;height:32px;border-radius:50%;flex:0 0 auto}
 
 /* ── cta bar ── */
@@ -251,7 +253,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
       <button class="cfg-chip on" data-sec="config" onclick="scrollCfgTo('config')">Dimensiune</button>
       <!-- Nevoi de lifestyle chip removed per request, kept in markup below for easy restore -->
       <button class="cfg-chip" data-sec="needs" onclick="scrollCfgTo('needs')" style="display:none">Nevoi</button>
-      <button class="cfg-chip" data-sec="color" onclick="scrollCfgTo('color')">Culoare</button>
+      <button class="cfg-chip" data-sec="color" onclick="scrollCfgTo('color')">Materiale</button>
       <button class="cfg-chip" data-sec="summary" onclick="scrollCfgTo('summary')">Sumar</button>
     </div>
     <div class="cfg-scroll" id="cfg-scroll">
@@ -291,9 +293,11 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
         <h3>Alege materialul și culoarea</h3>
         <p class="cfg-sec-sub" id="cfg-color-sub"></p>
 
+        <div class="cfg-fabric-pillrow" id="cfg-fabric-pillrow"></div>
+
         <button type="button" class="cfg-samples-btn" onclick="toast('Comparația materialelor va fi disponibilă în curând')">Vezi diferențele între materiale</button>
 
-        <div class="cfg-fabric-pillrow" id="cfg-fabric-pillrow"></div>
+        <p class="cfg-samples-hint">Vrei să vezi materialele în realitate? <button type="button" class="cfg-samples-hint-cta" onclick="toast('Mostrele au fost adăugate în coș')">Comandă mostre</button></p>
 
         <div class="cfg-fabric-divider"></div>
 
