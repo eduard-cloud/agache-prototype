@@ -133,16 +133,15 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 
 /* ── color swatch tiles (shared by every collection's grid) ── */
 .cfg-color-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px 10px;margin-top:18px}
-.mtile{position:relative;background:#fff;border:1px solid var(--chipbg);transition:border-color .15s}
-.mtile.on{border-color:var(--ink)}
+.mtile{position:relative}
 .mtile .imw{position:relative;aspect-ratio:1;overflow:hidden}
-.mtile img{width:100%;height:100%;object-fit:cover;display:block}
-.mtile .chk{display:none;position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;background:var(--ink);align-items:center;justify-content:center}
-.mtile.on .chk{display:flex}
-.mtile .lr{display:flex;align-items:center;justify-content:space-between;padding:8px}
-.mtile .nm{font-size:14px;letter-spacing:-.28px}
-.mtile .info-i{display:flex;align-items:center;justify-content:center;width:12px;height:12px;flex:0 0 auto;padding:0;background:none;border:none;box-shadow:none}
-.mtile .info-i svg{width:12px;height:12px;pointer-events:none;display:block}
+.mtile img{width:100%;height:100%;object-fit:cover}
+.mtile.on .imw::after{content:"";position:absolute;inset:0;border:2px solid var(--ink);box-shadow:inset 0 0 0 4px #fff}
+.mtile .lr{display:flex;align-items:center;justify-content:space-between;margin-top:9px}
+.mtile .nm{font-size:12px}
+.mtile .info-i{display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:32px;height:32px;padding:0;background:none;border:none;box-shadow:none;z-index:2}
+.mtile.on .info-i{display:block}
+.info-i svg{width:32px;height:32px;pointer-events:none;display:block}
 
 /* ── individual swatch info modal (opened from a color tile's info button) ── */
 .swm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:60;align-items:flex-end}
@@ -982,10 +981,8 @@ function renderFabricSections(){
       var friendly = nearestColorName(pair[1]);
       return '<div class="mtile' + (name === sel.colorName ? ' on' : '') + '" data-name="' + name + '">' +
         '<div class="imw"><img src="' + fabricAsset(name) + '" alt="' + name + '">' +
-        '<span class="chk"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></div>' +
-        '<div class="lr"><span class="nm">' + friendly + '</span>' +
-        '<button type="button" class="info-i" aria-label="Detalii ' + name + '"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
-        '</div></div>';
+        '<button type="button" class="info-i" aria-label="Detalii ' + name + '"><svg width="32" height="32" fill="none"><path d="M32 16c0-8.837-7.163-16-16-16S0 7.163 0 16s7.163 16 16 16 16-7.163 16-16Z" fill="#fff"/><path d="M16 22.333v-6.666" stroke="#121219" stroke-width="2" stroke-linecap="round"/><path d="M16.001 9.667a1.333 1.333 0 1 1 0 2.666 1.333 1.333 0 0 1 0-2.666Z" fill="#000"/></svg></button></div>' +
+        '<div class="lr"><span class="nm">' + friendly + '</span></div></div>';
     }).join('');
     section.innerHTML =
       '<div class="cfg-col-head"><span class="t">' + c.name +
