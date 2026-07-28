@@ -97,18 +97,17 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-badge{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--slate)}
 .cfg-badge svg{flex:0 0 auto;width:14px;height:14px}
 
-.cfg-fabric-pillrow{display:flex;gap:10px;margin-top:18px;overflow-x:auto;scrollbar-width:none}
-.cfg-fabric-pillrow::-webkit-scrollbar{display:none}
-.cfg-fabric-pill{flex:0 0 auto;width:88px;background:#fff;border:1px solid var(--chipbg);transition:border-color .15s}
+.cfg-fabric-pillrow{display:flex;gap:10px;margin-top:18px}
+.cfg-fabric-pill{flex:1 1 0;min-width:0;background:#fff;border:1px solid transparent;transition:border-color .15s}
 .cfg-fabric-pill.on{border-color:var(--ink)}
 .cfg-fabric-pill .imw{position:relative;width:100%;aspect-ratio:1;overflow:hidden}
 .cfg-fabric-pill .imw img{width:100%;height:100%;object-fit:cover;display:block}
 .cfg-fabric-pill .chk{display:none;position:absolute;top:6px;right:6px;width:20px;height:20px;border-radius:50%;background:var(--ink);align-items:center;justify-content:center}
 .cfg-fabric-pill.on .chk{display:flex}
 .cfg-fabric-pill .lr{display:flex;align-items:center;justify-content:space-between;padding:7px}
-.cfg-fabric-pill .nm{font-size:12px;letter-spacing:-.24px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.cfg-fabric-pill .info-i{display:flex;align-items:center;justify-content:center;width:12px;height:12px;flex:0 0 auto;padding:0;background:none;border:none;box-shadow:none}
-.cfg-fabric-pill .info-i svg{width:12px;height:12px;pointer-events:none;display:block}
+.cfg-fabric-pill .nm{font-size:15px;letter-spacing:-.3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cfg-fabric-pill .info-i{display:flex;align-items:center;justify-content:center;width:16px;height:16px;flex:0 0 auto;padding:0;background:none;border:none;box-shadow:none}
+.cfg-fabric-pill .info-i svg{width:16px;height:16px;pointer-events:none;display:block}
 
 .cfg-fabric-divider{height:1px;background:var(--hair);margin-top:18px}
 .cfg-fabric-toolrow{display:flex;align-items:center;justify-content:space-between;margin-top:14px}
@@ -138,6 +137,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 
 .cfg-col-section{padding-top:28px;border-top:1px solid var(--hair);margin-top:24px}
 .cfg-col-section:first-of-type{border-top:none;margin-top:0}
+.cfg-col-mattype{font-size:11px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--gray);margin-bottom:4px}
 .cfg-col-head{display:flex;align-items:baseline;justify-content:space-between}
 .cfg-col-head .t{font-size:17px;font-weight:600;display:flex;align-items:center;gap:6px}
 .cfg-col-head .info-i-inline{position:relative;width:18px;height:18px;display:flex;align-items:center;justify-content:center;padding:0;border-radius:50%}
@@ -761,12 +761,18 @@ function toast(msg){
 /* ══════════ v3-specific: configurator state + rendering ══════════ */
 var sel = { shapeEl: null, collectionSlug: 'luna', colorName: null, needs: [] };
 var FABRIC_PILLS = [
-  { key:'catifea', label:'Catifea', stems:['Catifea','Pluș'], asset:'assets/piano-04.png', blurb:'Material plușat, moale la atingere, cu aspect elegant, ușor lucios.' },
-  { key:'velur', label:'Velur', stems:['Microfibr'], asset:'assets/enjoylux-04.png', blurb:'Microfibră fină, cu tehnologie hidrofobă care respinge lichidele.' },
-  { key:'bucle', label:'Bucle', stems:['Țesătur'], asset:'assets/lunareal-33.png', blurb:'Țesătură texturată, cu aspect natural și rezistență sporită la uzură.' }
+  { key:'catifea', label:'Catifea', stems:['Catifea','Pluș'], asset:'assets/manila-hero.png', blurb:'Material plușat, moale la atingere, cu aspect elegant, ușor lucios.' },
+  { key:'velur', label:'Velur', stems:['Microfibr'], asset:'assets/enjoylux-hero.png', blurb:'Microfibră fină, cu tehnologie hidrofobă care respinge lichidele.' },
+  { key:'bucle', label:'Bucle', stems:['Țesătur'], asset:'assets/spello-hero.png', blurb:'Țesătură texturată, cu aspect natural și rezistență sporită la uzură.' }
 ];
 var activeFabricPill = null;
 var LUNA_SOFA_CODES = ['5','6','8','10','13','14'];
+function materialTypeLabel(c){
+  var match = FABRIC_PILLS.filter(function(p){
+    return p.stems.some(function(stem){ return c.materialTypes.some(function(t){ return t.indexOf(stem) > -1; }); });
+  })[0];
+  return match ? match.label : '';
+}
 
 var NEED_ICON_BABY = '<svg width="34" height="34" viewBox="0 0 93 93" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.325 17.919C0.425 18.219 2.525 25.119 3.725 28.219C4.425 29.919 6.625 36.719 6.925 40.219C7.325 44.619 12.125 51.219 21.425 52.019C22.425 52.219 23.425 52.219 24.425 52.219C28.425 52.219 35.425 51.119 39.725 44.319C42.125 40.519 44.125 39.219 48.925 37.519C52.225 36.319 54.425 34.319 54.725 32.319C54.925 30.919 54.325 29.519 53.225 28.619C51.525 27.219 48.425 27.819 45.425 28.419C44.425 28.719 43.325 28.819 42.225 28.819L41.625 28.619C40.325 28.319 39.225 28.019 40.325 22.719C41.725 15.919 42.925 8.91903 43.025 8.31903C43.525 6.21903 42.325 4.01903 40.325 3.31903C38.925 2.91903 37.025 3.51903 36.125 6.31903L32.525 18.919C32.225 19.819 31.425 20.519 31.225 20.419C31.025 20.319 30.725 19.819 30.625 18.219L30.225 3.91903C30.125 1.81903 28.425 0.119028 26.325 0.0190276C24.425 -0.180972 22.725 1.21903 22.525 3.11903L21.025 17.919C20.925 18.719 20.525 19.019 20.425 19.019C20.325 19.019 19.925 18.719 19.625 17.519L16.625 5.31903C16.225 3.31903 14.325 1.81903 12.325 2.01903C10.925 2.21903 9.325 3.41903 9.425 6.21903V6.31903L11.225 20.419C11.325 21.619 11.025 22.819 10.525 23.919C10.325 23.619 10.125 23.419 10.025 23.119L7.225 15.819C6.625 13.519 4.325 12.219 2.025 12.819C0.525 13.419 -0.575 15.219 0.325 17.919Z" fill="currentColor"/><path d="M65.6251 43.719C66.3251 40.819 64.9251 39.419 63.5251 39.119C61.3251 38.719 59.2251 40.019 58.6251 42.119C58.4251 42.719 55.9251 49.419 53.7251 56.019C52.0251 61.119 50.9251 60.819 49.6251 60.419C49.4251 60.319 49.2251 60.319 49.0251 60.219C48.1251 59.619 47.2251 59.019 46.5251 58.219C44.2251 56.219 41.8251 54.119 39.6251 54.419C38.2251 54.519 37.0251 55.519 36.4251 56.819C35.6251 58.819 36.5251 61.519 38.8251 64.219C42.0251 68.119 43.1251 70.219 43.3251 74.719C43.7251 86.119 54.2251 90.319 55.2251 90.719C57.6251 91.919 60.3251 92.519 63.0251 92.519C68.0251 92.519 72.0251 90.219 73.7251 87.819C75.8251 84.919 81.1251 80.219 82.5251 79.119C85.1251 77.119 90.4251 72.219 90.6251 72.019C92.8251 70.119 92.7251 68.019 91.6251 66.719C89.9251 65.019 87.3251 65.019 85.6251 66.719L79.4251 71.619C79.1251 71.819 78.8251 71.919 78.5251 72.019C78.6251 70.819 79.0251 69.619 79.7251 68.619L88.4251 57.419L88.5251 57.319C90.0251 54.919 89.3251 53.119 88.2251 52.219C86.5251 51.019 84.2251 51.319 82.8251 52.819L74.0251 61.819C73.2251 62.619 72.6251 62.719 72.6251 62.719C72.4251 62.319 72.5251 61.819 72.7251 61.519L78.9251 47.919C79.7251 46.219 78.9251 44.219 77.2251 43.419C75.3251 42.419 73.0251 43.019 71.9251 44.819L64.3251 56.919C63.4251 58.319 62.8251 58.519 62.7251 58.519C62.2251 57.919 62.1251 57.219 62.3251 56.519L65.6251 43.719ZM61.6251 60.719C62.5251 61.119 64.3251 61.319 66.3251 58.219L73.9251 46.119C74.4251 45.419 75.3251 45.219 76.0251 45.619C76.5251 45.819 76.8251 46.419 76.6251 46.919L70.4251 60.519C69.7251 62.319 70.0251 64.019 71.2251 64.819C71.7251 65.119 73.5251 66.019 75.8251 63.519L84.6251 54.519C85.1251 53.919 85.9251 53.819 86.6251 54.119C87.1251 54.519 86.6251 55.519 86.4251 55.919L77.8251 67.119C76.9251 68.319 75.1251 72.219 76.7251 73.919C77.3251 74.619 78.5251 75.119 80.8251 73.719L80.9251 73.619L87.2251 68.619C87.8251 67.919 88.9251 67.719 89.7251 68.319C90.1251 68.819 89.6251 69.519 88.9251 70.119C88.8251 70.219 83.4251 75.119 80.9251 77.119C79.2251 78.419 73.8251 83.319 71.6251 86.319C69.9251 88.619 64.0251 92.119 56.1251 88.419H56.0251C55.7251 88.319 46.2251 84.819 45.8251 74.719C45.6251 69.419 44.2251 66.819 40.8251 62.719C38.8251 60.319 38.5251 58.519 38.8251 57.719C38.9251 57.519 39.0251 57.119 40.0251 56.919H40.2251C41.3251 56.919 43.5251 58.919 44.9251 60.119C46.6251 61.619 47.6251 62.419 48.6251 62.619L49.1251 62.719C52.0251 63.519 54.1251 62.719 56.2251 56.619C58.5251 49.819 61.1251 42.819 61.1251 42.719V42.619C61.3251 41.819 62.1251 41.219 63.0251 41.319C63.6251 41.419 63.3251 42.619 63.3251 42.919L60.0251 55.619C59.4251 57.619 60.0251 60.019 61.6251 60.719Z" fill="currentColor"/></svg>';
 
@@ -910,7 +916,7 @@ function renderFabricPillRow(){
       '<div class="imw"><img src="' + p.asset + '" alt="' + p.label + '">' +
       '<span class="chk"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></div>' +
       '<div class="lr"><span class="nm">' + p.label + '</span>' +
-      '<button type="button" class="info-i" aria-label="Detalii ' + p.label + '"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
+      '<button type="button" class="info-i" aria-label="Detalii ' + p.label + '"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
       '</div>';
     card.onclick = function(){
       activeFabricPill = activeFabricPill === p.key ? null : p.key;
@@ -1020,6 +1026,7 @@ function renderFabricSections(){
         '<div class="lr"><span class="nm">' + friendly + '</span></div></div>';
     }).join('');
     section.innerHTML =
+      '<div class="cfg-col-mattype">Material ' + materialTypeLabel(c) + '</div>' +
       '<div class="cfg-col-head"><span class="t">' + c.name +
         '<button type="button" class="info-i-inline" aria-label="Detalii colecția ' + c.name + '"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span>' +
         '<span class="pr">' + formatPrice(c.price) + ' lei</span></div>' +
