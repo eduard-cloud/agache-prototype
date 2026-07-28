@@ -124,10 +124,10 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .mtile.on .imw::after{content:"";position:absolute;inset:0;border:2px solid var(--ink);box-shadow:inset 0 0 0 4px #fff}
 .mtile .lr{display:flex;align-items:center;justify-content:space-between;margin-top:9px}
 .mtile .nm{font-size:12px}
-.info-i{position:relative;flex:0 0 auto;width:18px;height:18px;display:flex;align-items:center;justify-content:center;padding:0;border-radius:50%}
-.info-i::before{content:'';position:absolute;top:50%;left:50%;width:44px;height:44px;transform:translate(-50%,-50%)}
+.mtile .info-i{display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:30px;height:30px;align-items:center;justify-content:center;padding:0;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.25);z-index:2}
+.mtile.on .info-i{display:flex}
 .info-i svg{width:16px;height:16px;pointer-events:none}
-.info-i:active{background:rgba(0,0,0,.08)}
+.info-i:active{background:#f2f2f2}
 
 /* ── section 4: summary ── */
 .cfg-samples-btn{display:block;width:100%;height:48px;border:1px solid var(--ink);border-radius:24px;font-size:14px;font-weight:500;margin-top:20px}
@@ -754,9 +754,9 @@ function renderColors(){
     tile.className = 'mtile' + (name === sel.colorName ? ' on' : '');
     tile.dataset.name = name;
     tile.innerHTML =
-      '<div class="imw"><img src="' + fabricAsset(name) + '" alt="' + name + '"></div>' +
-      '<div class="lr"><span class="nm">' + friendly + '</span>' +
-      '<button type="button" class="info-i" aria-label="Detalii ' + name + '"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>';
+      '<div class="imw"><img src="' + fabricAsset(name) + '" alt="' + name + '">' +
+      '<button type="button" class="info-i" aria-label="Detalii ' + name + '"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#121212"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10ZM12 11.5v5M12 7.51l.01-.011" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>' +
+      '<div class="lr"><span class="nm">' + friendly + '</span></div>';
     tile.onclick = function(){ pickColor(tile); };
     tile.querySelector('.info-i').onclick = function(e){ e.stopPropagation(); showSwatchInfo(name); };
     grid.appendChild(tile);
