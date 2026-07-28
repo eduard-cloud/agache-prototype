@@ -93,30 +93,33 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-needs-tile-name{display:block;font-size:12px;margin-top:6px;color:var(--ink);text-align:center}
 .cfg-needs-label{margin-top:14px;font-size:13px;color:var(--gray)}
 
-/* ── section 2b: material ── */
-.cfg-mat-filters{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
-.cfg-fchip.on{background:var(--ink);color:#fff}
-.cfg-mat-row{display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:20px 0 4px;scroll-snap-type:x proximity}
-.cfg-mat-row::-webkit-scrollbar{display:none}
-.cfg-mat-tile{flex:0 0 auto;width:92px;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;text-align:left}
-.cfg-mat-imw{position:relative;width:92px;height:92px;border-radius:4px;border:1px solid var(--hair);overflow:hidden;display:flex;align-items:center;justify-content:center;transition:box-shadow .15s;scroll-snap-align:start}
-.cfg-mat-imw img{width:100%;height:100%;object-fit:cover}
-.cfg-mat-tile.on .cfg-mat-imw{box-shadow:inset 0 0 0 2px var(--ink)}
-.cfg-mat-check{display:none;position:absolute;right:6px;bottom:6px;width:20px;height:20px;border-radius:50%;background:var(--ink);align-items:center;justify-content:center}
-.cfg-mat-tile.on .cfg-mat-check{display:flex}
-.cfg-mat-tile-name{display:block;font-size:12px;margin-top:6px;color:var(--ink)}
-.cfg-mat-detail{margin-top:14px}
-.cfg-mat-detail strong{font-size:15px;font-weight:600;display:block}
-.cfg-mat-detail-texture{font-size:13px;color:var(--gray);margin-top:2px;display:block}
-.cfg-mat-detail-badges{display:flex;flex-direction:column;gap:4px;margin-top:10px}
+/* ── section 2b/3: fabric picker — inline Sweef-style filters + all collections stacked ── */
 .cfg-badge{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--slate)}
 .cfg-badge svg{flex:0 0 auto;width:14px;height:14px}
-.cfg-mat-detail-foot{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
-.cfg-mat-detail-foot span:first-child{font-size:11px;color:var(--gray)}
-.cfg-mat-detail-foot span:last-child{font-size:14px;font-weight:700}
-.cfg-mat-empty{padding:24px 0;font-size:13px;color:var(--gray)}
 
-/* ── section 3: color ── */
+.cfg-filter-toprow{display:flex;align-items:center;justify-content:space-between;margin-top:18px}
+.cfg-filter-toggle{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--ink)}
+.cfg-filter-toggle svg{flex:0 0 auto}
+.cfg-filter-cnt{display:none;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;border-radius:9999px;background:var(--ink);color:#fff;font-size:11px;font-weight:600}
+.cfg-filter-cnt.on{display:inline-flex}
+.cfg-filter-total{font-size:13px;color:var(--gray)}
+.cfg-filter-tabs{display:flex;gap:8px;margin-top:14px;overflow-x:auto;scrollbar-width:none}
+.cfg-filter-tabs::-webkit-scrollbar{display:none}
+.cfg-ftab{flex:0 0 auto;background:#fff;border:1px solid #c8cbd0;border-radius:9999px;padding:9px 14px;font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap}
+.cfg-ftab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.cfg-filter-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.cfg-fpill.on{background:var(--ink);color:#fff}
+
+.cfg-col-section{padding-top:28px;border-top:1px solid var(--hair);margin-top:24px}
+.cfg-col-section:first-of-type{border-top:none;margin-top:0}
+.cfg-col-head{display:flex;align-items:baseline;justify-content:space-between}
+.cfg-col-head .t{font-size:17px;font-weight:600;display:flex;align-items:center;gap:6px}
+.cfg-col-head .info-i-inline{position:relative;width:18px;height:18px;display:flex;align-items:center;justify-content:center;padding:0;border-radius:50%}
+.cfg-col-head .pr{font-size:14px;font-weight:700}
+.cfg-col-usps{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+.cfg-col-empty{padding:16px 0;font-size:13px;color:var(--gray)}
+
+/* ── color swatch tiles (shared by every collection's grid) ── */
 .cfg-color-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px 10px;margin-top:18px}
 .mtile{position:relative}
 .mtile .imw{position:relative;aspect-ratio:1;overflow:hidden}
@@ -159,7 +162,6 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
       <button class="cfg-chip on" data-sec="config" onclick="scrollCfgTo('config')">Dimensiune</button>
       <!-- Nevoi de lifestyle chip removed per request, kept in markup below for easy restore -->
       <button class="cfg-chip" data-sec="needs" onclick="scrollCfgTo('needs')" style="display:none">Nevoi</button>
-      <button class="cfg-chip" data-sec="material" onclick="scrollCfgTo('material')">Material</button>
       <button class="cfg-chip" data-sec="color" onclick="scrollCfgTo('color')">Culoare</button>
       <button class="cfg-chip" data-sec="summary" onclick="scrollCfgTo('summary')">Sumar</button>
     </div>
@@ -196,30 +198,18 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
         <div class="cfg-needs-label" id="cfg-needs-label"></div>
       </section>
 
-      <section class="cfg-sec" id="sec-material">
-        <h3>Alege materialul</h3>
-        <p class="cfg-sec-sub">8 colecții de țesături, fiecare cu proprietăți proprii.</p>
-        <div class="cfg-mat-filters" id="cfg-mat-filters"></div>
-        <div class="cfg-mat-row" id="cfg-materials"></div>
-        <div class="cfg-mat-detail" id="cfg-mat-detail">
-          <strong id="cfg-mat-detail-name"></strong>
-          <span class="cfg-mat-detail-texture" id="cfg-mat-detail-texture"></span>
-          <div class="cfg-mat-detail-badges">
-            <span id="cfgmat-usp1" class="cfg-badge"></span>
-            <span id="cfgmat-usp2" class="cfg-badge"></span>
-            <span id="cfgmat-usp3" class="cfg-badge"></span>
-          </div>
-          <div class="cfg-mat-detail-foot">
-            <span id="cfg-mat-detail-durability"></span>
-            <span id="cfg-mat-detail-price"></span>
-          </div>
-        </div>
-      </section>
-
       <section class="cfg-sec" id="sec-color">
-        <h3>Alege culoarea</h3>
+        <h3>Alege materialul și culoarea</h3>
         <p class="cfg-sec-sub" id="cfg-color-sub"></p>
-        <div class="cfg-color-grid" id="cfg-colors"></div>
+
+        <div class="cfg-filter-toprow">
+          <span class="cfg-filter-toggle"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.7"><line x1="4" y1="7" x2="20" y2="7"/><circle cx="9" cy="7" r="2.2" fill="#fff"/><line x1="4" y1="16" x2="20" y2="16"/><circle cx="15" cy="16" r="2.2" fill="#fff"/></svg>Filtre<span class="cfg-filter-cnt" id="cfg-filter-cnt">0</span></span>
+          <span class="cfg-filter-total" id="cfg-filter-total"></span>
+        </div>
+        <div class="cfg-filter-tabs" id="cfg-filter-tabs"></div>
+        <div class="cfg-filter-pills" id="cfg-filter-pills"></div>
+
+        <div id="cfg-fabric-sections"></div>
       </section>
 
       <section class="cfg-sec" id="sec-summary">
@@ -561,7 +551,6 @@ function toast(msg){
 
 /* ══════════ v3-specific: configurator state + rendering ══════════ */
 var sel = { shapeEl: null, collectionSlug: 'luna', colorName: null, needs: [] };
-var activeMaterialFilter = null;
 var MATERIAL_FILTERS = [
   { label:'Catifea', stem:'Catifea' },
   { label:'Pluș', stem:'Pluș' },
@@ -661,7 +650,6 @@ function toggleNeed(key, tile){
   if (idx > -1) sel.needs.splice(idx, 1); else sel.needs.push(key);
   tile.classList.toggle('on');
   updateNeedsLabel();
-  renderMaterials();
   pressFeedback(tile);
 }
 
@@ -677,89 +665,143 @@ function updateNeedsLabel(){
   label.textContent = 'Recomandăm materiale potrivite pentru: ' + names.join(', ') + '.';
 }
 
-function renderMaterialFilters(){
-  var wrap = document.getElementById('cfg-mat-filters');
+/* ══════════ Fabric picker: inline Sweef-style filters + every collection stacked ══════════ */
+var chipColors = { 'Galben':'#ffe600', 'Gri':'#a8abb3', 'Maro / Bej':'#9e8e7c', 'Albastru':'#3b82f6', 'Roșu':'#ef4444', 'Roz':'#f48fb1', 'Verde':'#4caf50', 'Bej':'#d4c5a9', 'Negru':'#1d1e1f' };
+var PROP_OPTIONS = ['Impermeabil', 'Easy Clean', 'Pet Friendly', 'Piele sensibilă (OEKO-TEX®)'];
+var REZ_OPTIONS = ['Uz zilnic', 'Uz intensiv', 'Uz extrem'];
+var MART_BUCKETS = { 'Uz zilnic': [40000, 55000], 'Uz intensiv': [55000, 75000], 'Uz extrem': [75000, Infinity] };
+var FILTER_GROUPS = [
+  { key:'culoare', label:'Culoare', options: FAMILY_ORDER },
+  { key:'material', label:'Tip țesătură', options: MATERIAL_FILTERS.map(function(f){ return f.label; }) },
+  { key:'prop', label:'Proprietăți', options: PROP_OPTIONS.concat(REZ_OPTIONS) }
+];
+var openFilterGroup = 'culoare';
+var appliedFilters = [];
+
+function martRangeOverlaps(martindaleStr, bucketLabel){
+  var range = martRange(martindaleStr);
+  var bucket = MART_BUCKETS[bucketLabel];
+  return !!bucket && range[0] <= bucket[1] && range[1] >= bucket[0];
+}
+function propMatch(f, c){
+  if (f === 'Impermeabil') return c.waterproof;
+  if (f === 'Easy Clean') return c.easyClean;
+  if (f === 'Pet Friendly') return c.petFriendly;
+  if (f === 'Piele sensibilă (OEKO-TEX®)') return c.certifications === 'OEKO-TEX®';
+  return false;
+}
+function totalColorCount(){
+  return COLLECTION_ORDER.reduce(function(sum, slug){ return sum + COLLECTIONS[slug].colors.length; }, 0);
+}
+
+function renderFilterTabs(){
+  var wrap = document.getElementById('cfg-filter-tabs');
   wrap.innerHTML = '';
-  MATERIAL_FILTERS.forEach(function(f){
-    var chip = document.createElement('button');
-    chip.className = 'fchip cfg-fchip' + (activeMaterialFilter === f.label ? ' on' : '');
-    chip.textContent = f.label;
-    chip.onclick = function(){
-      activeMaterialFilter = activeMaterialFilter === f.label ? null : f.label;
-      renderMaterialFilters();
-      renderMaterials();
-    };
-    wrap.appendChild(chip);
+  FILTER_GROUPS.forEach(function(g){
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'cfg-ftab' + (openFilterGroup === g.key ? ' on' : '');
+    btn.textContent = g.label;
+    btn.onclick = function(){ openFilterGroup = g.key; renderFilterTabs(); renderFilterPills(); };
+    wrap.appendChild(btn);
   });
 }
 
-function renderMaterials(){
-  var row = document.getElementById('cfg-materials');
-  row.innerHTML = '';
-  var filter = MATERIAL_FILTERS.filter(function(f){ return f.label === activeMaterialFilter; })[0];
-  var needFilters = NEED_DEFS.filter(function(n){ return sel.needs.indexOf(n.key) > -1; });
+function renderFilterPills(){
+  var wrap = document.getElementById('cfg-filter-pills');
+  wrap.innerHTML = '';
+  var group = FILTER_GROUPS.filter(function(g){ return g.key === openFilterGroup; })[0];
+  group.options.forEach(function(opt){
+    var on = appliedFilters.indexOf(opt) > -1;
+    var pill = document.createElement('button');
+    pill.type = 'button';
+    pill.className = 'fchip cfg-fpill' + (on ? ' on' : '');
+    if (chipColors[opt] && !on) pill.style.color = chipColors[opt];
+    pill.textContent = opt;
+    pill.onclick = function(){
+      var i = appliedFilters.indexOf(opt);
+      if (i > -1) appliedFilters.splice(i, 1); else appliedFilters.push(opt);
+      renderFilterPills();
+      applyFabricFilters();
+    };
+    wrap.appendChild(pill);
+  });
+}
+
+function applyFabricFilters(){
+  var cnt = document.getElementById('cfg-filter-cnt');
+  cnt.textContent = appliedFilters.length;
+  cnt.classList.toggle('on', appliedFilters.length > 0);
+
+  var byCat = { material: [], culoare: [], prop: [], rez: [] };
+  appliedFilters.forEach(function(f){
+    if (FAMILY_ORDER.indexOf(f) > -1) byCat.culoare.push(f);
+    else if (MATERIAL_FILTERS.some(function(m){ return m.label === f; })) byCat.material.push(f);
+    else if (REZ_OPTIONS.indexOf(f) > -1) byCat.rez.push(f);
+    else byCat.prop.push(f);
+  });
+
+  var visibleCount = 0;
   COLLECTION_ORDER.forEach(function(slug){
     var c = COLLECTIONS[slug];
-    if (filter && !c.materialTypes.some(function(t){ return t.indexOf(filter.stem) > -1; })) return;
-    if (needFilters.length && !needFilters.every(function(n){ return n.test(c); })) return;
-    var firstColor = c.name + ' ' + c.colors[0][0];
-    var tile = document.createElement('button');
-    tile.className = 'cfg-mat-tile' + (slug === sel.collectionSlug ? ' on' : '');
-    tile.dataset.slug = slug;
-    tile.innerHTML =
-      '<span class="cfg-mat-imw"><img src="' + fabricAsset(firstColor) + '" alt="' + c.name + '">' +
-        '<span class="cfg-mat-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>' +
-      '</span>' +
-      '<span class="cfg-mat-tile-name">' + c.name + '</span>';
-    tile.onclick = function(){ pickMaterial(tile); };
-    row.appendChild(tile);
+    var section = document.querySelector('.cfg-col-section[data-slug="' + slug + '"]');
+    var matOK = !byCat.material.length || byCat.material.some(function(f){
+      var stem = MATERIAL_FILTERS.filter(function(m){ return m.label === f; })[0].stem;
+      return c.materialTypes.some(function(t){ return t.indexOf(stem) > -1; });
+    });
+    var propOK = !byCat.prop.length || byCat.prop.every(function(f){ return propMatch(f, c); });
+    var rezOK = !byCat.rez.length || byCat.rez.some(function(f){ return martRangeOverlaps(c.martindale, f); });
+    var anyVisible = false;
+    section.querySelectorAll('.mtile').forEach(function(tile){
+      var s = SWATCH_INDEX[tile.dataset.name];
+      var visible = matOK && propOK && rezOK;
+      if (visible && byCat.culoare.length) visible = s && byCat.culoare.indexOf(colorFamilyRO(s.hex)) > -1;
+      tile.style.display = visible ? '' : 'none';
+      if (visible){ anyVisible = true; visibleCount++; }
+    });
+    section.style.display = anyVisible ? '' : 'none';
   });
-  if (!row.children.length){
-    row.innerHTML = '<div class="cfg-mat-empty">Niciun material nu corespunde tuturor criteriilor selectate. Încearcă mai puține opțiuni.</div>';
-  }
-  updateMaterialDetail(COLLECTIONS[sel.collectionSlug]);
+  document.getElementById('cfg-filter-total').textContent = 'Se afișează ' + visibleCount + ' culori';
 }
 
-function updateMaterialDetail(c){
-  document.getElementById('cfg-mat-detail-name').textContent = c.name;
-  document.getElementById('cfg-mat-detail-texture').textContent = textureLabel(c);
-  document.getElementById('cfg-mat-detail-durability').textContent = durabilityLabel(c) + ' · ' + avgScore(c) + '/5';
-  document.getElementById('cfg-mat-detail-price').textContent = formatPrice(c.price) + ' lei';
-  renderUSPBadges('cfgmat', c);
-}
-
-function pickMaterial(el){
-  document.querySelectorAll('.cfg-mat-tile').forEach(function(t){ t.classList.remove('on'); });
-  el.classList.add('on');
-  sel.collectionSlug = el.dataset.slug;
-  var c = COLLECTIONS[sel.collectionSlug];
-  sel.colorName = c.name + ' ' + c.colors[0][0];
-  updateMaterialDetail(c);
-  renderColors();
-  updatePreview();
-  updateSummary();
-  pressFeedback(el);
-}
-
-function renderColors(){
-  var grid = document.getElementById('cfg-colors');
-  grid.innerHTML = '';
-  var c = COLLECTIONS[sel.collectionSlug];
-  document.getElementById('cfg-color-sub').textContent = c.colors.length + ' nuanțe disponibile pentru ' + c.name + '.';
-  c.colors.forEach(function(pair){
-    var name = c.name + ' ' + pair[0];
-    var friendly = nearestColorName(pair[1]);
-    var tile = document.createElement('div');
-    tile.className = 'mtile' + (name === sel.colorName ? ' on' : '');
-    tile.dataset.name = name;
-    tile.innerHTML =
-      '<div class="imw"><img src="' + fabricAsset(name) + '" alt="' + name + '">' +
-      '<button type="button" class="info-i" aria-label="Detalii ' + name + '"><svg width="32" height="32" fill="none"><path d="M32 16c0-8.837-7.163-16-16-16S0 7.163 0 16s7.163 16 16 16 16-7.163 16-16Z" fill="#fff"/><path d="M16 22.333v-6.666" stroke="#121219" stroke-width="2" stroke-linecap="round"/><path d="M16.001 9.667a1.333 1.333 0 1 1 0 2.666 1.333 1.333 0 0 1 0-2.666Z" fill="#000"/></svg></button></div>' +
-      '<div class="lr"><span class="nm">' + friendly + '</span></div>';
-    tile.onclick = function(){ pickColor(tile); };
-    tile.querySelector('.info-i').onclick = function(e){ e.stopPropagation(); showSwatchInfo(name); };
-    grid.appendChild(tile);
+function renderFabricSections(){
+  var wrap = document.getElementById('cfg-fabric-sections');
+  wrap.innerHTML = '';
+  COLLECTION_ORDER.forEach(function(slug){
+    var c = COLLECTIONS[slug];
+    var section = document.createElement('div');
+    section.className = 'cfg-col-section';
+    section.dataset.slug = slug;
+    var swatchesHTML = c.colors.map(function(pair){
+      var name = c.name + ' ' + pair[0];
+      var friendly = nearestColorName(pair[1]);
+      return '<div class="mtile' + (name === sel.colorName ? ' on' : '') + '" data-name="' + name + '">' +
+        '<div class="imw"><img src="' + fabricAsset(name) + '" alt="' + name + '">' +
+        '<button type="button" class="info-i" aria-label="Detalii ' + name + '"><svg width="32" height="32" fill="none"><path d="M32 16c0-8.837-7.163-16-16-16S0 7.163 0 16s7.163 16 16 16 16-7.163 16-16Z" fill="#fff"/><path d="M16 22.333v-6.666" stroke="#121219" stroke-width="2" stroke-linecap="round"/><path d="M16.001 9.667a1.333 1.333 0 1 1 0 2.666 1.333 1.333 0 0 1 0-2.666Z" fill="#000"/></svg></button></div>' +
+        '<div class="lr"><span class="nm">' + friendly + '</span></div></div>';
+    }).join('');
+    section.innerHTML =
+      '<div class="cfg-col-head"><span class="t">' + c.name +
+        '<button type="button" class="info-i-inline" aria-label="Detalii colecția ' + c.name + '"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span>' +
+        '<span class="pr">' + formatPrice(c.price) + ' lei</span></div>' +
+      '<div class="cfg-col-usps">' +
+        '<span id="colusp-' + slug + '-usp1" class="cfg-badge"></span>' +
+        '<span id="colusp-' + slug + '-usp2" class="cfg-badge"></span>' +
+        '<span id="colusp-' + slug + '-usp3" class="cfg-badge"></span>' +
+      '</div>' +
+      '<div class="cfg-color-grid">' + swatchesHTML + '</div>';
+    wrap.appendChild(section);
+    renderUSPBadges('colusp-' + slug, c);
+    section.querySelector('.info-i-inline').onclick = function(){
+      toast(c.name + ' · ' + textureLabel(c) + ' · ' + durabilityLabel(c) + ' · ' + formatPrice(c.price) + ' lei');
+    };
+    section.querySelectorAll('.mtile').forEach(function(tile){
+      tile.onclick = function(){ pickFabricSwatch(tile, slug); };
+      tile.querySelector('.info-i').onclick = function(e){ e.stopPropagation(); showSwatchInfo(tile.dataset.name); };
+    });
   });
+  document.getElementById('cfg-color-sub').textContent = totalColorCount() + ' nuanțe disponibile în ' + COLLECTION_ORDER.length + ' colecții.';
+  document.getElementById('cfg-filter-total').textContent = 'Se afișează ' + totalColorCount() + ' culori';
 }
 
 function showSwatchInfo(name){
@@ -768,9 +810,10 @@ function showSwatchInfo(name){
   toast(nearestColorName(s.hex) + ' · ' + name + ' (' + s.hex + ')');
 }
 
-function pickColor(el){
-  document.querySelectorAll('#cfg-colors .mtile').forEach(function(t){ t.classList.remove('on'); });
+function pickFabricSwatch(el, slug){
+  document.querySelectorAll('#cfg-fabric-sections .mtile').forEach(function(t){ t.classList.remove('on'); });
   el.classList.add('on');
+  sel.collectionSlug = slug;
   sel.colorName = el.dataset.name;
   updatePreview();
   updateSummary();
@@ -866,14 +909,14 @@ function setActiveCfgChip(sec, instant){
   sel.collectionSlug = 'luna';
   sel.colorName = 'Luna ' + COLLECTIONS.luna.colors[0][0];
   renderNeeds();
-  renderMaterialFilters();
-  renderMaterials();
-  renderColors();
+  renderFilterTabs();
+  renderFilterPills();
+  renderFabricSections();
   updatePreview();
   updateSummary();
 
   var hashSec = location.hash.replace('#', '');
-  if (['config','needs','material','color','summary'].indexOf(hashSec) > -1){
+  if (['config','needs','color','summary'].indexOf(hashSec) > -1){
     scrollCfgTo(hashSec, true);
   }
 })();
