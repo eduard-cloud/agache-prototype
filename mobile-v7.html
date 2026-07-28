@@ -142,9 +142,10 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-col-head .info-i-inline{position:relative;width:18px;height:18px;display:flex;align-items:center;justify-content:center;padding:0;border-radius:50%}
 .cfg-col-mattype-link{font-size:13px;font-weight:500;text-decoration:underline;color:var(--ink);background:none;border:none;padding:0;white-space:nowrap}
 .cfg-col-usps{display:flex;flex-direction:column;gap:4px;margin-top:8px}
-.cfg-usps-row{flex-direction:row;flex-wrap:wrap;column-gap:16px;row-gap:6px}
-.cfg-usps-row .cfg-badge{font-size:13px}
-.cfg-usps-row .cfg-badge svg{width:16px;height:16px}
+.cfg-usps-row{flex-direction:row;flex-wrap:nowrap;column-gap:12px;overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(to right,#000 92%,transparent 100%);mask-image:linear-gradient(to right,#000 92%,transparent 100%)}
+.cfg-usps-row::-webkit-scrollbar{display:none}
+.cfg-usps-row .cfg-badge{font-size:12px;white-space:nowrap;flex:0 0 auto}
+.cfg-usps-row .cfg-badge svg{width:15px;height:15px}
 .cfg-col-empty{padding:16px 0;font-size:13px;color:var(--gray)}
 
 /* ── color swatch tiles (shared by every collection's grid) ── */
@@ -676,7 +677,8 @@ var USP_ICONS = {
   droplet: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>',
   hand: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>',
   shield: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>',
-  grid: '<svg width="22" height="22" viewBox="0 0 24 24" fill="#4d35ff"><circle cx="7" cy="5" r="1.6"/><circle cx="13" cy="5" r="1.6"/><circle cx="7" cy="12" r="1.6"/><circle cx="13" cy="12" r="1.6"/><circle cx="7" cy="19" r="1.6"/><circle cx="13" cy="19" r="1.6"/></svg>'
+  grid: '<svg width="22" height="22" viewBox="0 0 24 24" fill="#4d35ff"><circle cx="7" cy="5" r="1.6"/><circle cx="13" cy="5" r="1.6"/><circle cx="7" cy="12" r="1.6"/><circle cx="13" cy="12" r="1.6"/><circle cx="7" cy="19" r="1.6"/><circle cx="13" cy="19" r="1.6"/></svg>',
+  bar: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7" stroke-linecap="round"><path d="M4 20V10"/><path d="M12 20V4"/><path d="M20 20v-6"/></svg>'
 };
 function textureLabel(c){
   if (c.surface === 'Plush/Soft') return c.finish === 'Glossy' ? 'Aspect catifelat, lucios' : 'Aspect catifelat, mat';
@@ -705,10 +707,15 @@ var USP_BADGES = [
   { icon: 'people', test: function(){ return true; }, label: durabilityLabel },
   { icon: 'shield', test: function(){ return true; }, label: function(c){ return c.composition; } }
 ];
-function renderUSPBadges(prefix, c){
+/* Collection-header variant: swaps the "Pentru uz extrem" durability tier for the raw
+   Martindale scale value, which is more compact and more precise. */
+var USP_BADGES_HEADER = USP_BADGES.slice();
+USP_BADGES_HEADER[5] = { icon: 'bar', test: function(){ return true; }, label: function(c){ return 'Martindale ' + c.martindale; } };
+function renderUSPBadges(prefix, c, pool){
+  pool = pool || USP_BADGES;
   var picked = [];
-  for (var i = 0; i < USP_BADGES.length && picked.length < 3; i++){
-    if (USP_BADGES[i].test(c)) picked.push(USP_BADGES[i]);
+  for (var i = 0; i < pool.length && picked.length < 3; i++){
+    if (pool[i].test(c)) picked.push(pool[i]);
   }
   picked.forEach(function(badge, i){
     var el = document.getElementById(prefix + '-usp' + (i + 1));
@@ -1038,7 +1045,7 @@ function renderFabricSections(){
       '</div>' +
       '<div class="cfg-color-grid">' + swatchesHTML + '</div>';
     wrap.appendChild(section);
-    renderUSPBadges('colusp-' + slug, c);
+    renderUSPBadges('colusp-' + slug, c, USP_BADGES_HEADER);
     section.querySelector('.info-i-inline').onclick = function(){ showCollectionDetail(slug); };
     section.querySelector('.cfg-col-mattype-link').onclick = function(){ showCollectionDetail(slug); };
     section.querySelectorAll('.mtile').forEach(function(tile){
