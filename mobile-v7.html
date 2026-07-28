@@ -131,6 +131,30 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .mtile.on .info-i{display:block}
 .info-i svg{width:32px;height:32px;pointer-events:none;display:block}
 
+/* ── individual swatch info modal (opened from a color tile's info button) ── */
+.swm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:60;align-items:flex-end}
+.swm-overlay.open{display:flex}
+.swm-sheet{background:#fff;border-radius:24px 24px 0 0;width:100%;max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 -8px 30px rgba(0,0,0,.14)}
+.swm-hero{position:relative;height:260px}
+.swm-hero img{width:100%;height:100%;object-fit:cover;display:block}
+.swm-close{position:absolute;right:16px;top:16px}
+.swm-body{padding:20px}
+.swm-title-row{display:flex;align-items:baseline;justify-content:space-between}
+.swm-title{font-size:20px;font-weight:600;letter-spacing:-.4px}
+.swm-sub{font-size:13px;color:var(--gray)}
+.swm-desc{font-size:14px;line-height:1.5;color:var(--slate);margin-top:8px}
+.rz-head{display:flex;align-items:center;justify-content:space-between;margin-top:24px;padding-bottom:12px;border-bottom:1px solid var(--hair)}
+.rz-head .t{font-size:15px;font-weight:600}
+.rz-head .s{font-size:14px;font-weight:600}
+.rz-head .s i{font-style:normal;color:var(--gray2);font-weight:400}
+.bar{position:relative;width:64px;height:4px;border-radius:2px;background:var(--hair);overflow:hidden;flex:0 0 auto}
+.bar i{position:absolute;left:0;top:0;height:100%;background:var(--ink);border-radius:2px;font-style:normal}
+.swm-feat-h,.mt-h{font-size:15px;font-weight:600;margin-top:24px;padding-bottom:12px;border-bottom:1px solid var(--hair)}
+.ft-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--hair);font-size:13px}
+.ft-row .k{color:var(--gray)}
+.ft-row .v{font-weight:500;text-align:right}
+.mt-p{font-size:13px;line-height:1.6;color:var(--slate);margin-top:12px}
+
 /* ── section 4: summary ── */
 .cfg-samples-btn{display:block;width:100%;height:48px;border:1px solid var(--ink);border-radius:24px;font-size:14px;font-weight:500;margin-top:20px}
 #cfg-sum-color-sw{width:32px;height:32px;border-radius:50%;flex:0 0 auto}
@@ -250,6 +274,45 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
   </div>
 </div>
 <div id="toast"></div>
+
+<div class="swm-overlay" id="swatch-modal" onclick="if(event.target===this) closeSwatchModal()">
+  <div class="swm-sheet">
+    <div class="swm-hero">
+      <img id="swm-img" src="" alt="">
+      <button class="circ-btn swm-close" onclick="closeSwatchModal()" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="swm-body">
+      <div class="swm-title-row"><span class="swm-title" id="swm-name"></span><span class="swm-sub" id="swm-sub"></span></div>
+      <p class="swm-desc" id="swm-desc"></p>
+
+      <div class="cfg-col-usps">
+        <span id="swm-usp1" class="cfg-badge"></span>
+        <span id="swm-usp2" class="cfg-badge"></span>
+        <span id="swm-usp3" class="cfg-badge"></span>
+      </div>
+
+      <div class="rz-head"><span class="t">Rezistență generală</span><span class="s" id="swm-score"></span></div>
+      <div class="rz-row"><div class="k">Martindale<em>test abraziune</em></div><div class="vv"><div class="v" id="swm-mart-v"></div><span class="bar"><i id="swm-mart-bar"></i></span></div></div>
+      <div class="rz-row"><div class="k">MACE<em>test agățare</em></div><div class="vv"><div class="v" id="swm-mace-v"></div><span class="bar"><i id="swm-mace-bar"></i></span></div></div>
+      <div class="rz-row"><div class="k">Rezistență culoare<em>la frecare</em></div><div class="vv"><div class="v" id="swm-rub-v"></div><span class="bar"><i id="swm-rub-bar"></i></span></div></div>
+      <div class="rz-row"><div class="k">Rezistență culoare<em>la lumină</em></div><div class="vv"><div class="v" id="swm-light-v"></div><span class="bar"><i id="swm-light-bar"></i></span></div></div>
+      <div class="rz-row" style="border-bottom:none"><div class="k">Pilling<em>scămoșare</em></div><div class="vv"><div class="v" id="swm-pill-v"></div><span class="bar"><i id="swm-pill-bar"></i></span></div></div>
+
+      <div class="swm-feat-h">Detalii</div>
+      <div class="ft-row"><span class="k">Certificări</span><span class="v" id="swm-cert"></span></div>
+      <div class="ft-row"><span class="k">Întreținere</span><span class="v" id="swm-maint"></span></div>
+      <div class="ft-row"><span class="k">Compoziție</span><span class="v" id="swm-comp"></span></div>
+      <div class="ft-row"><span class="k">Rezistență la foc</span><span class="v" id="swm-fire"></span></div>
+      <div class="ft-row"><span class="k">Greutate (g/m²)</span><span class="v" id="swm-weight"></span></div>
+      <div class="ft-row" style="border-bottom:none"><span class="k">Lățime rolă</span><span class="v" id="swm-width"></span></div>
+
+      <div class="mt-h">Îngrijire</div>
+      <p class="mt-p" id="swm-care"></p>
+
+      <button class="cfg-samples-btn" onclick="toast('Mostra a fost adăugată în coș')">Comandă mostră</button>
+    </div>
+  </div>
+</div>
 
 <script>
 /* ══════════ Data (copied verbatim from mobile-v2.html:1427-1530) ══════════ */
@@ -807,7 +870,17 @@ function renderFabricSections(){
 function showSwatchInfo(name){
   var s = SWATCH_INDEX[name];
   if (!s) return;
-  toast(nearestColorName(s.hex) + ' · ' + name + ' (' + s.hex + ')');
+  var c = s.collection;
+  document.getElementById('swm-img').src = fabricAsset(name);
+  document.getElementById('swm-img').alt = name;
+  document.getElementById('swm-name').textContent = nearestColorName(s.hex);
+  document.getElementById('swm-sub').textContent = name + ' · ' + s.hex;
+  fillCollectionText('swm', c);
+  document.querySelector('.swm-sheet').scrollTop = 0;
+  document.getElementById('swatch-modal').classList.add('open');
+}
+function closeSwatchModal(){
+  document.getElementById('swatch-modal').classList.remove('open');
 }
 
 function pickFabricSwatch(el, slug){
