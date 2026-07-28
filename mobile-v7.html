@@ -97,22 +97,15 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-badge{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--slate)}
 .cfg-badge svg{flex:0 0 auto;width:14px;height:14px}
 
-.cfg-fabric-pillrow{display:flex;gap:6px;margin-top:18px}
-.cfg-fabric-pill{flex:1;display:flex;align-items:stretch;justify-content:center;border-radius:9999px;overflow:hidden;border:1px solid #c8cbd0;background:#fff}
-.cfg-fabric-pill .lbl{padding:9px 8px;font-size:13px;font-weight:500;color:var(--ink)}
-.cfg-fabric-pill.on{border-color:var(--ink);background:var(--ink)}
-.cfg-fabric-pill.on .lbl{color:#fff}
-.cfg-fabric-pill .cnt{display:none;align-items:center;justify-content:center;padding:9px 8px;font-size:12px;font-weight:600;background:#000;color:#fff}
-.cfg-fabric-pill .div{display:none;width:1px;align-self:stretch;background:rgba(255,255,255,.3)}
-.cfg-fabric-pill.on .cnt,.cfg-fabric-pill.on .div{display:flex}
+.cfg-fabric-pillrow{display:flex;gap:10px;margin-top:18px;overflow-x:auto;scrollbar-width:none}
+.cfg-fabric-pillrow::-webkit-scrollbar{display:none}
+.cfg-fabric-pill{flex:0 0 auto;background:#fff;border:1px solid #c8cbd0;border-radius:9999px;padding:10px 16px;font-size:14px;letter-spacing:-.28px;white-space:nowrap;color:var(--ink);transition:all .15s}
+.cfg-fabric-pill.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 
-.cfg-filter-btn{width:100%;margin-top:10px;display:flex;align-items:center;justify-content:space-between;border:1px solid #c8cbd0;border-radius:9999px;padding:0;color:var(--ink);background:#fff;overflow:hidden}
-.cfg-filter-btn .lft{display:flex;align-items:stretch}
-.cfg-filter-btn .cnt{display:none;align-items:center;justify-content:center;padding:9px 10px;font-size:12px;font-weight:600;background:#000;color:#fff}
-.cfg-filter-btn .div{display:none;width:1px;align-self:stretch;background:var(--hair)}
+.cfg-filter-btn{flex:0 0 auto;display:flex;align-items:center;gap:6px;border:1px solid #363944;border-radius:20px;height:36px;padding:8px 12px;font-size:16px;font-weight:500;color:#000;white-space:nowrap}
+.cfg-filter-btn .cnt{display:none;width:16px;height:16px;border-radius:999px;background:#000;color:#fff;font-size:12px;font-weight:400;align-items:center;justify-content:center}
+.cfg-filter-btn .div{display:none;width:1px;height:20px;background:#d9dbe0}
 .cfg-filter-btn.has-count .cnt,.cfg-filter-btn.has-count .div{display:flex}
-.cfg-filter-btn .lbl{display:flex;align-items:center;gap:8px;padding:9px 14px;font-size:13px;font-weight:600}
-.cfg-filter-btn .chev{padding:0 14px;display:flex;align-items:center}
 
 .cfg-filter-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .cfg-fpill.on{background:var(--ink);color:#fff}
@@ -281,12 +274,14 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
         <h3>Alege materialul și culoarea</h3>
         <p class="cfg-sec-sub" id="cfg-color-sub"></p>
 
-        <div class="cfg-fabric-pillrow" id="cfg-fabric-pillrow"></div>
-
-        <button type="button" class="cfg-filter-btn" id="cfg-filter-btn" onclick="openFilterSheet()">
-          <span class="lft"><span class="cnt" id="cfg-filter-cnt">0</span><span class="div"></span><span class="lbl"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.7"><line x1="4" y1="7" x2="20" y2="7"/><circle cx="9" cy="7" r="2.2" fill="#fff"/><line x1="4" y1="16" x2="20" y2="16"/><circle cx="15" cy="16" r="2.2" fill="#fff"/></svg>Filtre</span></span>
-          <span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.7"><polyline points="9 6 15 12 9 18"/></svg></span>
-        </button>
+        <div class="cfg-fabric-pillrow" id="cfg-fabric-pillrow">
+          <button type="button" class="cfg-filter-btn" id="cfg-filter-btn" onclick="openFilterSheet()">
+            <span class="cnt" id="cfg-filter-cnt">0</span>
+            <span class="div"></span>
+            Filtre
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.7"><line x1="4" y1="7" x2="20" y2="7"/><circle cx="9" cy="7" r="2.2" fill="#fff"/><line x1="4" y1="16" x2="20" y2="16"/><circle cx="15" cy="16" r="2.2" fill="#fff"/></svg>
+          </button>
+        </div>
 
         <div id="cfg-fabric-sections"></div>
       </section>
@@ -882,28 +877,21 @@ function propMatch(f, c){
 function totalColorCount(){
   return COLLECTION_ORDER.reduce(function(sum, slug){ return sum + COLLECTIONS[slug].colors.length; }, 0);
 }
-function fabricPillCount(pillDef){
-  return COLLECTION_ORDER.reduce(function(sum, slug){
-    var c = COLLECTIONS[slug];
-    var match = pillDef.stems.some(function(stem){ return c.materialTypes.some(function(t){ return t.indexOf(stem) > -1; }); });
-    return sum + (match ? c.colors.length : 0);
-  }, 0);
-}
-
 function renderFabricPillRow(){
   var wrap = document.getElementById('cfg-fabric-pillrow');
-  wrap.innerHTML = '';
+  var filterBtn = document.getElementById('cfg-filter-btn');
+  wrap.querySelectorAll('.cfg-fabric-pill').forEach(function(el){ el.remove(); });
   FABRIC_PILLS.forEach(function(p){
     var btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'cfg-fabric-pill' + (activeFabricPill === p.key ? ' on' : '');
-    btn.innerHTML = '<span class="cnt">' + fabricPillCount(p) + '</span><span class="div"></span><span class="lbl">' + p.label + '</span>';
+    btn.textContent = p.label;
     btn.onclick = function(){
       activeFabricPill = activeFabricPill === p.key ? null : p.key;
       renderFabricPillRow();
       applyFabricFilters();
     };
-    wrap.appendChild(btn);
+    wrap.insertBefore(btn, filterBtn);
   });
 }
 
