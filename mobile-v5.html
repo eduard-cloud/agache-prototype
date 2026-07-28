@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Canapea Colecția Boston – Agache</title>
+<script>if(document.referrer.indexOf('mobile-v3.html')>-1)document.documentElement.classList.add('enter-l');</script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -20,6 +21,12 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
 a{text-decoration:none;color:inherit}
 img,video{display:block;max-width:100%}
 .page{max-width:480px;margin:0 auto;background:#fff;position:relative;min-height:100vh}
+
+/* ══ Cross-page push transition (PDP ↔ v3 configurator) ══ */
+@keyframes pushOutL{to{transform:translateX(-100%)}}
+@keyframes pushInL{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+body.push-out-l{animation:pushOutL .26s cubic-bezier(.4,0,1,1) forwards}
+html.enter-l body{animation:pushInL .26s cubic-bezier(.16,1,.3,1) both}
 
 /* ══ Views (SPA) ══ */
 .view{position:fixed;inset:0;max-width:480px;margin:0 auto;background:#fff;z-index:60;transform:translateX(100%);transition:transform .3s cubic-bezier(.32,.72,.35,1);overflow-y:auto;-webkit-overflow-scrolling:touch;visibility:hidden}
@@ -596,7 +603,7 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
     <!-- Size selector -->
     <div id="sizesel">
       <div class="sizesel-lbl">Alege dimensiunea</div>
-      <button id="typesel" onclick="pressFeedback(this);location.href='mobile-v3.html#config'">
+      <button id="typesel" onclick="pressFeedback(this);pushTo('mobile-v3.html#config')">
         <span class="t-i-wrap">
           <span class="t-i">
             <span class="t-n">Canapea cu 3 locuri</span>
@@ -618,13 +625,13 @@ h1{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1.3;color:var
           <button class="sw" id="pdp-sw4" data-name="Luna 10" onclick="pickSwatch(this)"><img src="assets/v2/luna-10-sofa.png" alt="Luna 10"></button>
           <button class="sw" data-name="Luna 5" onclick="pickSwatch(this)"><img src="assets/v2/luna-5-sofa.png" alt="Luna 5"></button>
           <button class="sw" data-name="Luna 6" onclick="pickSwatch(this)"><img src="assets/v2/luna-6-sofa.png" alt="Luna 6"></button>
-          <button class="sw-plus" onclick="location.href='mobile-v3.html#material'" aria-label="Mai multe materiale"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.6"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+          <button class="sw-plus" onclick="pushTo('mobile-v3.html#material')" aria-label="Mai multe materiale"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.6"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
         </div>
         <div class="sw-lbl-row">
           <button class="sw-name" onclick="openModal()"><span id="swname">Luna 8</span>
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
-          <button class="sw-all" onclick="location.href='mobile-v3.html#material'">Vezi toate materialele</button>
+          <button class="sw-all" onclick="pushTo('mobile-v3.html#material')">Vezi toate materialele</button>
         </div>
       </div>
     </div>
@@ -2451,6 +2458,12 @@ function pickShape(el){
 function pressFeedback(el){
   el.style.transition = 'transform .1s'; el.style.transform = 'scale(.97)';
   setTimeout(function(){ el.style.transform = ''; }, 120);
+}
+/* Cross-page push transition into the v3 configurator (Figma-style push) */
+function pushTo(url){
+  sessionStorage.setItem('pdpOrigin', 'mobile-v5.html');
+  document.body.classList.add('push-out-l');
+  setTimeout(function(){ location.href = url; }, 260);
 }
 function toggleFavorite(btn){
   var on = btn.classList.toggle('on');

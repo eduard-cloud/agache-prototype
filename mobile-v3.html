@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Configurator Boston – Agache</title>
+<script>document.documentElement.classList.add('enter-r');</script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -19,6 +20,12 @@ body{font-family:'DM Sans',sans-serif;color:var(--ink);background:#fff;overflow-
 button{cursor:pointer;border:none;background:none;font-family:inherit;color:inherit}
 a{text-decoration:none;color:inherit}
 img,video{display:block;max-width:100%}
+
+/* ══ Cross-page push transition (PDP ↔ v3 configurator) ══ */
+@keyframes pushInR{from{transform:translateX(100%)}to{transform:translateX(0)}}
+@keyframes pushOutR{to{transform:translateX(100%)}}
+html.enter-r body{animation:pushInR .26s cubic-bezier(.16,1,.3,1) both}
+body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 
 /* ══ shared components reused verbatim from mobile-v2.html ══ */
 .circ-btn{width:32px;height:32px;border-radius:50%;background:#fff;border:1px solid #e3e3e3;display:flex;align-items:center;justify-content:center}
@@ -137,7 +144,7 @@ img,video{display:block;max-width:100%}
 
 <div id="cfg">
   <div id="cfg-preview">
-    <button class="circ-btn" id="cfg-close" onclick="location.href='index.html'" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <button class="circ-btn" id="cfg-close" onclick="closeConfigurator()" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <button id="cfg-measure" aria-label="Dimensiuni"><img src="assets/btn-measure.png" alt=""></button>
     <button id="cfg-3d" onclick="pressFeedback(this)" aria-label="Vizualizare 3D">3D</button>
     <img id="cfg-shape-img" src="assets/shape-3seat.jpg" alt="Canapea Boston">
@@ -869,6 +876,14 @@ function setActiveCfgChip(sec, instant){
     scrollCfgTo(hashSec, true);
   }
 })();
+
+/* Cross-page push transition, mirrors the PDP's pushTo() on the way in/out */
+function closeConfigurator(){
+  var origin = sessionStorage.getItem('pdpOrigin');
+  sessionStorage.removeItem('pdpOrigin');
+  document.body.classList.add('push-out-r');
+  setTimeout(function(){ location.href = origin || 'index.html'; }, 260);
+}
 </script>
 </body>
 </html>
