@@ -1021,23 +1021,25 @@ function renderFsheetMaterialPill(){
   var wrap = document.getElementById('fsheet-material');
   var head = document.getElementById('fsheet-material-h');
   wrap.innerHTML = '';
-  var pillDef = FABRIC_PILLS.filter(function(p){ return p.key === activeFabricPill; })[0];
-  if (!pillDef){ head.style.display = 'none'; return; }
   head.style.display = '';
-  var pill = document.createElement('button');
-  pill.type = 'button';
-  pill.className = 'fchip cfg-fpill on';
-  pill.textContent = pillDef.label;
-  /* single-select, unlike Culoare/Proprietăți below -- the top fabric-type chips only ever
-     allow one material at a time, so the sheet surfaces just that one active choice instead
-     of all 3 as pickable options. */
-  pill.onclick = function(){
-    activeFabricPill = null;
-    renderFabricPillRow();
-    renderFsheetMaterialPill();
-    applyFabricFilters();
-  };
-  wrap.appendChild(pill);
+  /* Always shown as the first group, mirroring the top fabric-type chips -- but single-select
+     (radio-like), unlike Culoare/Proprietăți below where several values can be on at once.
+     Picking one deselects whatever else was active instead of adding to a set; picking the
+     already-active one clears it. When a material *is* selected, only that one option reads
+     as chosen -- the sheet never shows more than one Material pill "on" at a time. */
+  FABRIC_PILLS.forEach(function(p){
+    var pill = document.createElement('button');
+    pill.type = 'button';
+    pill.className = 'fchip cfg-fpill' + (activeFabricPill === p.key ? ' on' : '');
+    pill.textContent = p.label;
+    pill.onclick = function(){
+      activeFabricPill = activeFabricPill === p.key ? null : p.key;
+      renderFabricPillRow();
+      renderFsheetMaterialPill();
+      applyFabricFilters();
+    };
+    wrap.appendChild(pill);
+  });
 }
 function renderFsheetPills(){
   renderFsheetMaterialPill();
