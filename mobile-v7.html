@@ -97,7 +97,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-badge{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--slate)}
 .cfg-badge svg{flex:0 0 auto;width:14px;height:14px}
 
-.cfg-fabric-pillrow{display:flex;gap:10px;margin-top:18px;overflow-x:auto;scrollbar-width:none;align-items:flex-end}
+.cfg-fabric-pillrow{display:flex;gap:10px;margin-top:18px;overflow-x:auto;scrollbar-width:none}
 .cfg-fabric-pillrow::-webkit-scrollbar{display:none}
 .cfg-fabric-pill{flex:0 0 auto;width:88px;background:#fff;border:1px solid var(--chipbg);transition:border-color .15s}
 .cfg-fabric-pill.on{border-color:var(--ink)}
@@ -109,6 +109,12 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-fabric-pill .nm{font-size:12px;letter-spacing:-.24px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cfg-fabric-pill .info-i{display:flex;align-items:center;justify-content:center;width:12px;height:12px;flex:0 0 auto;padding:0;background:none;border:none;box-shadow:none}
 .cfg-fabric-pill .info-i svg{width:12px;height:12px;pointer-events:none;display:block}
+
+.cfg-fabric-divider{height:1px;background:var(--hair);margin-top:18px}
+.cfg-fabric-toolrow{display:flex;align-items:center;justify-content:space-between;margin-top:14px}
+.cfg-gridtoggle{display:flex;align-items:center;gap:4px}
+.cfg-gridbtn{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.cfg-gridbtn.on{background:var(--chipbg)}
 
 .cfg-filter-btn{flex:0 0 auto;display:flex;align-items:center;gap:6px;border:1px solid #363944;border-radius:20px;height:36px;padding:8px 12px;font-size:16px;font-weight:500;color:#000;white-space:nowrap}
 .cfg-filter-btn .cnt{display:none;width:16px;height:16px;border-radius:999px;background:#000;color:#fff;font-size:12px;font-weight:400;align-items:center;justify-content:center}
@@ -141,6 +147,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 
 /* ── color swatch tiles (shared by every collection's grid) ── */
 .cfg-color-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px 10px;margin-top:18px}
+#cfg-fabric-sections.cfg-grid4 .cfg-color-grid{grid-template-columns:repeat(4,1fr);gap:14px 8px}
 .mtile{position:relative}
 .mtile .imw{position:relative;aspect-ratio:1;overflow:hidden}
 .mtile img{width:100%;height:100%;object-fit:cover}
@@ -282,13 +289,21 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
         <h3>Alege materialul și culoarea</h3>
         <p class="cfg-sec-sub" id="cfg-color-sub"></p>
 
-        <div class="cfg-fabric-pillrow" id="cfg-fabric-pillrow">
+        <div class="cfg-fabric-pillrow" id="cfg-fabric-pillrow"></div>
+
+        <div class="cfg-fabric-divider"></div>
+
+        <div class="cfg-fabric-toolrow">
           <button type="button" class="cfg-filter-btn" id="cfg-filter-btn" onclick="openFilterSheet()">
             <span class="cnt" id="cfg-filter-cnt">0</span>
             <span class="div"></span>
             Filtre
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.7"><line x1="4" y1="7" x2="20" y2="7"/><circle cx="9" cy="7" r="2.2" fill="#fff"/><line x1="4" y1="16" x2="20" y2="16"/><circle cx="15" cy="16" r="2.2" fill="#fff"/></svg>
           </button>
+          <div class="cfg-gridtoggle" id="cfg-gridtoggle">
+            <button type="button" class="cfg-gridbtn on" onclick="setColorGridCols(3,this)" aria-label="Grilă 3 coloane"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.7"><rect x="2" y="4" width="5.3" height="16" rx="1.2"/><rect x="9.3" y="4" width="5.3" height="16" rx="1.2"/><rect x="16.7" y="4" width="5.3" height="16" rx="1.2"/></svg></button>
+            <button type="button" class="cfg-gridbtn" onclick="setColorGridCols(4,this)" aria-label="Grilă 4 coloane"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.7"><rect x="1" y="4" width="4.5" height="16" rx="1"/><rect x="6.8" y="4" width="4.5" height="16" rx="1"/><rect x="12.6" y="4" width="4.5" height="16" rx="1"/><rect x="18.4" y="4" width="4.5" height="16" rx="1"/></svg></button>
+          </div>
         </div>
 
         <div id="cfg-fabric-sections"></div>
@@ -887,7 +902,6 @@ function totalColorCount(){
 }
 function renderFabricPillRow(){
   var wrap = document.getElementById('cfg-fabric-pillrow');
-  var filterBtn = document.getElementById('cfg-filter-btn');
   wrap.querySelectorAll('.cfg-fabric-pill').forEach(function(el){ el.remove(); });
   FABRIC_PILLS.forEach(function(p){
     var card = document.createElement('div');
@@ -907,8 +921,13 @@ function renderFabricPillRow(){
       e.stopPropagation();
       toast(p.blurb);
     };
-    wrap.insertBefore(card, filterBtn);
+    wrap.appendChild(card);
   });
+}
+function setColorGridCols(n, el){
+  document.getElementById('cfg-fabric-sections').classList.toggle('cfg-grid4', n === 4);
+  document.querySelectorAll('.cfg-gridbtn').forEach(function(b){ b.classList.remove('on'); });
+  el.classList.add('on');
 }
 
 function makeFsheetPill(opt){
