@@ -97,10 +97,18 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-badge{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--slate)}
 .cfg-badge svg{flex:0 0 auto;width:14px;height:14px}
 
-.cfg-fabric-pillrow{display:flex;gap:10px;margin-top:18px;overflow-x:auto;scrollbar-width:none}
+.cfg-fabric-pillrow{display:flex;gap:10px;margin-top:18px;overflow-x:auto;scrollbar-width:none;align-items:flex-end}
 .cfg-fabric-pillrow::-webkit-scrollbar{display:none}
-.cfg-fabric-pill{flex:0 0 auto;background:#fff;border:1px solid #c8cbd0;border-radius:9999px;padding:10px 16px;font-size:14px;letter-spacing:-.28px;white-space:nowrap;color:var(--ink);transition:all .15s}
-.cfg-fabric-pill.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.cfg-fabric-pill{flex:0 0 auto;width:88px;background:#fff;border:1px solid var(--chipbg);transition:border-color .15s}
+.cfg-fabric-pill.on{border-color:var(--ink)}
+.cfg-fabric-pill .imw{position:relative;width:100%;aspect-ratio:1;overflow:hidden}
+.cfg-fabric-pill .imw img{width:100%;height:100%;object-fit:cover;display:block}
+.cfg-fabric-pill .chk{display:none;position:absolute;top:6px;right:6px;width:20px;height:20px;border-radius:50%;background:var(--ink);align-items:center;justify-content:center}
+.cfg-fabric-pill.on .chk{display:flex}
+.cfg-fabric-pill .lr{display:flex;align-items:center;justify-content:space-between;padding:7px}
+.cfg-fabric-pill .nm{font-size:12px;letter-spacing:-.24px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cfg-fabric-pill .info-i{display:flex;align-items:center;justify-content:center;width:12px;height:12px;flex:0 0 auto;padding:0;background:none;border:none;box-shadow:none}
+.cfg-fabric-pill .info-i svg{width:12px;height:12px;pointer-events:none;display:block}
 
 .cfg-filter-btn{flex:0 0 auto;display:flex;align-items:center;gap:6px;border:1px solid #363944;border-radius:20px;height:36px;padding:8px 12px;font-size:16px;font-weight:500;color:#000;white-space:nowrap}
 .cfg-filter-btn .cnt{display:none;width:16px;height:16px;border-radius:999px;background:#000;color:#fff;font-size:12px;font-weight:400;align-items:center;justify-content:center}
@@ -738,9 +746,9 @@ function toast(msg){
 /* ══════════ v3-specific: configurator state + rendering ══════════ */
 var sel = { shapeEl: null, collectionSlug: 'luna', colorName: null, needs: [] };
 var FABRIC_PILLS = [
-  { key:'catifea', label:'Catifea', stems:['Catifea','Pluș'] },
-  { key:'velur', label:'Velur', stems:['Microfibr'] },
-  { key:'bucle', label:'Bucle', stems:['Țesătur'] }
+  { key:'catifea', label:'Catifea', stems:['Catifea','Pluș'], asset:'assets/piano-04.png', blurb:'Material plușat, moale la atingere, cu aspect elegant, ușor lucios.' },
+  { key:'velur', label:'Velur', stems:['Microfibr'], asset:'assets/enjoylux-04.png', blurb:'Microfibră fină, cu tehnologie hidrofobă care respinge lichidele.' },
+  { key:'bucle', label:'Bucle', stems:['Țesătur'], asset:'assets/lunareal-33.png', blurb:'Țesătură texturată, cu aspect natural și rezistență sporită la uzură.' }
 ];
 var activeFabricPill = null;
 var LUNA_SOFA_CODES = ['5','6','8','10','13','14'];
@@ -882,16 +890,24 @@ function renderFabricPillRow(){
   var filterBtn = document.getElementById('cfg-filter-btn');
   wrap.querySelectorAll('.cfg-fabric-pill').forEach(function(el){ el.remove(); });
   FABRIC_PILLS.forEach(function(p){
-    var btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'cfg-fabric-pill' + (activeFabricPill === p.key ? ' on' : '');
-    btn.textContent = p.label;
-    btn.onclick = function(){
+    var card = document.createElement('div');
+    card.className = 'cfg-fabric-pill' + (activeFabricPill === p.key ? ' on' : '');
+    card.innerHTML =
+      '<div class="imw"><img src="' + p.asset + '" alt="' + p.label + '">' +
+      '<span class="chk"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></div>' +
+      '<div class="lr"><span class="nm">' + p.label + '</span>' +
+      '<button type="button" class="info-i" aria-label="Detalii ' + p.label + '"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
+      '</div>';
+    card.onclick = function(){
       activeFabricPill = activeFabricPill === p.key ? null : p.key;
       renderFabricPillRow();
       applyFabricFilters();
     };
-    wrap.insertBefore(btn, filterBtn);
+    card.querySelector('.info-i').onclick = function(e){
+      e.stopPropagation();
+      toast(p.blurb);
+    };
+    wrap.insertBefore(card, filterBtn);
   });
 }
 
