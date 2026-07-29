@@ -158,8 +158,9 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
 .fsheet-reset{flex:0 0 auto;font-size:14px;font-weight:500;color:var(--gray);padding:12px 8px}
 .fsheet-apply{flex:1 1 auto;background:var(--ink);color:#fff;border-radius:9999px;padding:12px;font-size:14px;font-weight:500;transition:opacity .15s}
 .fsheet-apply:disabled{opacity:.4}
-.fsheet-empty{display:none;flex-direction:column;align-items:center;text-align:center;gap:12px;padding:36px 12px 12px;color:var(--gray)}
+.fsheet-empty{display:none;align-items:flex-start;gap:10px;background:var(--chipbg);border-radius:12px;padding:14px;margin-bottom:20px;color:var(--ink)}
 .fsheet-empty.show{display:flex}
+.fsheet-empty svg{flex:0 0 auto;margin-top:1px}
 .fsheet-empty p{font-size:13px;line-height:1.5}
 
 .cfg-col-section{padding-top:28px;border-top:1px solid var(--hair);margin-top:24px}
@@ -602,16 +603,16 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
       <button class="circ-btn" onclick="closeFilterSheet()" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>
     <div class="fsheet-body">
+      <div class="fsheet-empty" id="fsheet-empty">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#707173" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="14" x2="14" y2="8"/></svg>
+        <p>Niciun material nu se potrivește cu această combinație de filtre. Elimină unul sau mai multe filtre pentru a vedea culori.</p>
+      </div>
       <div class="fsheet-group-h" id="fsheet-material-h" style="display:none">Material</div>
       <div class="cfg-filter-pills" id="fsheet-material"></div>
       <div class="fsheet-group-h">Culoare</div>
       <div class="cfg-filter-pills" id="fsheet-culoare"></div>
       <div class="fsheet-group-h">Proprietăți</div>
       <div class="cfg-filter-pills" id="fsheet-prop"></div>
-      <div class="fsheet-empty" id="fsheet-empty">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#707173" stroke-width="1.6"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="14" x2="14" y2="8"/></svg>
-        <p>Niciun material nu se potrivește cu această combinație de filtre.<br>Elimină unul sau mai multe filtre pentru a vedea culori.</p>
-      </div>
     </div>
     <div class="fsheet-foot">
       <button type="button" class="fsheet-reset" onclick="resetSheetFilters()">Resetează</button>
@@ -1309,7 +1310,7 @@ function applyFabricFilters(){
      user apply a combination that would leave them looking at an empty grid. */
   var applyBtn = document.getElementById('fsheet-apply-btn');
   if (applyBtn){
-    applyBtn.textContent = totalFilters > 0 ? ('Aplică filtrele (' + visibleCount + ')') : 'Aplică filtrele';
+    applyBtn.textContent = totalFilters > 0 ? ('Arată ' + visibleCount + ' culori') : 'Aplică filtrele';
     applyBtn.disabled = totalFilters > 0 && visibleCount === 0;
   }
   var emptyNotice = document.getElementById('fsheet-empty');
