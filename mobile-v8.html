@@ -88,8 +88,6 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
    separate grey line underneath. */
 h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.15;color:var(--ink)}
 .cfg-title .sub{color:var(--gray)} /* same weight as the lead words -- only the color changes */
-.cfg-subtitle{font-size:16px;font-weight:500;letter-spacing:-.03em;line-height:1.15;color:var(--ink);margin:18px 0 8px}
-.cfg-subtitle .sub{color:var(--gray)}
 
 /* ── section 2a: household needs ── */
 .cfg-needs-row{display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:20px 0 4px;scroll-snap-type:x proximity}
@@ -127,7 +125,7 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
 .cfg-seg.sm .nm{font-size:13px}
 .cfg-seg.sm .chk{width:14px;height:14px}
 
-.cfg-fabric-divider{height:1px;background:var(--hair);margin-top:18px}
+.cfg-fabric-divider{margin-top:60px}
 .cfg-fabric-toolrow{display:flex;align-items:center;justify-content:space-between;margin-top:14px}
 .cfg-gridtoggle{display:flex;align-items:center;gap:4px}
 .cfg-gridbtn{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center}
@@ -321,6 +319,8 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
 
         <div class="cfg-fabric-divider"></div>
 
+        <h3 class="cfg-title">Nuanțe. <span class="sub" id="cfg-color-sub"></span></h3>
+
         <div class="cfg-fabric-toolrow">
           <button type="button" class="cfg-filter-btn" id="cfg-filter-btn" onclick="openFilterSheet()">
             <span class="cnt" id="cfg-filter-cnt">0</span>
@@ -334,7 +334,6 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
           </div>
         </div>
 
-        <p class="cfg-subtitle">Culoare. <span class="sub" id="cfg-color-sub"></span></p>
         <div id="cfg-fabric-sections"></div>
       </section>
 
@@ -1121,7 +1120,7 @@ function applyFabricFilters(){
   });
   var noFilters = !pillDef && !appliedFilters.length;
   document.getElementById('cfg-color-sub').textContent = noFilters
-    ? (totalColorCount() + ' nuanțe disponibile în ' + COLLECTION_ORDER.length + ' colecții.')
+    ? (totalColorCount() + ' disponibile în ' + COLLECTION_ORDER.length + ' colecții.')
     : ('Se afișează ' + visibleCount + ' culori.');
 }
 
@@ -1156,7 +1155,7 @@ function renderFabricSections(){
       tile.querySelector('.info-i').onclick = function(e){ e.stopPropagation(); showSwatchInfo(tile.dataset.name); };
     });
   });
-  document.getElementById('cfg-color-sub').textContent = totalColorCount() + ' nuanțe disponibile în ' + COLLECTION_ORDER.length + ' colecții.';
+  document.getElementById('cfg-color-sub').textContent = totalColorCount() + ' disponibile în ' + COLLECTION_ORDER.length + ' colecții.';
 }
 
 function showSwatchInfo(name){
