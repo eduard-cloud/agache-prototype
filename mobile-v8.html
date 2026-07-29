@@ -1584,11 +1584,26 @@ function pickFabricSwatch(el, slug){
 }
 
 /* ══════════ Chip scroll-spy (adapted from mobile-v2.html:1804-1846) ══════════ */
+/* How far each section should sit below the sticky chip nav when scrolled to -- 0 for
+   "Dimensiune" so it lands flush at the very top, a little breathing room for "Materiale" so
+   the "Material." title isn't jammed against the chips. */
+var SCROLL_SEC_PAD = { color: 16 };
 function scrollCfgTo(sec, instant, targetId){
   var scroll = document.getElementById('cfg-scroll');
   var target = document.getElementById(targetId || ('sec-' + sec));
   if (!target) return;
-  var top = target.offsetTop;
+  /* target.offsetTop is relative to target.offsetParent, which is #cfg-sheet (the nearest
+     positioned ancestor) -- not #cfg-scroll, the actual scroll container. Using it directly
+     overshoots every scroll-to-section by the height of whatever sits above #cfg-scroll
+     (drag handle + chip nav), landing mid-section instead of at its top. Measuring via
+     getBoundingClientRect() against the scroll container itself gives the true relative
+     offset regardless of which ancestor happens to be positioned. */
+  /* "Dimensiune" is the very first section -- its natural resting position (scrollTop 0) is
+     already flush at the top with the container's own top padding as breathing room. Scrolling
+     to its computed offset instead would eat that padding and jam it against the chip nav, so
+     it gets an explicit 0 rather than going through the offset math below. */
+  var top = sec === 'config' ? 0
+    : target.getBoundingClientRect().top - scroll.getBoundingClientRect().top + scroll.scrollTop - (SCROLL_SEC_PAD[sec] || 0);
   scroll.scrollTo({ top: Math.max(0, top), behavior: instant ? 'auto' : 'smooth' });
   setActiveCfgChip(sec, instant);
 }
@@ -1649,7 +1664,10 @@ function resolveColorSec(){
 function openFilterSheetFromNav(){
   var scroll = document.getElementById('cfg-scroll');
   var target = document.getElementById('cfg-filter-btn');
-  if (target) scroll.scrollTo({ top: Math.max(0, target.offsetTop - 90), behavior: 'smooth' });
+  if (target){
+    var top = target.getBoundingClientRect().top - scroll.getBoundingClientRect().top + scroll.scrollTop;
+    scroll.scrollTo({ top: Math.max(0, top - 90), behavior: 'smooth' });
+  }
   setActiveCfgChip('filtre', false);
   setTimeout(openFilterSheet, 350);
 }
