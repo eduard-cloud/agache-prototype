@@ -120,6 +120,11 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
 .cfg-seg .nm{font-size:15px;font-weight:500;letter-spacing:-.2px;white-space:nowrap}
 .cfg-seg .chk{display:none;width:16px;height:16px;border-radius:50%;background:#fff;color:var(--ink);align-items:center;justify-content:center;flex:0 0 auto}
 .cfg-seg.on .chk{display:flex}
+/* same chip, smaller -- used in the Filtre sheet's Material group so all 3 fit on one row */
+.cfg-seg.sm{gap:6px;padding:4px 10px 4px 4px}
+.cfg-seg.sm .dot{width:34px;height:34px}
+.cfg-seg.sm .nm{font-size:13px}
+.cfg-seg.sm .chk{width:14px;height:14px}
 
 .cfg-fabric-divider{height:1px;background:var(--hair);margin-top:18px}
 .cfg-fabric-toolrow{display:flex;align-items:center;justify-content:space-between;margin-top:14px}
@@ -133,6 +138,7 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
 .cfg-filter-btn.has-count .cnt,.cfg-filter-btn.has-count .div{display:flex}
 
 .cfg-filter-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+#fsheet-material{flex-wrap:nowrap}
 .cfg-fpill.on{background:var(--ink);color:#fff}
 
 .fsheet-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:65;align-items:flex-end}
@@ -989,22 +995,30 @@ function propMatch(f, c){
 function totalColorCount(){
   return COLLECTION_ORDER.reduce(function(sum, slug){ return sum + COLLECTIONS[slug].colors.length; }, 0);
 }
+/* shared by the top material row and the Filtre sheet's Material group, so both use the
+   exact same chip -- photo dot + label + checkmark -- just at two sizes. */
+function buildFabricSeg(p, small, onPicked){
+  var seg = document.createElement('div');
+  seg.className = 'cfg-seg' + (small ? ' sm' : '') + (activeFabricPill === p.key ? ' on' : '');
+  seg.innerHTML =
+    '<span class="dot" style="background-image:url(\'' + p.asset + '\')"></span>' +
+    '<span class="nm">' + p.label + '</span>' +
+    '<span class="chk"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>';
+  seg.onclick = function(){
+    activeFabricPill = activeFabricPill === p.key ? null : p.key;
+    onPicked();
+  };
+  return seg;
+}
 function renderFabricPillRow(){
   var wrap = document.getElementById('cfg-fabric-pillrow');
   wrap.innerHTML = '';
   FABRIC_PILLS.forEach(function(p){
-    var seg = document.createElement('div');
-    seg.className = 'cfg-seg' + (activeFabricPill === p.key ? ' on' : '');
-    seg.innerHTML =
-      '<span class="dot" style="background-image:url(\'' + p.asset + '\')"></span>' +
-      '<span class="nm">' + p.label + '</span>' +
-      '<span class="chk"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>';
-    seg.onclick = function(){
-      activeFabricPill = activeFabricPill === p.key ? null : p.key;
+    wrap.appendChild(buildFabricSeg(p, false, function(){
       renderFabricPillRow();
+      renderFsheetMaterialPill();
       applyFabricFilters();
-    };
-    wrap.appendChild(seg);
+    }));
   });
 }
 function setColorGridCols(n, el){
@@ -1039,17 +1053,11 @@ function renderFsheetMaterialPill(){
      already-active one clears it. When a material *is* selected, only that one option reads
      as chosen -- the sheet never shows more than one Material pill "on" at a time. */
   FABRIC_PILLS.forEach(function(p){
-    var pill = document.createElement('button');
-    pill.type = 'button';
-    pill.className = 'fchip cfg-fpill' + (activeFabricPill === p.key ? ' on' : '');
-    pill.textContent = p.label;
-    pill.onclick = function(){
-      activeFabricPill = activeFabricPill === p.key ? null : p.key;
+    wrap.appendChild(buildFabricSeg(p, true, function(){
       renderFabricPillRow();
       renderFsheetMaterialPill();
       applyFabricFilters();
-    };
-    wrap.appendChild(pill);
+    }));
   });
 }
 function renderFsheetPills(){
