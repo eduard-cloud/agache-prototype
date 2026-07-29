@@ -1122,11 +1122,10 @@ function renderFabricSections(){
     section.dataset.slug = slug;
     var swatchesHTML = c.colors.map(function(pair){
       var name = c.name + ' ' + pair[0];
-      var friendly = nearestColorName(pair[1]);
       return '<div class="mtile' + (name === sel.colorName ? ' on' : '') + '" data-name="' + name + '">' +
         '<div class="imw"><img src="' + fabricAsset(name) + '" alt="' + name + '">' +
         '<button type="button" class="info-i" aria-label="Detalii ' + name + '"><svg width="32" height="32" fill="none"><path d="M32 16c0-8.837-7.163-16-16-16S0 7.163 0 16s7.163 16 16 16 16-7.163 16-16Z" fill="#fff"/><path d="M16 22.333v-6.666" stroke="#121219" stroke-width="2" stroke-linecap="round"/><path d="M16.001 9.667a1.333 1.333 0 1 1 0 2.666 1.333 1.333 0 0 1 0-2.666Z" fill="#000"/></svg></button></div>' +
-        '<div class="lr"><span class="nm">' + friendly + '</span></div></div>';
+        '<div class="lr"><span class="nm">' + name + '</span></div></div>';
     }).join('');
     section.innerHTML =
       '<div class="cfg-col-head"><span class="t">Colecția ' + c.name + '</span>' +
