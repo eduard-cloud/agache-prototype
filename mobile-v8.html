@@ -971,10 +971,13 @@ var FABRIC_PILLS = [
 ];
 var activeFabricPill = null;
 var LUNA_SOFA_CODES = ['5','6','8','10','13','14'];
-function materialTypeLabel(c){
-  var match = FABRIC_PILLS.filter(function(p){
+function materialTypeMatch(c){
+  return FABRIC_PILLS.filter(function(p){
     return p.stems.some(function(stem){ return c.materialTypes.some(function(t){ return t.indexOf(stem) > -1; }); });
   })[0];
+}
+function materialTypeLabel(c){
+  var match = materialTypeMatch(c);
   return match ? match.label : '';
 }
 
@@ -1276,7 +1279,8 @@ function renderFabricSections(){
       '</div>' +
       '<div class="cfg-color-grid">' + swatchesHTML + '</div>';
     wrap.appendChild(section);
-    section.querySelector('.cfg-col-mattype-link').onclick = function(){ showCollectionDetail(slug); };
+    var mattypeMatch = materialTypeMatch(c);
+    section.querySelector('.cfg-col-mattype-link').onclick = function(){ openMaterialDetail(mattypeMatch ? mattypeMatch.key : null); };
     section.querySelectorAll('.mtile').forEach(function(tile){
       tile.onclick = function(){ pickFabricSwatch(tile, slug); };
       tile.querySelector('.info-i').onclick = function(e){ e.stopPropagation(); showSwatchInfo(tile.dataset.name); };
