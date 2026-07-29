@@ -238,6 +238,37 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
 #collection-modal .mt-h{font-size:24px;font-weight:600;padding:48px 17px 0}
 #collection-modal .mt-p{font-size:14px;line-height:17.5px;padding:16px 17px 60px}
 
+/* ── samples modal (order up to 5 free fabric swatches) -- adapted from mobile-v6.html's
+   #samplesmodal, same real 191-swatch data, wired to this file's own overlay conventions ── */
+.sm-overlay{display:none;position:fixed;inset:0;max-width:480px;margin:0 auto;background:rgba(0,0,0,.45);z-index:75;align-items:flex-end}
+.sm-overlay.open{display:flex}
+.sm-sheet{position:relative;background:#fff;border-radius:20px 20px 0 0;width:100%;max-height:92vh;display:flex;flex-direction:column;overflow:hidden}
+.sm-top{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;flex-shrink:0}
+.sm-top .st-title{font-size:22px;font-weight:600;letter-spacing:-.3px}
+.sm-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.sm-body .col-head{display:flex;align-items:baseline;justify-content:space-between;padding:28px 20px 0}
+.sm-body .col-head .t{font-size:17px;font-weight:600}
+.sm-body .mgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px 10px;padding:14px 20px 0}
+.sm-tile{position:relative}
+.sm-tile .imw{position:relative;aspect-ratio:1;overflow:hidden;border-radius:4px}
+.sm-tile img{width:100%;height:100%;object-fit:cover;display:block}
+.sm-check{position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:#fff;border:1.5px solid #c8cbd0;display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s}
+.sm-check svg{opacity:0}
+.sm-tile.on .sm-check{background:var(--ink);border-color:var(--ink)}
+.sm-tile.on .sm-check svg{opacity:1}
+.sm-tile .nm{font-size:12px;margin-top:6px}
+.sm-sticky{flex-shrink:0;background:#fff;border-top:1px solid var(--hair);padding:14px 20px calc(14px + env(safe-area-inset-bottom))}
+.sm-tray{display:none;gap:8px;overflow-x:auto;padding-bottom:14px}
+.sm-tray.on{display:flex}
+.sm-tray-item{position:relative;width:52px;height:52px;flex:0 0 52px;border-radius:6px;overflow:hidden}
+.sm-tray-item img{width:100%;height:100%;object-fit:cover}
+.sm-tray-item .rm{position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:#fff;border:1px solid #e3e3e3;display:flex;align-items:center;justify-content:center}
+.sm-total{display:flex;align-items:baseline;justify-content:space-between;font-size:13px;color:var(--gray);margin-bottom:10px}
+.sm-total b{font-size:15px;color:var(--ink);font-weight:600}
+#sm-add-btn{width:100%;height:52px;background:var(--red);color:#fff;border-radius:26px;font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .2s}
+#sm-add-btn:disabled{opacity:.4}
+.sm-shipnote{text-align:center;font-size:12px;color:var(--gray);margin-top:12px}
+
 /* ── section 4: summary ── */
 .cfg-samples-btn{display:block;width:100%;height:48px;border:1px solid var(--ink);border-radius:24px;font-size:14px;font-weight:500;margin-top:20px}
 /* material section's own compare/sample row: outline secondary + orange primary, same shape
@@ -321,7 +352,7 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
 
         <div class="cfg-samples-row">
           <button type="button" class="cfg-samples-outline" onclick="toast('Comparația materialelor va fi disponibilă în curând')">Vezi diferențe materiale</button>
-          <button type="button" class="cfg-samples-primary" onclick="toast('Mostrele au fost adăugate în coș')">
+          <button type="button" class="cfg-samples-primary" onclick="openSamplesModal()">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.54985 0.025936C4.26768 -0.0459082 4.99245 0.0316079 5.67808 0.257226L5.71905 0.270461L5.75749 0.289997C6.15453 0.492295 6.48603 0.799848 6.71796 1.17797L6.81123 1.34371L6.83014 1.38215L6.84401 1.42249C7.07088 2.11447 7.14841 2.84614 7.07341 3.5697V12.4286C7.14904 13.1534 7.07152 13.8857 6.84401 14.5776L6.83014 14.6179L6.81123 14.6564C6.57994 15.1101 6.21125 15.4788 5.75749 15.7101L5.71905 15.729L5.67808 15.7429C4.99239 15.9685 4.26762 16.046 3.54986 15.9735C2.83266 16.0454 2.10789 15.9678 1.42276 15.7429L1.38179 15.729L1.34398 15.7101C0.890211 15.4788 0.520889 15.1101 0.290238 14.6564L0.270071 14.6179L0.257466 14.5776C0.0299455 13.885 -0.0475619 13.1533 0.0280579 12.4286V3.5697C-0.04757 2.84621 0.0299486 2.11453 0.257466 1.42249L0.270071 1.38215L0.290238 1.34371C0.520905 0.889954 0.890227 0.520642 1.34398 0.289997L1.38179 0.270461L1.42276 0.257226C2.10782 0.031615 2.83259 -0.0459066 3.54985 0.025936ZM5.28748 1.30086C4.74673 1.12944 4.17638 1.07271 3.61294 1.13637L3.55054 1.14394L3.48815 1.13637C2.92472 1.07272 2.35374 1.12944 1.81296 1.30086C1.59743 1.41934 1.4197 1.59705 1.30121 1.81259C1.12979 2.35333 1.07306 2.92429 1.13673 3.48774L1.14051 3.51925V12.4809L1.13673 12.5118C1.07307 13.0759 1.12979 13.6462 1.30121 14.1863C1.4197 14.4025 1.59741 14.5796 1.81296 14.6987C2.35371 14.8695 2.92406 14.9268 3.48815 14.8638L3.55054 14.8562L3.61294 14.8638C4.177 14.9268 4.74672 14.8695 5.28748 14.6987C5.50364 14.5796 5.68074 14.4025 5.79923 14.1863C5.97065 13.6462 6.02801 13.0759 5.96435 12.5118L5.96119 12.4809V3.51925L5.96435 3.48774C6.028 2.92432 5.97065 2.35336 5.79923 1.81259C5.68075 1.59707 5.50366 1.41934 5.28748 1.30086Z" fill="currentColor"/><path d="M4.29201 12.6353C4.59892 12.6353 4.84787 12.8842 4.84787 13.1917C4.84787 13.4986 4.59892 13.7476 4.29201 13.7476H2.80844C2.50153 13.7476 2.25195 13.4986 2.25195 13.1917C2.25195 12.8842 2.50153 12.6353 2.80844 12.6353H4.29201Z" fill="currentColor"/><path d="M10.327 0.987017C10.811 0.830093 11.3322 0.830093 11.8162 0.987017L11.8565 1.00025L11.895 1.01979C12.5397 1.34497 13.1075 1.80252 13.5645 2.36089C14.0511 2.75855 14.4607 3.24066 14.7733 3.78454L14.905 4.02969L14.9246 4.06687L14.9378 4.10784C15.0947 4.59184 15.0947 5.11367 14.9378 5.59767L14.9246 5.63801L14.905 5.67645C14.576 6.32873 14.1122 6.90223 13.545 7.3616L5.96075 14.9456V6.46231C5.92167 6.00478 5.96768 5.54409 6.09688 5.10356L6.11326 5.04558L6.14225 4.99265C6.36284 4.58931 6.65652 4.23071 7.00757 3.93451L8.56549 2.37663C9.02431 1.81069 9.5978 1.34811 10.2483 1.01976L10.2854 1.00023L10.327 0.987017ZM11.433 2.03381C11.1967 1.96512 10.9459 1.96512 10.7095 2.03381C10.206 2.29472 9.76291 2.65835 9.40935 3.10203L9.38981 3.1266L7.7606 4.75512L7.74044 4.77214C7.50283 4.96877 7.30243 5.20698 7.14801 5.47357C7.06798 5.77167 7.04151 6.08236 7.0705 6.38991L7.07302 6.41575V12.2604L12.7767 6.55756L12.7987 6.53614L12.8227 6.5166C13.2657 6.16242 13.6288 5.71938 13.8897 5.21584C13.959 4.97887 13.959 4.72742 13.8897 4.49046C13.6281 3.98691 13.2651 3.54387 12.8221 3.19032L12.7735 3.15125L12.7345 3.10209C12.3803 2.65779 11.9366 2.29472 11.433 2.03381Z" fill="currentColor"/><path d="M12.4227 8.9271C13.1493 8.85022 13.8842 8.92836 14.578 9.15713L14.6183 9.17037L14.6568 9.18991C15.0538 9.39157 15.386 9.69911 15.6172 10.076L15.7105 10.2424L15.7301 10.2808L15.7433 10.3211C15.9689 11.0062 16.0464 11.7316 15.9746 12.4488C16.0464 13.1666 15.9689 13.892 15.7433 14.5776L15.7301 14.618L15.7105 14.6558C15.4799 15.1095 15.1105 15.4782 14.6568 15.7095L14.6183 15.729L14.578 15.7429C13.8866 15.9698 13.1549 16.0473 12.4314 15.9723H3.55078V14.86H12.4812L12.5127 14.8625C13.0762 14.9262 13.6465 14.8694 14.1873 14.6987C14.4035 14.5795 14.5806 14.4018 14.699 14.1857C14.8698 13.6449 14.9278 13.0746 14.8642 12.5112L14.8572 12.4494L14.8642 12.3876C14.9278 11.8236 14.8711 11.2533 14.6997 10.7131C14.5806 10.4963 14.4028 10.3186 14.186 10.2001C13.6459 10.0287 13.0762 9.97262 12.5128 10.0357L12.4813 10.0394H10.5962V8.92711L12.4227 8.9271Z" fill="currentColor"/></svg>
             Comandă mostre
           </button>
@@ -367,7 +398,7 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
             <div class="vv"><div class="v" id="cfg-sum-price"></div></div>
           </div>
         </div>
-        <button class="cfg-samples-btn" onclick="toast('Mostrele au fost adăugate în coș')">Comandă mostre</button>
+        <button class="cfg-samples-btn" onclick="openSamplesModal()">Comandă mostre</button>
       </section>
 
     </div>
@@ -476,6 +507,27 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
     </div>
     <div class="mt-h">Întreținere</div>
     <p class="mt-p" id="colm-care"></p>
+  </div>
+</div>
+
+<div class="sm-overlay" id="samples-modal" onclick="if(event.target===this) closeSamplesModal()">
+  <div class="sm-sheet">
+    <div class="sm-top">
+      <span class="st-title">Găsește mostra perfectă</span>
+      <button class="circ-btn" onclick="closeSamplesModal()" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="sm-body">
+      <div id="sm-collections"></div>
+    </div>
+    <div class="sm-sticky">
+      <div class="sm-tray" id="smtray"><div id="smtray-row" style="display:flex;gap:8px"></div></div>
+      <div class="sm-total"><span>Mostre alese</span><b><span id="sm-count">0</span>/5</b></div>
+      <button id="sm-add-btn" disabled onclick="addSamplesToCart()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="21" r="1.6"/><circle cx="19" cy="21" r="1.6"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        Adaugă în coș
+      </button>
+      <div class="sm-shipnote">Livrare în 1-2 zile</div>
+    </div>
   </div>
 </div>
 
@@ -1220,6 +1272,79 @@ function showCollectionDetail(slug){
 }
 function closeCollectionModal(){
   document.getElementById('collection-modal').classList.remove('open');
+}
+
+/* ── Samples modal (order up to 5 free fabric swatches) -- adapted from mobile-v6.html's
+   #samplesmodal / sampleSel flow, same real 191-swatch COLLECTIONS data ── */
+var sampleSel = [];
+function isSampleLiked(name){ return sampleSel.indexOf(name) > -1; }
+function setSampleLiked(name, on){
+  if (on === isSampleLiked(name)) return;
+  if (on){
+    if (sampleSel.length >= 5){ toast('Poți alege maximum 5 mostre'); return; }
+    sampleSel.push(name);
+  } else {
+    sampleSel.splice(sampleSel.indexOf(name), 1);
+  }
+  document.querySelectorAll('#sm-collections .sm-tile[data-name="' + name + '"]').forEach(function(t){ t.classList.toggle('on', isSampleLiked(name)); });
+  renderSampleTray();
+}
+function buildSamplesGrid(){
+  var wrap = document.getElementById('sm-collections');
+  if (wrap.childElementCount) return;
+  COLLECTION_ORDER.forEach(function(slug){
+    var c = COLLECTIONS[slug];
+    var tilesHTML = c.colors.map(function(pair){
+      var name = c.name + ' ' + pair[0];
+      return '<div class="sm-tile' + (isSampleLiked(name) ? ' on' : '') + '" data-name="' + name + '" onclick="toggleSample(\'' + name + '\')">' +
+        '<div class="imw"><img src="' + fabricAsset(name) + '" alt="' + name + '">' +
+        '<div class="sm-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div></div>' +
+        '<div class="nm">' + name + '</div></div>';
+    }).join('');
+    wrap.insertAdjacentHTML('beforeend',
+      '<div class="col-head"><span class="t">Colecția ' + c.name + '</span>' +
+      '<button type="button" class="info-i" aria-label="Detalii colecția ' + c.name + '" onclick="event.stopPropagation();showCollectionDetail(\'' + slug + '\')"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>' +
+      '<div class="mgrid">' + tilesHTML + '</div>');
+  });
+}
+function toggleSample(name){
+  setSampleLiked(name, !isSampleLiked(name));
+}
+function removeSample(name){
+  setSampleLiked(name, false);
+}
+function renderSampleTray(){
+  var tray = document.getElementById('smtray');
+  var row = document.getElementById('smtray-row');
+  tray.classList.toggle('on', sampleSel.length > 0);
+  row.innerHTML = sampleSel.map(function(name){
+    return '<div class="sm-tray-item"><img src="' + fabricAsset(name) + '" alt="' + name + '">' +
+      '<button class="rm" onclick="event.stopPropagation();removeSample(\'' + name + '\')" aria-label="Elimină ' + name + '"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>';
+  }).join('');
+  document.getElementById('sm-count').textContent = sampleSel.length;
+  document.getElementById('sm-add-btn').disabled = sampleSel.length === 0;
+}
+function openSamplesModal(){
+  buildSamplesGrid();
+  document.getElementById('samples-modal').classList.add('open');
+}
+function closeSamplesModal(){
+  document.getElementById('samples-modal').classList.remove('open');
+}
+function addSamplesToCart(){
+  if (!sampleSel.length) return;
+  var btn = document.getElementById('sm-add-btn');
+  var orig = btn.innerHTML;
+  var count = sampleSel.length;
+  btn.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg> Adăugat în coș';
+  toast(count + (count === 1 ? ' mostră a fost adăugată în coș' : ' mostre au fost adăugate în coș'));
+  setTimeout(function(){
+    btn.innerHTML = orig;
+    closeSamplesModal();
+    sampleSel = [];
+    document.querySelectorAll('#sm-collections .sm-tile.on').forEach(function(t){ t.classList.remove('on'); });
+    renderSampleTray();
+  }, 1400);
 }
 
 function pickFabricSwatch(el, slug){
