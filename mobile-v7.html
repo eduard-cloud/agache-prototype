@@ -256,7 +256,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
       <!-- Nevoi de lifestyle chip removed per request, kept in markup below for easy restore -->
       <button class="cfg-chip" data-sec="needs" onclick="scrollCfgTo('needs')" style="display:none">Nevoi</button>
       <button class="cfg-chip" data-sec="color" onclick="scrollCfgTo('color')">Materiale</button>
-      <button class="cfg-chip" type="button" id="cfg-nav-filter-chip" onclick="openFilterSheetFromNav()">Filtre<span class="nav-cnt" id="cfg-nav-filter-cnt">0</span></button>
+      <button class="cfg-chip" type="button" id="cfg-nav-filter-chip" data-sec="filtre" onclick="openFilterSheetFromNav()">Filtre<span class="nav-cnt" id="cfg-nav-filter-cnt">0</span></button>
       <button class="cfg-chip" data-sec="colors-grid" onclick="scrollCfgTo('colors-grid', false, 'cfg-fabric-sections')">Culoare</button>
       <button class="cfg-chip" data-sec="summary" onclick="scrollCfgTo('summary')">Sumar</button>
     </div>
@@ -1230,14 +1230,25 @@ function setActiveCfgChip(sec, instant){
     nav.scrollTo({ left: Math.max(0, active.offsetLeft - 20), behavior: instant ? 'auto' : 'smooth' });
   }
 }
-/* Materiale and Culoare both live inside the single sec-color section (fabric-type chips
-   up top, the color grids further down), so the scroll-spy below needs a sub-split within
-   that one section instead of just picking whichever .cfg-sec is on screen. */
+/* Materiale, Filtre and Culoare all live inside the single sec-color section (fabric-type
+   chips up top, the inline Filtre row in the middle, the color grids further down), so the
+   scroll-spy below needs a three-way sub-split within that one section instead of just
+   picking whichever .cfg-sec is on screen. */
 function resolveColorSec(){
   var scroll = document.getElementById('cfg-scroll');
+  var filterBtn = document.getElementById('cfg-filter-btn');
   var grid = document.getElementById('cfg-fabric-sections');
-  var probe = scroll.scrollTop + scroll.clientHeight * 0.35;
-  return probe >= grid.offsetTop ? 'colors-grid' : 'color';
+  /* A 35%-of-viewport lookahead (used for the Materiale/Culoare split before Filtre existed
+     as its own zone) overshoots straight past this one -- the inline Filtre row is a single
+     thin toolbar, never tall enough to dominate a third of the screen, so that heuristic
+     always skipped it and reported "colors-grid" the instant you scrolled there. Use a small
+     fixed lookahead instead (matching the -90 offset openFilterSheetFromNav scrolls to), so
+     each zone activates right as its own top edge reaches the viewport, symmetrically whether
+     scrolling down into it or back up out of it. */
+  var probe = scroll.scrollTop + 90;
+  if (probe >= grid.offsetTop) return 'colors-grid';
+  if (probe >= filterBtn.offsetTop) return 'filtre';
+  return 'color';
 }
 (function(){
   var scroll = document.getElementById('cfg-scroll');
@@ -1264,6 +1275,7 @@ function openFilterSheetFromNav(){
   var scroll = document.getElementById('cfg-scroll');
   var target = document.getElementById('cfg-filter-btn');
   if (target) scroll.scrollTo({ top: Math.max(0, target.offsetTop - 90), behavior: 'smooth' });
+  setActiveCfgChip('filtre', false);
   setTimeout(openFilterSheet, 350);
 }
 
