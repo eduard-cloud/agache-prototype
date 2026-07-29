@@ -107,11 +107,11 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
    a check badge on the trailing edge, unselected = light chip fill. */
 .cfg-fabric-pillrow{display:flex;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;gap:4px;margin-top:8px}
 .cfg-fabric-pillrow::-webkit-scrollbar{display:none}
-.cfg-seg{flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;background:var(--chipbg);border-radius:9999px;padding:4px 12px 4px 4px;color:var(--ink)}
+.cfg-seg{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;background:var(--chipbg);border-radius:9999px;padding:4px 12px 4px 4px;color:var(--ink)}
 .cfg-seg.on{background:var(--ink);color:#fff}
 .cfg-seg .dot{width:44px;height:44px;border-radius:50%;flex:0 0 auto;background-size:cover;background-position:center}
 .cfg-seg .nm{font-size:15px;font-weight:500;letter-spacing:-.2px;white-space:nowrap}
-.cfg-seg .chk{display:none;width:20px;height:20px;border-radius:50%;background:#fff;color:var(--ink);align-items:center;justify-content:center;flex:0 0 auto}
+.cfg-seg .chk{display:none;width:16px;height:16px;border-radius:50%;background:#fff;color:var(--ink);align-items:center;justify-content:center;flex:0 0 auto}
 .cfg-seg.on .chk{display:flex}
 
 .cfg-fabric-divider{height:1px;background:var(--hair);margin-top:18px}
@@ -993,7 +993,7 @@ function renderFabricPillRow(){
     seg.innerHTML =
       '<span class="dot" style="background-image:url(\'' + p.asset + '\')"></span>' +
       '<span class="nm">' + p.label + '</span>' +
-      '<span class="chk"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>';
+      '<span class="chk"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>';
     seg.onclick = function(){
       activeFabricPill = activeFabricPill === p.key ? null : p.key;
       renderFabricPillRow();
