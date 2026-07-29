@@ -75,8 +75,9 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-chips::-webkit-scrollbar{display:none}
 .cfg-chip{flex:0 0 auto;display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #c8cbd0;border-radius:9999px;padding:10px 16px;font-size:14px;letter-spacing:-.28px;white-space:nowrap;color:var(--ink);transition:all .15s}
 .cfg-chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-.cfg-chip .nav-cnt{display:none;width:18px;height:18px;border-radius:999px;background:#000;color:#fff;font-size:11px;font-weight:400;align-items:center;justify-content:center;flex:0 0 auto}
+.cfg-chip .nav-cnt{display:none;width:18px;height:18px;border-radius:999px;background:#1D1D1F;color:#fff;font-size:11px;font-weight:400;align-items:center;justify-content:center;flex:0 0 auto}
 .cfg-chip.has-count .nav-cnt{display:flex}
+.cfg-chip.on .nav-cnt{background:#fff;color:#1D1D1F}
 .cfg-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:24px 20px 0}
 .cfg-sec{scroll-margin-top:8px;margin-top:60px}
 .cfg-sec:first-of-type{margin-top:0}
@@ -113,7 +114,7 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
    a check badge on the trailing edge, unselected = light chip fill. */
 .cfg-fabric-pillrow{display:flex;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;gap:4px;margin-top:20px}
 .cfg-fabric-pillrow::-webkit-scrollbar{display:none}
-.cfg-seg{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;background:var(--chipbg);border-radius:9999px;padding:4px 12px 4px 4px;color:var(--ink)}
+.cfg-seg{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;background:var(--chipbg);border-radius:9999px;padding:4px 16px 4px 4px;color:var(--ink)}
 .cfg-seg.on{background:var(--ink);color:#fff}
 .cfg-seg .dot{width:44px;height:44px;border-radius:50%;flex:0 0 auto;background-size:cover;background-position:center}
 .cfg-seg .nm{font-size:15px;font-weight:500;letter-spacing:-.2px;white-space:nowrap}
@@ -131,8 +132,8 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
 .cfg-gridbtn{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center}
 .cfg-gridbtn.on{background:var(--chipbg)}
 
-.cfg-filter-btn{flex:0 0 auto;display:flex;align-items:center;gap:6px;border:1px solid #363944;border-radius:20px;height:36px;padding:8px 12px;font-size:16px;font-weight:500;color:#000;white-space:nowrap}
-.cfg-filter-btn .cnt{display:none;width:16px;height:16px;border-radius:999px;background:#000;color:#fff;font-size:12px;font-weight:400;align-items:center;justify-content:center}
+.cfg-filter-btn{flex:0 0 auto;display:flex;align-items:center;gap:6px;border:1px solid #363944;border-radius:20px;height:36px;padding:8px 12px;font-size:16px;font-weight:500;color:#1D1D1F;white-space:nowrap}
+.cfg-filter-btn .cnt{display:none;width:16px;height:16px;border-radius:999px;background:#1D1D1F;color:#fff;font-size:12px;font-weight:400;align-items:center;justify-content:center}
 .cfg-filter-btn .div{display:none;width:1px;height:20px;background:#d9dbe0}
 .cfg-filter-btn.has-count .cnt,.cfg-filter-btn.has-count .div{display:flex}
 
@@ -251,7 +252,7 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
 .cfg-cta{flex:0 0 auto;background:#fff;border-top:1px solid var(--hair);display:flex;align-items:center;justify-content:space-between;padding:12px 16px}
 .cfg-cta .nm{font-size:13px}
 .cfg-cta .pr{font-size:15px;font-weight:700;margin-top:2px}
-.cfg-cta .bb{height:44px;background:#000;color:#fff;border-radius:22px;padding:0 18px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:8px}
+.cfg-cta .bb{height:44px;background:#1D1D1F;color:#fff;border-radius:22px;padding:0 18px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:8px}
 </style>
 </head>
 <body>
@@ -904,7 +905,7 @@ function updatePreview(){
   var swInfo = SWATCH_INDEX[sel.colorName];
   if (swInfo){
     document.getElementById('cfg-fabric-thumb-img').src = fabricAsset(sel.colorName);
-    document.getElementById('cfg-fabric-name').textContent = swInfo.collection.name + ' · ' + nearestColorName(swInfo.hex);
+    document.getElementById('cfg-fabric-name').textContent = swInfo.name;
   }
 }
 
@@ -1145,7 +1146,7 @@ function renderFabricSections(){
       var name = c.name + ' ' + pair[0];
       return '<div class="mtile' + (name === sel.colorName ? ' on' : '') + '" data-name="' + name + '">' +
         '<div class="imw"><img src="' + fabricAsset(name) + '" alt="' + name + '">' +
-        '<button type="button" class="info-i" aria-label="Detalii ' + name + '"><svg width="32" height="32" fill="none"><path d="M32 16c0-8.837-7.163-16-16-16S0 7.163 0 16s7.163 16 16 16 16-7.163 16-16Z" fill="#fff"/><path d="M16 22.333v-6.666" stroke="#121219" stroke-width="2" stroke-linecap="round"/><path d="M16.001 9.667a1.333 1.333 0 1 1 0 2.666 1.333 1.333 0 0 1 0-2.666Z" fill="#000"/></svg></button></div>' +
+        '<button type="button" class="info-i" aria-label="Detalii ' + name + '"><svg width="32" height="32" fill="none"><path d="M32 16c0-8.837-7.163-16-16-16S0 7.163 0 16s7.163 16 16 16 16-7.163 16-16Z" fill="#fff"/><path d="M16 22.333v-6.666" stroke="#121219" stroke-width="2" stroke-linecap="round"/><path d="M16.001 9.667a1.333 1.333 0 1 1 0 2.666 1.333 1.333 0 0 1 0-2.666Z" fill="#1D1D1F"/></svg></button></div>' +
         '<div class="lr"><span class="nm">' + name + '</span></div></div>';
     }).join('');
     section.innerHTML =
