@@ -86,7 +86,9 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
    inline in grey as part of the same sentence/paragraph, instead of a bold heading with a
    separate grey line underneath. */
 .cfg-title{font-size:20px;font-weight:600;letter-spacing:-.4px;line-height:1.3;color:var(--ink)}
-.cfg-title .sub{font-weight:400;color:var(--gray)}
+.cfg-title .sub{color:var(--gray)} /* same weight as the lead words -- only the color changes */
+.cfg-subtitle{font-size:16px;font-weight:600;letter-spacing:-.3px;line-height:1.3;color:var(--ink);margin:18px 0 8px}
+.cfg-subtitle .sub{color:var(--gray)}
 
 /* ── section 2a: household needs ── */
 .cfg-needs-row{display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:20px 0 4px;scroll-snap-type:x proximity}
@@ -301,7 +303,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
       </section>
 
       <section class="cfg-sec" id="sec-color">
-        <h3 class="cfg-title">Material și culoare. <span class="sub">Alege combinația potrivită pentru tine.</span></h3>
+        <h3 class="cfg-title">Material și culoare. <span class="sub">Alege tipul de material, apoi nuanța.</span></h3>
 
         <p class="cfg-eyebrow">Tip de material</p>
         <div class="cfg-fabric-pillrow" id="cfg-fabric-pillrow"></div>
@@ -325,8 +327,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
           </div>
         </div>
 
-        <p class="cfg-eyebrow">Culoare</p>
-        <p class="cfg-sec-sub" id="cfg-color-sub" style="margin-top:-4px;margin-bottom:12px"></p>
+        <p class="cfg-subtitle">Culoare. <span class="sub" id="cfg-color-sub"></span></p>
         <div id="cfg-fabric-sections"></div>
       </section>
 
