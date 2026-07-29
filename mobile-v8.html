@@ -101,19 +101,17 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 
 .cfg-eyebrow{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);font-weight:600;margin:18px 0 8px}
 
-/* material-type picker: a single segmented control instead of 3 square swatch-like tiles --
-   the shape itself now reads as a selector/filter, not as "more color swatches", and each
-   segment carries a small square texture photo instead of a full-size image tile. */
-/* filled tinted track (not an outlined pill like .cfg-samples-btn below it) so the two
-   don't read as the same kind of control */
-.cfg-fabric-pillrow{display:flex;gap:6px;background:var(--chipbg);border-radius:20px;padding:10px 8px;margin-top:8px}
-.cfg-seg{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:8px;padding:4px 2px 8px;border-radius:14px;color:var(--ink)}
-/* selection uses the same thin ink ring as the color swatches (.mtile.on) instead of an
-   inverted solid-black fill -- keeps the tray's own photos as the only color/contrast here */
-.cfg-seg .dot{width:60px;height:60px;border-radius:10px;flex:0 0 auto;background-size:cover;background-position:center;border:1px solid rgba(0,0,0,.1);box-sizing:border-box}
-.cfg-seg.on .dot{border:2px solid var(--ink);box-shadow:inset 0 0 0 2px #fff}
-.cfg-seg .nm{font-size:13px;font-weight:500;letter-spacing:-.2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
-.cfg-seg.on .nm{font-weight:700}
+/* material-type picker: individual pill chips (round texture photo + label), wrapping like
+   tag chips -- each one its own pill instead of 3 tiles sharing one control, so the shape
+   itself reads as a filter/tag, not as "more color swatches". Selected = solid ink fill +
+   a check badge on the trailing edge, unselected = light chip fill. */
+.cfg-fabric-pillrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.cfg-seg{display:inline-flex;align-items:center;gap:10px;background:var(--chipbg);border-radius:9999px;padding:6px 14px 6px 6px;color:var(--ink)}
+.cfg-seg.on{background:var(--ink);color:#fff}
+.cfg-seg .dot{width:44px;height:44px;border-radius:50%;flex:0 0 auto;background-size:cover;background-position:center}
+.cfg-seg .nm{font-size:15px;font-weight:500;letter-spacing:-.2px;white-space:nowrap}
+.cfg-seg .chk{display:none;width:20px;height:20px;border-radius:50%;background:#fff;color:var(--ink);align-items:center;justify-content:center;flex:0 0 auto}
+.cfg-seg.on .chk{display:flex}
 
 .cfg-fabric-divider{height:1px;background:var(--hair);margin-top:18px}
 .cfg-fabric-toolrow{display:flex;align-items:center;justify-content:space-between;margin-top:14px}
@@ -993,7 +991,8 @@ function renderFabricPillRow(){
     seg.className = 'cfg-seg' + (activeFabricPill === p.key ? ' on' : '');
     seg.innerHTML =
       '<span class="dot" style="background-image:url(\'' + p.asset + '\')"></span>' +
-      '<span class="nm">' + p.label + '</span>';
+      '<span class="nm">' + p.label + '</span>' +
+      '<span class="chk"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>';
     seg.onclick = function(){
       activeFabricPill = activeFabricPill === p.key ? null : p.key;
       renderFabricPillRow();
