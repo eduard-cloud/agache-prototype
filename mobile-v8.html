@@ -139,6 +139,9 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
 
 .cfg-filter-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 #fsheet-material{flex-wrap:nowrap}
+#fsheet-culoare{gap:10px}
+.cfg-fpill-color{height:40px;padding:0 16px;border-radius:12px;font-size:14px;font-weight:600}
+.cfg-fpill-color.on{box-shadow:inset 0 0 0 2px var(--ink)}
 .cfg-fpill.on{background:var(--ink);color:#fff}
 
 .fsheet-overlay{display:none;position:fixed;inset:0;max-width:480px;margin:0 auto;background:rgba(0,0,0,.45);z-index:65;align-items:flex-end}
@@ -228,6 +231,9 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
 .yl-band{margin-top:28px;background:var(--yellow2);display:flex;padding:22px 0}
 .yl-band .c{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--purple);font-size:14px;font-weight:500;text-align:center;line-height:19px;padding:0 6px}
 .yl-band .c+.c{border-left:1px solid rgba(77,53,255,.35)}
+.yl-band.grey{background:var(--chipbg);border-radius:12px}
+.yl-band.grey .c{color:var(--ink)}
+.yl-band.grey .c+.c{border-left:1px solid rgba(0,0,0,.12)}
 .see-more{display:flex;align-items:center;gap:6px;justify-content:center;margin:26px auto 0;font-size:15px;text-decoration:underline}
 .ft-h{font-size:22px;font-weight:600;padding:44px 17px 0}
 #collection-modal .rz-head{display:flex;align-items:baseline;justify-content:space-between;padding:34px 17px 0}
@@ -470,10 +476,12 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
       <div class="swm-title-row"><span class="swm-title" id="swm-name"></span><span class="swm-sub" id="swm-sub"></span></div>
       <p class="swm-desc" id="swm-desc"></p>
 
-      <div class="cfg-col-usps">
-        <span id="swm-usp1" class="cfg-badge"></span>
-        <span id="swm-usp2" class="cfg-badge"></span>
-        <span id="swm-usp3" class="cfg-badge"></span>
+      <button type="button" class="st-chip" onclick="openSamplesModal()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg><span>Comandă mostră</span></button>
+
+      <div class="yl-band grey">
+        <div class="c" id="swm-usp1"></div>
+        <div class="c" id="swm-usp2"></div>
+        <div class="c" id="swm-usp3"></div>
       </div>
 
       <div class="rz-head"><span class="t">Rezistență generală</span><span class="s" id="swm-score"></span></div>
@@ -492,8 +500,6 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
 
       <div class="mt-h">Îngrijire</div>
       <p class="mt-p" id="swm-care"></p>
-
-      <button type="button" class="st-chip" onclick="openSamplesModal()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg><span>Comandă mostră</span></button>
     </div>
   </div>
 </div>
@@ -517,7 +523,7 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
       <div class="st-title-row"><span class="st-title" id="colm-title"></span></div>
       <div class="st-desc" id="colm-desc"></div>
       <button class="st-chip" onclick="toast('Mostrele au fost adăugate în coș')">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
         <span>Comanda mostrar gratis</span>
       </button>
     </div>
@@ -851,10 +857,10 @@ function avgScore(c){
   return String(Math.round(avg * 10) / 10);
 }
 var USP_ICONS = {
-  people: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
-  droplet: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>',
-  hand: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>',
-  shield: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>',
+  people: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+  droplet: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>',
+  hand: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>',
+  shield: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>',
   grid: '<svg width="22" height="22" viewBox="0 0 24 24" fill="#4d35ff"><circle cx="7" cy="5" r="1.6"/><circle cx="13" cy="5" r="1.6"/><circle cx="7" cy="12" r="1.6"/><circle cx="13" cy="12" r="1.6"/><circle cx="7" cy="19" r="1.6"/><circle cx="13" cy="19" r="1.6"/></svg>'
 };
 function textureLabel(c){
@@ -1099,7 +1105,18 @@ function updateNeedsLabel(){
 }
 
 /* ══════════ Fabric picker: top fabric-type pills (jump/filter) + a Filtre sheet for color & properties, every collection stacked below ══════════ */
-var chipColors = { 'Galben':'#ffe600', 'Gri':'#a8abb3', 'Maro / Bej':'#9e8e7c', 'Albastru':'#3b82f6', 'Roșu':'#ef4444', 'Roz':'#f48fb1', 'Verde':'#4caf50', 'Bej':'#d4c5a9', 'Negru':'#1d1e1f' };
+/* Colored-pill filter chips (bg + fg per family) instead of grey chip + colored text. */
+var FAMILY_CHIP_STYLE = {
+  'Bej':          { bg:'#EDE1CB', fg:'#7A6647' },
+  'Galben':       { bg:'#F5E27A', fg:'#5B4A0A' },
+  'Roșu':         { bg:'#F7D2CE', fg:'#B23A2E' },
+  'Roz':          { bg:'#F5DCE8', fg:'#A24A78' },
+  'Albastru':     { bg:'#D9E6FA', fg:'#2E5DA8' },
+  'Verde':        { bg:'#DCEEDC', fg:'#3C7A44' },
+  'Maro / Bej':   { bg:'#D9C4AE', fg:'#5C4630' },
+  'Gri':          { bg:'#DADCDF', fg:'#4A4D52' },
+  'Negru':        { bg:'#1D1D1F', fg:'#ffffff' }
+};
 var PROP_OPTIONS = ['Impermeabil', 'Easy Clean', 'Pet Friendly', 'Piele sensibilă (OEKO-TEX®)'];
 var REZ_OPTIONS = ['Uz zilnic', 'Uz intensiv', 'Uz extrem'];
 var MART_BUCKETS = { 'Uz zilnic': [40000, 55000], 'Uz intensiv': [55000, 75000], 'Uz extrem': [75000, Infinity] };
@@ -1160,8 +1177,12 @@ function makeFsheetPill(opt){
   var on = appliedFilters.indexOf(opt) > -1;
   var pill = document.createElement('button');
   pill.type = 'button';
-  pill.className = 'fchip cfg-fpill' + (on ? ' on' : '');
-  if (chipColors[opt] && !on) pill.style.color = chipColors[opt];
+  var famStyle = FAMILY_CHIP_STYLE[opt];
+  pill.className = 'fchip cfg-fpill' + (famStyle ? ' cfg-fpill-color' : '') + (on ? ' on' : '');
+  if (famStyle){
+    pill.style.background = famStyle.bg;
+    pill.style.color = famStyle.fg;
+  }
   pill.textContent = opt;
   pill.onclick = function(){
     var i = appliedFilters.indexOf(opt);
@@ -1458,7 +1479,7 @@ function matdSlideHtml(m){
       '<h2>' + m.label + '</h2>' +
       '<p class="matd-desc">' + c.desc + '</p>' +
       '<button type="button" class="st-chip" onclick="event.stopPropagation();openSamplesModal()">' +
-        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>' +
+        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>' +
         '<span>Comandă mostrar gratis</span>' +
       '</button>' +
       (usps.length ? '<div class="matd-usps">' + usps.map(function(u){ return '<span>' + u + '</span>'; }).join('') + '</div>' : '') +
