@@ -154,7 +154,11 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
 .fsheet-apply{flex:1 1 auto;background:var(--ink);color:#fff;border-radius:9999px;padding:12px;font-size:14px;font-weight:500}
 
 .cfg-col-section{padding-top:28px;border-top:1px solid var(--hair);margin-top:24px}
-.cfg-col-section:first-of-type{border-top:none;margin-top:0}
+/* Can't use :first-of-type here -- filtering hides sections via display:none rather than
+   removing them, so the first *visible* section is often not the first in DOM order and would
+   otherwise keep its border-top, leaving a stray divider line floating above it with nothing
+   above to divide from. JS toggles this class onto whichever section is actually first-visible. */
+.cfg-col-section.first-visible{border-top:none;margin-top:0}
 .cfg-col-head{display:flex;align-items:baseline;justify-content:space-between}
 .cfg-col-head .t{font-size:17px;font-weight:600;display:flex;align-items:center;gap:6px}
 .cfg-col-mattype-link{font-size:13px;font-weight:500;text-decoration:underline;color:var(--ink);background:none;border:none;padding:0;white-space:nowrap}
@@ -409,8 +413,8 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.7"><line x1="4" y1="7" x2="20" y2="7"/><circle cx="9" cy="7" r="2.2" fill="#fff"/><line x1="4" y1="16" x2="20" y2="16"/><circle cx="15" cy="16" r="2.2" fill="#fff"/></svg>
           </button>
           <div class="cfg-gridtoggle" id="cfg-gridtoggle">
-            <button type="button" class="cfg-gridbtn on" onclick="setColorGridCols(3,this)" aria-label="Grilă 3 coloane"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.7"><rect x="2" y="4" width="5.3" height="16" rx="1.2"/><rect x="9.3" y="4" width="5.3" height="16" rx="1.2"/><rect x="16.7" y="4" width="5.3" height="16" rx="1.2"/></svg></button>
-            <button type="button" class="cfg-gridbtn" onclick="setColorGridCols(4,this)" aria-label="Grilă 4 coloane"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.7"><rect x="1" y="4" width="4.5" height="16" rx="1"/><rect x="6.8" y="4" width="4.5" height="16" rx="1"/><rect x="12.6" y="4" width="4.5" height="16" rx="1"/><rect x="18.4" y="4" width="4.5" height="16" rx="1"/></svg></button>
+            <button type="button" class="cfg-gridbtn on" onclick="setColorGridCols(3,this)" aria-label="Grilă 3 coloane"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="M15 3v18"/></svg></button>
+            <button type="button" class="cfg-gridbtn" onclick="setColorGridCols(4,this)" aria-label="Grilă 4 coloane"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7.5 3v18"/><path d="M12 3v18"/><path d="M16.5 3v18"/></svg></button>
           </div>
         </div>
 
@@ -1193,6 +1197,15 @@ function resetSheetFilters(){
   applyFabricFilters();
 }
 
+function markFirstVisibleSection(){
+  var sections = document.querySelectorAll('.cfg-col-section');
+  var found = false;
+  sections.forEach(function(s){
+    var isFirst = !found && s.style.display !== 'none';
+    s.classList.toggle('first-visible', isFirst);
+    if (isFirst) found = true;
+  });
+}
 function applyFabricFilters(){
   renderFsheetMaterialPill();
   var totalFilters = appliedFilters.length + (activeFabricPill ? 1 : 0);
@@ -1229,6 +1242,7 @@ function applyFabricFilters(){
     });
     section.style.display = anyVisible ? '' : 'none';
   });
+  markFirstVisibleSection();
   var noFilters = !pillDef && !appliedFilters.length;
   document.getElementById('cfg-color-sub').textContent = noFilters
     ? ('Alege din ' + totalColorCount() + ' culori diferite.')
@@ -1269,6 +1283,7 @@ function renderFabricSections(){
     });
   });
   document.getElementById('cfg-color-sub').textContent = 'Alege din ' + totalColorCount() + ' culori diferite.';
+  markFirstVisibleSection();
 }
 
 function showSwatchInfo(name){
