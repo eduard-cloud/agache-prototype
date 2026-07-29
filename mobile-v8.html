@@ -104,14 +104,13 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 /* material-type picker: a single segmented control instead of 3 square swatch-like tiles --
    the shape itself now reads as a selector/filter, not as "more color swatches", and each
    segment carries a small round texture photo instead of a full-size image tile. */
-.cfg-fabric-pillrow{display:flex;border:1px solid var(--ink);border-radius:14px;overflow:hidden;margin-top:8px}
-.cfg-seg{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:6px;padding:10px 8px;border-right:1px solid var(--hair);color:var(--ink);transition:background-color .15s,color .15s}
-.cfg-seg:last-child{border-right:none}
+/* filled tinted track (not an outlined pill like .cfg-samples-btn below it) so the two
+   don't read as the same kind of control */
+.cfg-fabric-pillrow{display:flex;gap:6px;background:var(--chipbg);border-radius:20px;padding:10px 8px;margin-top:8px}
+.cfg-seg{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:8px;padding:4px 2px 8px;border-radius:14px;color:var(--ink);transition:background-color .15s,color .15s}
 .cfg-seg.on{background:var(--ink);color:#fff}
-.cfg-seg .dot{width:20px;height:20px;border-radius:50%;flex:0 0 auto;background-size:cover;background-position:center;border:1px solid rgba(0,0,0,.1)}
-.cfg-seg .nm{font-size:13px;font-weight:500;letter-spacing:-.2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.cfg-seg .info-i{display:flex;align-items:center;justify-content:center;width:15px;height:15px;flex:0 0 auto;padding:0;background:none;border:none;box-shadow:none;color:inherit}
-.cfg-seg .info-i svg{width:15px;height:15px;pointer-events:none;display:block}
+.cfg-seg .dot{width:60px;height:60px;border-radius:50%;flex:0 0 auto;background-size:cover;background-position:center;border:1px solid rgba(0,0,0,.1)}
+.cfg-seg .nm{font-size:13px;font-weight:500;letter-spacing:-.2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
 
 .cfg-fabric-divider{height:1px;background:var(--hair);margin-top:18px}
 .cfg-fabric-toolrow{display:flex;align-items:center;justify-content:space-between;margin-top:14px}
@@ -991,16 +990,11 @@ function renderFabricPillRow(){
     seg.className = 'cfg-seg' + (activeFabricPill === p.key ? ' on' : '');
     seg.innerHTML =
       '<span class="dot" style="background-image:url(\'' + p.asset + '\')"></span>' +
-      '<span class="nm">' + p.label + '</span>' +
-      '<button type="button" class="info-i" aria-label="Detalii ' + p.label + '"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button>';
+      '<span class="nm">' + p.label + '</span>';
     seg.onclick = function(){
       activeFabricPill = activeFabricPill === p.key ? null : p.key;
       renderFabricPillRow();
       applyFabricFilters();
-    };
-    seg.querySelector('.info-i').onclick = function(e){
-      e.stopPropagation();
-      toast(p.blurb);
     };
     wrap.appendChild(seg);
   });
