@@ -326,7 +326,7 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
 
         <div class="cfg-fabric-divider"></div>
 
-        <h3 class="cfg-title">Nuanțe. <span class="sub" id="cfg-color-sub"></span></h3>
+        <h3 class="cfg-title">Culori. <span class="sub" id="cfg-color-sub"></span></h3>
 
         <div class="cfg-fabric-toolrow">
           <button type="button" class="cfg-filter-btn" id="cfg-filter-btn" onclick="openFilterSheet()">
@@ -1127,8 +1127,10 @@ function applyFabricFilters(){
   });
   var noFilters = !pillDef && !appliedFilters.length;
   document.getElementById('cfg-color-sub').textContent = noFilters
-    ? (totalColorCount() + ' disponibile în ' + COLLECTION_ORDER.length + ' colecții.')
-    : ('Se afișează ' + visibleCount + ' culori.');
+    ? ('Alege din ' + totalColorCount() + ' culori diferite.')
+    : pillDef
+      ? ('Alege din ' + visibleCount + ' culori de ' + pillDef.label.toLowerCase() + '.')
+      : ('Alege din ' + visibleCount + ' culori diferite.');
 }
 
 function renderFabricSections(){
@@ -1162,7 +1164,7 @@ function renderFabricSections(){
       tile.querySelector('.info-i').onclick = function(e){ e.stopPropagation(); showSwatchInfo(tile.dataset.name); };
     });
   });
-  document.getElementById('cfg-color-sub').textContent = totalColorCount() + ' disponibile în ' + COLLECTION_ORDER.length + ' colecții.';
+  document.getElementById('cfg-color-sub').textContent = 'Alege din ' + totalColorCount() + ' culori diferite.';
 }
 
 function showSwatchInfo(name){
