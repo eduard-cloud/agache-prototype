@@ -242,9 +242,11 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
 .cfg-samples-btn{display:block;width:100%;height:48px;border:1px solid var(--ink);border-radius:24px;font-size:14px;font-weight:500;margin-top:20px}
 /* material section's own compare/sample row: outline secondary + orange primary, same shape
    language as the PDP's Suna-ne / Comandă mostre row */
-.cfg-samples-row{display:flex;gap:4px;margin-top:20px}
-.cfg-samples-outline{flex:1;min-width:0;height:48px;border:1px solid var(--ink);border-radius:24px;background:#fff;color:var(--ink);font-size:14px;font-weight:500}
-.cfg-samples-primary{flex:1;min-width:0;height:48px;border-radius:24px;background:var(--red);color:#fff;font-size:14px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px}
+.cfg-samples-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:20px}
+/* plain underlined link, no button chrome, hugs the left edge */
+.cfg-samples-outline{flex:0 0 auto;height:auto;padding:0;border:none;background:none;color:var(--ink);font-size:14px;font-weight:500;text-decoration:underline}
+/* same pill appearance the link used to have */
+.cfg-samples-primary{flex:0 0 auto;height:48px;padding:0 20px;border:1px solid var(--ink);border-radius:24px;background:#fff;color:var(--ink);font-size:14px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px}
 .cfg-samples-primary svg{flex:0 0 auto}
 #cfg-sum-color-sw{width:32px;height:32px;border-radius:50%;flex:0 0 auto}
 
@@ -252,7 +254,7 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
 .cfg-cta{flex:0 0 auto;background:#fff;border-top:1px solid var(--hair);display:flex;align-items:center;justify-content:space-between;padding:12px 16px}
 .cfg-cta .nm{font-size:13px}
 .cfg-cta .pr{font-size:15px;font-weight:700;margin-top:2px}
-.cfg-cta .bb{height:44px;background:#1D1D1F;color:#fff;border-radius:22px;padding:0 18px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:8px}
+.cfg-cta .bb{height:44px;background:var(--red);color:#fff;border-radius:22px;padding:0 18px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:8px}
 </style>
 </head>
 <body>
