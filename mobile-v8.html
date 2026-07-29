@@ -281,7 +281,7 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
 .matd-track{display:flex;transition:transform .32s cubic-bezier(.32,.72,.35,1)}
 .matd-hero{flex:0 0 100%;aspect-ratio:4/3;background-size:cover;background-position:center;touch-action:pan-y;min-width:0}
 .matd-dots{display:flex;justify-content:center;gap:6px;padding:14px 0 0}
-.matd-dots button{width:7px;height:7px;padding:0;border-radius:50%;background:var(--hair)}
+.matd-dots button{width:7px;height:7px;padding:0;border-radius:50%;background:var(--gray2)}
 .matd-dots button.on{background:var(--ink)}
 .matd-body{padding:20px 20px 28px}
 .matd-body h2{font-size:24px;font-weight:600;letter-spacing:-.4px}
@@ -1406,16 +1406,13 @@ function buildMaterialDetail(){
   dots.innerHTML = MATERIAL_DETAIL.map(function(_, k){
     return '<button onclick="matdTo(' + k + ')" aria-label="Material ' + (k + 1) + '"></button>';
   }).join('');
-  document.querySelectorAll('.matd-hero').forEach(function(hero){
-    bindSwipe(hero, function(d){ matdTo(matdIdx + d); });
-  });
+  bindSwipe(document.querySelector('.matd-card'), function(d){ matdTo(matdIdx + d); });
 }
 function matdRenderBody(m){
   var c = COLLECTIONS[m.collectionSlug];
   var specs = [
     ['Compoziție', c.composition],
     ['Greutate', c.weight + ' g/m²'],
-    ['Lățime rolă', c.width + ' cm'],
     ['Durabilitate', c.martindale + ' cicluri Martindale']
   ];
   if (c.rubbing) specs.push(['Rezistență la frecare', c.rubbing]);
@@ -1429,6 +1426,10 @@ function matdRenderBody(m){
   document.getElementById('matd-body').innerHTML =
     '<h2>' + m.label + '</h2>' +
     '<p class="matd-desc">' + c.desc + '</p>' +
+    '<button type="button" class="st-chip" onclick="event.stopPropagation();openSamplesModal()">' +
+      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>' +
+      '<span>Comandă mostrar gratis</span>' +
+    '</button>' +
     (usps.length ? '<div class="matd-usps">' + usps.map(function(u){ return '<span>' + u + '</span>'; }).join('') + '</div>' : '') +
     '<div class="matd-specs">' + specs.map(function(s){
       return '<div class="row"><span class="k">' + s[0] + '</span><span class="v">' + s[1] + '</span></div>';
