@@ -488,13 +488,12 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
       <div class="ft-row"><span class="k">Întreținere</span><span class="v" id="swm-maint"></span></div>
       <div class="ft-row"><span class="k">Compoziție</span><span class="v" id="swm-comp"></span></div>
       <div class="ft-row"><span class="k">Rezistență la foc</span><span class="v" id="swm-fire"></span></div>
-      <div class="ft-row"><span class="k">Greutate (g/m²)</span><span class="v" id="swm-weight"></span></div>
-      <div class="ft-row" style="border-bottom:none"><span class="k">Lățime rolă</span><span class="v" id="swm-width"></span></div>
+      <div class="ft-row" style="border-bottom:none"><span class="k">Greutate (g/m²)</span><span class="v" id="swm-weight"></span></div>
 
       <div class="mt-h">Îngrijire</div>
       <p class="mt-p" id="swm-care"></p>
 
-      <button class="cfg-samples-btn" onclick="toast('Mostra a fost adăugată în coș')">Comandă mostră</button>
+      <button type="button" class="st-chip" onclick="openSamplesModal()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4d35ff" stroke-width="1.7"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg><span>Comandă mostră</span></button>
     </div>
   </div>
 </div>
@@ -923,23 +922,35 @@ function fillCollectionText(p, c){
   document.getElementById(p + '-care').textContent = c.care;
   document.getElementById(p + '-comp').textContent = c.composition;
   document.getElementById(p + '-weight').textContent = c.weight + ' g/m²';
-  document.getElementById(p + '-width').textContent = c.width + ' cm';
+  var widthEl = document.getElementById(p + '-width');
+  if (widthEl) widthEl.textContent = c.width + ' cm';
   document.getElementById(p + '-fire').innerHTML = c.fireTest === 'BS 5852: Partea 1' ? 'BS 5852: Partea 1: 1979<br>sursa 0 (țigară)' : c.fireTest;
   document.getElementById(p + '-cert').textContent = c.certifications || '—';
   document.getElementById(p + '-maint').textContent = c.easyClean ? 'Ușor de întreținut, curățare cu apă' : (c.waterproof ? 'Rezistent la lichide, curățare delicată' : 'Necesită curățare delicată, la uscat');
   document.getElementById(p + '-mart-v').textContent = c.martindale;
   document.getElementById(p + '-mart-bar').style.width = martPercent(c.martindale) + '%';
+  /* The individual color modal (p === 'swm') only carries data for a subset of these ratings
+     per collection -- hide whichever rows come back empty instead of showing a bare "—". The
+     collection modal (p === 'colm') keeps showing all rows as before. */
   [['mace', c.mace], ['rub', c.rubbing], ['light', c.light], ['pill', c.pilling]].forEach(function(pair){
     var vEl = document.getElementById(p + '-' + pair[0] + '-v');
     var bEl = document.getElementById(p + '-' + pair[0] + '-bar');
+    var row = vEl.closest('.rz-row');
     if (pair[1]){
       vEl.innerHTML = pair[1].replace(/\/5$/, '<i>/5</i>');
       bEl.style.width = ratingPercent(pair[1]) + '%';
+      if (row) row.style.display = '';
     } else {
       vEl.textContent = '—';
       bEl.style.width = '0%';
+      if (row && p === 'swm') row.style.display = 'none';
     }
   });
+  if (p === 'swm'){
+    var martRow = document.getElementById(p + '-mart-v').closest('.rz-row');
+    var rzRows = Array.prototype.filter.call(martRow.parentElement.querySelectorAll('.rz-row'), function(r){ return r.style.display !== 'none'; });
+    rzRows.forEach(function(r, i){ r.style.borderBottom = (i === rzRows.length - 1) ? 'none' : ''; });
+  }
   document.getElementById(p + '-score').innerHTML = avgScore(c) + '<i>/5</i>';
 }
 
