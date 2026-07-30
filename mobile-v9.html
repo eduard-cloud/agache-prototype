@@ -71,7 +71,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 #cfg-sheet{position:relative;flex:0 0 auto;height:var(--sheet-h);background:#fff;border-radius:24px 24px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.14);display:flex;flex-direction:column;overflow:hidden;z-index:3}
 #cfg-sheet.dragging{transition:none}
 .cfg-handle{flex:0 0 auto;display:flex;justify-content:center;touch-action:none;padding-top:4px}
-.cfg-chips{flex:0 0 auto;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:0 20px 16px;border-bottom:1px solid var(--hair)}
+.cfg-chips{flex:0 0 auto;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:0 20px 16px;border-bottom:1px solid var(--hair);scroll-behavior:smooth}
 .cfg-chips::-webkit-scrollbar{display:none}
 /* Tylko-style nav chips: no outline on unselected (just ink text on transparent bg), and the
    selected pill's checkmark lives in a permanently-reserved slot (fixed width, animated via
@@ -1603,13 +1603,28 @@ function scrollCfgTo(sec, instant, targetId){
   scroll.scrollTo({ top: Math.max(0, top), behavior: instant ? 'auto' : 'smooth' });
   setActiveCfgChip(sec, instant);
 }
-function setActiveCfgChip(sec, instant){
-  /* Matches tylko: the chip row itself never auto-scrolls on selection -- it only moves when
-     the user drags it directly. Selecting a chip just flips which one is styled "on". */
+function setActiveCfgChip(sec, instant, followNav){
+  /* Tapping a chip never scrolls the row itself (tylko doesn't either -- you tapped what you
+     could already see). But scrolling the content one-handed, without ever touching the chip
+     row, is a different story: tylko's own scroll-spy leaves the active chip stranded off-
+     screen once you're a few sections down, which reads as broken rather than intentional. We
+     follow the active chip into view here (call site: the #cfg-scroll scroll-spy listener),
+     nudging the row just enough to keep it visible instead of re-centering on every change. */
   var chips = document.querySelectorAll('.cfg-chip');
+  var active;
   chips.forEach(function(c){
-    c.classList.toggle('on', c.dataset.sec === sec);
+    var on = c.dataset.sec === sec;
+    c.classList.toggle('on', on);
+    if (on) active = c;
   });
+  if (followNav && active){
+    var nav = document.getElementById('cfg-chips');
+    var pad = 20;
+    var chipLeft = active.offsetLeft, chipRight = chipLeft + active.offsetWidth;
+    var viewLeft = nav.scrollLeft, viewRight = viewLeft + nav.clientWidth;
+    if (chipLeft - pad < viewLeft) nav.scrollLeft = Math.max(0, chipLeft - pad);
+    else if (chipRight + pad > viewRight) nav.scrollLeft = chipRight + pad - nav.clientWidth;
+  }
 }
 /* Materiale, Filtre and Culoare all live inside the single sec-color section (fabric-type
    chips up top, the inline Filtre row in the middle, the color grids further down), so the
@@ -1647,7 +1662,7 @@ function resolveColorSec(){
     });
     var sec = current.id.replace('sec-', '');
     if (sec === 'color') sec = resolveColorSec();
-    if (sec !== lastSec){ lastSec = sec; setActiveCfgChip(sec, false); }
+    if (sec !== lastSec){ lastSec = sec; setActiveCfgChip(sec, false, true); }
   });
 })();
 /* Filtre in the top nav: scroll to the in-section Filtre row first so the sheet doesn't pop
