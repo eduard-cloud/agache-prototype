@@ -140,7 +140,7 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
 .cfg-filter-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 #fsheet-material{flex-wrap:nowrap}
 #fsheet-culoare{gap:10px}
-.cfg-fpill-color{height:40px;padding:0 16px;border-radius:12px}
+.cfg-fpill-color{height:32px;padding:0 12px;border-radius:10px}
 .cfg-fpill-color.on{box-shadow:inset 0 0 0 2px var(--ink)}
 .cfg-fpill-color .fp-chk{display:none;width:14px;height:14px;border-radius:50%;background:#fff;align-items:center;justify-content:center;flex:0 0 auto}
 .cfg-fpill-color.on .fp-chk{display:flex}
@@ -609,10 +609,10 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
       </div>
       <div class="fsheet-group-h" id="fsheet-material-h" style="display:none">Material</div>
       <div class="cfg-filter-pills" id="fsheet-material"></div>
-      <div class="fsheet-group-h">Culoare</div>
-      <div class="cfg-filter-pills" id="fsheet-culoare"></div>
       <div class="fsheet-group-h">Proprietăți</div>
       <div class="cfg-filter-pills" id="fsheet-prop"></div>
+      <div class="fsheet-group-h">Culoare</div>
+      <div class="cfg-filter-pills" id="fsheet-culoare"></div>
     </div>
     <div class="fsheet-foot">
       <button type="button" class="fsheet-reset" onclick="resetSheetFilters()">Resetează</button>
@@ -708,7 +708,7 @@ var COLLECTIONS = {
 var COLLECTION_ORDER = ['luna','manila','enjoylux','milton','piano','spello','maya','zoya'];
 var SWATCH_INDEX = {};
 /* order the main color groups sweep around the wheel, neutrals bookending it */
-var FAMILY_ORDER = ['Bej', 'Galben', 'Roșu', 'Roz', 'Albastru', 'Verde', 'Maro / Bej', 'Gri', 'Negru'];
+var FAMILY_ORDER = ['Bej', 'Galben', 'Maro', 'Roz', 'Roșu', 'Albastru', 'Verde', 'Gri', 'Negru'];
 function hexLuminance(hex){
   var rgb = hexToRGB(hex);
   return 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
@@ -721,7 +721,7 @@ function hexLuminance(hex){
    through the warm families before the cool ones, ending on the true neutrals.
    Uses the same Lab-based family logic as colorFamilyRO() so a swatch's position in the grid
    always matches the filter chip it shows up under. */
-var COLOR_SORT_FAMILY_ORDER = ['Bej', 'Galben', 'Maro / Bej', 'Roșu', 'Roz', 'Verde', 'Albastru', 'Gri', 'Negru'];
+var COLOR_SORT_FAMILY_ORDER = ['Bej', 'Galben', 'Maro', 'Roșu', 'Roz', 'Verde', 'Albastru', 'Gri', 'Negru'];
 function sortColorFamily(hex){
   return colorFamilyRO(hex);
 }
@@ -787,13 +787,13 @@ function colorFamilyRO(hex){
   if (c < neutralCutoff) return l > 60 ? 'Bej' : 'Gri';
   if (h >= 17 && h < 50) return 'Roșu';
   if (h >= 50 && h < 100){
-    /* this band covers true gold/mustard (Galben), muted tan/brown (Bej, Maro / Bej), and
+    /* this band covers true gold/mustard (Galben), muted tan/brown (Bej, Maro), and
        rust/terracotta clay tones -- only the h>=70 sub-range clusters around actual
        mustard/ochre/gold hues (confirmed against Muștar/Ocru/Auriu/Galben reference swatches);
        h 50-70 at the same chroma reads as rust or clay-brown, not yellow, so it always falls
        through to the tan/brown split below rather than being called "Galben". */
     if (h >= 70 && c >= 32 && l >= 40) return 'Galben';
-    return l >= 48 ? 'Bej' : 'Maro / Bej';
+    return l >= 48 ? 'Bej' : 'Maro';
   }
   if (h >= 100 && h < 220) return 'Verde';
   if (h >= 220 && h < 310) return 'Albastru';
@@ -1124,24 +1124,17 @@ var FAMILY_CHIP_STYLE = {
   'Roz':          { bg:'#F5DCE8', fg:'#A24A78' },
   'Albastru':     { bg:'#D9E6FA', fg:'#2E5DA8' },
   'Verde':        { bg:'#DCEEDC', fg:'#3C7A44' },
-  'Maro / Bej':   { bg:'#D9C4AE', fg:'#5C4630' },
+  'Maro':         { bg:'#D9C4AE', fg:'#5C4630' },
   'Gri':          { bg:'#DADCDF', fg:'#4A4D52' },
   'Negru':        { bg:'#1D1D1F', fg:'#ffffff' }
 };
 var PROP_OPTIONS = ['Impermeabil', 'Easy Clean', 'Pet Friendly', 'Piele sensibilă (OEKO-TEX®)'];
-var REZ_OPTIONS = ['Uz zilnic', 'Uz intensiv', 'Uz extrem'];
-var MART_BUCKETS = { 'Uz zilnic': [40000, 55000], 'Uz intensiv': [55000, 75000], 'Uz extrem': [75000, Infinity] };
 var FILTER_GROUPS = [
   { key:'culoare', label:'Culoare', options: FAMILY_ORDER },
-  { key:'prop', label:'Proprietăți', options: PROP_OPTIONS.concat(REZ_OPTIONS) }
+  { key:'prop', label:'Proprietăți', options: PROP_OPTIONS }
 ];
 var appliedFilters = [];
 
-function martRangeOverlaps(martindaleStr, bucketLabel){
-  var range = martRange(martindaleStr);
-  var bucket = MART_BUCKETS[bucketLabel];
-  return !!bucket && range[0] <= bucket[1] && range[1] >= bucket[0];
-}
 function propMatch(f, c){
   if (f === 'Impermeabil') return c.waterproof;
   if (f === 'Easy Clean') return c.easyClean;
@@ -1272,10 +1265,9 @@ function applyFabricFilters(){
   document.getElementById('cfg-nav-filter-cnt').textContent = totalFilters;
   navChip.classList.toggle('has-count', totalFilters > 0);
 
-  var byCat = { culoare: [], prop: [], rez: [] };
+  var byCat = { culoare: [], prop: [] };
   appliedFilters.forEach(function(f){
     if (FAMILY_ORDER.indexOf(f) > -1) byCat.culoare.push(f);
-    else if (REZ_OPTIONS.indexOf(f) > -1) byCat.rez.push(f);
     else byCat.prop.push(f);
   });
   var pillDef = FABRIC_PILLS.filter(function(p){ return p.key === activeFabricPill; })[0];
@@ -1286,11 +1278,10 @@ function applyFabricFilters(){
     var section = document.querySelector('.cfg-col-section[data-slug="' + slug + '"]');
     var matOK = !pillDef || pillDef.stems.some(function(stem){ return c.materialTypes.some(function(t){ return t.indexOf(stem) > -1; }); });
     var propOK = !byCat.prop.length || byCat.prop.every(function(f){ return propMatch(f, c); });
-    var rezOK = !byCat.rez.length || byCat.rez.some(function(f){ return martRangeOverlaps(c.martindale, f); });
     var anyVisible = false;
     section.querySelectorAll('.mtile').forEach(function(tile){
       var s = SWATCH_INDEX[tile.dataset.name];
-      var visible = matOK && propOK && rezOK;
+      var visible = matOK && propOK;
       if (visible && byCat.culoare.length) visible = s && byCat.culoare.indexOf(colorFamilyRO(s.hex)) > -1;
       tile.style.display = visible ? '' : 'none';
       if (visible){ anyVisible = true; visibleCount++; }
