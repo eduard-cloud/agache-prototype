@@ -78,10 +78,13 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
    opacity/scale only) so a chip never changes size on select/deselect -- neighbors never get
    pushed left or right, they just sit still while the pill fades to black underneath them. */
 .cfg-chip{flex:0 0 auto;display:flex;align-items:center;gap:5px;background:transparent;border:none;border-radius:9999px;padding:9px 16px 9px 12px;font-size:14px;letter-spacing:-.28px;white-space:nowrap;color:var(--ink);transition:background-color .15s,color .15s}
-.cfg-chip .chip-check{width:14px;height:14px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.6);transition:opacity .15s,transform .15s}
-.cfg-chip .chip-check svg{width:100%;height:100%;display:block}
+/* Slot itself is a fixed 14px (that's what keeps the chip's total width constant, so
+   selecting never pushes neighbors) -- but the checkmark inside it grows in from width:0,
+   same technique tylko uses on its own tab icons, just clipped to a slot that doesn't move. */
+.cfg-chip .chip-check{width:14px;height:14px;flex:0 0 auto;overflow:hidden}
+.cfg-chip .chip-check svg{width:14px;height:14px;display:block;transform-origin:0 50%;transform:scaleX(0);transition:transform .14s linear}
 .cfg-chip.on{background:var(--ink);color:#fff}
-.cfg-chip.on .chip-check{opacity:1;transform:scale(1)}
+.cfg-chip.on .chip-check svg{transform:scaleX(1)}
 .cfg-chip .nav-cnt{display:none;width:18px;height:18px;border-radius:999px;background:#1D1D1F;color:#fff;font-size:11px;font-weight:400;align-items:center;justify-content:center;flex:0 0 auto}
 .cfg-chip.has-count .nav-cnt{display:flex}
 .cfg-chip.on .nav-cnt{background:#fff;color:#1D1D1F}
