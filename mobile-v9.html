@@ -71,7 +71,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 #cfg-sheet{position:relative;flex:0 0 auto;height:var(--sheet-h);background:#fff;border-radius:24px 24px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.14);display:flex;flex-direction:column;overflow:hidden;z-index:3}
 #cfg-sheet.dragging{transition:none}
 .cfg-handle{flex:0 0 auto;display:flex;justify-content:center;touch-action:none;padding-top:4px}
-.cfg-chips{flex:0 0 auto;display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding:0 20px 16px;border-bottom:1px solid var(--hair);scroll-behavior:smooth}
+.cfg-chips{flex:0 0 auto;display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding:0 20px 16px;border-bottom:1px solid var(--hair)}
 .cfg-chips::-webkit-scrollbar{display:none}
 /* Tylko-style nav chips: no outline on unselected (just ink text on transparent bg), and the
    selected pill's checkmark lives in a permanently-reserved slot (fixed width, animated via
@@ -1601,29 +1601,12 @@ function scrollCfgTo(sec, instant, targetId){
   setActiveCfgChip(sec, instant);
 }
 function setActiveCfgChip(sec, instant){
+  /* Matches tylko: the chip row itself never auto-scrolls on selection -- it only moves when
+     the user drags it directly. Selecting a chip just flips which one is styled "on". */
   var chips = document.querySelectorAll('.cfg-chip');
-  var active;
   chips.forEach(function(c){
-    var on = c.dataset.sec === sec;
-    c.classList.toggle('on', on);
-    if (on) active = c;
+    c.classList.toggle('on', c.dataset.sec === sec);
   });
-  if (active){
-    var nav = document.getElementById('cfg-chips');
-    var target = Math.max(0, active.offsetLeft - 20);
-    /* Direct scrollLeft assignment (animated by the .cfg-chips CSS scroll-behavior:smooth rule)
-       instead of scrollTo({behavior:'smooth'}) -- the options-object form silently no-ops in
-       some mobile webviews when the scroller sits inside this sheet's own transform/scroll
-       stack, leaving the chip row looking frozen while only the content below it moved. */
-    if (instant){
-      nav.style.scrollBehavior = 'auto';
-      nav.scrollLeft = target;
-      nav.offsetHeight; /* force reflow so the behavior:auto actually applies before we restore it */
-      nav.style.scrollBehavior = '';
-    } else {
-      nav.scrollLeft = target;
-    }
-  }
 }
 /* Materiale, Filtre and Culoare all live inside the single sec-color section (fabric-type
    chips up top, the inline Filtre row in the middle, the color grids further down), so the
