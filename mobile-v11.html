@@ -102,6 +102,13 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
    inline in grey as part of the same sentence/paragraph, instead of a bold heading with a
    separate grey line underneath. */
 h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.4;color:var(--ink);margin-bottom:24px}
+/* "Vezi diferențele între materiale" moved up next to the section title instead of its own
+   row lower down -- title takes the flexible space, the button stays compact on the right so
+   the two-line title still has room to wrap without shoving the button underneath it. */
+.cfg-fabric-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:24px}
+.cfg-fabric-head h3.cfg-title{margin-bottom:0}
+.cfg-matdiff-btn{flex:0 0 auto;display:flex;align-items:center;gap:6px;background:var(--chipbg);border:none;border-radius:9999px;padding:8px 14px;font-size:13px;font-weight:500;color:var(--ink);white-space:nowrap;margin-top:2px}
+.cfg-matdiff-btn svg{flex:0 0 auto}
 
 /* ── section 2a: household needs ── */
 .cfg-needs-row{display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:0 0 4px;margin-bottom:12px;scroll-snap-type:x proximity}
@@ -350,10 +357,6 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 /* same pill appearance the link used to have */
 .cfg-samples-primary{flex:0 0 auto;height:auto;padding:8px 14px;border:1px solid var(--ink);border-radius:24px;background:#fff;color:var(--ink);font-size:14px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px}
 .cfg-samples-primary svg{flex:0 0 auto}
-/* "Vezi diferențele între materiale" -- sits right under the material chips, above the color
-   grid, so it reads as "compare these 4 fabric families" before you scroll into 191 colors. */
-.cfg-matdiff-row{margin:2px 0 16px}
-.cfg-matdiff-row .cfg-samples-primary{width:100%;border:none;background:var(--chipbg)}
 #cfg-sum-color-sw{width:32px;height:32px;border-radius:50%;flex:0 0 auto}
 
 /* ── cta bar -- tylko's floating bar: just a big price + a pill button, nothing else ── */
@@ -420,16 +423,12 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
       </section>
 
       <section class="cfg-sec" id="sec-color">
-        <h3 class="cfg-title">Alege din 3 țesături diferite.</h3>
+        <div class="cfg-fabric-head">
+          <h3 class="cfg-title">Alege-ți materialul</h3>
+          <button type="button" class="cfg-matdiff-btn" onclick="openMaterialDetail()">Diferențe</button>
+        </div>
 
         <div class="cfg-fabric-pillrow" id="cfg-fabric-pillrow"></div>
-
-        <div class="cfg-matdiff-row">
-          <button type="button" class="cfg-samples-primary" onclick="openMaterialDetail()">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>
-            Vezi diferențele între materiale
-          </button>
-        </div>
 
         <div class="cfg-fabric-toolrow">
           <button type="button" class="cfg-filter-btn" id="cfg-filter-btn" onclick="openFilterSheet()">
