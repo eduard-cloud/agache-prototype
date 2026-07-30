@@ -1346,8 +1346,8 @@ function showSwatchInfo(name){
   var c = s.collection;
   document.getElementById('swm-img').src = fabricAsset(name);
   document.getElementById('swm-img').alt = name;
-  document.getElementById('swm-name').textContent = nearestColorName(s.hex);
-  document.getElementById('swm-sub').textContent = name + ' · ' + s.hex;
+  document.getElementById('swm-name').textContent = name;
+  document.getElementById('swm-sub').textContent = nearestColorName(s.hex) + ' · ' + s.hex;
   fillCollectionText('swm', c);
   document.querySelector('.swm-sheet').scrollTop = 0;
   document.getElementById('swatch-modal').classList.add('open');
