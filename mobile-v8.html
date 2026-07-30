@@ -708,7 +708,7 @@ var COLLECTIONS = {
 var COLLECTION_ORDER = ['luna','manila','enjoylux','milton','piano','spello','maya','zoya'];
 var SWATCH_INDEX = {};
 /* order the main color groups sweep around the wheel, neutrals bookending it */
-var FAMILY_ORDER = ['Bej', 'Galben', 'Maro', 'Roz', 'Roșu', 'Albastru', 'Verde', 'Gri', 'Negru'];
+var FAMILY_ORDER = ['Bej', 'Maro', 'Roz', 'Roșu', 'Albastru', 'Verde', 'Gri', 'Negru'];
 function hexLuminance(hex){
   var rgb = hexToRGB(hex);
   return 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
@@ -721,7 +721,7 @@ function hexLuminance(hex){
    through the warm families before the cool ones, ending on the true neutrals.
    Uses the same Lab-based family logic as colorFamilyRO() so a swatch's position in the grid
    always matches the filter chip it shows up under. */
-var COLOR_SORT_FAMILY_ORDER = ['Bej', 'Galben', 'Maro', 'Roșu', 'Roz', 'Verde', 'Albastru', 'Gri', 'Negru'];
+var COLOR_SORT_FAMILY_ORDER = ['Bej', 'Maro', 'Roșu', 'Roz', 'Verde', 'Albastru', 'Gri', 'Negru'];
 function sortColorFamily(hex){
   return colorFamilyRO(hex);
 }
@@ -786,15 +786,11 @@ function colorFamilyRO(hex){
   var neutralCutoff = cool ? 12 : 7;
   if (c < neutralCutoff) return l > 60 ? 'Bej' : 'Gri';
   if (h >= 17 && h < 50) return 'Roșu';
-  if (h >= 50 && h < 100){
-    /* this band covers true gold/mustard (Galben), muted tan/brown (Bej, Maro), and
-       rust/terracotta clay tones -- only the h>=70 sub-range clusters around actual
-       mustard/ochre/gold hues (confirmed against Muștar/Ocru/Auriu/Galben reference swatches);
-       h 50-70 at the same chroma reads as rust or clay-brown, not yellow, so it always falls
-       through to the tan/brown split below rather than being called "Galben". */
-    if (h >= 70 && c >= 32 && l >= 40) return 'Galben';
-    return l >= 48 ? 'Bej' : 'Maro';
-  }
+  /* This band covers true gold/mustard, muted tan/brown, and rust/terracotta clay tones --
+     "Galben" was dropped as its own family, so everything here (gold/mustard included) now
+     routes into the Bej/Maro split purely on lightness, same as the rest of this band always
+     has been split. */
+  if (h >= 50 && h < 100) return l >= 48 ? 'Bej' : 'Maro';
   if (h >= 100 && h < 220) return 'Verde';
   if (h >= 220 && h < 310) return 'Albastru';
   /* remaining hues (310-360, 0-17) are red/pink */
@@ -1119,7 +1115,6 @@ function updateNeedsLabel(){
 /* Colored-pill filter chips (bg + fg per family) instead of grey chip + colored text. */
 var FAMILY_CHIP_STYLE = {
   'Bej':          { bg:'#EDE1CB', fg:'#7A6647' },
-  'Galben':       { bg:'#F5E27A', fg:'#5B4A0A' },
   'Roșu':         { bg:'#F7D2CE', fg:'#B23A2E' },
   'Roz':          { bg:'#F5DCE8', fg:'#A24A78' },
   'Albastru':     { bg:'#D9E6FA', fg:'#2E5DA8' },
