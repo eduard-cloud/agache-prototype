@@ -471,7 +471,6 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
             <div class="vv"><div class="v" id="cfg-sum-price"></div></div>
           </div>
         </div>
-        <button class="cfg-samples-btn" onclick="openSamplesModal()">Comandă mostre</button>
       </section>
 
     </div>
@@ -988,7 +987,7 @@ function addToCart(btn){
   var orig = btn.innerHTML;
   btn.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg> Adăugat în coș';
   toast('Produsul a fost adăugat în coș');
-  setTimeout(function(){ btn.innerHTML = orig; }, 1800);
+  setTimeout(function(){ closeConfigurator(); }, 900);
 }
 function pressFeedback(el){
   el.style.transition = 'transform .1s'; el.style.transform = 'scale(.97)';
