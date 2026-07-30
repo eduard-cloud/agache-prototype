@@ -34,7 +34,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
    8px (matches already), smaller 84px tiles instead of 92px, and a single compact 14px caption
    line instead of a bold-name + grey-dimension pair (tylko's own "Ausrichtung: rechts" caption
    is one plain 14px line, mb 12px -- not a two-line label block). */
-.cfg-shape-row{display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:16px 0 4px;scroll-snap-type:x proximity}
+.cfg-shape-row{display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:0 0 4px;margin-bottom:12px;scroll-snap-type:x proximity}
 .cfg-shape-row::-webkit-scrollbar{display:none}
 .cfg-shape-tile{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start}
 .cfg-shape-imw{position:relative;width:84px;height:84px;overflow:hidden;display:flex;align-items:center;justify-content:center;transition:box-shadow .15s;scroll-snap-align:start;background:var(--graysec)}
@@ -42,7 +42,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-shape-tile.on .cfg-shape-imw{box-shadow:inset 0 0 0 2px var(--ink)}
 .cfg-shape-check{display:none;position:absolute;right:6px;bottom:6px;width:18px;height:18px;border-radius:50%;background:var(--ink);align-items:center;justify-content:center}
 .cfg-shape-tile.on .cfg-shape-check{display:flex}
-.cfg-shape-label{margin-top:12px}
+.cfg-shape-label{margin-top:0}
 .cfg-shape-label strong{font-size:14px;font-weight:600;display:block}
 .cfg-shape-label span{font-size:12px;color:var(--gray);margin-top:2px;display:block}
 .fchip{display:flex;align-items:center;gap:7px;background:var(--chipbg);border-radius:8px;height:30px;padding:0 10px;font-size:13px}
@@ -101,11 +101,10 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 /* Apple-style config title: bold lead word(s) + period, then the description continues
    inline in grey as part of the same sentence/paragraph, instead of a bold heading with a
    separate grey line underneath. */
-h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.4;color:var(--ink)}
-.cfg-title .sub{color:var(--gray)} /* same weight as the lead words -- only the color changes */
+h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.4;color:var(--ink);margin-bottom:24px}
 
 /* ── section 2a: household needs ── */
-.cfg-needs-row{display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:20px 0 4px;scroll-snap-type:x proximity}
+.cfg-needs-row{display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:0 0 4px;margin-bottom:12px;scroll-snap-type:x proximity}
 .cfg-needs-row::-webkit-scrollbar{display:none}
 .cfg-needs-tile{flex:0 0 auto;width:92px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center}
 .cfg-needs-imw{position:relative;width:92px;height:92px;border-radius:4px;border:1px solid var(--hair);color:var(--ink);overflow:hidden;display:flex;align-items:center;justify-content:center;transition:box-shadow .15s;scroll-snap-align:start}
@@ -126,7 +125,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
    tag chips -- each one its own pill instead of 3 tiles sharing one control, so the shape
    itself reads as a filter/tag, not as "more color swatches". Selected = solid ink fill +
    a check badge on the trailing edge, unselected = light chip fill. */
-.cfg-fabric-pillrow{display:flex;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;gap:4px;margin-top:20px}
+.cfg-fabric-pillrow{display:flex;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;gap:4px;margin-bottom:12px}
 .cfg-fabric-pillrow::-webkit-scrollbar{display:none}
 .cfg-seg{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;background:var(--chipbg);border-radius:9999px;padding:4px 16px 4px 4px;color:var(--ink)}
 .cfg-seg.on{background:var(--ink);color:#fff}
@@ -141,7 +140,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-seg.sm .chk{width:14px;height:14px}
 
 .cfg-fabric-divider{margin-top:60px}
-.cfg-fabric-toolrow{display:flex;align-items:center;justify-content:space-between;margin-top:20px}
+.cfg-fabric-toolrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .cfg-gridtoggle{display:flex;align-items:center;gap:4px}
 .cfg-gridbtn{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center}
 .cfg-gridbtn.on{background:var(--chipbg)}
@@ -343,7 +342,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-samples-btn{display:block;width:100%;height:48px;border:1px solid var(--ink);border-radius:24px;font-size:14px;font-weight:500;margin-top:20px}
 /* material section's own compare/sample row: outline secondary + orange primary, same shape
    language as the PDP's Suna-ne / Comandă mostre row */
-.cfg-samples-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:20px}
+.cfg-samples-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
 /* plain underlined link, no button chrome, hugs the left edge */
 .cfg-samples-outline{flex:0 0 auto;height:auto;padding:0;border:none;background:none;color:var(--ink);font-size:14px;font-weight:500;text-decoration:underline}
 /* same pill appearance the link used to have */
@@ -385,7 +384,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
     <div class="cfg-scroll" id="cfg-scroll">
 
       <section class="cfg-sec" id="sec-config">
-        <h3 class="cfg-title">Formă. <span class="sub">Alege numărul de locuri și orientarea canapelei.</span></h3>
+        <h3 class="cfg-title">Alege numărul de locuri și orientarea canapelei.</h3>
         <div class="cfg-shape-row" id="shape-grid">
           <button class="cfg-shape-tile on" data-name="Canapea 3 locuri" data-dim="245 x 100 cm" onclick="pickCfgShape(this)">
             <span class="cfg-shape-imw"><img src="assets/shape-3seat.png" alt="Canapea 3 locuri"><span class="cfg-shape-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span></span>
@@ -415,7 +414,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
       </section>
 
       <section class="cfg-sec" id="sec-color">
-        <h3 class="cfg-title">Material. <span class="sub">Alege din 3 țesături diferite.</span></h3>
+        <h3 class="cfg-title">Alege din 3 țesături diferite.</h3>
 
         <div class="cfg-fabric-pillrow" id="cfg-fabric-pillrow"></div>
 
@@ -429,7 +428,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 
         <div class="cfg-fabric-divider"></div>
 
-        <h3 class="cfg-title">Culori. <span class="sub" id="cfg-color-sub"></span></h3>
+        <h3 class="cfg-title"><span id="cfg-color-sub"></span></h3>
 
         <div class="cfg-fabric-toolrow">
           <button type="button" class="cfg-filter-btn" id="cfg-filter-btn" onclick="openFilterSheet()">
@@ -448,8 +447,8 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
       </section>
 
       <section class="cfg-sec" id="sec-summary">
-        <h3 class="cfg-title">Sumar. <span class="sub">Verifică alegerile tale înainte de a adăuga în coș.</span></h3>
-        <div id="cfg-summary-body" style="margin-top:20px">
+        <h3 class="cfg-title">Verifică alegerile tale înainte de a adăuga în coș.</h3>
+        <div id="cfg-summary-body">
           <div class="rz-row">
             <div class="k">Formă<em id="cfg-sum-shape-dim"></em></div>
             <div class="vv"><div class="v" id="cfg-sum-shape-name"></div></div>
