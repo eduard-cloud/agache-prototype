@@ -292,7 +292,7 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
    configurator carousel -- this is what makes it read as "3 individual widgets" rather than one
    panel whose content swaps. Native overflow-x scroll + scroll-snap drives the swipe (real
    momentum + rubber-banding), dots below sync to whichever card is nearest-centered. */
-.matd-overlay{display:none;position:fixed;inset:0;max-width:480px;margin:0 auto;background:rgba(0,0,0,.22);z-index:78}
+.matd-overlay{display:none;position:fixed;inset:0;max-width:480px;margin:0 auto;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:78}
 .matd-overlay.open{display:flex;flex-direction:column}
 .matd-topbar{flex:0 0 auto;display:flex;justify-content:flex-end;padding:16px 16px 8px;z-index:2}
 .matd-topbar .circ-btn{box-shadow:0 2px 8px rgba(0,0,0,.18)}
@@ -305,13 +305,13 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
    scroll-container quirk), so the last card would end up flush against the right edge no matter
    what margin/padding it's given. A real trailing spacer element is the only reliable fix: its
    own box-width participates in scrollWidth like any other flex child. */
-.matd-slide{flex:0 0 90%;scroll-snap-align:center;min-width:0;height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;border-radius:20px;background:#fff;box-shadow:0 16px 40px rgba(0,0,0,.22)}
+.matd-slide{flex:0 0 85%;scroll-snap-align:center;min-width:0;height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;border-radius:20px;background:#fff;box-shadow:0 16px 40px rgba(0,0,0,.35)}
 .matd-slide:first-child{margin-left:20px}
 .matd-spacer{flex:0 0 12px}
 .matd-hero{aspect-ratio:4/3;background-size:cover;background-position:center;border-radius:20px 20px 0 0}
 .matd-dots{flex:0 0 auto;display:flex;justify-content:center;gap:6px;padding:16px 0 20px}
-.matd-dots button{width:7px;height:7px;padding:0;border-radius:50%;border:none;background:rgba(0,0,0,.22)}
-.matd-dots button.on{background:var(--ink)}
+.matd-dots button{width:22px;height:3px;padding:0;border-radius:2px;border:none;background:rgba(255,255,255,.35)}
+.matd-dots button.on{background:#fff}
 .matd-body{padding:20px 20px 28px}
 .matd-body h2{font-size:24px;font-weight:600;letter-spacing:-.4px}
 .matd-desc{font-size:14px;line-height:1.5;color:var(--ink);margin-top:14px}
