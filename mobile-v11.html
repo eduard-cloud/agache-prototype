@@ -129,11 +129,11 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-fabric-pillrow::-webkit-scrollbar{display:none}
 .cfg-seg{flex:0 0 auto;display:inline-flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--ink);border-radius:9999px;padding:6px 18px 6px 6px;color:var(--ink);transition:background-color .15s,color .15s,border-color .15s}
 .cfg-seg.on{background:var(--ink);border-color:var(--ink);color:#fff}
-.cfg-seg .dot{width:48px;height:48px;border-radius:50%;flex:0 0 auto;background-size:650%;background-position:center;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.cfg-seg .dot{width:36px;height:36px;border-radius:50%;flex:0 0 auto;background-size:650%;background-position:center;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
 .cfg-seg .nm{font-size:15px;font-weight:500;letter-spacing:-.2px;white-space:nowrap}
-/* same chip, smaller -- used in the Filtre sheet's Material group so all 4 fit on one row */
-.cfg-seg.sm{gap:7px;padding:5px 14px 5px 5px}
-.cfg-seg.sm .dot{width:36px;height:36px}
+/* same chip, smaller -- used in the Filtre sheet's Material group, wraps to a 2nd row if all 4 don't fit on one */
+.cfg-seg.sm{gap:6px;padding:4px 12px 4px 4px}
+.cfg-seg.sm .dot{width:26px;height:26px}
 .cfg-seg.sm .nm{font-size:13px}
 
 .cfg-fabric-divider{margin-top:60px}
@@ -147,7 +147,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-filter-btn.has-count .cnt{display:flex}
 
 .cfg-filter-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-#fsheet-material{flex-wrap:nowrap}
+#fsheet-material{flex-wrap:wrap}
 #fsheet-culoare{gap:10px}
 .cfg-fpill-color{height:32px;padding:0 12px;border-radius:10px}
 .cfg-fpill-color.on{box-shadow:inset 0 0 0 2px var(--ink)}
