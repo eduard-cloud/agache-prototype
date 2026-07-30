@@ -1429,8 +1429,7 @@ function buildSamplesGrid(){
         '<div class="nm">' + name + '</div></div>';
     }).join('');
     wrap.insertAdjacentHTML('beforeend',
-      '<div class="col-head"><span class="t">Colecția ' + c.name + '</span>' +
-      '<button type="button" class="info-i" aria-label="Detalii colecția ' + c.name + '" onclick="event.stopPropagation();showCollectionDetail(\'' + slug + '\')"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>' +
+      '<div class="col-head"><span class="t">Colecția ' + c.name + '</span></div>' +
       '<div class="mgrid">' + tilesHTML + '</div>');
   });
 }
