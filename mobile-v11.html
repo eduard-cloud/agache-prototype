@@ -422,6 +422,15 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
       <section class="cfg-sec" id="sec-color">
         <h3 class="cfg-title">Alege din 3 țesături diferite.</h3>
 
+        <div class="cfg-fabric-pillrow" id="cfg-fabric-pillrow"></div>
+
+        <div class="cfg-matdiff-row">
+          <button type="button" class="cfg-samples-primary" onclick="openMaterialDetail()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>
+            Vezi diferențele între materiale
+          </button>
+        </div>
+
         <div class="cfg-fabric-toolrow">
           <button type="button" class="cfg-filter-btn" id="cfg-filter-btn" onclick="openFilterSheet()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.7"><line x1="4" y1="7" x2="20" y2="7"/><circle cx="9" cy="7" r="2.2" fill="#fff"/><line x1="4" y1="16" x2="20" y2="16"/><circle cx="15" cy="16" r="2.2" fill="#fff"/></svg>
@@ -431,15 +440,6 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
             <button type="button" class="cfg-gridbtn" onclick="setColorGridCols(3,this)" aria-label="Grilă 3 coloane"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="M15 3v18"/></svg></button>
             <button type="button" class="cfg-gridbtn on" onclick="setColorGridCols(4,this)" aria-label="Grilă 4 coloane"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7.5 3v18"/><path d="M12 3v18"/><path d="M16.5 3v18"/></svg></button>
           </div>
-        </div>
-
-        <div class="cfg-fabric-pillrow" id="cfg-fabric-pillrow"></div>
-
-        <div class="cfg-matdiff-row">
-          <button type="button" class="cfg-samples-primary" onclick="openMaterialDetail()">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>
-            Vezi diferențele între materiale
-          </button>
         </div>
 
         <div id="cfg-fabric-sections"></div>
