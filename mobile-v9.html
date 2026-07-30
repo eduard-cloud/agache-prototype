@@ -30,17 +30,21 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 /* ══ shared components reused verbatim from mobile-v2.html ══ */
 .circ-btn{width:32px;height:32px;border-radius:50%;background:#fff;border:1px solid #e3e3e3;display:flex;align-items:center;justify-content:center}
 .hbar{width:134px;height:5px;background:#d9d9d9;border-radius:3px;margin:8px auto 8px}
-.cfg-shape-row{display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:20px 0 4px;scroll-snap-type:x proximity}
+/* Sizing/spacing checked against tylko's own "Wähle die Ausrichtung" section: tile row gap
+   8px (matches already), smaller 84px tiles instead of 92px, and a single compact 14px caption
+   line instead of a bold-name + grey-dimension pair (tylko's own "Ausrichtung: rechts" caption
+   is one plain 14px line, mb 12px -- not a two-line label block). */
+.cfg-shape-row{display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:16px 0 4px;scroll-snap-type:x proximity}
 .cfg-shape-row::-webkit-scrollbar{display:none}
 .cfg-shape-tile{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start}
-.cfg-shape-imw{position:relative;width:92px;height:92px;overflow:hidden;display:flex;align-items:center;justify-content:center;transition:box-shadow .15s;scroll-snap-align:start;background:var(--graysec)}
+.cfg-shape-imw{position:relative;width:84px;height:84px;overflow:hidden;display:flex;align-items:center;justify-content:center;transition:box-shadow .15s;scroll-snap-align:start;background:var(--graysec)}
 .cfg-shape-imw img{width:100%;height:100%;object-fit:contain}
 .cfg-shape-tile.on .cfg-shape-imw{box-shadow:inset 0 0 0 2px var(--ink)}
-.cfg-shape-check{display:none;position:absolute;right:6px;bottom:6px;width:20px;height:20px;border-radius:50%;background:var(--ink);align-items:center;justify-content:center}
+.cfg-shape-check{display:none;position:absolute;right:6px;bottom:6px;width:18px;height:18px;border-radius:50%;background:var(--ink);align-items:center;justify-content:center}
 .cfg-shape-tile.on .cfg-shape-check{display:flex}
-.cfg-shape-label{margin-top:14px}
-.cfg-shape-label strong{font-size:15px;font-weight:600;display:block}
-.cfg-shape-label span{font-size:13px;color:var(--gray);margin-top:2px;display:block}
+.cfg-shape-label{margin-top:12px}
+.cfg-shape-label strong{font-size:14px;font-weight:600;display:block}
+.cfg-shape-label span{font-size:12px;color:var(--gray);margin-top:2px;display:block}
 .fchip{display:flex;align-items:center;gap:7px;background:var(--chipbg);border-radius:8px;height:30px;padding:0 10px;font-size:13px}
 .rz-row{display:flex;align-items:center;justify-content:space-between;padding:20px 17px;border-bottom:1px solid var(--hair)}
 .rz-row .k{font-size:15px;font-weight:600}
@@ -97,7 +101,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 /* Apple-style config title: bold lead word(s) + period, then the description continues
    inline in grey as part of the same sentence/paragraph, instead of a bold heading with a
    separate grey line underneath. */
-h3.cfg-title{font-size:18px;font-weight:500;letter-spacing:-.03em;line-height:1.15;color:var(--ink)}
+h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.4;color:var(--ink)}
 .cfg-title .sub{color:var(--gray)} /* same weight as the lead words -- only the color changes */
 
 /* ── section 2a: household needs ── */
