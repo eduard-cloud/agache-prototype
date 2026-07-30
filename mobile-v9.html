@@ -349,7 +349,7 @@ h3.cfg-title{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.
 
 /* ── cta bar -- tylko's floating bar: just a big price + a pill button, nothing else ── */
 .cfg-cta{flex:0 0 auto;background:#fff;border-top:1px solid var(--hair);display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
-.cfg-cta .pr{font-size:20px;font-weight:600;letter-spacing:-.02em}
+.cfg-cta .pr{font-size:24px;font-weight:500;letter-spacing:-.72px;color:var(--red)}
 .cfg-cta .bb{height:46px;background:var(--red);color:#fff;border-radius:23px;padding:0 20px;font-size:14px;font-weight:500;display:flex;align-items:center}
 </style>
 </head>
@@ -1060,9 +1060,10 @@ function updateSummary(){
     document.getElementById('cfg-sum-color-hex').textContent = swInfo.hex;
     document.getElementById('cfg-sum-color-img').src = fabricAsset(sel.colorName);
   }
-  var priceStr = formatPrice(c.price) + ' lei';
-  document.getElementById('cfg-sum-price').textContent = priceStr;
-  document.getElementById('cfg-price').textContent = priceStr;
+  document.getElementById('cfg-sum-price').textContent = formatPrice(c.price) + ' lei';
+  /* Floating CTA bar mirrors the PDP's own price style (see mobile-v10.html .p-price) --
+     no decimals there, so match it here instead of reusing the 2-decimal summary format. */
+  document.getElementById('cfg-price').textContent = Math.round(c.price).toLocaleString('ro-RO') + ' lei';
 }
 
 function pickCfgShape(el){
