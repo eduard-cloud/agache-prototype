@@ -105,10 +105,9 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 /* "Vezi diferențele între materiale" moved up next to the section title instead of its own
    row lower down -- title takes the flexible space, the button stays compact on the right so
    the two-line title still has room to wrap without shoving the button underneath it. */
-.cfg-fabric-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:24px}
+.cfg-fabric-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:24px}
 .cfg-fabric-head h3.cfg-title{margin-bottom:0}
-.cfg-matdiff-btn{flex:0 0 auto;display:flex;align-items:center;gap:6px;background:var(--chipbg);border:none;border-radius:9999px;padding:8px 14px;font-size:13px;font-weight:500;color:var(--ink);white-space:nowrap;margin-top:2px}
-.cfg-matdiff-btn svg{flex:0 0 auto}
+.cfg-matdiff-btn{flex:0 0 auto;display:flex;align-items:center;gap:6px;background:var(--chipbg);border:none;border-radius:9999px;padding:8px 14px;font-size:13px;font-weight:500;color:var(--ink);white-space:nowrap}
 
 /* ── section 2a: household needs ── */
 .cfg-needs-row{display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:0 0 4px;margin-bottom:12px;scroll-snap-type:x proximity}
@@ -393,7 +392,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
     <div class="cfg-scroll" id="cfg-scroll">
 
       <section class="cfg-sec" id="sec-config">
-        <h3 class="cfg-title">Alege numărul de locuri și orientarea canapelei.</h3>
+        <h3 class="cfg-title">Alege numărul de locuri și forma</h3>
         <div class="cfg-shape-row" id="shape-grid">
           <button class="cfg-shape-tile on" data-name="Canapea 3 locuri" data-dim="245 x 100 cm" onclick="pickCfgShape(this)">
             <span class="cfg-shape-imw"><img src="assets/shape-3seat.png" alt="Canapea 3 locuri"><span class="cfg-shape-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span></span>
@@ -425,7 +424,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
       <section class="cfg-sec" id="sec-color">
         <div class="cfg-fabric-head">
           <h3 class="cfg-title">Alege-ți materialul</h3>
-          <button type="button" class="cfg-matdiff-btn" onclick="openMaterialDetail()">Diferențe</button>
+          <button type="button" class="cfg-matdiff-btn" onclick="openMaterialDetail()">Diferențe materiale</button>
         </div>
 
         <div class="cfg-fabric-pillrow" id="cfg-fabric-pillrow"></div>
