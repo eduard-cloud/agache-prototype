@@ -1091,7 +1091,7 @@ var FABRIC_PILLS = [
   { key:'catifea', label:'Catifea', stems:['Catifea'], asset:'assets/chip-catifea.jpg', zoom:850 },
   { key:'efect-catifea', label:'Efect catifea', stems:['Efect catifea'], asset:'assets/chip-efectcatifea.jpg', zoom:850 }
 ];
-var activeFabricPill = null;
+var activeFabricPills = [];
 var LUNA_SOFA_CODES = ['5','6','8','10','13','14'];
 function materialTypeMatch(c){
   return FABRIC_PILLS.filter(function(p){
@@ -1244,12 +1244,13 @@ function totalColorCount(){
    exact same chip -- photo dot + label + checkmark -- just at two sizes. */
 function buildFabricSeg(p, small, onPicked){
   var seg = document.createElement('div');
-  seg.className = 'cfg-seg' + (small ? ' sm' : '') + (activeFabricPill === p.key ? ' on' : '');
+  seg.className = 'cfg-seg' + (small ? ' sm' : '') + (activeFabricPills.indexOf(p.key) > -1 ? ' on' : '');
   seg.innerHTML =
     '<span class="dot" style="background-image:url(\'' + p.asset + '\');background-size:' + (p.zoom || 650) + '%"></span>' +
     '<span class="nm">' + p.label + '</span>';
   seg.onclick = function(){
-    activeFabricPill = activeFabricPill === p.key ? null : p.key;
+    var i = activeFabricPills.indexOf(p.key);
+    if (i > -1) activeFabricPills.splice(i, 1); else activeFabricPills.push(p.key);
     onPicked();
   };
   return seg;
@@ -1302,11 +1303,8 @@ function renderFsheetMaterialPill(){
   var head = document.getElementById('fsheet-material-h');
   wrap.innerHTML = '';
   head.style.display = '';
-  /* Always shown as the first group, mirroring the top fabric-type chips -- but single-select
-     (radio-like), unlike Culoare/Proprietăți below where several values can be on at once.
-     Picking one deselects whatever else was active instead of adding to a set; picking the
-     already-active one clears it. When a material *is* selected, only that one option reads
-     as chosen -- the sheet never shows more than one Material pill "on" at a time. */
+  /* Always shown as the first group, mirroring the top fabric-type chips -- multi-select just
+     like Culoare/Proprietăți below, so several material types can be on at once. */
   FABRIC_PILLS.forEach(function(p){
     wrap.appendChild(buildFabricSeg(p, true, function(){
       renderFabricPillRow();
@@ -1333,7 +1331,7 @@ function closeFilterSheet(){
 }
 function resetSheetFilters(){
   appliedFilters = [];
-  activeFabricPill = null;
+  activeFabricPills = [];
   renderFsheetPills();
   renderFabricPillRow();
   applyFabricFilters();
@@ -1374,7 +1372,7 @@ function applyFabricFilters(){
   var priceMin = priceMinEl ? parseInt(priceMinEl.value, 10) : PRICE_MIN_DEFAULT;
   var priceMax = priceMaxEl ? parseInt(priceMaxEl.value, 10) : PRICE_MAX_DEFAULT;
   var priceFiltered = priceMin > PRICE_MIN_DEFAULT || priceMax < PRICE_MAX_DEFAULT;
-  var totalFilters = appliedFilters.length + (activeFabricPill ? 1 : 0) + (priceFiltered ? 1 : 0);
+  var totalFilters = appliedFilters.length + activeFabricPills.length + (priceFiltered ? 1 : 0);
   var btn = document.getElementById('cfg-filter-btn');
   var cnt = document.getElementById('cfg-filter-cnt');
   cnt.textContent = totalFilters;
@@ -1388,13 +1386,15 @@ function applyFabricFilters(){
     if (FAMILY_ORDER.indexOf(f) > -1) byCat.culoare.push(f);
     else byCat.prop.push(f);
   });
-  var pillDef = FABRIC_PILLS.filter(function(p){ return p.key === activeFabricPill; })[0];
+  var pillDefs = FABRIC_PILLS.filter(function(p){ return activeFabricPills.indexOf(p.key) > -1; });
 
   var visibleCount = 0;
   document.querySelectorAll('#cfg-fabric-sections .mtile').forEach(function(tile){
     var s = SWATCH_INDEX[tile.dataset.name];
     var c = s.collection;
-    var matOK = !pillDef || pillDef.stems.some(function(stem){ return c.materialTypes.some(function(t){ return t.indexOf(stem) > -1; }); });
+    var matOK = !pillDefs.length || pillDefs.some(function(pillDef){
+      return pillDef.stems.some(function(stem){ return c.materialTypes.some(function(t){ return t.indexOf(stem) > -1; }); });
+    });
     var propOK = !byCat.prop.length || byCat.prop.every(function(f){ return propMatch(f, c); });
     var priceOK = c.price >= priceMin && c.price <= priceMax;
     var visible = matOK && propOK && priceOK;
@@ -1402,11 +1402,11 @@ function applyFabricFilters(){
     tile.style.display = visible ? '' : 'none';
     if (visible) visibleCount++;
   });
-  var noFilters = !pillDef && !appliedFilters.length && !priceFiltered;
+  var noFilters = !pillDefs.length && !appliedFilters.length && !priceFiltered;
   document.getElementById('cfg-color-sub').textContent = noFilters
     ? ('Alege din ' + totalColorCount() + ' culori diferite.')
-    : pillDef
-      ? ('Alege din ' + visibleCount + ' culori de ' + pillDef.label.toLowerCase() + '.')
+    : pillDefs.length
+      ? ('Alege din ' + visibleCount + ' culori de ' + pillDefs.map(function(p){ return p.label.toLowerCase(); }).join(', ') + '.')
       : ('Alege din ' + visibleCount + ' culori diferite.');
 
   /* Filter sheet: show the live result count on the Apply button, and when a filter
