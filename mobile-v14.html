@@ -147,7 +147,8 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-fabric-divider{margin-top:60px}
 .cfg-fabric-toolrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .cfg-gridtoggle{display:flex;align-items:center;gap:4px}
-.cfg-gridbtn{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.cfg-gridbtn{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#707173}
+.cfg-gridbtn.on{color:#3d3d3f}
 .cfg-gridbtn.on{background:var(--chipbg)}
 
 .cfg-filter-btn{flex:0 0 auto;display:flex;align-items:center;gap:6px;background:none;border:1px solid #121212;border-radius:20px;height:36px;padding:8px 12px;font-size:16px;font-weight:500;color:#1D1D1F;white-space:nowrap}
@@ -328,8 +329,18 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
    momentum + rubber-banding), dots below sync to whichever card is nearest-centered. */
 .matd-overlay{display:none;position:fixed;inset:0;max-width:480px;margin:0 auto;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:78}
 .matd-overlay.open{display:flex;flex-direction:column}
-.matd-topbar{flex:0 0 auto;display:flex;justify-content:flex-end;padding:16px 16px 8px;z-index:2}
-.matd-topbar .circ-btn{box-shadow:0 2px 8px rgba(0,0,0,.18)}
+/* min-height covers the segmented control below, which is absolutely positioned and so
+   doesn't otherwise count toward this bar's auto height -- without it the taller pill hangs
+   past the topbar's flow height and overlaps the card carousel underneath. */
+.matd-topbar{position:relative;flex:0 0 auto;display:flex;align-items:center;justify-content:flex-end;padding:16px;min-height:76px;z-index:2}
+.matd-topbar .circ-btn{width:44px;height:44px;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+/* Apple-style segmented control (text/video toggle) -- centered over the topbar, independent
+   of the close button which stays pinned to the right via the topbar's own flex layout. */
+.matd-seg{position:absolute;left:50%;top:16px;transform:translateX(-50%);display:flex;height:44px;background:#fff;border:1px solid #e3e3e3;border-radius:9999px;padding:4px;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.matd-seg-thumb{position:absolute;top:4px;left:4px;width:72px;height:calc(100% - 8px);background:var(--chipbg);border-radius:9999px;transition:transform .25s cubic-bezier(.4,0,.2,1)}
+.matd-seg.mode-video .matd-seg-thumb{transform:translateX(72px)}
+.matd-seg-btn{position:relative;z-index:1;width:72px;height:100%;border-radius:9999px;font-size:15px;font-weight:500;color:var(--gray);text-align:center;transition:color .2s}
+.matd-seg-btn.on{color:var(--ink)}
 .matd-viewport{flex:1 1 auto;min-height:0;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .matd-viewport::-webkit-scrollbar{display:none}
 .matd-track{display:flex;gap:8px;height:100%}
@@ -341,6 +352,27 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
    own box-width participates in scrollWidth like any other flex child. */
 .matd-slide{flex:0 0 85%;scroll-snap-align:center;min-width:0;height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;border-radius:20px;background:#fff;box-shadow:0 16px 40px rgba(0,0,0,.35)}
 .matd-slide:first-child{margin-left:20px}
+/* Video mode's single card -- edge-to-edge player, not the 4:3 hero strip used by the text
+   cards. The card itself is sized to the video's own intrinsic ratio (height:auto, centered
+   in the track via align-self) instead of stretching to the full slide height, so there's no
+   leftover white above/below -- the card is exactly as tall as the video. */
+.matd-slide.video-only{flex-basis:calc(100% - 40px);height:auto;align-self:flex-start;overflow:hidden}
+.matd-video-wrap{position:relative;width:100%}
+.matd-video-frame{position:relative;width:100%;overflow:hidden;line-height:0}
+/* Source footage has a faint dark hairline baked into its outer edge -- a hair of
+   overscan (scale) crops it out without being a noticeable zoom. */
+.matd-video-frame video{width:100%;height:auto;display:block;transform:scale(1.02);transform-origin:center}
+/* Play/pause stays hidden until the viewer taps the video, then fades back out on its own
+   (see matdToggleControls) -- matches the tap-to-reveal convention of most video players
+   instead of permanently covering the footage. */
+.matd-video-playbtn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:56px;height:56px;border-radius:50%;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;color:#fff;opacity:0;pointer-events:none;transition:opacity .2s}
+.matd-video-frame.show-controls .matd-video-playbtn{opacity:1;pointer-events:auto}
+.matd-video-playbtn .ic-pause{display:none}
+.matd-video-frame.playing .matd-video-playbtn .ic-play{display:none}
+.matd-video-frame.playing .matd-video-playbtn .ic-pause{display:block}
+.matd-video-timeline{position:absolute;left:16px;right:16px;bottom:16px;height:3px;background:rgba(255,255,255,.3);border-radius:2px}
+.matd-video-progress{height:100%;width:0%;background:#fff;border-radius:2px}
+.matd-video-fsbtn{position:absolute;top:12px;right:12px;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;color:#fff}
 .matd-spacer{flex:0 0 12px}
 .matd-hero{aspect-ratio:4/3;background-size:cover;background-position:center;border-radius:20px 20px 0 0}
 .matd-dots{flex:0 0 auto;display:flex;justify-content:center;gap:6px;padding:16px 0 20px}
@@ -451,8 +483,8 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
             <span class="cnt" id="cfg-filter-cnt">0</span>
           </button>
           <div class="cfg-gridtoggle" id="cfg-gridtoggle">
-            <button type="button" class="cfg-gridbtn" onclick="setColorGridCols(3,this)" aria-label="Grilă 3 coloane"><svg width="18" height="18" viewBox="0 0 24 24" fill="#121212"><rect x="1" y="1" width="6" height="6"/><rect x="9" y="1" width="6" height="6"/><rect x="17" y="1" width="6" height="6"/><rect x="1" y="9" width="6" height="6"/><rect x="9" y="9" width="6" height="6"/><rect x="17" y="9" width="6" height="6"/><rect x="1" y="17" width="6" height="6"/><rect x="9" y="17" width="6" height="6"/><rect x="17" y="17" width="6" height="6"/></svg></button>
-            <button type="button" class="cfg-gridbtn on" onclick="setColorGridCols(4,this)" aria-label="Grilă 4 coloane"><svg width="18" height="18" viewBox="0 0 24 24" fill="#121212"><rect x="1" y="1" width="4.6" height="4.6"/><rect x="6.8" y="1" width="4.6" height="4.6"/><rect x="12.6" y="1" width="4.6" height="4.6"/><rect x="18.4" y="1" width="4.6" height="4.6"/><rect x="1" y="6.8" width="4.6" height="4.6"/><rect x="6.8" y="6.8" width="4.6" height="4.6"/><rect x="12.6" y="6.8" width="4.6" height="4.6"/><rect x="18.4" y="6.8" width="4.6" height="4.6"/><rect x="1" y="12.6" width="4.6" height="4.6"/><rect x="6.8" y="12.6" width="4.6" height="4.6"/><rect x="12.6" y="12.6" width="4.6" height="4.6"/><rect x="18.4" y="12.6" width="4.6" height="4.6"/><rect x="1" y="18.4" width="4.6" height="4.6"/><rect x="6.8" y="18.4" width="4.6" height="4.6"/><rect x="12.6" y="18.4" width="4.6" height="4.6"/><rect x="18.4" y="18.4" width="4.6" height="4.6"/></svg></button>
+            <button type="button" class="cfg-gridbtn" onclick="setColorGridCols(3,this)" aria-label="Grilă 3 coloane"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="1" y="1" width="6" height="6"/><rect x="9" y="1" width="6" height="6"/><rect x="17" y="1" width="6" height="6"/><rect x="1" y="9" width="6" height="6"/><rect x="9" y="9" width="6" height="6"/><rect x="17" y="9" width="6" height="6"/><rect x="1" y="17" width="6" height="6"/><rect x="9" y="17" width="6" height="6"/><rect x="17" y="17" width="6" height="6"/></svg></button>
+            <button type="button" class="cfg-gridbtn on" onclick="setColorGridCols(4,this)" aria-label="Grilă 4 coloane"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="1" y="1" width="4.6" height="4.6"/><rect x="6.8" y="1" width="4.6" height="4.6"/><rect x="12.6" y="1" width="4.6" height="4.6"/><rect x="18.4" y="1" width="4.6" height="4.6"/><rect x="1" y="6.8" width="4.6" height="4.6"/><rect x="6.8" y="6.8" width="4.6" height="4.6"/><rect x="12.6" y="6.8" width="4.6" height="4.6"/><rect x="18.4" y="6.8" width="4.6" height="4.6"/><rect x="1" y="12.6" width="4.6" height="4.6"/><rect x="6.8" y="12.6" width="4.6" height="4.6"/><rect x="12.6" y="12.6" width="4.6" height="4.6"/><rect x="18.4" y="12.6" width="4.6" height="4.6"/><rect x="1" y="18.4" width="4.6" height="4.6"/><rect x="6.8" y="18.4" width="4.6" height="4.6"/><rect x="12.6" y="18.4" width="4.6" height="4.6"/><rect x="18.4" y="18.4" width="4.6" height="4.6"/></svg></button>
           </div>
         </div>
 
@@ -616,6 +648,11 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 
 <div class="matd-overlay" id="material-detail-modal" onclick="if(event.target===this) closeMaterialDetail()">
   <div class="matd-topbar">
+    <div class="matd-seg" id="matd-seg" role="tablist" aria-label="Mod afișare">
+      <div class="matd-seg-thumb" aria-hidden="true"></div>
+      <button type="button" class="matd-seg-btn on" data-mode="text" role="tab" aria-selected="true" onclick="setMatdMode('text')">Text</button>
+      <button type="button" class="matd-seg-btn" data-mode="video" role="tab" aria-selected="false" onclick="setMatdMode('video')">Video</button>
+    </div>
     <button class="circ-btn" onclick="closeMaterialDetail()" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
   </div>
   <div class="matd-viewport" id="matd-viewport">
@@ -1532,8 +1569,9 @@ var MATERIAL_DETAIL = [
   { key:'efect-catifea', label:'Efect catifea', asset:'assets/chip-efectcatifea.jpg', collectionSlug:'manila' }
 ];
 var matdIdx = 0;
-function matdSlideHtml(m){
-  var c = COLLECTIONS[m.collectionSlug];
+var matdTextIdx = 0;
+var matdMode = 'text';
+function matdBodyHtml(m, c){
   var specs = [
     ['Compoziție', c.composition],
     ['Greutate', c.weight + ' g/m²'],
@@ -1547,9 +1585,7 @@ function matdSlideHtml(m){
   if (c.waterproof) usps.push('Impermeabil');
   if (c.easyClean) usps.push('Easy Clean');
   if (c.petFriendly) usps.push('Pet Friendly');
-  return '<div class="matd-slide">' +
-    '<div class="matd-hero" style="background-image:url(\'' + m.asset + '\')"></div>' +
-    '<div class="matd-body">' +
+  return '<div class="matd-body">' +
       '<h2>' + m.label + '</h2>' +
       (usps.length ? '<div class="matd-usps">' + usps.map(function(u){ return '<span>' + u + '</span>'; }).join('') + '</div>' : '') +
       '<p class="matd-desc">' + c.desc + '</p>' +
@@ -1561,17 +1597,171 @@ function matdSlideHtml(m){
         return '<div class="row"><span class="k">' + s[0] + '</span><span class="v">' + s[1] + '</span></div>';
       }).join('') + '</div>' +
       '<div class="matd-care"><h3>Îngrijire</h3><p>' + c.care + '</p></div>' +
+    '</div>';
+}
+function matdSlideHtml(m){
+  var c = COLLECTIONS[m.collectionSlug];
+  return '<div class="matd-slide">' +
+    '<div class="matd-hero" style="background-image:url(\'' + m.asset + '\')"></div>' +
+    matdBodyHtml(m, c) +
+  '</div>';
+}
+/* Video mode is a single card (one supplied clip, not split per material) rather than a
+   4-up carousel like text mode -- a custom player (center play/pause, bottom timeline)
+   since the video has no native controls attribute. */
+function matdVideoSlideHtml(){
+  return '<div class="matd-slide video-only">' +
+    '<div class="matd-video-wrap">' +
+      '<div class="matd-video-frame playing" onclick="matdToggleControls()">' +
+        '<video id="matd-video" src="material-videos.mp4" autoplay muted loop playsinline></video>' +
+        '<button type="button" class="matd-video-playbtn" onclick="event.stopPropagation();toggleMatdVideo()" aria-label="Redă/Pauză">' +
+          '<svg class="ic-play" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20"/></svg>' +
+          '<svg class="ic-pause" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="4" width="5" height="16"/><rect x="14" y="4" width="5" height="16"/></svg>' +
+        '</button>' +
+        '<button type="button" class="matd-video-fsbtn" onclick="event.stopPropagation();toggleMatdFullscreen()" aria-label="Ecran complet">' +
+          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>' +
+        '</button>' +
+        '<div class="matd-video-timeline" onclick="event.stopPropagation();seekMatdVideo(event)"><div class="matd-video-progress" id="matd-video-progress"></div></div>' +
+      '</div>' +
     '</div>' +
   '</div>';
 }
-function buildMaterialDetail(){
+function toggleMatdVideo(){
+  var v = document.getElementById('matd-video');
+  if (!v) return;
+  if (v.paused) v.play(); else v.pause();
+}
+var matdControlsTimer = null;
+function matdToggleControls(){
+  var frame = document.querySelector('.matd-video-frame');
+  if (!frame) return;
+  clearTimeout(matdControlsTimer);
+  var showing = frame.classList.toggle('show-controls');
+  if (showing) matdControlsTimer = setTimeout(function(){ frame.classList.remove('show-controls'); }, 2500);
+}
+/* Fullscreening the frame (not just the <video>) keeps our own play/pause, fullscreen and
+   timeline buttons part of the fullscreen element instead of being left behind -- only iOS's
+   native player (webkitEnterFullscreen, video-only, no custom overlay possible) falls back to
+   fullscreening the video itself, since that's the one path with its own built-in pinch/zoom. */
+function toggleMatdFullscreen(){
+  var frame = document.querySelector('.matd-video-frame');
+  var v = document.getElementById('matd-video');
+  if (!frame || !v) return;
+  if (document.fullscreenElement){ document.exitFullscreen(); return; }
+  if (frame.requestFullscreen) frame.requestFullscreen();
+  else if (v.webkitEnterFullscreen) v.webkitEnterFullscreen();
+  else if (frame.webkitRequestFullscreen) frame.webkitRequestFullscreen();
+}
+var MATD_BASE_SCALE = 1.02;
+var matdZoom = 1;
+var matdPinchStartDist = 0;
+var matdPinchStartZoom = 1;
+var matdLastTapTime = 0;
+function matdApplyZoom(){
+  var v = document.getElementById('matd-video');
+  if (v) v.style.transform = 'scale(' + (MATD_BASE_SCALE * matdZoom) + ')';
+}
+function matdResetZoom(){
+  matdZoom = 1;
+  var v = document.getElementById('matd-video');
+  if (v) v.style.transform = '';
+}
+function matdTouchDistance(touches){
+  var dx = touches[0].clientX - touches[1].clientX;
+  var dy = touches[0].clientY - touches[1].clientY;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+/* Pinch/double-tap zoom only while truly fullscreen -- inline the video is already
+   sized/cropped to fit its card, zooming there would just break the layout. */
+function matdFrameTouchStart(e){
+  var frame = document.querySelector('.matd-video-frame');
+  if (document.fullscreenElement !== frame) return;
+  if (e.touches.length === 2){
+    matdPinchStartDist = matdTouchDistance(e.touches);
+    matdPinchStartZoom = matdZoom;
+  } else if (e.touches.length === 1){
+    var now = Date.now();
+    if (now - matdLastTapTime < 300){
+      matdZoom = matdZoom > 1 ? 1 : 2;
+      matdApplyZoom();
+    }
+    matdLastTapTime = now;
+  }
+}
+function matdFrameTouchMove(e){
+  var frame = document.querySelector('.matd-video-frame');
+  if (document.fullscreenElement !== frame) return;
+  if (e.touches.length === 2 && matdPinchStartDist){
+    e.preventDefault();
+    var dist = matdTouchDistance(e.touches);
+    matdZoom = Math.min(4, Math.max(1, matdPinchStartZoom * (dist / matdPinchStartDist)));
+    matdApplyZoom();
+  }
+}
+document.addEventListener('fullscreenchange', function(){
+  if (!document.fullscreenElement) matdResetZoom();
+});
+function seekMatdVideo(e){
+  var v = document.getElementById('matd-video');
+  if (!v || !v.duration) return;
+  var rect = e.currentTarget.getBoundingClientRect();
+  v.currentTime = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width)) * v.duration;
+}
+function bindMatdVideoControls(){
+  var v = document.getElementById('matd-video');
+  var frame = document.querySelector('.matd-video-frame');
+  var progress = document.getElementById('matd-video-progress');
+  if (!v) return;
+  v.addEventListener('play', function(){ frame.classList.add('playing'); });
+  v.addEventListener('pause', function(){ frame.classList.remove('playing'); });
+  v.addEventListener('timeupdate', function(){
+    if (v.duration) progress.style.width = (v.currentTime / v.duration * 100) + '%';
+  });
+  frame.addEventListener('touchstart', matdFrameTouchStart, { passive: true });
+  frame.addEventListener('touchmove', matdFrameTouchMove, { passive: false });
+}
+function renderMatdTrack(){
   var track = document.getElementById('matd-track');
+  /* Video mode is a single non-swiping full-width card -- no trailing spacer needed, that's
+     only there to keep the last text card's peeking edge visible while scroll-snapping. */
+  track.innerHTML = matdMode === 'video'
+    ? matdVideoSlideHtml()
+    : MATERIAL_DETAIL.map(matdSlideHtml).join('') + '<div class="matd-spacer" aria-hidden="true"></div>';
+  if (matdMode === 'video') bindMatdVideoControls();
+}
+function renderMatdDots(){
   var dots = document.getElementById('matd-dots');
-  if (track.childElementCount) return;
-  track.innerHTML = MATERIAL_DETAIL.map(matdSlideHtml).join('') + '<div class="matd-spacer" aria-hidden="true"></div>';
-  dots.innerHTML = MATERIAL_DETAIL.map(function(_, k){
-    return '<button onclick="matdTo(' + k + ')" aria-label="Material ' + (k + 1) + '"></button>';
-  }).join('');
+  if (matdMode === 'video'){
+    dots.innerHTML = '';
+    dots.style.display = 'none';
+  } else {
+    dots.style.display = 'flex';
+    dots.innerHTML = MATERIAL_DETAIL.map(function(_, k){
+      return '<button onclick="matdTo(' + k + ')" aria-label="Material ' + (k + 1) + '"></button>';
+    }).join('');
+  }
+}
+function updateMatdSegUI(){
+  var seg = document.getElementById('matd-seg');
+  seg.classList.toggle('mode-video', matdMode === 'video');
+  Array.prototype.forEach.call(seg.querySelectorAll('.matd-seg-btn'), function(b){
+    var on = b.dataset.mode === matdMode;
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+}
+function setMatdMode(mode){
+  if (mode === matdMode) return;
+  if (matdMode === 'text') matdTextIdx = matdIdx;
+  matdMode = mode;
+  updateMatdSegUI();
+  renderMatdTrack();
+  renderMatdDots();
+  matdTo(mode === 'video' ? 0 : matdTextIdx, true);
+}
+function buildMaterialDetail(){
+  renderMatdTrack();
+  renderMatdDots();
 }
 function matdUpdateDots(){
   Array.prototype.forEach.call(document.getElementById('matd-dots').children, function(b, k){ b.classList.toggle('on', k === matdIdx); });
@@ -1600,16 +1790,20 @@ function matdSyncFromScroll(){
   }, { passive: true });
 })();
 function matdTo(i, instant){
-  matdIdx = Math.min(MATERIAL_DETAIL.length - 1, Math.max(0, i));
-  var slide = document.getElementById('matd-track').querySelectorAll('.matd-slide')[matdIdx];
+  var slides = document.getElementById('matd-track').querySelectorAll('.matd-slide');
+  matdIdx = Math.min(slides.length - 1, Math.max(0, i));
+  var slide = slides[matdIdx];
   if (slide) slide.scrollIntoView({ behavior: instant ? 'auto' : 'smooth', inline: 'center', block: 'nearest' });
   matdUpdateDots();
 }
 function openMaterialDetail(key){
+  matdMode = 'text';
+  updateMatdSegUI();
   buildMaterialDetail();
   var startIdx = key ? MATERIAL_DETAIL.findIndex(function(m){ return m.key === key; }) : 0;
+  matdTextIdx = Math.max(0, startIdx);
   document.getElementById('material-detail-modal').classList.add('open');
-  matdTo(Math.max(0, startIdx), true);
+  matdTo(matdTextIdx, true);
   Array.prototype.forEach.call(document.querySelectorAll('.matd-slide'), function(s){ s.scrollTop = 0; });
 }
 function closeMaterialDetail(){
