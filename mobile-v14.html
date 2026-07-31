@@ -154,8 +154,9 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-seg.sm .nm{font-size:13px}
 
 .cfg-fabric-divider{margin-top:60px}
-.cfg-fabric-toolrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.cfg-color-count{font-size:13px;color:var(--gray);margin:-4px 0 16px}
+.cfg-fabric-toolrow{display:flex;align-items:center;margin-bottom:12px}
+.cfg-toolrow-right{display:flex;align-items:center;gap:8px;margin-left:24px}
+.cfg-color-count{font-size:13px;color:var(--gray);white-space:nowrap}
 .cfg-gridtoggle{display:flex;align-items:center;gap:4px}
 .cfg-gridbtn{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#707173}
 .cfg-gridbtn.on{color:#3d3d3f}
@@ -495,13 +496,14 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
             <span class="sep"></span>
             <span class="cnt" id="cfg-filter-cnt">0</span>
           </button>
-          <div class="cfg-gridtoggle" id="cfg-gridtoggle">
-            <button type="button" class="cfg-gridbtn" onclick="setColorGridCols(3,this)" aria-label="Grilă 3 coloane"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="1" y="1" width="6" height="6"/><rect x="9" y="1" width="6" height="6"/><rect x="17" y="1" width="6" height="6"/><rect x="1" y="9" width="6" height="6"/><rect x="9" y="9" width="6" height="6"/><rect x="17" y="9" width="6" height="6"/><rect x="1" y="17" width="6" height="6"/><rect x="9" y="17" width="6" height="6"/><rect x="17" y="17" width="6" height="6"/></svg></button>
-            <button type="button" class="cfg-gridbtn on" onclick="setColorGridCols(4,this)" aria-label="Grilă 4 coloane"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="1" y="1" width="4.6" height="4.6"/><rect x="6.8" y="1" width="4.6" height="4.6"/><rect x="12.6" y="1" width="4.6" height="4.6"/><rect x="18.4" y="1" width="4.6" height="4.6"/><rect x="1" y="6.8" width="4.6" height="4.6"/><rect x="6.8" y="6.8" width="4.6" height="4.6"/><rect x="12.6" y="6.8" width="4.6" height="4.6"/><rect x="18.4" y="6.8" width="4.6" height="4.6"/><rect x="1" y="12.6" width="4.6" height="4.6"/><rect x="6.8" y="12.6" width="4.6" height="4.6"/><rect x="12.6" y="12.6" width="4.6" height="4.6"/><rect x="18.4" y="12.6" width="4.6" height="4.6"/><rect x="1" y="18.4" width="4.6" height="4.6"/><rect x="6.8" y="18.4" width="4.6" height="4.6"/><rect x="12.6" y="18.4" width="4.6" height="4.6"/><rect x="18.4" y="18.4" width="4.6" height="4.6"/></svg></button>
+          <div class="cfg-toolrow-right">
+            <div class="cfg-color-count" id="cfg-color-sub"></div>
+            <div class="cfg-gridtoggle" id="cfg-gridtoggle">
+              <button type="button" class="cfg-gridbtn" onclick="setColorGridCols(3,this)" aria-label="Grilă 3 coloane"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="1" y="1" width="6" height="6"/><rect x="9" y="1" width="6" height="6"/><rect x="17" y="1" width="6" height="6"/><rect x="1" y="9" width="6" height="6"/><rect x="9" y="9" width="6" height="6"/><rect x="17" y="9" width="6" height="6"/><rect x="1" y="17" width="6" height="6"/><rect x="9" y="17" width="6" height="6"/><rect x="17" y="17" width="6" height="6"/></svg></button>
+              <button type="button" class="cfg-gridbtn on" onclick="setColorGridCols(4,this)" aria-label="Grilă 4 coloane"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="1" y="1" width="4.6" height="4.6"/><rect x="6.8" y="1" width="4.6" height="4.6"/><rect x="12.6" y="1" width="4.6" height="4.6"/><rect x="18.4" y="1" width="4.6" height="4.6"/><rect x="1" y="6.8" width="4.6" height="4.6"/><rect x="6.8" y="6.8" width="4.6" height="4.6"/><rect x="12.6" y="6.8" width="4.6" height="4.6"/><rect x="18.4" y="6.8" width="4.6" height="4.6"/><rect x="1" y="12.6" width="4.6" height="4.6"/><rect x="6.8" y="12.6" width="4.6" height="4.6"/><rect x="12.6" y="12.6" width="4.6" height="4.6"/><rect x="18.4" y="12.6" width="4.6" height="4.6"/><rect x="1" y="18.4" width="4.6" height="4.6"/><rect x="6.8" y="18.4" width="4.6" height="4.6"/><rect x="12.6" y="18.4" width="4.6" height="4.6"/><rect x="18.4" y="18.4" width="4.6" height="4.6"/></svg></button>
+            </div>
           </div>
         </div>
-
-        <div class="cfg-color-count" id="cfg-color-sub"></div>
 
         <div id="cfg-fabric-sections"></div>
 
@@ -1447,11 +1449,8 @@ function applyFabricFilters(){
     if (visible) visibleCount++;
   });
   var noFilters = !pillDefs.length && !appliedFilters.length && !priceFiltered;
-  document.getElementById('cfg-color-sub').textContent = noFilters
-    ? ('Alege din ' + totalColorCount() + ' culori diferite.')
-    : pillDefs.length
-      ? ('Alege din ' + visibleCount + ' culori de ' + pillDefs.map(function(p){ return p.label.toLowerCase(); }).join(', ') + '.')
-      : ('Alege din ' + visibleCount + ' culori diferite.');
+  var optionCount = noFilters ? totalColorCount() : visibleCount;
+  document.getElementById('cfg-color-sub').textContent = optionCount + (optionCount === 1 ? ' opțiune' : ' opțiuni');
 
   /* Filter sheet: show the live result count on the Apply button, and when a filter
      combination zeroes out every color, disable Apply and explain why instead of letting the
@@ -1484,7 +1483,8 @@ function renderFabricSections(){
     tile.onclick = function(){ pickFabricSwatch(tile, tile.dataset.slug); };
     tile.querySelector('.info-i').onclick = function(e){ e.stopPropagation(); showSwatchInfo(tile.dataset.name); };
   });
-  document.getElementById('cfg-color-sub').textContent = 'Alege din ' + totalColorCount() + ' culori diferite.';
+  var totalOptions = totalColorCount();
+  document.getElementById('cfg-color-sub').textContent = totalOptions + (totalOptions === 1 ? ' opțiune' : ' opțiuni');
 }
 
 function showSwatchInfo(name){
