@@ -109,11 +109,12 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
    the two-line title still has room to wrap without shoving the button underneath it. */
 .cfg-fabric-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:24px}
 .cfg-fabric-head h3.cfg-title{margin-bottom:0}
-.cfg-matdiff-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--chipbg);border:none;border-radius:9999px;padding:14px;font-size:13px;font-weight:500;color:var(--ink);text-decoration:underline;white-space:nowrap;margin-bottom:24px}
+.cfg-matdiff-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--chipbg);border:none;border-radius:9999px;padding:14px;font-size:14px;font-weight:500;color:var(--ink);text-decoration:underline;white-space:nowrap;margin-bottom:24px}
 .cfg-matdiff-swatch{width:28px;height:28px;border-radius:50%;overflow:hidden;flex:0 0 auto}
-/* Frozen on a talking-head frame (see the swatch's inline JS below) and zoomed in on just the
-   face -- the source clip has a caption band burned in near the bottom of every frame, so a
-   plain loop would keep flashing that text in a 28px badge. Pinning + cropping avoids it. */
+/* Loops just the 10s-12.7s window (see the swatch's inline JS below) -- a clean, static-camera
+   talking-head stretch with her hands down, before the clip cuts to a title card. The source
+   has a caption band burned in near the bottom of every frame, so this crop zooms in on just
+   the face, keeping the caption (and the title-card text elsewhere in the clip) out of frame. */
 .cfg-matdiff-swatch video{width:100%;height:100%;object-fit:cover;object-position:50% 0%;display:block;transform:scale(2.5);transform-origin:45% 45%}
 
 /* ── section 2a: household needs ── */
@@ -479,7 +480,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
         <div class="cfg-fabric-pillrow" id="cfg-fabric-pillrow"></div>
 
         <button type="button" class="cfg-matdiff-btn" onclick="openMaterialDetail()">
-          <span class="cfg-matdiff-swatch"><video src="material-videos.mp4#t=12.3" muted playsinline onloadedmetadata="this.currentTime=12.3"></video></span>
+          <span class="cfg-matdiff-swatch"><video src="material-videos.mp4#t=10" muted autoplay loop playsinline onloadedmetadata="this.currentTime=10" ontimeupdate="if(this.currentTime>=12.7)this.currentTime=10"></video></span>
           Vezi diferențe între materiale
         </button>
 
