@@ -109,7 +109,9 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
    the two-line title still has room to wrap without shoving the button underneath it. */
 .cfg-fabric-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:24px}
 .cfg-fabric-head h3.cfg-title{margin-bottom:0}
-.cfg-matdiff-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:6px;background:var(--chipbg);border:none;border-radius:9999px;padding:14px;font-size:13px;font-weight:500;color:var(--ink);text-decoration:underline;white-space:nowrap;margin-bottom:24px}
+.cfg-matdiff-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--chipbg);border:none;border-radius:9999px;padding:14px;font-size:13px;font-weight:500;color:var(--ink);text-decoration:underline;white-space:nowrap;margin-bottom:24px}
+.cfg-matdiff-swatch{width:28px;height:28px;border-radius:50%;overflow:hidden;flex:0 0 auto}
+.cfg-matdiff-swatch video{width:100%;height:100%;object-fit:cover;display:block}
 
 /* ── section 2a: household needs ── */
 .cfg-needs-row{display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:0 0 4px;margin-bottom:12px;scroll-snap-type:x proximity}
@@ -338,7 +340,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
    of the close button which stays pinned to the right via the topbar's own flex layout. */
 .matd-seg{position:absolute;left:50%;top:16px;transform:translateX(-50%);display:flex;height:44px;background:#fff;border:1px solid #e3e3e3;border-radius:9999px;padding:4px;box-shadow:0 2px 8px rgba(0,0,0,.18)}
 .matd-seg-thumb{position:absolute;top:4px;left:4px;width:72px;height:calc(100% - 8px);background:var(--chipbg);border-radius:9999px;transition:transform .25s cubic-bezier(.4,0,.2,1)}
-.matd-seg.mode-video .matd-seg-thumb{transform:translateX(72px)}
+.matd-seg.mode-text .matd-seg-thumb{transform:translateX(72px)}
 .matd-seg-btn{position:relative;z-index:1;width:72px;height:100%;border-radius:9999px;font-size:15px;font-weight:500;color:var(--gray);text-align:center;transition:color .2s}
 .matd-seg-btn.on{color:var(--ink)}
 .matd-viewport{flex:1 1 auto;min-height:0;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -473,7 +475,10 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 
         <div class="cfg-fabric-pillrow" id="cfg-fabric-pillrow"></div>
 
-        <button type="button" class="cfg-matdiff-btn" onclick="openMaterialDetail()">Vezi diferențe între materiale</button>
+        <button type="button" class="cfg-matdiff-btn" onclick="openMaterialDetail()">
+          <span class="cfg-matdiff-swatch"><video src="material-videos.mp4" autoplay muted loop playsinline></video></span>
+          Vezi diferențe între materiale
+        </button>
 
         <div class="cfg-fabric-toolrow">
           <button type="button" class="cfg-filter-btn" id="cfg-filter-btn" onclick="openFilterSheet()">
@@ -650,8 +655,8 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
   <div class="matd-topbar">
     <div class="matd-seg" id="matd-seg" role="tablist" aria-label="Mod afișare">
       <div class="matd-seg-thumb" aria-hidden="true"></div>
-      <button type="button" class="matd-seg-btn on" data-mode="text" role="tab" aria-selected="true" onclick="setMatdMode('text')">Text</button>
-      <button type="button" class="matd-seg-btn" data-mode="video" role="tab" aria-selected="false" onclick="setMatdMode('video')">Video</button>
+      <button type="button" class="matd-seg-btn on" data-mode="video" role="tab" aria-selected="true" onclick="setMatdMode('video')">Video</button>
+      <button type="button" class="matd-seg-btn" data-mode="text" role="tab" aria-selected="false" onclick="setMatdMode('text')">Text</button>
     </div>
     <button class="circ-btn" onclick="closeMaterialDetail()" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
   </div>
@@ -1570,7 +1575,7 @@ var MATERIAL_DETAIL = [
 ];
 var matdIdx = 0;
 var matdTextIdx = 0;
-var matdMode = 'text';
+var matdMode = 'video';
 function matdBodyHtml(m, c){
   var specs = [
     ['Compoziție', c.composition],
@@ -1743,7 +1748,7 @@ function renderMatdDots(){
 }
 function updateMatdSegUI(){
   var seg = document.getElementById('matd-seg');
-  seg.classList.toggle('mode-video', matdMode === 'video');
+  seg.classList.toggle('mode-text', matdMode === 'text');
   Array.prototype.forEach.call(seg.querySelectorAll('.matd-seg-btn'), function(b){
     var on = b.dataset.mode === matdMode;
     b.classList.toggle('on', on);
@@ -1797,13 +1802,15 @@ function matdTo(i, instant){
   matdUpdateDots();
 }
 function openMaterialDetail(key){
-  matdMode = 'text';
+  /* Video is the default landing mode -- matdTextIdx is still tracked so a specific
+     material (key) is right there waiting if/when the viewer switches to Text. */
+  matdMode = 'video';
   updateMatdSegUI();
   buildMaterialDetail();
   var startIdx = key ? MATERIAL_DETAIL.findIndex(function(m){ return m.key === key; }) : 0;
   matdTextIdx = Math.max(0, startIdx);
   document.getElementById('material-detail-modal').classList.add('open');
-  matdTo(matdTextIdx, true);
+  matdTo(0, true);
   Array.prototype.forEach.call(document.querySelectorAll('.matd-slide'), function(s){ s.scrollTop = 0; });
 }
 function closeMaterialDetail(){
