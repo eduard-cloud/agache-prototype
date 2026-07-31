@@ -17,9 +17,20 @@
 }
 html,body{height:100%;-webkit-text-size-adjust:100%;overflow-x:hidden;overscroll-behavior-x:none}
 body{font-family:'DM Sans',sans-serif;color:var(--ink);background:#fff}
-button{cursor:pointer;border:none;background:none;font-family:inherit;color:inherit}
+button{cursor:pointer;border:none;background:none;font-family:inherit;color:inherit;-webkit-tap-highlight-color:transparent;transition:transform .12s ease,filter .12s ease}
 a{text-decoration:none;color:inherit}
 img,video{display:block;max-width:100%}
+
+/* ══ Universal "while pressing" feedback -- every button (plus the two div-based tap targets,
+   .cfg-seg material pills and .mtile/.sm-tile swatch tiles, which aren't <button> elements)
+   darkens and shrinks slightly for as long as it's held down, mirroring native touch feedback.
+   filter:brightness() darkens the rendered pixels directly instead of fading toward white the
+   way opacity would on light backgrounds, so it reads as "pressed" no matter the button's own
+   color. .mtile .info-i and .matd-video-playbtn self-center via transform:translate(-50%,-50%),
+   so they get their own override that keeps the centering and layers the press-scale on top
+   instead of replacing it. */
+button:active, .cfg-seg:active, .mtile:active, .sm-tile:active{transform:scale(.96);filter:brightness(.93)}
+.mtile .info-i:active, .matd-video-playbtn:active{transform:translate(-50%,-50%) scale(.9);filter:brightness(.93)}
 
 /* ══ Cross-page push transition (PDP ↔ v3 configurator) ══ */
 @keyframes pushInR{from{transform:translateX(100%)}to{transform:translateX(0)}}
@@ -81,7 +92,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
    selected pill's checkmark lives in a permanently-reserved slot (fixed width, animated via
    opacity/scale only) so a chip never changes size on select/deselect -- neighbors never get
    pushed left or right, they just sit still while the pill fades to black underneath them. */
-.cfg-chip{flex:0 0 auto;display:flex;align-items:center;gap:5px;background:transparent;border:none;border-radius:9999px;padding:9px 16px 9px 12px;font-size:14px;letter-spacing:-.28px;white-space:nowrap;color:var(--ink);transition:background-color .15s,color .15s}
+.cfg-chip{flex:0 0 auto;display:flex;align-items:center;gap:5px;background:transparent;border:none;border-radius:9999px;padding:9px 16px 9px 12px;font-size:14px;letter-spacing:-.28px;white-space:nowrap;color:var(--ink);transition:background-color .15s,color .15s,transform .12s ease,filter .12s ease}
 /* Slot itself is a fixed 14px (that's what keeps the chip's total width constant, so
    selecting never pushes neighbors) -- but the checkmark inside it grows in from width:0,
    same technique tylko uses on its own tab icons, just clipped to a slot that doesn't move. */
@@ -104,18 +115,20 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
    inline in grey as part of the same sentence/paragraph, instead of a bold heading with a
    separate grey line underneath. */
 h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.4;color:var(--ink);margin-bottom:24px}
-/* "Vezi diferențele între materiale" moved up next to the section title instead of its own
-   row lower down -- title takes the flexible space, the button stays compact on the right so
-   the two-line title still has room to wrap without shoving the button underneath it. */
 .cfg-fabric-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:24px}
 .cfg-fabric-head h3.cfg-title{margin-bottom:0}
-.cfg-matdiff-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--chipbg);border:none;border-radius:9999px;padding:8px 14px 8px 8px;font-size:14px;font-weight:500;color:var(--ink);text-decoration:underline;white-space:nowrap;margin-bottom:24px}
-.cfg-matdiff-swatch{width:28px;height:28px;border-radius:50%;overflow:hidden;flex:0 0 auto}
+/* Card format matches Figma node 899:7869 exactly: 16px outer radius, 8px padding, 16px gap,
+   60x60 8px-radius thumbnail, two-line underlined label + trailing chevron. */
+.cfg-matdiff-btn{width:100%;display:flex;align-items:center;gap:16px;background:#fff;border:1px solid #e3e3e3;border-radius:16px;padding:8px;text-align:left;margin-bottom:24px}
+.cfg-matdiff-swatch{position:relative;width:60px;height:60px;border-radius:8px;overflow:hidden;flex:0 0 auto;background:#fff}
 /* Loops just the 10s-12.7s window (see the swatch's inline JS below) -- a clean, static-camera
    talking-head stretch with her hands down, before the clip cuts to a title card. The source
    has a caption band burned in near the bottom of every frame, so this crop zooms in on just
    the face, keeping the caption (and the title-card text elsewhere in the clip) out of frame. */
 .cfg-matdiff-swatch video{width:100%;height:100%;object-fit:cover;object-position:50% 0%;display:block;transform:scale(1.44);transform-origin:45% 45%}
+.cfg-matdiff-text{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;font-size:16px;font-weight:500;line-height:1.15;letter-spacing:-.03em;color:#1d1d1f}
+.cfg-matdiff-text span{text-decoration:underline;text-decoration-skip-ink:auto}
+.cfg-matdiff-chevron{flex:0 0 auto;color:#1d1d1f}
 
 /* ── section 2a: household needs ── */
 .cfg-needs-row{display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:0 0 4px;margin-bottom:12px;scroll-snap-type:x proximity}
@@ -136,15 +149,14 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-eyebrow{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);font-weight:600;margin:18px 0 8px}
 
 /* material-type picker: pill chips with a real close-up crop of that texture family plus a
-   label -- light grey outline, unselected; solid ink fill, selected. A black outline on the
-   unselected state read as "already active" in usability testing (Diana, 2026-07), so
-   unselected pills use --chipbg (same grey as the "Vezi diferențe" button fill) instead of
-   --ink for the border. Labels like "Neted" vs "Catifea" don't mean anything on their own to
-   someone who hasn't felt the fabric, so the photo carries the actual distinction and the
-   text just names it. */
+   label -- grey fill w/ a slightly darker grey outline, unselected; solid ink fill, selected.
+   A black outline on the unselected state read as "already active" in usability testing
+   (Diana, 2026-07), so unselected pills stay off --ink for the border. Labels like "Neted" vs
+   "Catifea" don't mean anything on their own to someone who hasn't felt the fabric, so the
+   photo carries the actual distinction and the text just names it. */
 .cfg-fabric-pillrow{display:flex;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;gap:4px;margin-bottom:12px}
 .cfg-fabric-pillrow::-webkit-scrollbar{display:none}
-.cfg-seg{flex:0 0 auto;display:inline-flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--chipbg);border-radius:9999px;padding:6px 18px 6px 6px;color:var(--ink);transition:background-color .15s,color .15s,border-color .15s}
+.cfg-seg{flex:0 0 auto;display:inline-flex;align-items:center;gap:9px;background:var(--chipbg);border:1px solid #e3e3e3;border-radius:9999px;padding:6px 18px 6px 6px;color:var(--ink);transition:background-color .15s,color .15s,border-color .15s,transform .12s ease,filter .12s ease}
 .cfg-seg.on{background:var(--ink);border-color:var(--ink);color:#fff}
 .cfg-seg .dot{width:36px;height:36px;border-radius:50%;flex:0 0 auto;background-size:650%;background-position:center;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
 .cfg-seg .nm{font-size:15px;font-weight:500;letter-spacing:-.2px;white-space:nowrap}
@@ -188,7 +200,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 #fsheet-material-h{margin-top:0;padding-top:0;border-top:none}
 .fsheet-foot{display:flex;gap:10px;padding:14px 20px;border-top:1px solid var(--hair)}
 .fsheet-reset{flex:0 0 auto;font-size:14px;font-weight:500;color:var(--gray);padding:12px 8px}
-.fsheet-apply{flex:1 1 auto;background:var(--ink);color:#fff;border-radius:9999px;padding:12px;font-size:14px;font-weight:500;transition:opacity .15s}
+.fsheet-apply{flex:1 1 auto;background:var(--ink);color:#fff;border-radius:9999px;padding:12px;font-size:14px;font-weight:500;transition:opacity .15s,transform .12s ease}
 .fsheet-apply:disabled{opacity:.4}
 .price-slider{margin-top:12px;padding-bottom:32px}
 .fsheet-result-count{margin-top:-16px;font-size:13px;color:var(--gray)}
@@ -222,9 +234,15 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-col-empty{padding:16px 0;font-size:13px;color:var(--gray)}
 
 /* ── color swatch tiles (shared by every collection's grid) ── */
+/* Material-type group title -- only rendered when 2+ fabric-type pills are active (see
+   renderFabricSections), so each material's colors get their own labeled block instead of
+   being mixed into one grid. */
+.cfg-matgroup-title{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:600;letter-spacing:-.2px;color:var(--ink);margin-top:28px}
+.cfg-matgroup-title:first-of-type{margin-top:0}
+.cfg-matgroup-info{flex:0 0 auto;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#1d1d1f}
 .cfg-color-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 8px;margin-top:18px}
 #cfg-fabric-sections.cfg-grid3 .cfg-color-grid{grid-template-columns:repeat(3,1fr);gap:12px 10px}
-.mtile{position:relative}
+.mtile{position:relative;transition:transform .12s ease,filter .12s ease}
 .mtile .imw{position:relative;aspect-ratio:1;overflow:hidden}
 /* Source swatch photos are only 160x160 and mostly flat-looking at that size -- scaling the
    image up within its cropped square magnifies whatever weave/nap texture is actually there,
@@ -314,7 +332,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .sm-body .col-head{display:flex;align-items:baseline;justify-content:space-between;padding:28px 20px 0}
 .sm-body .col-head .t{font-size:17px;font-weight:600}
 .sm-body .mgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px 10px;padding:14px 20px 0}
-.sm-tile{position:relative}
+.sm-tile{position:relative;transition:transform .12s ease,filter .12s ease}
 .sm-tile .imw{position:relative;aspect-ratio:1;overflow:hidden;border-radius:4px}
 .sm-tile img{width:100%;height:100%;object-fit:cover;display:block}
 .sm-check{position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:#fff;border:1.5px solid #c8cbd0;display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s}
@@ -352,7 +370,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .matd-seg{position:absolute;left:50%;top:16px;transform:translateX(-50%);display:flex;height:44px;background:#fff;border:1px solid #e3e3e3;border-radius:9999px;padding:4px;box-shadow:0 2px 8px rgba(0,0,0,.18)}
 .matd-seg-thumb{position:absolute;top:4px;left:4px;width:72px;height:calc(100% - 8px);background:var(--chipbg);border-radius:9999px;transition:transform .25s cubic-bezier(.4,0,.2,1)}
 .matd-seg.mode-text .matd-seg-thumb{transform:translateX(72px)}
-.matd-seg-btn{position:relative;z-index:1;width:72px;height:100%;border-radius:9999px;font-size:15px;font-weight:500;color:var(--gray);text-align:center;transition:color .2s}
+.matd-seg-btn{position:relative;z-index:1;width:72px;height:100%;border-radius:9999px;font-size:15px;font-weight:500;color:var(--gray);text-align:center;transition:color .2s,transform .12s ease,filter .12s ease}
 .matd-seg-btn.on{color:var(--ink)}
 .matd-viewport{flex:1 1 auto;min-height:0;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .matd-viewport::-webkit-scrollbar{display:none}
@@ -486,8 +504,14 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
         <div class="cfg-fabric-pillrow" id="cfg-fabric-pillrow"></div>
 
         <button type="button" class="cfg-matdiff-btn" onclick="openMaterialDetail()">
-          <span class="cfg-matdiff-swatch"><video src="material-videos.mp4" muted autoplay loop playsinline onloadedmetadata="this.currentTime=9.5;this.play()" ontimeupdate="if(this.currentTime>=15.7)this.currentTime=9.5"></video></span>
-          Vezi diferențe între materiale
+          <span class="cfg-matdiff-swatch">
+            <video src="material-videos.mp4" muted autoplay loop playsinline onloadedmetadata="this.currentTime=9.5;this.play()" ontimeupdate="if(this.currentTime>=15.7)this.currentTime=9.5"></video>
+          </span>
+          <span class="cfg-matdiff-text">
+            <span>Vezi diferențe</span>
+            <span>între materiale</span>
+          </span>
+          <svg class="cfg-matdiff-chevron" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
 
         <div class="cfg-fabric-toolrow">
@@ -1093,6 +1117,10 @@ function addToCart(btn){
   toast('Produsul a fost adăugat în coș');
   setTimeout(function(){ closeConfigurator(); }, 900);
 }
+/* No-op touch listener -- iOS Safari only renders :active styles on tap when some ancestor has
+   a touch handler bound, so without this the whole "while pressing" button treatment above
+   silently never shows up on an iPhone. */
+document.addEventListener('touchstart', function(){}, { passive:true });
 function pressFeedback(el){
   el.style.transition = 'transform .1s'; el.style.transform = 'scale(.97)';
   setTimeout(function(){ el.style.transform = ''; }, 120);
@@ -1294,6 +1322,7 @@ function renderFabricPillRow(){
     wrap.appendChild(buildFabricSeg(p, false, function(){
       renderFabricPillRow();
       renderFsheetMaterialPill();
+      renderFabricSections();
       applyFabricFilters();
     }));
   });
@@ -1341,6 +1370,7 @@ function renderFsheetMaterialPill(){
     wrap.appendChild(buildFabricSeg(p, true, function(){
       renderFabricPillRow();
       renderFsheetMaterialPill();
+      renderFabricSections();
       applyFabricFilters();
     }));
   });
@@ -1366,6 +1396,7 @@ function resetSheetFilters(){
   activeFabricPills = [];
   renderFsheetPills();
   renderFabricPillRow();
+  renderFabricSections();
   applyFabricFilters();
   document.getElementById('price-min').value = PRICE_MIN_DEFAULT;
   document.getElementById('price-max').value = PRICE_MAX_DEFAULT;
@@ -1449,6 +1480,15 @@ function applyFabricFilters(){
     tile.style.display = visible ? '' : 'none';
     if (visible) visibleCount++;
   });
+  /* A material-type group (title + its grid) can end up with every tile hidden once color/prop/
+     price filters are layered on top of the material pills -- hide the label along with the
+     empty grid rather than leaving a heading over blank space. */
+  document.querySelectorAll('#cfg-fabric-sections .cfg-color-grid').forEach(function(grid){
+    var anyVisible = Array.prototype.some.call(grid.children, function(t){ return t.style.display !== 'none'; });
+    var title = grid.previousElementSibling;
+    if (title && title.classList.contains('cfg-matgroup-title')) title.style.display = anyVisible ? '' : 'none';
+    grid.style.display = anyVisible ? '' : 'none';
+  });
   var noFilters = !pillDefs.length && !appliedFilters.length && !priceFiltered;
   var optionCount = noFilters ? totalColorCount() : visibleCount;
   document.getElementById('cfg-color-sub').textContent = optionCount + (optionCount === 1 ? ' opțiune' : ' opțiuni');
@@ -1467,20 +1507,45 @@ function applyFabricFilters(){
   if (resultCountEl) resultCountEl.textContent = visibleCount + (visibleCount === 1 ? ' culoare afișată' : ' culori afișate');
 }
 
+function fabricTileHtml(s){
+  var name = s.name;
+  return '<div class="mtile' + (name === sel.colorName ? ' on' : '') + '" data-name="' + name + '" data-slug="' + s.slug + '">' +
+    '<div class="imw"><img src="' + fabricAsset(name) + '" alt="' + name + '">' +
+    '<button type="button" class="info-i" aria-label="Detalii ' + name + '"><svg width="32" height="32" fill="none"><path d="M32 16c0-8.837-7.163-16-16-16S0 7.163 0 16s7.163 16 16 16 16-7.163 16-16Z" fill="#fff"/><path d="M16 22.333v-6.666" stroke="#121219" stroke-width="2" stroke-linecap="round"/><path d="M16.001 9.667a1.333 1.333 0 1 1 0 2.666 1.333 1.333 0 0 1 0-2.666Z" fill="#1D1D1F"/></svg></button></div>' +
+    '<div class="lr"><span class="nm">' + name + '</span></div></div>';
+}
+function appendFabricGrid(wrap, swatches){
+  var grid = document.createElement('div');
+  grid.className = 'cfg-color-grid';
+  grid.innerHTML = swatches.map(fabricTileHtml).join('');
+  wrap.appendChild(grid);
+}
+/* Below one active material-type pill, colors from every matching collection can just live in
+   one grid -- there's nothing to tell apart yet. From 2 pills on, mixing e.g. Neted and
+   Texturat swatches into the same grid makes it impossible to tell which texture a given color
+   belongs to, so each active material gets its own labeled group instead (in FABRIC_PILLS'
+   fixed order, not click order, so re-picking the same two pills always looks the same). */
 function renderFabricSections(){
   var wrap = document.getElementById('cfg-fabric-sections');
   wrap.innerHTML = '';
-  var grid = document.createElement('div');
-  grid.className = 'cfg-color-grid';
-  grid.innerHTML = ALL_SWATCHES.map(function(s){
-    var name = s.name;
-    return '<div class="mtile' + (name === sel.colorName ? ' on' : '') + '" data-name="' + name + '" data-slug="' + s.slug + '">' +
-      '<div class="imw"><img src="' + fabricAsset(name) + '" alt="' + name + '">' +
-      '<button type="button" class="info-i" aria-label="Detalii ' + name + '"><svg width="32" height="32" fill="none"><path d="M32 16c0-8.837-7.163-16-16-16S0 7.163 0 16s7.163 16 16 16 16-7.163 16-16Z" fill="#fff"/><path d="M16 22.333v-6.666" stroke="#121219" stroke-width="2" stroke-linecap="round"/><path d="M16.001 9.667a1.333 1.333 0 1 1 0 2.666 1.333 1.333 0 0 1 0-2.666Z" fill="#1D1D1F"/></svg></button></div>' +
-      '<div class="lr"><span class="nm">' + name + '</span></div></div>';
-  }).join('');
-  wrap.appendChild(grid);
-  grid.querySelectorAll('.mtile').forEach(function(tile){
+  var activePillDefs = FABRIC_PILLS.filter(function(p){ return activeFabricPills.indexOf(p.key) > -1; });
+  if (activePillDefs.length < 2){
+    appendFabricGrid(wrap, ALL_SWATCHES);
+  } else {
+    activePillDefs.forEach(function(pillDef){
+      var swatches = ALL_SWATCHES.filter(function(s){ return materialTypeMatch(s.collection) === pillDef; });
+      if (!swatches.length) return;
+      var h = document.createElement('div');
+      h.className = 'cfg-matgroup-title';
+      h.innerHTML = '<span>' + pillDef.label + '</span>' +
+        '<button type="button" class="cfg-matgroup-info" aria-label="Detalii ' + pillDef.label + '" onclick="openMaterialGroupDetail(\'' + pillDef.key + '\')">' +
+          '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 11v5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7.7" r="1.1" fill="currentColor"/></svg>' +
+        '</button>';
+      wrap.appendChild(h);
+      appendFabricGrid(wrap, swatches);
+    });
+  }
+  wrap.querySelectorAll('.mtile').forEach(function(tile){
     tile.onclick = function(){ pickFabricSwatch(tile, tile.dataset.slug); };
     tile.querySelector('.info-i').onclick = function(e){ e.stopPropagation(); showSwatchInfo(tile.dataset.name); };
   });
@@ -1798,6 +1863,13 @@ function openMaterialDetail(key){
 }
 function closeMaterialDetail(){
   document.getElementById('material-detail-modal').classList.remove('open');
+}
+/* Info button on a material-type group heading (e.g. "Neted") -- unlike the main "Vezi
+   diferențe" entry, which opens on the video intro, tapping this already means the viewer wants
+   that specific material's own info, so skip straight to its Text card instead of the intro. */
+function openMaterialGroupDetail(key){
+  openMaterialDetail(key);
+  setMatdMode('text');
 }
 
 function pickFabricSwatch(el, slug){
