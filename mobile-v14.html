@@ -378,7 +378,6 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .matd-video-frame.playing .matd-video-playbtn .ic-pause{display:block}
 .matd-video-timeline{position:absolute;left:16px;right:16px;bottom:16px;height:3px;background:rgba(255,255,255,.3);border-radius:2px}
 .matd-video-progress{height:100%;width:0%;background:#fff;border-radius:2px}
-.matd-video-fsbtn{position:absolute;top:12px;right:12px;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;color:#fff}
 .matd-spacer{flex:0 0 12px}
 .matd-hero{aspect-ratio:4/3;background-size:cover;background-position:center;border-radius:20px 20px 0 0}
 .matd-dots{flex:0 0 auto;display:flex;justify-content:center;gap:6px;padding:16px 0 20px}
@@ -480,7 +479,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
         <div class="cfg-fabric-pillrow" id="cfg-fabric-pillrow"></div>
 
         <button type="button" class="cfg-matdiff-btn" onclick="openMaterialDetail()">
-          <span class="cfg-matdiff-swatch"><video src="material-videos.mp4#t=10" muted autoplay loop playsinline onloadedmetadata="this.currentTime=10" ontimeupdate="if(this.currentTime>=12.7)this.currentTime=10"></video></span>
+          <span class="cfg-matdiff-swatch"><video src="material-videos.mp4" muted autoplay loop playsinline onloadedmetadata="this.currentTime=10;this.play()" ontimeupdate="if(this.currentTime>=12.7)this.currentTime=10"></video></span>
           Vezi diferențe între materiale
         </button>
 
@@ -1627,9 +1626,6 @@ function matdVideoSlideHtml(){
           '<svg class="ic-play" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20"/></svg>' +
           '<svg class="ic-pause" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="4" width="5" height="16"/><rect x="14" y="4" width="5" height="16"/></svg>' +
         '</button>' +
-        '<button type="button" class="matd-video-fsbtn" onclick="event.stopPropagation();toggleMatdFullscreen()" aria-label="Ecran complet">' +
-          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>' +
-        '</button>' +
         '<div class="matd-video-timeline" onclick="event.stopPropagation();seekMatdVideo(event)"><div class="matd-video-progress" id="matd-video-progress"></div></div>' +
       '</div>' +
     '</div>' +
@@ -1648,68 +1644,6 @@ function matdToggleControls(){
   var showing = frame.classList.toggle('show-controls');
   if (showing) matdControlsTimer = setTimeout(function(){ frame.classList.remove('show-controls'); }, 2500);
 }
-/* Fullscreening the frame (not just the <video>) keeps our own play/pause, fullscreen and
-   timeline buttons part of the fullscreen element instead of being left behind -- only iOS's
-   native player (webkitEnterFullscreen, video-only, no custom overlay possible) falls back to
-   fullscreening the video itself, since that's the one path with its own built-in pinch/zoom. */
-function toggleMatdFullscreen(){
-  var frame = document.querySelector('.matd-video-frame');
-  var v = document.getElementById('matd-video');
-  if (!frame || !v) return;
-  if (document.fullscreenElement){ document.exitFullscreen(); return; }
-  if (frame.requestFullscreen) frame.requestFullscreen();
-  else if (v.webkitEnterFullscreen) v.webkitEnterFullscreen();
-  else if (frame.webkitRequestFullscreen) frame.webkitRequestFullscreen();
-}
-var MATD_BASE_SCALE = 1.02;
-var matdZoom = 1;
-var matdPinchStartDist = 0;
-var matdPinchStartZoom = 1;
-var matdLastTapTime = 0;
-function matdApplyZoom(){
-  var v = document.getElementById('matd-video');
-  if (v) v.style.transform = 'scale(' + (MATD_BASE_SCALE * matdZoom) + ')';
-}
-function matdResetZoom(){
-  matdZoom = 1;
-  var v = document.getElementById('matd-video');
-  if (v) v.style.transform = '';
-}
-function matdTouchDistance(touches){
-  var dx = touches[0].clientX - touches[1].clientX;
-  var dy = touches[0].clientY - touches[1].clientY;
-  return Math.sqrt(dx * dx + dy * dy);
-}
-/* Pinch/double-tap zoom only while truly fullscreen -- inline the video is already
-   sized/cropped to fit its card, zooming there would just break the layout. */
-function matdFrameTouchStart(e){
-  var frame = document.querySelector('.matd-video-frame');
-  if (document.fullscreenElement !== frame) return;
-  if (e.touches.length === 2){
-    matdPinchStartDist = matdTouchDistance(e.touches);
-    matdPinchStartZoom = matdZoom;
-  } else if (e.touches.length === 1){
-    var now = Date.now();
-    if (now - matdLastTapTime < 300){
-      matdZoom = matdZoom > 1 ? 1 : 2;
-      matdApplyZoom();
-    }
-    matdLastTapTime = now;
-  }
-}
-function matdFrameTouchMove(e){
-  var frame = document.querySelector('.matd-video-frame');
-  if (document.fullscreenElement !== frame) return;
-  if (e.touches.length === 2 && matdPinchStartDist){
-    e.preventDefault();
-    var dist = matdTouchDistance(e.touches);
-    matdZoom = Math.min(4, Math.max(1, matdPinchStartZoom * (dist / matdPinchStartDist)));
-    matdApplyZoom();
-  }
-}
-document.addEventListener('fullscreenchange', function(){
-  if (!document.fullscreenElement) matdResetZoom();
-});
 function seekMatdVideo(e){
   var v = document.getElementById('matd-video');
   if (!v || !v.duration) return;
@@ -1726,8 +1660,6 @@ function bindMatdVideoControls(){
   v.addEventListener('timeupdate', function(){
     if (v.duration) progress.style.width = (v.currentTime / v.duration * 100) + '%';
   });
-  frame.addEventListener('touchstart', matdFrameTouchStart, { passive: true });
-  frame.addEventListener('touchmove', matdFrameTouchMove, { passive: false });
 }
 function renderMatdTrack(){
   var track = document.getElementById('matd-track');
