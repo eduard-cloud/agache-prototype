@@ -154,15 +154,16 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-seg.sm .nm{font-size:13px}
 
 .cfg-fabric-divider{margin-top:60px}
-.cfg-fabric-toolrow{display:flex;align-items:center;margin-bottom:12px}
-.cfg-toolrow-right{display:flex;align-items:center;gap:8px;margin-left:24px}
+.cfg-fabric-toolrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cfg-toolrow-right{display:flex;align-items:center;gap:8px;order:1}
 .cfg-color-count{font-size:13px;color:var(--gray);white-space:nowrap}
-.cfg-gridtoggle{display:flex;align-items:center;gap:4px}
+/* grid density toggle hidden for now -- re-enable by dropping this rule */
+.cfg-gridtoggle{display:none;align-items:center;gap:4px}
 .cfg-gridbtn{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#707173}
 .cfg-gridbtn.on{color:#3d3d3f}
 .cfg-gridbtn.on{background:var(--chipbg)}
 
-.cfg-filter-btn{flex:0 0 auto;display:flex;align-items:center;gap:6px;background:none;border:1px solid #121212;border-radius:20px;height:36px;padding:8px 12px;font-size:16px;font-weight:500;color:#1D1D1F;white-space:nowrap}
+.cfg-filter-btn{order:2;flex:0 0 auto;display:flex;align-items:center;gap:6px;background:none;border:1px solid #121212;border-radius:20px;height:36px;padding:8px 12px;font-size:16px;font-weight:500;color:#1D1D1F;white-space:nowrap}
 .cfg-filter-btn .sep{display:none;align-self:stretch;width:1px;background:#121212;margin:-8px 0}
 .cfg-filter-btn.has-count .sep{display:block}
 .cfg-filter-btn .cnt{display:none;width:20px;height:20px;border-radius:999px;background:#1D1D1F;color:#fff;font-size:12px;font-weight:400;align-items:center;justify-content:center}
