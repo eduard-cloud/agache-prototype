@@ -50,10 +50,12 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-shape-tile{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start}
 .cfg-shape-imw{position:relative;width:84px;height:84px;overflow:hidden;display:flex;align-items:center;justify-content:center;transition:background-color .15s,border-color .15s;scroll-snap-align:start;background:#fff;border-radius:12px;border:1px solid var(--hair)}
 .cfg-shape-imw img{width:100%;height:100%;object-fit:contain}
-.cfg-shape-tile.on .cfg-shape-imw{border:2px solid var(--ink);background:#fff}
-/* Default: light grey border, white. Pressed and selected both go to a black border on white --
-   no background fill on select, per feedback -- so :active/:hover (press) and .on (selected)
-   share the exact same treatment; :active just lets the border react before the tap commits. */
+.cfg-shape-tile.on .cfg-shape-imw{border:2px solid var(--ink);background:var(--chipbg)}
+/* Formă is the one chip family that keeps Airbnb's grey fill on actual selection (matches the
+   "Free parking" reference card exactly) -- every other chip in the configurator (Proprietăți,
+   material-type) stays border-only per later feedback, so don't copy this fill onto those.
+   Press-only feedback (:active, plus :hover as its desktop stand-in) still stays white/no-fill,
+   so only committing the tap turns the card grey -- press alone never looks already selected. */
 .cfg-shape-tile:not(.on):active .cfg-shape-imw{border:2px solid var(--ink);background:#fff}
 @media (hover:hover) and (pointer:fine){
   .cfg-shape-tile:not(.on):hover .cfg-shape-imw{border:2px solid var(--ink);background:#fff}
@@ -188,10 +190,12 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-gridbtn.on{color:#3d3d3f}
 .cfg-gridbtn.on{background:var(--chipbg)}
 
-.cfg-filter-btn{order:2;flex:0 0 auto;display:flex;align-items:center;gap:6px;background:none;border:none;border-radius:20px;height:36px;padding:8px 12px;font-size:16px;font-weight:500;color:#1D1D1F;white-space:nowrap}
-.cfg-filter-btn .sep{display:none;align-self:stretch;width:1px;background:#121212;margin:-8px 0}
-.cfg-filter-btn.has-count .sep{display:block}
-.cfg-filter-btn .cnt{display:none;width:20px;height:20px;border-radius:999px;background:#1D1D1F;color:#fff;font-size:12px;font-weight:400;align-items:center;justify-content:center}
+/* Airbnb-style circular filter icon: no outline while unused, a black circle border once at
+   least one filter is applied, plus the active-filter count as a small black badge overlaid on
+   the top-right edge of the circle -- border and badge both key off .has-count together. */
+.cfg-filter-btn{order:2;flex:0 0 auto;position:relative;display:flex;align-items:center;justify-content:center;background:none;border:1.5px solid transparent;border-radius:50%;width:40px;height:40px;padding:0;color:#1D1D1F}
+.cfg-filter-btn.has-count{border-color:#121212}
+.cfg-filter-btn .cnt{display:none;position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:999px;background:#1D1D1F;color:#fff;font-size:11px;font-weight:600;align-items:center;justify-content:center;border:2px solid #fff}
 .cfg-filter-btn.has-count .cnt{display:flex}
 
 .cfg-filter-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
@@ -552,7 +556,6 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
         <div class="cfg-fabric-toolrow">
           <button type="button" class="cfg-filter-btn" id="cfg-filter-btn" onclick="openFilterSheet()" aria-label="Filtre">
             <svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.3337 4.66666H7.33366M9.33366 11.3333H3.33366M9.33366 11.3333C9.33366 12.4379 10.2291 13.3333 11.3337 13.3333C12.4382 13.3333 13.3337 12.4379 13.3337 11.3333C13.3337 10.2288 12.4382 9.33332 11.3337 9.33332C10.2291 9.33332 9.33366 10.2288 9.33366 11.3333ZM6.66699 4.66666C6.66699 5.77123 5.77156 6.66666 4.66699 6.66666C3.56242 6.66666 2.66699 5.77123 2.66699 4.66666C2.66699 3.56209 3.56242 2.66666 4.66699 2.66666C5.77156 2.66666 6.66699 3.56209 6.66699 4.66666Z" stroke="#1D1D1F" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span class="sep"></span>
             <span class="cnt" id="cfg-filter-cnt">0</span>
           </button>
           <div class="cfg-toolrow-right">
