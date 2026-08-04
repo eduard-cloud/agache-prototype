@@ -48,9 +48,12 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-shape-row{display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:0 0 4px;margin-bottom:12px;scroll-snap-type:x proximity}
 .cfg-shape-row::-webkit-scrollbar{display:none}
 .cfg-shape-tile{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start}
-.cfg-shape-imw{position:relative;width:84px;height:84px;overflow:hidden;display:flex;align-items:center;justify-content:center;transition:box-shadow .15s;scroll-snap-align:start;background:var(--graysec)}
+.cfg-shape-imw{position:relative;width:84px;height:84px;overflow:hidden;display:flex;align-items:center;justify-content:center;transition:background-color .15s,border-color .15s;scroll-snap-align:start;background:#fff;border-radius:16px;border:1px solid var(--hair)}
 .cfg-shape-imw img{width:100%;height:100%;object-fit:contain}
-.cfg-shape-tile.on .cfg-shape-imw{box-shadow:inset 0 0 0 2px var(--ink)}
+.cfg-shape-tile.on .cfg-shape-imw{border:2px solid var(--ink);background:var(--chipbg)}
+@media (hover:hover) and (pointer:fine){
+  .cfg-shape-tile:not(.on):hover .cfg-shape-imw{border-color:var(--gray2);background:var(--chipbg)}
+}
 .cfg-shape-check{display:none;position:absolute;right:6px;bottom:6px;width:18px;height:18px;border-radius:50%;background:var(--ink);align-items:center;justify-content:center}
 .cfg-shape-tile.on .cfg-shape-check{display:flex}
 .cfg-shape-label{margin-top:0}
@@ -189,6 +192,19 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-fpill-color .fp-chk{display:none;width:14px;height:14px;border-radius:50%;background:#fff;align-items:center;justify-content:center;flex:0 0 auto}
 .cfg-fpill-color.on .fp-chk{display:flex}
 .cfg-fpill.on{background:var(--ink);color:#fff}
+/* Proprietăți pills recreated as Airbnb-style amenity pills -- icon + label inside a full
+   rounded, bordered capsule. Selected state keeps a bordered/tinted look (border thickens,
+   background tints) instead of inverting to solid ink, since a solid fill on an icon+text pill
+   this size reads closer to a disabled state than an on state. Border grows 1px->2px on select;
+   padding drops by 1px to match so the pill doesn't grow and reflow its neighbors. */
+.cfg-fpill-amenity{height:48px;padding:0 20px;border-radius:9999px;border:1px solid var(--hair);background:#fff;gap:10px}
+.cfg-fpill-amenity .fp-icon{display:flex;flex:0 0 auto;color:var(--ink)}
+.cfg-fpill-amenity .fp-icon svg{width:20px;height:20px}
+.cfg-fpill-amenity span{font-size:14px;font-weight:500;white-space:nowrap}
+.cfg-fpill-amenity.on{border:2px solid var(--ink);background:var(--chipbg);color:var(--ink);padding:0 19px}
+@media (hover:hover) and (pointer:fine){
+  .cfg-fpill-amenity:not(.on):hover{background:var(--chipbg)}
+}
 
 .fsheet-overlay{display:none;position:fixed;inset:0;max-width:480px;margin:0 auto;background:rgba(0,0,0,.45);z-index:65;align-items:flex-end}
 .fsheet-overlay.open{display:flex}
@@ -202,16 +218,25 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .fsheet-reset{flex:0 0 auto;font-size:14px;font-weight:500;color:var(--gray);padding:12px 8px}
 .fsheet-apply{flex:1 1 auto;background:var(--ink);color:#fff;border-radius:9999px;padding:12px;font-size:14px;font-weight:500;transition:opacity .15s,transform .12s ease}
 .fsheet-apply:disabled{opacity:.4}
-.price-slider{margin-top:12px;padding-bottom:32px}
+.price-slider{margin-top:12px;padding-bottom:4px}
 .fsheet-result-count{margin-top:-16px;font-size:13px;color:var(--gray)}
-.price-slider-vals{display:flex;justify-content:space-between;font-size:14px;font-weight:500;color:var(--ink);margin-bottom:14px}
-.price-slider-track{position:relative;height:20px}
+/* Histogram: one bar per price bucket, only the buckets a real fabric/shape combo actually
+   lands in get any height -- most bins stay at 0, which is why the bars cluster instead of
+   spreading evenly, same as Airbnb's real listing-price histogram. */
+.price-histogram{display:flex;align-items:flex-end;gap:2px;height:64px;margin-bottom:10px}
+.price-hist-bar{flex:1 1 0;min-width:2px;height:0;background:var(--gray2);border-radius:2px 2px 0 0;transition:background-color .15s}
+.price-hist-bar.active{background:var(--red)}
+.price-slider-track{position:relative;height:20px;margin-bottom:24px}
 .price-slider-track::before{content:'';position:absolute;top:50%;left:0;right:0;height:4px;background:var(--hair);border-radius:2px;transform:translateY(-50%)}
-.price-slider-range{position:absolute;top:50%;height:4px;background:var(--ink);border-radius:2px;transform:translateY(-50%)}
+.price-slider-range{position:absolute;top:50%;height:4px;background:var(--red);border-radius:2px;transform:translateY(-50%)}
 .price-slider-track input[type=range]{position:absolute;top:0;left:0;width:100%;height:20px;margin:0;background:none;pointer-events:none;-webkit-appearance:none;appearance:none}
-.price-slider-track input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;pointer-events:auto;width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.25);cursor:pointer}
-.price-slider-track input[type=range]::-moz-range-thumb{pointer-events:auto;width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.25);cursor:pointer;box-sizing:border-box}
+.price-slider-track input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;pointer-events:auto;width:22px;height:22px;border-radius:50%;background:#fff;border:2px solid var(--red);box-shadow:0 1px 3px rgba(0,0,0,.25);cursor:pointer}
+.price-slider-track input[type=range]::-moz-range-thumb{pointer-events:auto;width:22px;height:22px;border-radius:50%;background:#fff;border:2px solid var(--red);box-shadow:0 1px 3px rgba(0,0,0,.25);cursor:pointer;box-sizing:border-box}
 .price-slider-track input[type=range]::-webkit-slider-runnable-track{-webkit-appearance:none;background:none}
+.price-slider-fields{display:flex;gap:16px}
+.price-field{flex:1;display:flex;flex-direction:column;gap:8px}
+.price-field-label{font-size:13px;color:var(--gray)}
+.price-field-box{border:1px solid var(--hair);border-radius:9999px;padding:14px 18px;font-size:15px;font-weight:500;color:var(--ink)}
 .fsheet-empty{display:none;align-items:flex-start;gap:10px;background:var(--chipbg);border-radius:12px;padding:14px;margin-bottom:20px;color:var(--ink)}
 .fsheet-empty.show{display:flex}
 .fsheet-empty svg{flex:0 0 auto;margin-top:1px}
@@ -720,11 +745,21 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
       <div class="cfg-filter-pills" id="fsheet-culoare"></div>
       <div class="fsheet-group-h">Preț</div>
       <div class="price-slider">
-        <div class="price-slider-vals"><span id="price-min-val">4.745 lei</span><span id="price-max-val">5.775 lei</span></div>
+        <div class="price-histogram" id="price-histogram"></div>
         <div class="price-slider-track">
           <div class="price-slider-range" id="price-slider-range"></div>
           <input type="range" id="price-min" min="4745" max="5775" step="5" value="4745" oninput="updatePriceSlider()">
           <input type="range" id="price-max" min="4745" max="5775" step="5" value="5775" oninput="updatePriceSlider()">
+        </div>
+        <div class="price-slider-fields">
+          <div class="price-field">
+            <span class="price-field-label">Minim</span>
+            <div class="price-field-box"><span id="price-min-val">4.745 lei</span></div>
+          </div>
+          <div class="price-field">
+            <span class="price-field-label">Maxim</span>
+            <div class="price-field-box"><span id="price-max-val">5.775 lei</span></div>
+          </div>
         </div>
       </div>
       <div class="fsheet-result-count" id="fsheet-result-count"></div>
@@ -1333,11 +1368,32 @@ function setColorGridCols(n, el){
   el.classList.add('on');
 }
 
+/* Proprietăți pills reuse the same icon set as the collection USP badges (people/droplet/hand/
+   shield) so a claim like "Impermeabil" looks identical whether it shows up as a filter pill
+   here or a badge on a collection card. */
+var PROP_ICONS = {
+  'Impermeabil': 'droplet',
+  'Easy Clean': 'hand',
+  'Pet Friendly': 'people',
+  'Piele sensibilă (OEKO-TEX®)': 'shield'
+};
 function makeFsheetPill(opt){
   var on = appliedFilters.indexOf(opt) > -1;
   var pill = document.createElement('button');
   pill.type = 'button';
   var famStyle = FAMILY_CHIP_STYLE[opt];
+  var propIcon = PROP_ICONS[opt];
+  if (propIcon){
+    pill.className = 'fchip cfg-fpill cfg-fpill-amenity' + (on ? ' on' : '');
+    pill.innerHTML = '<span class="fp-icon">' + USP_ICONS[propIcon] + '</span><span>' + opt + '</span>';
+    pill.onclick = function(){
+      var i = appliedFilters.indexOf(opt);
+      if (i > -1) appliedFilters.splice(i, 1); else appliedFilters.push(opt);
+      renderFsheetPills();
+      applyFabricFilters();
+    };
+    return pill;
+  }
   pill.className = 'fchip cfg-fpill' + (famStyle ? ' cfg-fpill-color' : '') + (on ? ' on' : '');
   if (famStyle){
     pill.style.background = famStyle.bg;
@@ -1416,7 +1472,50 @@ function updatePriceSliderBounds(){
   minEl.max = maxEl.max = PRICE_MAX_DEFAULT;
   minEl.value = PRICE_MIN_DEFAULT;
   maxEl.value = PRICE_MAX_DEFAULT;
+  renderPriceHistogram();
   updatePriceSlider();
+}
+/* Airbnb's histogram is a real "how many listings at this price" chart -- ours is the fabric
+   equivalent: how many colors land at each real shape+tier price point. Only 5 distinct prices
+   exist per shape (one per fabric tier), so they're bucketed into PRICE_HIST_BINS slots across
+   the full min->max span; most bins end up empty and the few real price points spike, which is
+   exactly the clustered-with-gaps look a real Airbnb histogram has, just for a genuinely
+   discrete underlying dataset instead of a continuous one. */
+var PRICE_HIST_BINS = 24;
+function renderPriceHistogram(){
+  var wrap = document.getElementById('price-histogram');
+  wrap.innerHTML = '';
+  var range = shapePriceRange();
+  var min = range.min, max = range.max, span = (max - min) || 1;
+  var counts = {};
+  COLLECTION_ORDER.forEach(function(slug){
+    var c = COLLECTIONS[slug];
+    var price = collectionPrice(slug);
+    counts[price] = (counts[price] || 0) + c.colors.length;
+  });
+  var bins = new Array(PRICE_HIST_BINS).fill(0);
+  Object.keys(counts).forEach(function(priceStr){
+    var price = parseInt(priceStr, 10);
+    var idx = Math.min(PRICE_HIST_BINS - 1, Math.max(0, Math.floor((price - min) / span * PRICE_HIST_BINS)));
+    bins[idx] += counts[priceStr];
+  });
+  var maxCount = Math.max.apply(null, bins.concat([1]));
+  bins.forEach(function(count, i){
+    var bar = document.createElement('div');
+    bar.className = 'price-hist-bar';
+    bar.style.height = (count ? Math.max(10, Math.round(count / maxCount * 100)) : 0) + '%';
+    bar.dataset.price = Math.round(min + (i + 0.5) / PRICE_HIST_BINS * span);
+    wrap.appendChild(bar);
+  });
+  updatePriceHistogramActive();
+}
+function updatePriceHistogramActive(){
+  var min = parseInt(document.getElementById('price-min').value, 10);
+  var max = parseInt(document.getElementById('price-max').value, 10);
+  document.querySelectorAll('#price-histogram .price-hist-bar').forEach(function(bar){
+    var p = parseInt(bar.dataset.price, 10);
+    bar.classList.toggle('active', p >= min && p <= max);
+  });
 }
 function updatePriceSlider(){
   var minEl = document.getElementById('price-min');
@@ -1430,6 +1529,7 @@ function updatePriceSlider(){
   var range = document.getElementById('price-slider-range');
   range.style.left = ((min - lo) / (hi - lo) * 100) + '%';
   range.style.right = (100 - (max - lo) / (hi - lo) * 100) + '%';
+  updatePriceHistogramActive();
   applyFabricFilters();
 }
 document.addEventListener('DOMContentLoaded', updatePriceSliderBounds);
