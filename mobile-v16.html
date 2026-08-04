@@ -48,11 +48,17 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-shape-row{display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:0 0 4px;margin-bottom:12px;scroll-snap-type:x proximity}
 .cfg-shape-row::-webkit-scrollbar{display:none}
 .cfg-shape-tile{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start}
-.cfg-shape-imw{position:relative;width:84px;height:84px;overflow:hidden;display:flex;align-items:center;justify-content:center;transition:background-color .15s,border-color .15s;scroll-snap-align:start;background:#fff;border-radius:16px;border:1px solid var(--hair)}
+.cfg-shape-imw{position:relative;width:84px;height:84px;overflow:hidden;display:flex;align-items:center;justify-content:center;transition:background-color .15s,border-color .15s;scroll-snap-align:start;background:#fff;border-radius:12px;border:1px solid var(--hair)}
 .cfg-shape-imw img{width:100%;height:100%;object-fit:contain}
 .cfg-shape-tile.on .cfg-shape-imw{border:2px solid var(--ink);background:var(--chipbg)}
+/* Airbnb's card has 3 distinct states, not 2: default (light grey border, white), pressed
+   (black border, still white -- no fill yet), and actually selected (black border + grey
+   fill). Press-only feedback (:active, plus :hover as its desktop stand-in) borrows the
+   selected border color without the fill, so committing the tap is the only thing that turns
+   the card grey -- press alone never looks like it already picked something. */
+.cfg-shape-tile:not(.on):active .cfg-shape-imw{border:2px solid var(--ink);background:#fff}
 @media (hover:hover) and (pointer:fine){
-  .cfg-shape-tile:not(.on):hover .cfg-shape-imw{border-color:var(--gray2);background:var(--chipbg)}
+  .cfg-shape-tile:not(.on):hover .cfg-shape-imw{border:2px solid var(--ink);background:#fff}
 }
 /* Badge itself stays in markup (harmless, unused) -- the bordered/tinted tile from the card
    redesign already communicates selection on its own, so the corner checkmark badge is
