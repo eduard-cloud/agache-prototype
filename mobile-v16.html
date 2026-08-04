@@ -50,12 +50,10 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-shape-tile{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start}
 .cfg-shape-imw{position:relative;width:84px;height:84px;overflow:hidden;display:flex;align-items:center;justify-content:center;transition:background-color .15s,border-color .15s;scroll-snap-align:start;background:#fff;border-radius:12px;border:1px solid var(--hair)}
 .cfg-shape-imw img{width:100%;height:100%;object-fit:contain}
-.cfg-shape-tile.on .cfg-shape-imw{border:2px solid var(--ink);background:var(--chipbg)}
-/* Airbnb's card has 3 distinct states, not 2: default (light grey border, white), pressed
-   (black border, still white -- no fill yet), and actually selected (black border + grey
-   fill). Press-only feedback (:active, plus :hover as its desktop stand-in) borrows the
-   selected border color without the fill, so committing the tap is the only thing that turns
-   the card grey -- press alone never looks like it already picked something. */
+.cfg-shape-tile.on .cfg-shape-imw{border:2px solid var(--ink);background:#fff}
+/* Default: light grey border, white. Pressed and selected both go to a black border on white --
+   no background fill on select, per feedback -- so :active/:hover (press) and .on (selected)
+   share the exact same treatment; :active just lets the border react before the tap commits. */
 .cfg-shape-tile:not(.on):active .cfg-shape-imw{border:2px solid var(--ink);background:#fff}
 @media (hover:hover) and (pointer:fine){
   .cfg-shape-tile:not(.on):hover .cfg-shape-imw{border:2px solid var(--ink);background:#fff}
@@ -205,15 +203,15 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-fpill-color.on .fp-chk{display:flex}
 .cfg-fpill.on{background:var(--ink);color:#fff}
 /* Proprietăți pills recreated as Airbnb-style amenity pills -- icon + label inside a full
-   rounded, bordered capsule. Selected state keeps a bordered/tinted look (border thickens,
-   background tints) instead of inverting to solid ink, since a solid fill on an icon+text pill
-   this size reads closer to a disabled state than an on state. Border grows 1px->2px on select;
-   padding drops by 1px to match so the pill doesn't grow and reflow its neighbors. */
+   rounded, bordered capsule. Selected state only thickens the border (1px->2px, ink) and stays
+   white -- no background fill -- instead of inverting to solid ink, since a solid fill on an
+   icon+text pill this size reads closer to a disabled state than an on state. Padding drops by
+   1px to match the thicker border so the pill doesn't grow and reflow its neighbors. */
 .cfg-fpill-amenity{height:48px;padding:0 20px;border-radius:9999px;border:1px solid var(--hair);background:#fff;gap:10px}
 .cfg-fpill-amenity .fp-icon{display:flex;flex:0 0 auto;color:var(--ink)}
 .cfg-fpill-amenity .fp-icon svg{width:20px;height:20px}
 .cfg-fpill-amenity span{font-size:14px;font-weight:500;white-space:nowrap}
-.cfg-fpill-amenity.on{border:2px solid var(--ink);background:var(--chipbg);color:var(--ink);padding:0 19px}
+.cfg-fpill-amenity.on{border:2px solid var(--ink);background:#fff;color:var(--ink);padding:0 19px}
 @media (hover:hover) and (pointer:fine){
   .cfg-fpill-amenity:not(.on):hover{background:var(--chipbg)}
 }
