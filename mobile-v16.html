@@ -160,19 +160,23 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-eyebrow{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);font-weight:600;margin:18px 0 8px}
 
 /* material-type picker: pill chips with a real close-up crop of that texture family plus a
-   label -- grey fill w/ a slightly darker grey outline, unselected; solid ink fill, selected.
-   A black outline on the unselected state read as "already active" in usability testing
-   (Diana, 2026-07), so unselected pills stay off --ink for the border. Labels like "Neted" vs
-   "Catifea" don't mean anything on their own to someone who hasn't felt the fabric, so the
-   photo carries the actual distinction and the text just names it. */
+   label -- white fill w/ a light grey outline, unselected; grey-tinted fill w/ a black outline,
+   selected -- same Airbnb amenity-card treatment as the Proprietăți pills and the Formă shape
+   cards, so every selectable chip in the configurator reads as one consistent pattern. A black
+   outline on the UNSELECTED state read as "already active" in usability testing (Diana,
+   2026-07); that finding is still respected here since black only ever appears once a pill is
+   actually on, not by default. Labels like "Neted" vs "Catifea" don't mean anything on their
+   own to someone who hasn't felt the fabric, so the photo carries the actual distinction and
+   the text just names it. */
 .cfg-fabric-pillrow{display:flex;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;gap:4px;margin-bottom:12px}
 .cfg-fabric-pillrow::-webkit-scrollbar{display:none}
-.cfg-seg{flex:0 0 auto;display:inline-flex;align-items:center;gap:9px;background:var(--graysec);border:1px solid #e3e3e3;border-radius:9999px;padding:6px 18px 6px 6px;color:var(--ink);transition:background-color .15s,color .15s,border-color .15s,transform .12s ease,filter .12s ease}
-.cfg-seg.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.cfg-seg{flex:0 0 auto;display:inline-flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--hair);border-radius:9999px;padding:6px 18px 6px 6px;color:var(--ink);transition:background-color .15s,color .15s,border-color .15s,transform .12s ease,filter .12s ease}
+.cfg-seg.on{background:#fff;border:2px solid var(--ink);color:var(--ink);padding:5px 17px 5px 5px}
 .cfg-seg .dot{width:36px;height:36px;border-radius:50%;flex:0 0 auto;background-size:650%;background-position:center;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
 .cfg-seg .nm{font-size:15px;font-weight:500;letter-spacing:-.2px;white-space:nowrap}
 /* same chip, smaller -- used in the Filtre sheet's Material group, wraps to a 2nd row if all 4 don't fit on one */
 .cfg-seg.sm{gap:6px;padding:4px 12px 4px 4px}
+.cfg-seg.sm.on{padding:3px 11px 3px 3px}
 .cfg-seg.sm .dot{width:26px;height:26px}
 .cfg-seg.sm .nm{font-size:13px}
 
