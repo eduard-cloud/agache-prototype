@@ -1,0 +1,1220 @@
+{
+ "luna": {
+  "name": "Luna",
+  "assetSlug": "lunareal",
+  "material": "Texturat",
+  "finish": "Matte",
+  "source": "src-texturat-luna.webp",
+  "colors": [
+   {
+    "code": "01",
+    "hex": "#CFD0CB",
+    "file": "luna-01.jpg",
+    "dropin": "lunareal-01.png"
+   },
+   {
+    "code": "08",
+    "hex": "#342C2B",
+    "file": "luna-08.jpg",
+    "dropin": "lunareal-08.png"
+   },
+   {
+    "code": "14",
+    "hex": "#645147",
+    "file": "luna-14.jpg",
+    "dropin": "lunareal-14.png"
+   },
+   {
+    "code": "15",
+    "hex": "#7F7674",
+    "file": "luna-15.jpg",
+    "dropin": "lunareal-15.png"
+   },
+   {
+    "code": "16",
+    "hex": "#0F6C89",
+    "file": "luna-16.jpg",
+    "dropin": "lunareal-16.png"
+   },
+   {
+    "code": "17",
+    "hex": "#8E8A36",
+    "file": "luna-17.jpg",
+    "dropin": "lunareal-17.png"
+   },
+   {
+    "code": "21",
+    "hex": "#C6BCA9",
+    "file": "luna-21.jpg",
+    "dropin": "lunareal-21.png"
+   },
+   {
+    "code": "24",
+    "hex": "#3E1E30",
+    "file": "luna-24.jpg",
+    "dropin": "lunareal-24.png"
+   },
+   {
+    "code": "27",
+    "hex": "#2F2321",
+    "file": "luna-27.jpg",
+    "dropin": "lunareal-27.png"
+   },
+   {
+    "code": "30",
+    "hex": "#22303E",
+    "file": "luna-30.jpg",
+    "dropin": "lunareal-30.png"
+   },
+   {
+    "code": "31",
+    "hex": "#929390",
+    "file": "luna-31.jpg",
+    "dropin": "lunareal-31.png"
+   },
+   {
+    "code": "32",
+    "hex": "#35393C",
+    "file": "luna-32.jpg",
+    "dropin": "lunareal-32.png"
+   },
+   {
+    "code": "33",
+    "hex": "#A0978E",
+    "file": "luna-33.jpg",
+    "dropin": "lunareal-33.png"
+   },
+   {
+    "code": "34",
+    "hex": "#6A6461",
+    "file": "luna-34.jpg",
+    "dropin": "lunareal-34.png"
+   },
+   {
+    "code": "35",
+    "hex": "#3C3B3C",
+    "file": "luna-35.jpg",
+    "dropin": "lunareal-35.png"
+   },
+   {
+    "code": "36",
+    "hex": "#151514",
+    "file": "luna-36.jpg",
+    "dropin": "lunareal-36.png"
+   },
+   {
+    "code": "41",
+    "hex": "#292526",
+    "file": "luna-41.jpg",
+    "dropin": "lunareal-41.png"
+   },
+   {
+    "code": "60",
+    "hex": "#7C1C27",
+    "file": "luna-60.jpg",
+    "dropin": "lunareal-60.png"
+   },
+   {
+    "code": "78",
+    "hex": "#6D2B48",
+    "file": "luna-78.jpg",
+    "dropin": "lunareal-78.png"
+   },
+   {
+    "code": "85",
+    "hex": "#293E48",
+    "file": "luna-85.jpg",
+    "dropin": "lunareal-85.png"
+   },
+   {
+    "code": "96",
+    "hex": "#202020",
+    "file": "luna-96.jpg",
+    "dropin": "lunareal-96.png"
+   }
+  ]
+ },
+ "manila": {
+  "name": "Manila",
+  "assetSlug": "manila",
+  "material": "Efect catifea",
+  "finish": "Glossy",
+  "source": "src-efectcatifea.jpg",
+  "colors": [
+   {
+    "code": "00",
+    "hex": "#EEEFE9",
+    "file": "manila-00.jpg",
+    "dropin": "manila-00.png"
+   },
+   {
+    "code": "01",
+    "hex": "#F3EFE3",
+    "file": "manila-01.jpg",
+    "dropin": "manila-01.png"
+   },
+   {
+    "code": "02",
+    "hex": "#ABA291",
+    "file": "manila-02.jpg",
+    "dropin": "manila-02.png"
+   },
+   {
+    "code": "03",
+    "hex": "#908776",
+    "file": "manila-03.jpg",
+    "dropin": "manila-03.png"
+   },
+   {
+    "code": "04",
+    "hex": "#30211C",
+    "file": "manila-04.jpg",
+    "dropin": "manila-04.png"
+   },
+   {
+    "code": "05",
+    "hex": "#5A4C41",
+    "file": "manila-05.jpg",
+    "dropin": "manila-05.png"
+   },
+   {
+    "code": "06",
+    "hex": "#43262A",
+    "file": "manila-06.jpg",
+    "dropin": "manila-06.png"
+   },
+   {
+    "code": "07",
+    "hex": "#422D32",
+    "file": "manila-07.jpg",
+    "dropin": "manila-07.png"
+   },
+   {
+    "code": "08",
+    "hex": "#8E8381",
+    "file": "manila-08.jpg",
+    "dropin": "manila-08.png"
+   },
+   {
+    "code": "09",
+    "hex": "#CDB4BA",
+    "file": "manila-09.jpg",
+    "dropin": "manila-09.png"
+   },
+   {
+    "code": "10",
+    "hex": "#ABCAC5",
+    "file": "manila-10.jpg",
+    "dropin": "manila-10.png"
+   },
+   {
+    "code": "11",
+    "hex": "#8AB0A3",
+    "file": "manila-11.jpg",
+    "dropin": "manila-11.png"
+   },
+   {
+    "code": "12",
+    "hex": "#4D6160",
+    "file": "manila-12.jpg",
+    "dropin": "manila-12.png"
+   },
+   {
+    "code": "13",
+    "hex": "#CFCEC9",
+    "file": "manila-13.jpg",
+    "dropin": "manila-13.png"
+   },
+   {
+    "code": "14",
+    "hex": "#C4C0B7",
+    "file": "manila-14.jpg",
+    "dropin": "manila-14.png"
+   },
+   {
+    "code": "15",
+    "hex": "#94948A",
+    "file": "manila-15.jpg",
+    "dropin": "manila-15.png"
+   },
+   {
+    "code": "16",
+    "hex": "#767573",
+    "file": "manila-16.jpg",
+    "dropin": "manila-16.png"
+   },
+   {
+    "code": "17",
+    "hex": "#5B5C54",
+    "file": "manila-17.jpg",
+    "dropin": "manila-17.png"
+   },
+   {
+    "code": "18",
+    "hex": "#2E2F29",
+    "file": "manila-18.jpg",
+    "dropin": "manila-18.png"
+   },
+   {
+    "code": "19",
+    "hex": "#494947",
+    "file": "manila-19.jpg",
+    "dropin": "manila-19.png"
+   },
+   {
+    "code": "20",
+    "hex": "#56626E",
+    "file": "manila-20.jpg",
+    "dropin": "manila-20.png"
+   },
+   {
+    "code": "21",
+    "hex": "#857264",
+    "file": "manila-21.jpg",
+    "dropin": "manila-21.png"
+   },
+   {
+    "code": "22",
+    "hex": "#453832",
+    "file": "manila-22.jpg",
+    "dropin": "manila-22.png"
+   },
+   {
+    "code": "23",
+    "hex": "#982F33",
+    "file": "manila-23.jpg",
+    "dropin": "manila-23.png"
+   },
+   {
+    "code": "25",
+    "hex": "#103440",
+    "file": "manila-25.jpg",
+    "dropin": "manila-25.png"
+   },
+   {
+    "code": "26",
+    "hex": "#0E2944",
+    "file": "manila-26.jpg",
+    "dropin": "manila-26.png"
+   },
+   {
+    "code": "27",
+    "hex": "#274452",
+    "file": "manila-27.jpg",
+    "dropin": "manila-27.png"
+   },
+   {
+    "code": "28",
+    "hex": "#AF292A",
+    "file": "manila-28.jpg",
+    "dropin": "manila-28.png"
+   },
+   {
+    "code": "29",
+    "hex": "#896157",
+    "file": "manila-29.jpg",
+    "dropin": "manila-29.png"
+   },
+   {
+    "code": "30",
+    "hex": "#B98669",
+    "file": "manila-30.jpg",
+    "dropin": "manila-30.png"
+   },
+   {
+    "code": "31",
+    "hex": "#955A2E",
+    "file": "manila-31.jpg",
+    "dropin": "manila-31.png"
+   },
+   {
+    "code": "32",
+    "hex": "#D19B45",
+    "file": "manila-32.jpg",
+    "dropin": "manila-32.png"
+   },
+   {
+    "code": "33",
+    "hex": "#AF862C",
+    "file": "manila-33.jpg",
+    "dropin": "manila-33.png"
+   },
+   {
+    "code": "34",
+    "hex": "#53512B",
+    "file": "manila-34.jpg",
+    "dropin": "manila-34.png"
+   },
+   {
+    "code": "35",
+    "hex": "#163629",
+    "file": "manila-35.jpg",
+    "dropin": "manila-35.png"
+   },
+   {
+    "code": "36",
+    "hex": "#4D6F61",
+    "file": "manila-36.jpg",
+    "dropin": "manila-36.png"
+   },
+   {
+    "code": "37",
+    "hex": "#0E5653",
+    "file": "manila-37.jpg",
+    "dropin": "manila-37.png"
+   },
+   {
+    "code": "38",
+    "hex": "#516F6D",
+    "file": "manila-38.jpg",
+    "dropin": "manila-38.png"
+   },
+   {
+    "code": "39",
+    "hex": "#32578E",
+    "file": "manila-39.jpg",
+    "dropin": "manila-39.png"
+   },
+   {
+    "code": "40",
+    "hex": "#79733F",
+    "file": "manila-40.jpg",
+    "dropin": "manila-40.png"
+   },
+   {
+    "code": "41",
+    "hex": "#7EAF5E",
+    "file": "manila-41.jpg",
+    "dropin": "manila-41.png"
+   }
+  ]
+ },
+ "enjoylux": {
+  "name": "Enjoy Lux",
+  "assetSlug": "enjoylux",
+  "material": "Neted",
+  "finish": "Matte",
+  "source": "src-neted-enjoylux.webp",
+  "colors": [
+   {
+    "code": "01",
+    "hex": "#C7C1B9",
+    "file": "enjoylux-01.jpg",
+    "dropin": "enjoylux-01.png"
+   },
+   {
+    "code": "02",
+    "hex": "#AE9C8C",
+    "file": "enjoylux-02.jpg",
+    "dropin": "enjoylux-02.png"
+   },
+   {
+    "code": "03",
+    "hex": "#988C8C",
+    "file": "enjoylux-03.jpg",
+    "dropin": "enjoylux-03.png"
+   },
+   {
+    "code": "04",
+    "hex": "#443930",
+    "file": "enjoylux-04.jpg",
+    "dropin": "enjoylux-04.png"
+   },
+   {
+    "code": "05",
+    "hex": "#393132",
+    "file": "enjoylux-05.jpg",
+    "dropin": "enjoylux-05.png"
+   },
+   {
+    "code": "06",
+    "hex": "#231F1F",
+    "file": "enjoylux-06.jpg",
+    "dropin": "enjoylux-06.png"
+   },
+   {
+    "code": "07",
+    "hex": "#887E76",
+    "file": "enjoylux-07.jpg",
+    "dropin": "enjoylux-07.png"
+   },
+   {
+    "code": "08",
+    "hex": "#423E3C",
+    "file": "enjoylux-08.jpg",
+    "dropin": "enjoylux-08.png"
+   },
+   {
+    "code": "09",
+    "hex": "#473F3E",
+    "file": "enjoylux-09.jpg",
+    "dropin": "enjoylux-09.png"
+   },
+   {
+    "code": "10",
+    "hex": "#827C23",
+    "file": "enjoylux-10.jpg",
+    "dropin": "enjoylux-10.png"
+   },
+   {
+    "code": "11",
+    "hex": "#B49738",
+    "file": "enjoylux-11.jpg",
+    "dropin": "enjoylux-11.png"
+   },
+   {
+    "code": "12",
+    "hex": "#BE8031",
+    "file": "enjoylux-12.jpg",
+    "dropin": "enjoylux-12.png"
+   },
+   {
+    "code": "13",
+    "hex": "#9A3C2E",
+    "file": "enjoylux-13.jpg",
+    "dropin": "enjoylux-13.png"
+   },
+   {
+    "code": "14",
+    "hex": "#5F303B",
+    "file": "enjoylux-14.jpg",
+    "dropin": "enjoylux-14.png"
+   },
+   {
+    "code": "15",
+    "hex": "#2D282E",
+    "file": "enjoylux-15.jpg",
+    "dropin": "enjoylux-15.png"
+   },
+   {
+    "code": "16",
+    "hex": "#6A154E",
+    "file": "enjoylux-16.jpg",
+    "dropin": "enjoylux-16.png"
+   },
+   {
+    "code": "17",
+    "hex": "#264D56",
+    "file": "enjoylux-17.jpg",
+    "dropin": "enjoylux-17.png"
+   },
+   {
+    "code": "18",
+    "hex": "#5F847F",
+    "file": "enjoylux-18.jpg",
+    "dropin": "enjoylux-18.png"
+   },
+   {
+    "code": "19",
+    "hex": "#AE9295",
+    "file": "enjoylux-19.jpg",
+    "dropin": "enjoylux-19.png"
+   },
+   {
+    "code": "20",
+    "hex": "#ACACAC",
+    "file": "enjoylux-20.jpg",
+    "dropin": "enjoylux-20.png"
+   },
+   {
+    "code": "21",
+    "hex": "#87868B",
+    "file": "enjoylux-21.jpg",
+    "dropin": "enjoylux-21.png"
+   },
+   {
+    "code": "22",
+    "hex": "#3E4749",
+    "file": "enjoylux-22.jpg",
+    "dropin": "enjoylux-22.png"
+   },
+   {
+    "code": "23",
+    "hex": "#484848",
+    "file": "enjoylux-23.jpg",
+    "dropin": "enjoylux-23.png"
+   },
+   {
+    "code": "24",
+    "hex": "#302F34",
+    "file": "enjoylux-24.jpg",
+    "dropin": "enjoylux-24.png"
+   },
+   {
+    "code": "25",
+    "hex": "#242325",
+    "file": "enjoylux-25.jpg",
+    "dropin": "enjoylux-25.png"
+   }
+  ]
+ },
+ "milton": {
+  "name": "Milton",
+  "assetSlug": "milton",
+  "material": "Neted",
+  "finish": "Semi-Glossy",
+  "source": "src-neted-enjoylux.webp",
+  "colors": [
+   {
+    "code": "01",
+    "hex": "#D3C2B8",
+    "file": "milton-01.jpg",
+    "dropin": "milton-01.png"
+   },
+   {
+    "code": "02",
+    "hex": "#D1BFB5",
+    "file": "milton-02.jpg",
+    "dropin": "milton-02.png"
+   },
+   {
+    "code": "03",
+    "hex": "#BDAA9A",
+    "file": "milton-03.jpg",
+    "dropin": "milton-03.png"
+   },
+   {
+    "code": "04",
+    "hex": "#71605F",
+    "file": "milton-04.jpg",
+    "dropin": "milton-04.png"
+   },
+   {
+    "code": "05",
+    "hex": "#463939",
+    "file": "milton-05.jpg",
+    "dropin": "milton-05.png"
+   },
+   {
+    "code": "06",
+    "hex": "#2A2724",
+    "file": "milton-06.jpg",
+    "dropin": "milton-06.png"
+   },
+   {
+    "code": "07",
+    "hex": "#8F4F2F",
+    "file": "milton-07.jpg",
+    "dropin": "milton-07.png"
+   },
+   {
+    "code": "08",
+    "hex": "#88343B",
+    "file": "milton-08.jpg",
+    "dropin": "milton-08.png"
+   },
+   {
+    "code": "09",
+    "hex": "#541F2E",
+    "file": "milton-09.jpg",
+    "dropin": "milton-09.png"
+   },
+   {
+    "code": "10",
+    "hex": "#5A2454",
+    "file": "milton-10.jpg",
+    "dropin": "milton-10.png"
+   },
+   {
+    "code": "11",
+    "hex": "#88733D",
+    "file": "milton-11.jpg",
+    "dropin": "milton-11.png"
+   },
+   {
+    "code": "12",
+    "hex": "#265255",
+    "file": "milton-12.jpg",
+    "dropin": "milton-12.png"
+   },
+   {
+    "code": "13",
+    "hex": "#243143",
+    "file": "milton-13.jpg",
+    "dropin": "milton-13.png"
+   },
+   {
+    "code": "14",
+    "hex": "#6F6F6B",
+    "file": "milton-14.jpg",
+    "dropin": "milton-14.png"
+   },
+   {
+    "code": "15",
+    "hex": "#4A4547",
+    "file": "milton-15.jpg",
+    "dropin": "milton-15.png"
+   },
+   {
+    "code": "16",
+    "hex": "#272727",
+    "file": "milton-16.jpg",
+    "dropin": "milton-16.png"
+   },
+   {
+    "code": "17",
+    "hex": "#47464A",
+    "file": "milton-17.jpg",
+    "dropin": "milton-17.png"
+   },
+   {
+    "code": "18",
+    "hex": "#141C16",
+    "file": "milton-18.jpg",
+    "dropin": "milton-18.png"
+   },
+   {
+    "code": "19",
+    "hex": "#1B292D",
+    "file": "milton-19.jpg",
+    "dropin": "milton-19.png"
+   },
+   {
+    "code": "20",
+    "hex": "#1A1A32",
+    "file": "milton-20.jpg",
+    "dropin": "milton-20.png"
+   },
+   {
+    "code": "21",
+    "hex": "#A2C2B3",
+    "file": "milton-21.jpg",
+    "dropin": "milton-21.png"
+   },
+   {
+    "code": "22",
+    "hex": "#8E9EA5",
+    "file": "milton-22.jpg",
+    "dropin": "milton-22.png"
+   },
+   {
+    "code": "23",
+    "hex": "#D7BDC2",
+    "file": "milton-23.jpg",
+    "dropin": "milton-23.png"
+   },
+   {
+    "code": "24",
+    "hex": "#4E665A",
+    "file": "milton-24.jpg",
+    "dropin": "milton-24.png"
+   },
+   {
+    "code": "25",
+    "hex": "#8599A6",
+    "file": "milton-25.jpg",
+    "dropin": "milton-25.png"
+   },
+   {
+    "code": "26",
+    "hex": "#4F6772",
+    "file": "milton-26.jpg",
+    "dropin": "milton-26.png"
+   },
+   {
+    "code": "27",
+    "hex": "#57522E",
+    "file": "milton-27.jpg",
+    "dropin": "milton-27.png"
+   },
+   {
+    "code": "28",
+    "hex": "#AC6B41",
+    "file": "milton-28.jpg",
+    "dropin": "milton-28.png"
+   },
+   {
+    "code": "29",
+    "hex": "#A99991",
+    "file": "milton-29.jpg",
+    "dropin": "milton-29.png"
+   },
+   {
+    "code": "30",
+    "hex": "#C0B5AF",
+    "file": "milton-30.jpg",
+    "dropin": "milton-30.png"
+   },
+   {
+    "code": "31",
+    "hex": "#E8E4E2",
+    "file": "milton-31.jpg",
+    "dropin": "milton-31.png"
+   },
+   {
+    "code": "32",
+    "hex": "#AA8C84",
+    "file": "milton-32.jpg",
+    "dropin": "milton-32.png"
+   },
+   {
+    "code": "33",
+    "hex": "#562E36",
+    "file": "milton-33.jpg",
+    "dropin": "milton-33.png"
+   }
+  ]
+ },
+ "piano": {
+  "name": "Piano",
+  "assetSlug": "piano",
+  "material": "Catifea",
+  "finish": "Glossy",
+  "source": "src-catifea.jpg",
+  "colors": [
+   {
+    "code": "01",
+    "hex": "#F3F1E6",
+    "file": "piano-01.jpg",
+    "dropin": "piano-01.png"
+   },
+   {
+    "code": "02",
+    "hex": "#ECE3D6",
+    "file": "piano-02.jpg",
+    "dropin": "piano-02.png"
+   },
+   {
+    "code": "03",
+    "hex": "#E1C8B0",
+    "file": "piano-03.jpg",
+    "dropin": "piano-03.png"
+   },
+   {
+    "code": "04",
+    "hex": "#B7A6A0",
+    "file": "piano-04.jpg",
+    "dropin": "piano-04.png"
+   },
+   {
+    "code": "05",
+    "hex": "#665452",
+    "file": "piano-05.jpg",
+    "dropin": "piano-05.png"
+   },
+   {
+    "code": "06",
+    "hex": "#5F2534",
+    "file": "piano-06.jpg",
+    "dropin": "piano-06.png"
+   },
+   {
+    "code": "07",
+    "hex": "#BD8910",
+    "file": "piano-07.jpg",
+    "dropin": "piano-07.png"
+   },
+   {
+    "code": "08",
+    "hex": "#074B30",
+    "file": "piano-08.jpg",
+    "dropin": "piano-08.png"
+   },
+   {
+    "code": "09",
+    "hex": "#537368",
+    "file": "piano-09.jpg",
+    "dropin": "piano-09.png"
+   },
+   {
+    "code": "10",
+    "hex": "#114B54",
+    "file": "piano-10.jpg",
+    "dropin": "piano-10.png"
+   },
+   {
+    "code": "11",
+    "hex": "#90ABB8",
+    "file": "piano-11.jpg",
+    "dropin": "piano-11.png"
+   },
+   {
+    "code": "12",
+    "hex": "#1B1C32",
+    "file": "piano-12.jpg",
+    "dropin": "piano-12.png"
+   },
+   {
+    "code": "13",
+    "hex": "#CEC3BB",
+    "file": "piano-13.jpg",
+    "dropin": "piano-13.png"
+   },
+   {
+    "code": "14",
+    "hex": "#909396",
+    "file": "piano-14.jpg",
+    "dropin": "piano-14.png"
+   },
+   {
+    "code": "15",
+    "hex": "#595353",
+    "file": "piano-15.jpg",
+    "dropin": "piano-15.png"
+   },
+   {
+    "code": "16",
+    "hex": "#130F0E",
+    "file": "piano-16.jpg",
+    "dropin": "piano-16.png"
+   },
+   {
+    "code": "17",
+    "hex": "#101010",
+    "file": "piano-17.jpg",
+    "dropin": "piano-17.png"
+   },
+   {
+    "code": "18",
+    "hex": "#5A4947",
+    "file": "piano-18.jpg",
+    "dropin": "piano-18.png"
+   },
+   {
+    "code": "19",
+    "hex": "#484848",
+    "file": "piano-19.jpg",
+    "dropin": "piano-19.png"
+   },
+   {
+    "code": "20",
+    "hex": "#81605B",
+    "file": "piano-20.jpg",
+    "dropin": "piano-20.png"
+   },
+   {
+    "code": "21",
+    "hex": "#774118",
+    "file": "piano-21.jpg",
+    "dropin": "piano-21.png"
+   },
+   {
+    "code": "22",
+    "hex": "#8D7668",
+    "file": "piano-22.jpg",
+    "dropin": "piano-22.png"
+   },
+   {
+    "code": "23",
+    "hex": "#7C622F",
+    "file": "piano-23.jpg",
+    "dropin": "piano-23.png"
+   },
+   {
+    "code": "24",
+    "hex": "#3C4043",
+    "file": "piano-24.jpg",
+    "dropin": "piano-24.png"
+   },
+   {
+    "code": "25",
+    "hex": "#585836",
+    "file": "piano-25.jpg",
+    "dropin": "piano-25.png"
+   },
+   {
+    "code": "26",
+    "hex": "#27352A",
+    "file": "piano-26.jpg",
+    "dropin": "piano-26.png"
+   },
+   {
+    "code": "28",
+    "hex": "#2E3740",
+    "file": "piano-28.jpg",
+    "dropin": "piano-28.png"
+   }
+  ]
+ },
+ "spello": {
+  "name": "Spello",
+  "assetSlug": "spello",
+  "material": "Texturat",
+  "finish": "Matte",
+  "source": "src-texturat-spello.webp",
+  "colors": [
+   {
+    "code": "04",
+    "hex": "#B0915B",
+    "file": "spello-04.jpg",
+    "dropin": "spello-04.png"
+   },
+   {
+    "code": "05",
+    "hex": "#9F867F",
+    "file": "spello-05.jpg",
+    "dropin": "spello-05.png"
+   },
+   {
+    "code": "06",
+    "hex": "#683C47",
+    "file": "spello-06.jpg",
+    "dropin": "spello-06.png"
+   },
+   {
+    "code": "08",
+    "hex": "#5D636D",
+    "file": "spello-08.jpg",
+    "dropin": "spello-08.png"
+   },
+   {
+    "code": "09",
+    "hex": "#273940",
+    "file": "spello-09.jpg",
+    "dropin": "spello-09.png"
+   },
+   {
+    "code": "10",
+    "hex": "#6F7D70",
+    "file": "spello-10.jpg",
+    "dropin": "spello-10.png"
+   },
+   {
+    "code": "13",
+    "hex": "#62625E",
+    "file": "spello-13.jpg",
+    "dropin": "spello-13.png"
+   }
+  ]
+ },
+ "maya": {
+  "name": "Maya",
+  "assetSlug": "maya",
+  "material": "Efect catifea",
+  "finish": "Semi-Glossy",
+  "source": "src-efectcatifea.jpg",
+  "colors": [
+   {
+    "code": "01",
+    "hex": "#C9C2B8",
+    "file": "maya-01.jpg",
+    "dropin": "maya-01.png"
+   },
+   {
+    "code": "02",
+    "hex": "#DCD6C2",
+    "file": "maya-02.jpg",
+    "dropin": "maya-02.png"
+   },
+   {
+    "code": "03",
+    "hex": "#DACCB8",
+    "file": "maya-03.jpg",
+    "dropin": "maya-03.png"
+   },
+   {
+    "code": "04",
+    "hex": "#B5925C",
+    "file": "maya-04.jpg",
+    "dropin": "maya-04.png"
+   },
+   {
+    "code": "05",
+    "hex": "#CB9541",
+    "file": "maya-05.jpg",
+    "dropin": "maya-05.png"
+   },
+   {
+    "code": "06",
+    "hex": "#835D48",
+    "file": "maya-06.jpg",
+    "dropin": "maya-06.png"
+   },
+   {
+    "code": "07",
+    "hex": "#383E1A",
+    "file": "maya-07.jpg",
+    "dropin": "maya-07.png"
+   },
+   {
+    "code": "08",
+    "hex": "#20302E",
+    "file": "maya-08.jpg",
+    "dropin": "maya-08.png"
+   },
+   {
+    "code": "09",
+    "hex": "#222632",
+    "file": "maya-09.jpg",
+    "dropin": "maya-09.png"
+   },
+   {
+    "code": "10",
+    "hex": "#1D2B3A",
+    "file": "maya-10.jpg",
+    "dropin": "maya-10.png"
+   },
+   {
+    "code": "11",
+    "hex": "#525658",
+    "file": "maya-11.jpg",
+    "dropin": "maya-11.png"
+   },
+   {
+    "code": "12",
+    "hex": "#5C6173",
+    "file": "maya-12.jpg",
+    "dropin": "maya-12.png"
+   },
+   {
+    "code": "13",
+    "hex": "#89A3A2",
+    "file": "maya-13.jpg",
+    "dropin": "maya-13.png"
+   },
+   {
+    "code": "14",
+    "hex": "#6C827E",
+    "file": "maya-14.jpg",
+    "dropin": "maya-14.png"
+   },
+   {
+    "code": "15",
+    "hex": "#B4988C",
+    "file": "maya-15.jpg",
+    "dropin": "maya-15.png"
+   },
+   {
+    "code": "16",
+    "hex": "#78605C",
+    "file": "maya-16.jpg",
+    "dropin": "maya-16.png"
+   },
+   {
+    "code": "17",
+    "hex": "#5A4E4E",
+    "file": "maya-17.jpg",
+    "dropin": "maya-17.png"
+   },
+   {
+    "code": "18",
+    "hex": "#6D625F",
+    "file": "maya-18.jpg",
+    "dropin": "maya-18.png"
+   },
+   {
+    "code": "19",
+    "hex": "#807875",
+    "file": "maya-19.jpg",
+    "dropin": "maya-19.png"
+   },
+   {
+    "code": "20",
+    "hex": "#ABA9A5",
+    "file": "maya-20.jpg",
+    "dropin": "maya-20.png"
+   },
+   {
+    "code": "21",
+    "hex": "#666665",
+    "file": "maya-21.jpg",
+    "dropin": "maya-21.png"
+   },
+   {
+    "code": "22",
+    "hex": "#2C282A",
+    "file": "maya-22.jpg",
+    "dropin": "maya-22.png"
+   }
+  ]
+ },
+ "zoya": {
+  "name": "Zoya",
+  "assetSlug": "zoya",
+  "material": "Efect catifea",
+  "finish": "Matte",
+  "source": "src-efectcatifea.jpg",
+  "colors": [
+   {
+    "code": "01",
+    "hex": "#BCBDB8",
+    "file": "zoya-01.jpg",
+    "dropin": "zoya-01.png"
+   },
+   {
+    "code": "02",
+    "hex": "#AAA7A4",
+    "file": "zoya-02.jpg",
+    "dropin": "zoya-02.png"
+   },
+   {
+    "code": "03",
+    "hex": "#8B787B",
+    "file": "zoya-03.jpg",
+    "dropin": "zoya-03.png"
+   },
+   {
+    "code": "04",
+    "hex": "#483437",
+    "file": "zoya-04.jpg",
+    "dropin": "zoya-04.png"
+   },
+   {
+    "code": "05",
+    "hex": "#4C4443",
+    "file": "zoya-05.jpg",
+    "dropin": "zoya-05.png"
+   },
+   {
+    "code": "06",
+    "hex": "#1B2E2B",
+    "file": "zoya-06.jpg",
+    "dropin": "zoya-06.png"
+   },
+   {
+    "code": "07",
+    "hex": "#4A5858",
+    "file": "zoya-07.jpg",
+    "dropin": "zoya-07.png"
+   },
+   {
+    "code": "08",
+    "hex": "#576460",
+    "file": "zoya-08.jpg",
+    "dropin": "zoya-08.png"
+   },
+   {
+    "code": "09",
+    "hex": "#2F3336",
+    "file": "zoya-09.jpg",
+    "dropin": "zoya-09.png"
+   },
+   {
+    "code": "10",
+    "hex": "#585C5F",
+    "file": "zoya-10.jpg",
+    "dropin": "zoya-10.png"
+   },
+   {
+    "code": "11",
+    "hex": "#676768",
+    "file": "zoya-11.jpg",
+    "dropin": "zoya-11.png"
+   },
+   {
+    "code": "12",
+    "hex": "#A0A4A2",
+    "file": "zoya-12.jpg",
+    "dropin": "zoya-12.png"
+   },
+   {
+    "code": "13",
+    "hex": "#876934",
+    "file": "zoya-13.jpg",
+    "dropin": "zoya-13.png"
+   },
+   {
+    "code": "14",
+    "hex": "#41442F",
+    "file": "zoya-14.jpg",
+    "dropin": "zoya-14.png"
+   },
+   {
+    "code": "15",
+    "hex": "#283748",
+    "file": "zoya-15.jpg",
+    "dropin": "zoya-15.png"
+   }
+  ]
+ }
+}
