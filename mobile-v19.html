@@ -300,7 +300,12 @@ html,body{height:100%;margin:0;background:#fff;overflow:hidden}
 .sw.on .tick{display:flex}
 .cta.is-empty{opacity:.35;pointer-events:none}
 .slot.full{position:relative;overflow:hidden}
-.slot.full img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(2.3)}
+.slot.full{overflow:visible;cursor:pointer;position:relative}
+.slot.full .im{position:absolute;inset:0;border-radius:2px;overflow:hidden}
+.slot.full .im img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(2.3)}
+.slot-rm{position:absolute;top:-6px;right:-6px;width:18px;height:18px;padding:0;border:1px solid #e3e3e3;
+  border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;z-index:3}
+.slot-rm svg{width:9px;height:9px}
 .grid4{grid-template-columns:repeat(3,1fr);gap:10px}
 .swn{white-space:normal}
 
@@ -979,6 +984,15 @@ function leave(){ location.href = 'mobile-v17.html'; }
   });
 })();
 
+/* the close glyph already on these screens, reused for the bag's remove buttons */
+var X_GLYPH = (function(){
+  var x = document.querySelector('.iconbtn svg');
+  return x ? x.outerHTML : '';
+})();
+
+/* every swatch gets a stable key so a slot can point back at the one that filled it */
+document.querySelectorAll('.sw').forEach(function(sw, i){ sw.dataset.k = 'k' + i; });
+
 var MAX = 5;
 var PLUS = (function(){
   var s = document.querySelector('.slot:not(.full)');
@@ -999,8 +1013,19 @@ function syncBag(screen){
       var img = p.querySelector('img');
       slot.classList.add('full');
       slot.style.background = p.style.background;
-      slot.innerHTML = img ? '<img src="' + img.getAttribute('src') + '" alt="">' : '';
+      /* the photo is cropped in 2.3x, so it has to be clipped by an inner box -- the slot
+         itself has to stay unclipped for the x to sit on its corner */
+      slot.innerHTML = img ? '<span class="im"><img src="' + img.getAttribute('src') + '" alt=""></span>' : '';
+      /* a sample can be thrown out of the bag from the bag itself, not only by finding it
+         again in the grid -- the x is the screens' own close glyph, scaled down */
+      var rm = document.createElement('button');
+      rm.className = 'slot-rm';
+      rm.setAttribute('aria-label', 'Elimină mostra');
+      rm.innerHTML = X_GLYPH;
+      slot.appendChild(rm);
+      slot.dataset.swatch = p.dataset.k;
     } else {
+      slot.removeAttribute('data-swatch');
       slot.classList.remove('full');
       slot.style.background = '';
       slot.innerHTML = PLUS;
@@ -1020,6 +1045,13 @@ function syncBag(screen){
 
 document.addEventListener('click', function(e){
   var i = at;
+  var slot = e.target.closest('.slot[data-swatch]');
+  if (slot){
+    var owner = screens[at].querySelector('.sw[data-k="' + slot.dataset.swatch + '"]');
+    if (owner) owner.classList.remove('on');
+    syncBag(screens[at]);
+    return;
+  }
   var seg = e.target.closest('.abseg span');
   if (seg){
     Array.prototype.forEach.call(seg.parentNode.children, function(b){ b.classList.remove('on'); });
