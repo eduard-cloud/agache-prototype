@@ -1092,6 +1092,9 @@ document.addEventListener('click', function(e){
   if (go) return show(Number(go.dataset.go));
   var nav = e.target.closest(NAV);
   if (!nav) return;
+  /* a dimmed button is dead: pointer-events already stops a real tap, this stops everything
+     else (a dispatched click, a keyboard activation) from walking past it */
+  if (nav.classList.contains('is-empty')) return;
   if (nav.classList.contains('filtbtn') || nav.classList.contains('custbtn')) return show(6);
   /* The flow is a modal over the PDP, so its X dismisses the whole thing and lands back on
      the product page. The exception is the filter panel (6, 7), which is its own overlay on
@@ -1261,6 +1264,12 @@ function applyFilters(){
     }
   });
   var exact = GRID_TOP ? countVisible(GRID_TOP) : 0;
+
+  /* a question cannot be moved past until it has an answer */
+  [[2,'needs'],[3,'feel'],[4,'look']].forEach(function(pair){
+    var cta = screens[pair[0]].querySelector('.cta');
+    if (cta) cta.classList.toggle('is-empty', state[pair[1]].length === 0);
+  });
 
   /* the panel's apply button carries the live count, and says so when there is nothing left */
   document.querySelectorAll('.abshow').forEach(function(btn){
