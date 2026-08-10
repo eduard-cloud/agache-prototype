@@ -291,6 +291,18 @@ html,body{height:100%;margin:0;background:#fff;overflow:hidden}
 /* samples, presented the Noah way: the woven cloth itself, three to a row, name under,
    check in the top-right corner of the ones you picked. Swatch tiles only -- every other
    screen keeps the board's own layout. */
+/* Square corners, no hairline: nothing frames an unpicked sample, so the eye goes to the
+   cloth. Picking one draws a black border on its edge. */
+.sw{border-radius:0;box-shadow:none}
+/* the photo fills the tile, so the border has to be drawn over it, not under */
+.sw.on{box-shadow:none}
+.sw.on::after{content:"";position:absolute;inset:0;border:2px solid var(--black);z-index:1;pointer-events:none}
+.sw img{border-radius:0}
+/* An unpicked name is quiet grey -- it is there when you want it, not competing with the
+   color. The one you picked steps forward in ink. */
+.swn{color:var(--greyish)}
+.sw.on + .swn{color:var(--black);font-weight:500}
+
 /* The macros are shot wide; at tile size the weave only reads once you crop into them --
    same 2.3x the configurator grid uses on the identical files. */
 .sw{overflow:hidden}
@@ -301,7 +313,8 @@ html,body{height:100%;margin:0;background:#fff;overflow:hidden}
 .cta.is-empty{opacity:.35;pointer-events:none}
 .slot.full{position:relative;overflow:hidden}
 .slot.full{overflow:visible;cursor:pointer;position:relative}
-.slot.full .im{position:absolute;inset:0;border-radius:2px;overflow:hidden}
+.slot,.slot.full .im{border-radius:0}
+.slot.full .im{position:absolute;inset:0;overflow:hidden}
 .slot.full .im img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(2.3)}
 .slot-rm{position:absolute;top:-6px;right:-6px;width:18px;height:18px;padding:0;border:1px solid #e3e3e3;
   border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;z-index:3}
