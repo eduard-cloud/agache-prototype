@@ -296,7 +296,9 @@ html,body{height:100%;margin:0;background:#fff;overflow:hidden}
 .sw{overflow:hidden}
 .sw img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
   transform:scale(2.3);transform-origin:center}
-.sw .tick{top:5px;right:5px;bottom:auto;left:auto;z-index:2;box-shadow:0 0 0 2px #fff}
+.sw .tick{top:5px;right:5px;bottom:auto;left:auto;z-index:2;box-shadow:0 0 0 2px #fff;display:none}
+.sw.on .tick{display:flex}
+.cta.is-empty{opacity:.35;pointer-events:none}
 .slot.full{position:relative;overflow:hidden}
 .slot.full img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(2.3)}
 .grid4{grid-template-columns:repeat(3,1fr);gap:10px}
@@ -395,8 +397,8 @@ html.enter-r body{animation:pushInR .26s cubic-bezier(.16,1,.3,1) both}
         <div class="bwhite">Începe configurarea <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></div>
       </div>
     </div>
-    <div class="bar" style="border-top:none" data-go="9">
-      <div style="display:flex;align-items:center;gap:12px">
+    <div class="bar" style="border-top:none">
+      <div style="display:flex;align-items:center;gap:12px" data-go="9">
         <span class="stack"><span style="background:#A0978E"></span><span style="background:#0F6C89"></span><span style="background:#E1C8B0"></span></span>
         <span class="b16" style="flex:1">Vezi toate materialele și culorile</span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
@@ -480,7 +482,7 @@ html.enter-r body{animation:pushInR .26s cubic-bezier(.16,1,.3,1) both}
       <div>
         <div class="msub12">Trec toate cele 3 criterii · 37 de culori</div>
         <div class="grid4" style="margin-top:12px">
-          <div><span class="sw on" style="background:#DCD6C2"><img src="assets/maya-02.png" alt="Maya 02" loading="lazy" onerror="this.remove()"><span class="tick"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span></span><span class="swn">Maya 02</span></div>
+          <div><span class="sw" style="background:#DCD6C2"><img src="assets/maya-02.png" alt="Maya 02" loading="lazy" onerror="this.remove()"><span class="tick"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span></span><span class="swn">Maya 02</span></div>
           <div><span class="sw" style="background:#DACCB8"><img src="assets/maya-03.png" alt="Maya 03" loading="lazy" onerror="this.remove()"></span><span class="swn">Maya 03</span></div>
           <div><span class="sw" style="background:#C9C2B8"><img src="assets/maya-01.png" alt="Maya 01" loading="lazy" onerror="this.remove()"></span><span class="swn">Maya 01</span></div>
           <div><span class="sw" style="background:#BCBDB8"><img src="assets/zoya-01.png" alt="Zoya 01" loading="lazy" onerror="this.remove()"></span><span class="swn">Zoya 01</span></div>
@@ -879,7 +881,7 @@ html.enter-r body{animation:pushInR .26s cubic-bezier(.16,1,.3,1) both}
       <div>
         <div class="msub12">Texturat · 28 culori · Luna, Spello</div>
         <div class="grid4" style="margin-top:12px">
-          <div><span class="sw on" style="background:#A0978E"><img src="assets/lunareal-33.png" alt="Luna 33" loading="lazy" onerror="this.remove()"><span class="tick"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span></span><span class="swn">Luna 33</span></div>
+          <div><span class="sw" style="background:#A0978E"><img src="assets/lunareal-33.png" alt="Luna 33" loading="lazy" onerror="this.remove()"><span class="tick"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span></span><span class="swn">Luna 33</span></div>
           <div><span class="sw" style="background:#0F6C89"><img src="assets/lunareal-16.png" alt="Luna 16" loading="lazy" onerror="this.remove()"></span><span class="swn">Luna 16</span></div>
           <div><span class="sw" style="background:#8E8A36"><img src="assets/lunareal-17.png" alt="Luna 17" loading="lazy" onerror="this.remove()"></span><span class="swn">Luna 17</span></div>
           <div><span class="sw" style="background:#B0915B"><img src="assets/spello-04.png" alt="Spello 04" loading="lazy" onerror="this.remove()"></span><span class="swn">Spello 04</span></div>
@@ -962,6 +964,60 @@ function show(n){
 }
 function leave(){ location.href = 'mobile-v17.html'; }
 
+/* The board drew the bag above the CTA in a fixed state, because a static screen has nothing
+   to react to. Here a tap has to land in it: the picked swatches fill the slots in order,
+   un-picking empties one, and the CTA counts what is in the bag. The empty-slot "+" is taken
+   from the board's own markup rather than redrawn. */
+/* The board only drew the check badge on the one swatch it showed as chosen. Every swatch is
+   choosable here, so each gets a copy of that same badge element, shown by CSS when picked --
+   the badge itself is the board's, not a new one. */
+(function(){
+  var tick = document.querySelector('.sw .tick');
+  if (!tick) return;
+  document.querySelectorAll('.sw').forEach(function(sw){
+    if (!sw.querySelector('.tick')) sw.appendChild(tick.cloneNode(true));
+  });
+})();
+
+var MAX = 5;
+var PLUS = (function(){
+  var s = document.querySelector('.slot:not(.full)');
+  return s ? s.innerHTML : '';
+})();
+function bagOf(screen){
+  var slots = screen.querySelectorAll('.bar .slot');
+  return slots.length ? slots : null;
+}
+function picked(screen){ return Array.prototype.slice.call(screen.querySelectorAll('.sw.on')); }
+function syncBag(screen){
+  var slots = bagOf(screen);
+  if (!slots) return;
+  var chosen = picked(screen);
+  Array.prototype.forEach.call(slots, function(slot, i){
+    var p = chosen[i];
+    if (p){
+      var img = p.querySelector('img');
+      slot.classList.add('full');
+      slot.style.background = p.style.background;
+      slot.innerHTML = img ? '<img src="' + img.getAttribute('src') + '" alt="">' : '';
+    } else {
+      slot.classList.remove('full');
+      slot.style.background = '';
+      slot.innerHTML = PLUS;
+    }
+  });
+  var cta = screen.querySelector('.bar .cta');
+  if (cta){
+    var n = chosen.length;
+    var icon = cta.querySelector('svg');
+    cta.textContent = n === 0 ? 'Alege până la 5 mostre'
+                    : n === 1 ? 'Comandă 1 mostră — 49 lei'
+                              : 'Comandă ' + n + ' mostre — 49 lei';
+    if (icon) cta.appendChild(icon);
+    cta.classList.toggle('is-empty', n === 0);
+  }
+}
+
 document.addEventListener('click', function(e){
   var i = at;
   var seg = e.target.closest('.abseg span');
@@ -972,9 +1028,14 @@ document.addEventListener('click', function(e){
   }
   var sel = e.target.closest(SELECTABLE);
   if (sel && !e.target.closest(NAV)){
+    var screen = screens[at];
+    /* a sample is a place in the bag, and there are only five of them */
+    if (sel.classList.contains('sw') && !sel.classList.contains('on') && bagOf(screen)
+        && picked(screen).length >= MAX) return;
     sel.classList.toggle('on');
     var pill = sel.closest('.abselpill');
     if (pill) pill.remove();
+    if (sel.classList.contains('sw')) syncBag(screen);
     return;
   }
   var go = e.target.closest('[data-go]');
@@ -994,6 +1055,7 @@ document.addEventListener('click', function(e){
 /* Entered from the real PDP, so the flow starts on the samples page -- screen 1 is the
    board's own copy of the PDP and would be a second one. */
 show(1);
+screens.forEach(syncBag);
 </script>
 <script>
 document.documentElement.addEventListener('animationend', function(e){
