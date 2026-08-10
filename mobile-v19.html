@@ -288,6 +288,16 @@ html,body{height:100%;margin:0;background:#fff;overflow:hidden}
 .screen.on{display:block}
 .screen .ph{width:100%;height:100%;border:none;border-radius:0;box-shadow:none}
 .screen .ph .sbar{display:none}
+/* On a phone the screen IS the page. Opened on a desktop that same layout would stretch a
+   375-wide design across the whole window, so above phone width the board's frame comes back:
+   the .ph box at its designed size, centred on the canvas colour, status bar and all. */
+@media (min-width:560px){
+  html,body{background:#EAE7E2;overflow:hidden}
+  .screen.on{display:flex;align-items:center;justify-content:center;width:100%;padding:24px 0}
+  .screen .ph{width:390px;flex:none;height:min(844px, 100%);
+    border:1px solid #D8D5D0;border-radius:28px;box-shadow:0 6px 22px rgba(0,0,0,.07)}
+  .screen .ph .sbar{display:flex}
+}
 /* samples, presented the Noah way: the woven cloth itself, three to a row, name under,
    check in the top-right corner of the ones you picked. Swatch tiles only -- every other
    screen keeps the board's own layout. */
@@ -970,7 +980,7 @@ html.enter-r body{animation:pushInR .26s cubic-bezier(.16,1,.3,1) both}
   </div>
 </div></div>
 <script>
-var SELECTABLE = '.tile,.abcard,.abpill,.crow,.abselpill,.sw,.chip,.mat,.fpill';
+var SELECTABLE = '.tile,.abcard,.abpill,.crow,.sw,.chip,.mat,.fpill';
 var NAV = '.cta,.bwhite,.abshow,.bsec,.filtbtn,.custbtn,.iconbtn,.ebtn,.abclear';
 var screens = Array.prototype.slice.call(document.querySelectorAll('.screen'));
 var at = 0;
@@ -1066,12 +1076,6 @@ document.addEventListener('click', function(e){
     syncBag(screens[at]);
     return;
   }
-  var seg = e.target.closest('.abseg span');
-  if (seg){
-    Array.prototype.forEach.call(seg.parentNode.children, function(b){ b.classList.remove('on'); });
-    seg.classList.add('on');
-    return;
-  }
   var sel = e.target.closest(SELECTABLE);
   if (sel && !e.target.closest(NAV)){
     var screen = screens[at];
@@ -1082,8 +1086,6 @@ document.addEventListener('click', function(e){
     if (sel.classList.contains('sw') && !sel.classList.contains('on') && bagOf(screen)
         && picked(screen).length >= MAX) return;
     sel.classList.toggle('on');
-    var pill = sel.closest('.abselpill');
-    if (pill) pill.remove();
     if (sel.classList.contains('sw')) syncBag(screen);
     return;
   }
@@ -1099,7 +1101,13 @@ document.addEventListener('click', function(e){
      the product page. The exception is the filter panel (6, 7), which is its own overlay on
      top of the list -- its X closes the panel back to the results, as it did on the board. */
   if (nav.classList.contains('iconbtn')) return (i === 6 || i === 7) ? show(5) : leave();
-  if (nav.classList.contains('abshow') || nav.classList.contains('abclear')) return show(5);
+  if (nav.classList.contains('abclear')){
+    Object.keys(state).forEach(function(k){ state[k].length = 0; });
+    repaintOptions();
+    applyFilters();
+    return;
+  }
+  if (nav.classList.contains('abshow')) return show(5);
   if (nav.classList.contains('ebtn')) return show(5);
   if (i === 5) return show(10);     // rezultate -> livrare
   if (i === 8) return show(5);      // nicio potrivire -> inapoi la rezultate
@@ -1218,12 +1226,51 @@ function toggleState(group, label){
   var a = state[group], i = a.indexOf(label);
   if (i > -1) a.splice(i, 1); else a.push(label);
 }
+/* The board drew the Selectate chips as a fixed row, so taking one off only deleted the pill
+   and left the option ticked underneath it. The chips are the ticked options, drawn: one per
+   pick, and its x unticks the option itself, which puts that section back to its default. */
+var CHIP_X = (function(){
+  var svg = document.querySelector('.abselpill svg');
+  return svg ? svg.outerHTML : X_GLYPH;
+})();
+var SEL_SECS = Array.prototype.filter.call(document.querySelectorAll('.absec'), function(sec){
+  var h = sec.querySelector('.abh');
+  return h && /Selectate/.test(h.textContent);
+}).map(function(sec){ return { sec: sec, row: sec.querySelector('.abrow') }; });
+
+var GROUPS = ['needs', 'feel', 'look', 'colors', 'props'];
+function picks(){
+  var out = [];
+  GROUPS.forEach(function(g){
+    state[g].forEach(function(l){ out.push({ g: g, l: l }); });
+  });
+  return out;
+}
+function renderChips(){
+  var list = picks();
+  SEL_SECS.forEach(function(s){
+    if (!s.row) return;
+    s.row.textContent = '';
+    list.forEach(function(p){
+      var chip = document.createElement('span');
+      chip.className = 'abselpill';
+      chip.dataset.g = p.g;
+      chip.dataset.l = p.l;
+      chip.textContent = p.l + ' ';
+      chip.insertAdjacentHTML('beforeend', CHIP_X);
+      s.row.appendChild(chip);
+    });
+    /* an empty section would leave a heading with nothing under it */
+    s.sec.style.display = list.length ? '' : 'none';
+  });
+}
 function repaintOptions(){
-  document.querySelectorAll('.tile,.crow,.abcard,.abpill').forEach(function(el){
+  document.querySelectorAll('.tile,.crow,.abcard,.abpill,.abseg span').forEach(function(el){
     var g = groupOf(el);
     if (!g) return;
     el.classList.toggle('on', state[g].indexOf(labelOf(el)) > -1);
   });
+  renderChips();
 }
 
 function passesFilters(item){
@@ -1278,6 +1325,14 @@ function applyFilters(){
     btn.classList.toggle('is-empty', empty);
   });
 
+  /* the badge on the filter button counts what is ticked, so an untick is visible from
+     outside the panel too */
+  var n = picks().length;
+  document.querySelectorAll('.filtbtn .cnt,.custbtn .cnt').forEach(function(b){
+    b.textContent = n;
+    b.style.display = n ? '' : 'none';
+  });
+
   /* the two headings on the results screen, held from the start -- the first one changes
      class, so re-querying by class would hand back the wrong element next time */
   var heads = [HEAD_TOP, HEAD_REST];
@@ -1308,7 +1363,14 @@ function applyFilters(){
 
 
 document.addEventListener('click', function(e){
-  var opt = e.target.closest('.tile,.crow,.abcard,.abpill');
+  var chip = e.target.closest('.abselpill');
+  if (chip && chip.dataset.g){
+    toggleState(chip.dataset.g, chip.dataset.l);
+    repaintOptions();
+    applyFilters();
+    return;
+  }
+  var opt = e.target.closest('.tile,.crow,.abcard,.abpill,.abseg span');
   if (!opt || e.target.closest(NAV)) return;
   var g = groupOf(opt);
   if (!g) return;
