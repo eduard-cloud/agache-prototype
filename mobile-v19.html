@@ -1156,6 +1156,9 @@ function familyOf(hex){
 var NEED_PROP = { 'Copil mic':'easyClean', 'Animal de companie':'petFriendly', 'Pahar de vin':'waterproof' };
 var PROP_KEY  = { 'Impermeabil':'waterproof', 'Easy Clean':'easyClean', 'Pet Friendly':'petFriendly' };
 
+var HEAD_TOP = screens[5].querySelectorAll('.msub12')[0] || null;
+var HEAD_REST = screens[5].querySelectorAll('.msub12')[1] || null;
+
 /* the two groups on the results screen, and how many of a group is on screen right now */
 var GRID_TOP = screens[5].querySelectorAll('.grid4')[0] || null;
 var GRID_REST = screens[5].querySelectorAll('.grid4')[1] || null;
@@ -1267,13 +1270,23 @@ function applyFilters(){
     btn.classList.toggle('is-empty', empty);
   });
 
-  /* the two headings on the results screen */
-  var heads = screens[5].querySelectorAll('.msub12');
+  /* the two headings on the results screen, held from the start -- the first one changes
+     class, so re-querying by class would hand back the wrong element next time */
+  var heads = [HEAD_TOP, HEAD_REST];
   var rest = GRID_REST ? countVisible(GRID_REST) : 0;
-  if (heads[0]) heads[0].textContent = total
-    ? 'Trec toate cele ' + total + (total === 1 ? ' criteriu · ' : ' criterii · ') + exact + (exact === 1 ? ' culoare' : ' de culori')
-    : 'Toate culorile · ' + exact;
-  if (heads[1]) heads[1].textContent = 'Restul culorilor · ' + rest + ', de la cea mai deschisă la cea mai închisă';
+  /* The first group leads the screen, so it gets a real title in the h3 the screens already
+     use for their headlines, not a small uppercase label. */
+  if (heads[0]){
+    heads[0].classList.remove('msub12');
+    heads[0].classList.add('h3');
+    heads[0].textContent = exact === 1 ? 'Am găsit o culoare pentru tine'
+                                       : 'Am găsit ' + exact + ' culori pentru tine';
+  }
+  /* the second group is everything that did not match -- it says so, and stays the small
+     label so the two groups do not read as two titles of equal weight */
+  if (heads[1]) heads[1].textContent = rest === 1
+    ? 'O culoare care nu se potrivește cu filtrele tale'
+    : 'Aceste ' + rest + ' culori nu se potrivesc cu filtrele tale';
 
   /* the designed empty state, shown in place rather than as a screen you cannot reach */
   /* Screen 8 IS the no-exact-match state and screen 7 is the nothing-left state -- they are
