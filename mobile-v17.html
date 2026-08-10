@@ -2401,11 +2401,12 @@ function renderSampleTray(){
   document.getElementById('sm-count').textContent = sampleSel.length;
   document.getElementById('sm-add-btn').disabled = sampleSel.length === 0;
 }
-/* Every "Comanda mostre" / "Alege mostre" entry point on this page goes to the full-screen
-   mostre flow in mobile-v18.html, which is the configurator shell in multi-select. The old
-   in-page overlay is kept below as openSamplesModalLegacy, unreferenced. */
+/* Every "Comanda mostre" / "Alege mostre" entry point on this page opens the existing
+   Design Lab samples screens in comanda-mostre-v3.html. Separate flow -- the sofa
+   configurator in mobile-v18.html is untouched and still owns Configurează and the material
+   paths. The old in-page overlay is kept below as openSamplesModalLegacy, unreferenced. */
 function openSamplesModal(){
-  pushTo('mobile-v18.html#mostre');
+  pushTo('mobile-v19.html');
 }
 function openSamplesModalLegacy(){
   buildSamplesGrid();

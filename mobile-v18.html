@@ -4,9 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Configurator Boston – Agache</title>
-<script>document.documentElement.classList.add('enter-r');
-/* Set the mode before first paint -- otherwise both modes' sections are visible for a frame. */
-document.documentElement.setAttribute('data-cfgmode', location.hash === '#mostre' ? 'mostre' : 'config');</script>
+<script>document.documentElement.classList.add('enter-r');</script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -469,37 +467,6 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-cta{flex:0 0 auto;background:#fff;border-top:1px solid var(--hair);display:flex;align-items:center;justify-content:space-between;padding:14px 24px}
 .cfg-cta .pr{font-size:24px;font-weight:500;letter-spacing:-.72px;color:var(--ink)}
 .cfg-cta .bb{height:46px;background:var(--red);color:#fff;border-radius:23px;padding:0 20px;font-size:14px;font-weight:500;display:flex;align-items:center}
-.cfg-cta .bb:disabled{opacity:.35}
-.cfg-cta-main{flex:1;display:flex;align-items:center;justify-content:space-between}
-
-/* ── mostre mode ── the same shell as configuring a sofa: same sheet, same chips, same filter
-   sheet, same color grid. Only three things differ -- the sections that belong to a sofa
-   (formă, sumar) drop out, the three questions come in, and the cta grows a row of 5 sample
-   slots above it. Everything mode-specific is switched by html[data-cfgmode], so neither mode
-   needs its own copy of any component. */
-html[data-cfgmode="mostre"] [data-mode="config"]{display:none!important}
-html[data-cfgmode="config"] [data-mode="mostre"]{display:none!important}
-html[data-cfgmode="mostre"] .cfg-cta{flex-direction:column;align-items:stretch;gap:12px;padding:12px 24px 14px}
-.cfg-tray{display:flex;gap:8px;align-items:center}
-.cfg-slot{position:relative;flex:0 0 auto;width:46px;height:46px;border-radius:4px;border:1px dashed #d5d5d5;background:var(--graysec);overflow:visible}
-.cfg-slot .im{position:absolute;inset:0;border-radius:4px;overflow:hidden}
-.cfg-slot img{width:100%;height:100%;object-fit:cover;transform:scale(2.3)}
-.cfg-slot.filled{border:1px solid var(--hair);background:#fff}
-.cfg-slot .rm{position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:#fff;border:1px solid #e3e3e3;display:flex;align-items:center;justify-content:center;padding:0;z-index:2}
-.cfg-tray-label{margin-left:auto;font-size:14px;color:var(--gray);white-space:nowrap}
-.cfg-tray-label b{color:var(--ink);font-weight:500}
-html[data-cfgmode="mostre"] .cfg-cta .pr{font-size:20px;letter-spacing:-.4px;line-height:1.15}
-.cfg-cta .pr em{display:block;font-size:12px;font-style:normal;font-weight:400;letter-spacing:0;color:var(--gray)}
-html[data-cfgmode="mostre"] .cfg-cta .bb{flex:0 0 auto}
-/* In mostre mode a tile is a checkbox, not a radio: the ink ring plus a check badge reads as
-   "in the bag", where config mode's single ring reads as "this is the one". */
-html[data-cfgmode="mostre"] .mtile .imw::before{content:"";position:absolute;right:6px;bottom:6px;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.9);z-index:1;display:none}
-html[data-cfgmode="mostre"] .mtile.on .imw::before{display:block}
-html[data-cfgmode="mostre"] .mtile.on .imw::after{content:"";position:absolute;right:6px;bottom:6px;width:20px;height:20px;border-radius:50%;background:var(--ink);z-index:1;border:none;box-shadow:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
-  background-size:11px;background-repeat:no-repeat;background-position:center;inset:auto 6px 6px auto}
-html[data-cfgmode="mostre"] .mtile.on{box-shadow:none}
-html[data-cfgmode="mostre"] .mtile.on .imw{box-shadow:inset 0 0 0 2px var(--ink)}
 </style>
 </head>
 <body>
@@ -519,20 +486,17 @@ html[data-cfgmode="mostre"] .mtile.on .imw{box-shadow:inset 0 0 0 2px var(--ink)
   <div id="cfg-sheet">
     <div class="cfg-handle" id="cfg-handle"><div class="hbar"></div></div>
     <div class="cfg-chips" id="cfg-chips">
-      <button class="cfg-chip on" data-mode="config" data-sec="config" onclick="scrollCfgTo('config')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Formă</button>
-      <!-- Nevoi de lifestyle chip stays hidden while configuring a sofa (removed per request);
-           in mostre mode it is the first of the three questions. -->
-      <button class="cfg-chip" data-mode="mostre" data-sec="needs" onclick="scrollCfgTo('needs')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Nevoi</button>
-      <button class="cfg-chip" data-mode="mostre" data-sec="feel" onclick="scrollCfgTo('feel')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Atingere</button>
-      <button class="cfg-chip" data-mode="mostre" data-sec="look" onclick="scrollCfgTo('look')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Aspect</button>
+      <button class="cfg-chip on" data-sec="config" onclick="scrollCfgTo('config')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Formă</button>
+      <!-- Nevoi de lifestyle chip removed per request, kept in markup below for easy restore -->
+      <button class="cfg-chip" data-sec="needs" onclick="scrollCfgTo('needs')" style="display:none"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Nevoi</button>
       <button class="cfg-chip" data-sec="color" onclick="scrollCfgTo('color')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Material</button>
       <button class="cfg-chip" type="button" id="cfg-nav-filter-chip" data-sec="filtre" onclick="openFilterSheetFromNav()"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Filtre<span class="nav-cnt" id="cfg-nav-filter-cnt">0</span></button>
       <button class="cfg-chip" data-sec="colors-grid" onclick="scrollCfgTo('colors-grid', false, 'cfg-fabric-sections')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Culoare</button>
-      <button class="cfg-chip" data-mode="config" data-sec="summary" onclick="scrollCfgTo('summary')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Sumar</button>
+      <button class="cfg-chip" data-sec="summary" onclick="scrollCfgTo('summary')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Sumar</button>
     </div>
     <div class="cfg-scroll" id="cfg-scroll">
 
-      <section class="cfg-sec" data-mode="config" id="sec-config">
+      <section class="cfg-sec" id="sec-config">
         <h3 class="cfg-title">Alege numărul de locuri și forma</h3>
         <div class="cfg-shape-row" id="shape-grid">
           <button class="cfg-shape-tile on" data-name="Canapea 3 locuri" data-dim="245 x 100 cm" onclick="pickCfgShape(this)">
@@ -554,27 +518,12 @@ html[data-cfgmode="mostre"] .mtile.on .imw{box-shadow:inset 0 0 0 2px var(--ink)
         </div>
       </section>
 
-      <!-- The three questions. They only ever reorder the grid below -- every one of the 191
-           colors stays reachable no matter what is ticked, so no combination can dead-end. -->
-      <section class="cfg-sec" data-mode="mostre" id="sec-needs">
+      <!-- Nevoi de lifestyle section removed per request, kept in markup for easy restore -->
+      <section class="cfg-sec" id="sec-needs" style="display:none">
         <h3>Nevoi de lifestyle</h3>
-        <p class="cfg-sec-sub">Alege una sau mai multe. Punem potrivirile primele.</p>
+        <p class="cfg-sec-sub">Îți recomandăm materiale potrivite nevoilor tale.</p>
         <div class="cfg-needs-row" id="cfg-needs"></div>
         <div class="cfg-needs-label" id="cfg-needs-label"></div>
-      </section>
-
-      <section class="cfg-sec" data-mode="mostre" id="sec-feel">
-        <h3>Cum se simte la atingere?</h3>
-        <p class="cfg-sec-sub">Macro-urile sunt fotografii reale ale țesăturii.</p>
-        <div class="cfg-needs-row" id="cfg-feel"></div>
-        <div class="cfg-needs-label" id="cfg-feel-label"></div>
-      </section>
-
-      <section class="cfg-sec" data-mode="mostre" id="sec-look">
-        <h3>Cum arată?</h3>
-        <p class="cfg-sec-sub">Cât de mult se joacă lumina pe suprafață.</p>
-        <div class="cfg-needs-row" id="cfg-look"></div>
-        <div class="cfg-needs-label" id="cfg-look-label"></div>
       </section>
 
       <section class="cfg-sec" id="sec-color">
@@ -618,7 +567,7 @@ html[data-cfgmode="mostre"] .mtile.on .imw{box-shadow:inset 0 0 0 2px var(--ink)
         <div class="cfg-fabric-divider" style="display:none"></div>
       </section>
 
-      <section class="cfg-sec" data-mode="config" id="sec-summary">
+      <section class="cfg-sec" id="sec-summary">
         <h3 class="cfg-title">Gata! Canapeaua ta arată superb.</h3>
         <div id="cfg-summary-body">
           <div class="rz-row">
@@ -648,12 +597,8 @@ html[data-cfgmode="mostre"] .mtile.on .imw{box-shadow:inset 0 0 0 2px var(--ink)
     </div>
 
     <div class="cfg-cta" id="cfg-cta">
-      <div class="cfg-tray" data-mode="mostre" id="cfg-tray"></div>
-      <div class="cfg-cta-main">
-        <div class="pr" id="cfg-price">—</div>
-        <button class="bb" data-mode="config" onclick="addToCart(this)">Adaugă în coș</button>
-        <button class="bb" data-mode="mostre" id="cfg-samples-btn" disabled onclick="orderSamples(this)">Comandă mostrele</button>
-      </div>
+      <div class="pr" id="cfg-price">—</div>
+      <button class="bb" onclick="addToCart(this)">Adaugă în coș</button>
     </div>
   </div>
 </div>
@@ -1217,10 +1162,7 @@ function toast(msg){
 }
 
 /* ══════════ v3-specific: configurator state + rendering ══════════ */
-var sel = { shapeEl: null, collectionSlug: 'luna', colorName: null, needs: [], feel: [], look: [] };
-/* 'config' = configuring a sofa (the flow this file has always been). 'mostre' = ordering
-   fabric samples: same shell, same components, multi-select instead of single-select. */
-var cfgMode = 'config';
+var sel = { shapeEl: null, collectionSlug: 'luna', colorName: null, needs: [] };
 /* Grouped by actual fabric structure (per agache.ro's own material descriptions), not by
    price tier and not by the old Catifea/Velur/Bucle split -- that split had real velvet
    (Piano) lumped in with velvet-*look* wovens (Manila/Zoya/Maya), and called plain thick
@@ -1355,88 +1297,6 @@ function updateNeedsLabel(){
   });
   label.textContent = 'Recomandăm materiale potrivite pentru: ' + names.join(', ') + '.';
 }
-
-/* ══════════ The three questions (mostre mode) ══════════ */
-/* Questions 2 and 3 read the inventory's own Surface and Finish columns -- the same columns
-   the tactile grouping and the sheen chips came from -- so no property here is invented.
-   All three RANK the grid below; none of them removes a color, so no combination of answers
-   can leave you looking at nothing. */
-var FEEL_DEFS = [
-  { key:'Smooth',     label:'Neted',     img:'assets/chip-neted.jpg',   test:function(c){ return c.surface === 'Smooth'; } },
-  { key:'Textured',   label:'Texturat',  img:'assets/chip-texturat.jpg',test:function(c){ return c.surface === 'Textured'; } },
-  { key:'Plush/Soft', label:'Catifelat', img:'assets/chip-catifea.jpg', test:function(c){ return c.surface === 'Plush/Soft'; } }
-];
-var LOOK_DEFS = [
-  { key:'Matte',       label:'Mat',         grad:'linear-gradient(150deg,#9c948b,#6f6862)',
-    test:function(c){ return c.finish === 'Matte'; } },
-  { key:'Semi-Glossy', label:'Semi-lucios', grad:'linear-gradient(150deg,#d3cbc1 0%,#8b847c 48%,#c0b8ae 100%)',
-    test:function(c){ return c.finish === 'Semi-Glossy'; } },
-  { key:'Glossy',      label:'Lucios',      grad:'linear-gradient(150deg,#f6f0e8 0%,#8b847c 38%,#f1eae2 62%,#736c66 100%)',
-    test:function(c){ return c.finish === 'Glossy'; } }
-];
-var CHECK_SVG = '<span class="cfg-needs-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>';
-
-function choiceCount(def){
-  return ALL_SWATCHES.filter(function(s){ return def.test(s.collection); }).length;
-}
-function renderChoiceRow(rowId, defs, stateKey, inner){
-  var row = document.getElementById(rowId);
-  if (!row) return;
-  row.innerHTML = '';
-  defs.forEach(function(d){
-    var tile = document.createElement('button');
-    tile.className = 'cfg-needs-tile' + (sel[stateKey].indexOf(d.key) > -1 ? ' on' : '');
-    tile.dataset.key = d.key;
-    tile.innerHTML = '<span class="cfg-needs-imw">' + inner(d) + CHECK_SVG + '</span>' +
-      '<span class="cfg-needs-tile-name">' + d.label + '</span>' +
-      '<span class="cfg-needs-tile-name" style="color:var(--gray)">' + choiceCount(d) + ' culori</span>';
-    tile.onclick = function(){ toggleChoice(stateKey, d.key, tile); };
-    row.appendChild(tile);
-  });
-}
-function renderFeelLook(){
-  renderChoiceRow('cfg-feel', FEEL_DEFS, 'feel', function(d){
-    return '<img src="' + d.img + '" alt="' + d.label + '" style="width:100%;height:100%;object-fit:cover">';
-  });
-  renderChoiceRow('cfg-look', LOOK_DEFS, 'look', function(d){
-    return '<span style="position:absolute;inset:0;background:' + d.grad + '"></span>';
-  });
-  updateChoiceLabels();
-}
-function toggleChoice(stateKey, key, tile){
-  var arr = sel[stateKey];
-  var i = arr.indexOf(key);
-  if (i > -1) arr.splice(i, 1); else arr.push(key);
-  tile.classList.toggle('on');
-  pressFeedback(tile);
-  updateChoiceLabels();
-  renderFabricSections();
-  applyFabricFilters();
-}
-function labelFor(defs, keys, empty){
-  if (!keys.length) return empty;
-  var names = defs.filter(function(d){ return keys.indexOf(d.key) > -1; }).map(function(d){ return d.label; });
-  return 'Punem primele: ' + names.join(', ') + '.';
-}
-function updateChoiceLabels(){
-  var f = document.getElementById('cfg-feel-label');
-  var l = document.getElementById('cfg-look-label');
-  if (f) f.textContent = labelFor(FEEL_DEFS, sel.feel, 'Alege una sau mai multe. Nimic nu dispare din listă.');
-  if (l) l.textContent = labelFor(LOOK_DEFS, sel.look, 'Alege una sau mai multe. Nimic nu dispare din listă.');
-}
-
-/* How well one collection answers everything ticked so far. Used to rank, never to exclude. */
-function matchScore(c){
-  var n = 0;
-  sel.needs.forEach(function(k){
-    var d = NEED_DEFS.filter(function(x){ return x.key === k; })[0];
-    if (d && d.test(c)) n++;
-  });
-  if (sel.feel.indexOf(c.surface) > -1) n++;
-  if (sel.look.indexOf(c.finish) > -1) n++;
-  return n;
-}
-function answeredCount(){ return sel.needs.length + sel.feel.length + sel.look.length; }
 
 /* ══════════ Fabric picker: top fabric-type pills (jump/filter) + a Filtre sheet for color & properties, every collection stacked below ══════════ */
 /* Colored-pill filter chips (bg + fg per family) instead of grey chip + colored text. */
@@ -1698,17 +1558,10 @@ function applyFabricFilters(){
 
 function fabricTileHtml(s){
   var name = s.name;
-  var on = cfgMode === 'mostre' ? isSampleLiked(name) : (name === sel.colorName);
-  return '<div class="mtile' + (on ? ' on' : '') + '" data-name="' + name + '" data-slug="' + s.slug + '">' +
+  return '<div class="mtile' + (name === sel.colorName ? ' on' : '') + '" data-name="' + name + '" data-slug="' + s.slug + '">' +
     '<div class="imw"><img src="' + fabricAsset(name) + '" alt="' + name + '">' +
     '<button type="button" class="info-i" aria-label="Detalii ' + name + '"><svg width="32" height="32" fill="none"><path d="M32 16c0-8.837-7.163-16-16-16S0 7.163 0 16s7.163 16 16 16 16-7.163 16-16Z" fill="#fff"/><path d="M16 22.333v-6.666" stroke="#121219" stroke-width="2" stroke-linecap="round"/><path d="M16.001 9.667a1.333 1.333 0 1 1 0 2.666 1.333 1.333 0 0 1 0-2.666Z" fill="#1D1D1F"/></svg></button></div>' +
     '<div class="lr"><span class="nm">' + name + '</span></div></div>';
-}
-function appendGroupTitle(wrap, text){
-  var h = document.createElement('div');
-  h.className = 'cfg-matgroup-title';
-  h.innerHTML = '<span>' + text + '</span>';
-  wrap.appendChild(h);
 }
 function appendFabricGrid(wrap, swatches){
   var grid = document.createElement('div');
@@ -1725,21 +1578,7 @@ function renderFabricSections(){
   var wrap = document.getElementById('cfg-fabric-sections');
   wrap.innerHTML = '';
   var activePillDefs = FABRIC_PILLS.filter(function(p){ return activeFabricPills.indexOf(p.key) > -1; });
-  /* In mostre mode, once any question is answered the grid splits in two: everything that
-     answers the most of them, then the rest of the inventory in its normal order. The split
-     is a ranking, so the top group is never empty and the bottom one is never a dead end. */
-  if (cfgMode === 'mostre' && answeredCount() && activePillDefs.length < 2){
-    var scored = ALL_SWATCHES.map(function(s){ return { s:s, n:matchScore(s.collection) }; });
-    var best = scored.reduce(function(m, x){ return Math.max(m, x.n); }, 0);
-    var hit = scored.filter(function(x){ return x.n === best; }).map(function(x){ return x.s; });
-    var rest = scored.filter(function(x){ return x.n !== best; }).map(function(x){ return x.s; });
-    appendGroupTitle(wrap, 'Potrivite pentru tine');
-    appendFabricGrid(wrap, hit);
-    if (rest.length){
-      appendGroupTitle(wrap, 'Restul culorilor');
-      appendFabricGrid(wrap, rest);
-    }
-  } else if (activePillDefs.length < 2){
+  if (activePillDefs.length < 2){
     appendFabricGrid(wrap, ALL_SWATCHES);
   } else {
     activePillDefs.forEach(function(pillDef){
@@ -1756,10 +1595,7 @@ function renderFabricSections(){
     });
   }
   wrap.querySelectorAll('.mtile').forEach(function(tile){
-    tile.onclick = function(){
-      if (cfgMode === 'mostre'){ toggleSample(tile.dataset.name); pressFeedback(tile); return; }
-      pickFabricSwatch(tile, tile.dataset.slug);
-    };
+    tile.onclick = function(){ pickFabricSwatch(tile, tile.dataset.slug); };
     tile.querySelector('.info-i').onclick = function(e){ e.stopPropagation(); showSwatchInfo(tile.dataset.name); };
   });
   var totalOptions = totalColorCount();
@@ -1831,64 +1667,7 @@ function setSampleLiked(name, on){
     sampleSel.splice(sampleSel.indexOf(name), 1);
   }
   document.querySelectorAll('#sm-collections .sm-tile[data-name="' + name + '"]').forEach(function(t){ t.classList.toggle('on', isSampleLiked(name)); });
-  document.querySelectorAll('#cfg-fabric-sections .mtile[data-name="' + name + '"]').forEach(function(t){ t.classList.toggle('on', isSampleLiked(name)); });
-  /* Picking a sample also drops it onto the sofa above -- the preview is right there, and
-     seeing the color at furniture scale is the whole reason someone orders a swatch. */
-  if (on && SWATCH_INDEX[name]){
-    sel.colorName = name;
-    sel.collectionSlug = SWATCH_INDEX[name].slug;
-    updatePreview();
-  }
   renderSampleTray();
-  renderCfgTray();
-}
-
-/* The 5 slots that sit directly above the cta: every sample lands here the moment it is
-   tapped, and can be thrown back out from here without hunting for it in the grid. */
-function renderCfgTray(){
-  var tray = document.getElementById('cfg-tray');
-  if (!tray) return;
-  var html = '';
-  for (var i = 0; i < 5; i++){
-    var name = sampleSel[i];
-    html += name
-      ? '<div class="cfg-slot filled"><span class="im"><img src="' + fabricAsset(name) + '" alt="' + name + '"></span>' +
-          '<button type="button" class="rm" onclick="removeSample(\'' + name + '\')" aria-label="Elimină ' + name + '">' +
-          '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>'
-      : '<div class="cfg-slot"></div>';
-  }
-  html += '<div class="cfg-tray-label"><b>' + sampleSel.length + '</b>/5</div>';
-  tray.innerHTML = html;
-  var btn = document.getElementById('cfg-samples-btn');
-  if (btn) btn.disabled = sampleSel.length === 0;
-  if (cfgMode === 'mostre'){
-    document.getElementById('cfg-price').innerHTML = '49 lei<em>se scad din prețul canapelei</em>';
-  }
-}
-
-function setCfgMode(mode){
-  cfgMode = mode;
-  document.documentElement.setAttribute('data-cfgmode', mode);
-  renderFabricSections();
-  applyFabricFilters();
-  if (mode === 'mostre'){
-    renderFeelLook();
-    renderCfgTray();
-    setActiveCfgChip('needs');
-  } else {
-    updatePreview();
-    updateSummary();
-    setActiveCfgChip('config');
-  }
-}
-
-function orderSamples(btn){
-  if (!sampleSel.length) return;
-  var count = sampleSel.length;
-  var orig = btn.innerHTML;
-  btn.innerHTML = 'Comandate';
-  toast(count + (count === 1 ? ' mostră a fost adăugată în coș' : ' mostre au fost adăugate în coș'));
-  setTimeout(function(){ btn.innerHTML = orig; closeConfigurator(); }, 1100);
 }
 function buildSamplesGrid(){
   var wrap = document.getElementById('sm-collections');
@@ -2305,8 +2084,7 @@ function openFilterSheetFromNav(){
   updateSummary();
 
   var hashSec = location.hash.replace('#', '');
-  setCfgMode(hashSec === 'mostre' ? 'mostre' : 'config');
-  if (['config','needs','feel','look','color','summary'].indexOf(hashSec) > -1){
+  if (['config','needs','color','summary'].indexOf(hashSec) > -1){
     scrollCfgTo(hashSec, true);
   }
 })();
