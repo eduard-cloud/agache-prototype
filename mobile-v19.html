@@ -313,7 +313,7 @@ html,body{height:100%;margin:0;background:#fff;overflow:hidden}
   transform:scale(2.3);transform-origin:center}
 .sw .tick{top:5px;right:5px;bottom:auto;left:auto;z-index:2;box-shadow:0 0 0 2px #fff;display:none}
 .sw.on .tick{display:flex}
-.cta.is-empty{opacity:.35;pointer-events:none}
+.cta.is-empty,.abshow.is-empty{opacity:.35;pointer-events:none}
 .slot.full{position:relative;overflow:hidden}
 .slot.full{overflow:visible;cursor:pointer;position:relative}
 .slot,.slot.full .im{border-radius:0}
@@ -542,7 +542,6 @@ html.enter-r body{animation:pushInR .26s cubic-bezier(.16,1,.3,1) both}
           <div><span class="sw" style="background:#222632"><img src="assets/maya-09.png" alt="Maya 09" loading="lazy" onerror="this.remove()"></span><span class="swn">Maya 09</span></div>
         </div>
       </div>
-      <div style="background:var(--green);border-radius:16px;padding:16px"><span class="cap13" style="color:var(--black)">Toate sunt materiale <b style="font-weight:500">Special</b> (Maya, Zoya) — canapeaua trece de la 2.140 la <b style="font-weight:500">2.610 lei</b>.</span></div>
       <div class="line"></div>
       <div>
         <div class="msub12">Restul culorilor · 154, de la cea mai deschisă la cea mai închisă</div>
@@ -1077,6 +1076,9 @@ document.addEventListener('click', function(e){
   var sel = e.target.closest(SELECTABLE);
   if (sel && !e.target.closest(NAV)){
     var screen = screens[at];
+    /* filter and question options are owned by the filtering listener below, which keeps the
+       panel and the question screens in one state -- toggling here too would undo it */
+    if (groupOf(sel)) return;
     /* a sample is a place in the bag, and there are only five of them */
     if (sel.classList.contains('sw') && !sel.classList.contains('on') && bagOf(screen)
         && picked(screen).length >= MAX) return;
@@ -1107,6 +1109,195 @@ document.addEventListener('click', function(e){
    board's own copy of the PDP and would be a second one. */
 show(1);
 screens.forEach(syncBag);
+
+/* ══════════ Live filtering ══════════
+   The board's screens are pictures of each state, so nothing in them computed anything: the
+   panel's counts, the two headings on the results screen and the two empty states were fixed
+   text. This is the part that had to be written rather than copied. The properties come from
+   the inventory in mobile-v16.html (surface, finish, waterproof / easy-clean / pet-friendly,
+   tier) -- COLLECTION_META below is generated from that file, not retyped.
+
+   Two different mechanisms, as designed: the three QUESTIONS rank (they decide which of the
+   two groups on the results screen a color lands in, and never remove anything), while the
+   panel's COLOR and PROPERTIES filters hide. That is why the two empty states differ --
+   "nicio potrivire exactă" is an empty top group with colors still below it, "nicio culoare
+   disponibilă" is a filter combination that leaves nothing at all. */
+
+var COLLECTION_META = {"Luna": {"tier": "Practic", "finish": "Mat", "surface": "Texturat", "waterproof": false, "easyClean": false, "petFriendly": false}, "Manila": {"tier": "Practic", "finish": "Lucios", "surface": "Catifelat", "waterproof": false, "easyClean": false, "petFriendly": false}, "Enjoy Lux": {"tier": "Confort", "finish": "Mat", "surface": "Neted", "waterproof": true, "easyClean": true, "petFriendly": false}, "Milton": {"tier": "Premium", "finish": "Semi-lucios", "surface": "Neted", "waterproof": true, "easyClean": false, "petFriendly": false}, "Piano": {"tier": "Lux", "finish": "Lucios", "surface": "Catifelat", "waterproof": true, "easyClean": true, "petFriendly": false}, "Spello": {"tier": "Lux", "finish": "Mat", "surface": "Texturat", "waterproof": true, "easyClean": false, "petFriendly": false}, "Maya": {"tier": "Special", "finish": "Semi-lucios", "surface": "Catifelat", "waterproof": true, "easyClean": true, "petFriendly": true}, "Zoya": {"tier": "Special", "finish": "Mat", "surface": "Catifelat", "waterproof": true, "easyClean": true, "petFriendly": true}};
+
+/* The inventory has no color-family column -- the 12 families in the panel are the design's,
+   so each color is placed by hue and lightness off its own hex. Neutrals are decided first
+   (white, black, grey), then the hue wheel is cut where the panel's names sit. */
+function familyOf(hex){
+  var r = parseInt(hex.substr(1,2),16)/255, g = parseInt(hex.substr(3,2),16)/255, b = parseInt(hex.substr(5,2),16)/255;
+  var max = Math.max(r,g,b), min = Math.min(r,g,b), l = (max+min)/2, d = max-min;
+  var s = d === 0 ? 0 : d/(1 - Math.abs(2*l - 1));
+  var h = 0;
+  if (d){
+    if (max === r) h = 60*(((g-b)/d)%6);
+    else if (max === g) h = 60*(((b-r)/d)+2);
+    else h = 60*(((r-g)/d)+4);
+  }
+  if (h < 0) h += 360;
+  if (l >= 0.82 && s <= 0.22) return 'Alb';
+  if (l <= 0.16) return 'Negru';
+  if (s <= 0.10) return 'Gri';
+  if (h < 16 || h >= 345) return l > 0.62 ? 'Roz' : 'Roșu';
+  if (h < 40) return (l > 0.60 && s < 0.45) ? 'Bej' : 'Maro';
+  if (h < 56) return l > 0.72 ? 'Bej' : 'Muștar';
+  if (h < 80) return 'Oliv';
+  if (h < 155) return 'Verde';
+  if (h < 200) return 'Petrol';
+  if (h < 255) return 'Albastru';
+  if (h < 345) return l > 0.55 ? 'Roz' : 'Roșu';
+  return 'Roșu';
+}
+
+var NEED_PROP = { 'Copil mic':'easyClean', 'Animal de companie':'petFriendly', 'Pahar de vin':'waterproof' };
+var PROP_KEY  = { 'Impermeabil':'waterproof', 'Easy Clean':'easyClean', 'Pet Friendly':'petFriendly' };
+
+/* the two groups on the results screen, and how many of a group is on screen right now */
+var GRID_TOP = screens[5].querySelectorAll('.grid4')[0] || null;
+var GRID_REST = screens[5].querySelectorAll('.grid4')[1] || null;
+function countVisible(grid){
+  return Array.prototype.filter.call(grid.children, function(c){ return c.style.display !== 'none'; }).length;
+}
+
+/* every swatch, with what the inventory knows about it */
+var CATALOG = [];
+document.querySelectorAll('.sw').forEach(function(sw){
+  var label = sw.nextElementSibling;
+  var name = label && label.classList.contains('swn') ? label.textContent.trim() : '';
+  var family = name.replace(/\s+\S+$/, '');
+  var meta = COLLECTION_META[family];
+  var hex = (sw.getAttribute('style') || '').match(/#[0-9A-Fa-f]{6}/);
+  if (!meta || !hex) return;
+  CATALOG.push({ el: sw, cell: sw.parentElement, meta: meta, color: familyOf(hex[0].toUpperCase()),
+                 /* the same color appears on the results screen and on the browse screen --
+                    both get filtered, only the results copy is counted */
+                 counted: !!sw.closest('.screen[data-i="5"]'),
+                 home: sw.parentElement.parentElement });
+});
+
+/* Which options are ticked, read straight off the screens. The three questions and the
+   panel's first three sections are the same three questions, so they share one state and are
+   repainted together -- answering on a question screen shows up in the panel and back. */
+var state = { needs: [], feel: [], look: [], colors: [], props: [] };
+function groupOf(el){
+  var screen = el.closest('.screen');
+  var i = screen ? Number(screen.dataset.i) : -1;
+  if (i === 2) return 'needs';
+  if (i === 3) return 'feel';
+  if (i === 4) return 'look';
+  var sec = el.closest('.absec');
+  var head = sec && sec.querySelector('.abh');
+  var t = head ? head.textContent.trim() : '';
+  if (/Recomandate/.test(t)) return 'needs';
+  if (/se simte/.test(t)) return 'feel';
+  if (/arată/.test(t)) return 'look';
+  if (/Culoare/.test(t)) return 'colors';
+  if (/Propriet/.test(t)) return 'props';
+  return null;
+}
+function labelOf(el){
+  var nm = el.querySelector('.nm');
+  if (nm) return nm.textContent.trim();
+  var own = el.textContent.trim();
+  if (own) return own;
+  /* the question tiles are icon-only; their label is the caption beside them */
+  var sib = el.nextElementSibling;
+  if (sib) return sib.textContent.trim();
+  return '';
+}
+function toggleState(group, label){
+  var a = state[group], i = a.indexOf(label);
+  if (i > -1) a.splice(i, 1); else a.push(label);
+}
+function repaintOptions(){
+  document.querySelectorAll('.tile,.crow,.abcard,.abpill').forEach(function(el){
+    var g = groupOf(el);
+    if (!g) return;
+    el.classList.toggle('on', state[g].indexOf(labelOf(el)) > -1);
+  });
+}
+
+function passesFilters(item){
+  if (state.colors.length && state.colors.indexOf(item.color) < 0) return false;
+  for (var i = 0; i < state.props.length; i++){
+    var key = PROP_KEY[state.props[i]];
+    if (key && !item.meta[key]) return false;      /* OEKO-TEX etc: no column, so no filter */
+  }
+  return true;
+}
+/* the questions: how many of the ticked answers this color actually satisfies */
+function answersMet(item){
+  var n = 0;
+  if (state.needs.length && state.needs.some(function(l){ var k = NEED_PROP[l]; return k && item.meta[k]; })) n++;
+  if (state.feel.length && state.feel.indexOf(item.meta.surface) > -1) n++;
+  if (state.look.length && state.look.indexOf(item.meta.finish) > -1) n++;
+  return n;
+}
+/* three questions, so at most three criteria -- a question with two answers ticked is still
+   one criterion, and a color meets it by matching either answer */
+function answered(){
+  return (state.needs.length ? 1 : 0) + (state.feel.length ? 1 : 0) + (state.look.length ? 1 : 0);
+}
+
+function applyFilters(){
+  var total = answered();
+  var shown = 0;
+  CATALOG.forEach(function(item){
+    var ok = passesFilters(item);
+    item.cell.style.display = ok ? '' : 'none';
+    if (ok && item.counted) shown++;
+    /* answering a question actually re-ranks: a color that satisfies every answer moves up
+       into the first group, the others drop to the second. Nothing is ever removed. */
+    if (item.counted && GRID_TOP && GRID_REST){
+      var target = (total && answersMet(item) === total) ? GRID_TOP : (total ? GRID_REST : item.home);
+      if (item.cell.parentElement !== target) target.appendChild(item.cell);
+    }
+  });
+  var exact = GRID_TOP ? countVisible(GRID_TOP) : 0;
+
+  /* the panel's apply button carries the live count, and says so when there is nothing left */
+  document.querySelectorAll('.abshow').forEach(function(btn){
+    var empty = shown === 0;
+    btn.textContent = empty ? 'Nicio culoare disponibilă'
+                            : 'Arată ' + shown + (shown === 1 ? ' culoare' : ' culori');
+    btn.classList.toggle('is-empty', empty);
+  });
+
+  /* the two headings on the results screen */
+  var heads = screens[5].querySelectorAll('.msub12');
+  var rest = GRID_REST ? countVisible(GRID_REST) : 0;
+  if (heads[0]) heads[0].textContent = total
+    ? 'Trec toate cele ' + total + (total === 1 ? ' criteriu · ' : ' criterii · ') + exact + (exact === 1 ? ' culoare' : ' de culori')
+    : 'Toate culorile · ' + exact;
+  if (heads[1]) heads[1].textContent = 'Restul culorilor · ' + rest + ', de la cea mai deschisă la cea mai închisă';
+
+  /* the designed empty state, shown in place rather than as a screen you cannot reach */
+  /* Screen 8 IS the no-exact-match state and screen 7 is the nothing-left state -- they are
+     designed screens, so they get shown as screens instead of pieces of them being pasted
+     onto the results. Only swap while the results screen is the one on show. */
+  if (at === 5 || at === 8){
+    if (total && exact === 0 && shown > 0) { if (at !== 8) show(8); }
+    else if (at === 8) show(5);
+  }
+}
+
+
+document.addEventListener('click', function(e){
+  var opt = e.target.closest('.tile,.crow,.abcard,.abpill');
+  if (!opt || e.target.closest(NAV)) return;
+  var g = groupOf(opt);
+  if (!g) return;
+  toggleState(g, labelOf(opt));
+  repaintOptions();
+  applyFilters();
+}, true);
+
+repaintOptions();
+applyFilters();
 </script>
 <script>
 document.documentElement.addEventListener('animationend', function(e){
