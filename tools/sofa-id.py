@@ -68,7 +68,13 @@ SOURCES = {
 }
 
 CARD_BG = (244, 243, 241)
-BOTTOM_AIR = 0.13    # white space under the feet, as a fraction of the crop
+
+# Breathing room around the sofa, as fractions of the finished square. Sized so
+# the piece sits inside the frame rather than filling it -- a tile cropped tight
+# to the upholstery reads as a fabric close-up, not as furniture. Slightly more
+# air below than above so the sofa sits marginally high, which stops it looking
+# like it is sliding off the bottom of the card.
+AIR_TOP, AIR_BOTTOM, AIR_LEFT = 0.11, 0.17, 0.09
 
 
 def load(name):
@@ -181,13 +187,19 @@ def fabric_mask(arr, master, master_sil, feather=1.0):
     return m, (dx, dy, score)
 
 
-def crop_left_square(img_arr, mask, margin=0.05):
-    """Square framing showing the left of the sofa, with air beneath the feet."""
+def crop_left_square(img_arr, mask):
+    """Square framing showing the left of the sofa, with air around it.
+
+    The square is derived from the sofa's height plus the air above and below
+    it, so the piece occupies a fixed share of the tile no matter how the
+    silhouette is measured. It still runs off the right edge, as the reference
+    cards do -- the air is on the other three sides.
+    """
     ys, xs = np.where(mask > 0.5)
     x0, y0, y1 = xs.min(), ys.min(), ys.max()
-    side = int((y1 - y0) * (1 + margin + BOTTOM_AIR))
-    left = int(x0 - side * margin)
-    top = int(y1 + side * BOTTOM_AIR) - side
+    side = int((y1 - y0) / (1 - AIR_TOP - AIR_BOTTOM))
+    left = int(x0 - side * AIR_LEFT)
+    top = int(y0 - side * AIR_TOP)
     return left, top, side
 
 
