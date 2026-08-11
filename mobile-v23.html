@@ -1944,12 +1944,17 @@ function applyFilters(){
      label so the two groups do not read as two titles of equal weight */
   if (heads[1]){
     /* The two groups are the two halves of one answer, so the second is titled like the
-       first rather than labelled underneath it. The count is left to the grid. */
+       first rather than labelled underneath it. The count is left to the grid.
+
+       The title stays neutral: these colours are being put in front of someone to be
+       bought, and a heading that opens by saying they do not fit argues against them. It
+       says what they are -- the rest of the range -- and the line under it does the honest
+       work of saying they missed a criterion. */
     heads[1].classList.remove('msub12');
     heads[1].classList.add('h3');
     heads[1].textContent = rest === 1
-      ? 'Încă o culoare care nu se potrivește'
-      : 'Mai multe culori care nu se potrivesc';
+      ? 'Încă o culoare din gamă'
+      : 'Mai multe culori din gamă';
     /* with nothing left out there is no second group, so its heading and the note under it
        would sit on an empty grid */
     var sib = heads[1].parentElement;
