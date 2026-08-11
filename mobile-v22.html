@@ -447,20 +447,18 @@ html.enter-r body{animation:pushInR .26s cubic-bezier(.16,1,.3,1) both}
 .kidot i{width:40px;height:40px;border-radius:50%;display:block;background-size:cover;
   background-position:center}
 .kidot.on{border-color:var(--black)}
-.kiname{display:flex;flex-direction:column;gap:4px}
-.kicolor{font:400 14px/20px 'DM Sans',sans-serif;letter-spacing:-.28px;color:var(--greytext)}
 
 /* the care symbols, in a line under the name -- the same grey as the secondary text */
 .kicare{display:flex;align-items:center;gap:16px;flex-wrap:wrap;color:var(--greytext)}
 .kicare svg{width:26px;height:26px;flex:none}
 
-/* the word back after a sample is taken: a line above the button, gone in a couple of
-   seconds. It sits on the footer so it clears the button whatever the button says. */
-.kifoot{position:relative}
-.kitoast{position:absolute;left:20px;right:20px;bottom:calc(100% + 12px);z-index:5;
+/* the word back after a sample is taken: a line that drops in under the header, over the
+   top of the photo, and is gone in a couple of seconds */
+.kibd{position:relative}
+.kitoast{position:absolute;left:24px;right:24px;top:80px;z-index:5;
   display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;
   background:var(--black);color:#fff;font:500 14px/20px 'DM Sans',sans-serif;
-  letter-spacing:-.28px;opacity:0;transform:translateY(8px);pointer-events:none;
+  letter-spacing:-.28px;opacity:0;transform:translateY(-8px);pointer-events:none;
   transition:opacity .18s ease,transform .18s ease}
 .kitoast.on{opacity:1;transform:none}
 .kitoast svg{flex:none}
@@ -1429,16 +1427,13 @@ body.view-1up .kgrid .sw{aspect-ratio:4/3}
 </div></div>
 <div class="screen" data-i="11"><div class="ph">
   <div class="sbar"><span>9:41</span><span>▮▮▮ ▮</span></div>
-  <div class="bd">
+  <div class="bd kibd">
     <div class="khead kihead"><span class="kback"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"></path><path d="m12 19-7-7 7-7"></path></svg></span></div>
     <div class="scroll kscroll kiscroll">
       <img class="kimg" src="assets/swatches/thumb/maya-02.jpg" alt="">
       <div class="kicolors" id="ki-colors" role="group" aria-label="Culorile colecției"></div>
       <div class="kisec">
-        <div class="kiname">
-          <span class="kicolor" id="ki-colorname"></span>
-          <h3 class="kititle">Maya</h3>
-        </div>
+        <h3 class="kititle">Maya 02</h3>
         <div class="kicare" id="ki-care"></div>
         <p class="kidesc"></p>
       </div>
@@ -1451,12 +1446,10 @@ body.view-1up .kgrid .sw{aspect-ratio:4/3}
         <dl class="kilist" id="ki-feat"></dl>
       </div>
     </div>
-    <div class="bar kfoot kifoot">
-      <div class="kitoast" id="ki-toast" role="status" aria-live="polite">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
-        <span class="kimsg"></span><span class="kicount"></span>
-      </div>
-      <div class="cta kiadd">Adaugă în coș</div>
+    <div class="bar kfoot kifoot"><div class="cta kiadd">Adaugă în coș</div></div>
+    <div class="kitoast" id="ki-toast" role="status" aria-live="polite">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+      <span class="kimsg"></span><span class="kicount"></span>
     </div>
   </div>
 </div></div>
@@ -2062,8 +2055,7 @@ document.documentElement.addEventListener('animationend', function(e){
     var c = colorOf(coll, name) || {src: '', hex: ''};
     sheet.querySelector('.kimg').src = c.src;
     sheet.querySelector('.kimg').style.background = c.hex || '';
-    sheet.querySelector('#ki-colorname').textContent = name;
-    sheet.querySelector('.kititle').textContent = coll;
+    sheet.querySelector('.kititle').textContent = name;
     sheet.querySelector('.kidesc').textContent = m.desc;
     sheet.querySelector('.kiscore').innerHTML = m.score.toFixed(1) + '<span>/5</span>';
     sheet.querySelector('#ki-res').innerHTML =
@@ -2071,7 +2063,8 @@ document.documentElement.addEventListener('animationend', function(e){
       row(LABEL.martindale, m.martindale.toLocaleString('ro-RO'), Math.min(100, m.martindale / 120000 * 100)) +
       row(LABEL.light, m.light, m.light / 5 * 100);
     sheet.querySelector('#ki-feat').innerHTML =
-      row('Culoare', name) + row('Cod', name.toUpperCase().replace(/[^A-Z0-9]/g, '')) +
+      /* the title carries the colour now, so the row that repeated it names the collection */
+      row('Colecție', coll) + row('Cod', name.toUpperCase().replace(/[^A-Z0-9]/g, '')) +
       row('Gramaj (g/m²)', m.gsm) + row('Lățime rolă (cm)', m.roll) +
       row('Compoziție', m.comp) + row('Tip țesătură', m.kind);
 
