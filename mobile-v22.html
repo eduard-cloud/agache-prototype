@@ -427,7 +427,8 @@ html.enter-r body{animation:pushInR .26s cubic-bezier(.16,1,.3,1) both}
 .kimg{width:100%;aspect-ratio:1.5;object-fit:cover;flex:none}
 .kisec{display:flex;flex-direction:column;gap:12px;margin-bottom:8px}
 .kititle{font:500 27px/27px 'DM Sans',sans-serif;letter-spacing:-.81px;margin:0}
-.kidesc{font:400 12px/18px 'DM Sans',sans-serif;letter-spacing:-.24px;margin:0}
+/* the description reads straight off the name now, so it is set as body copy, not a caption */
+.kidesc{font:400 15px/1.35 'DM Sans',sans-serif;letter-spacing:-.3px;margin:0}
 .kiattrs{display:flex;flex-direction:column;gap:8px}
 .kih{font:500 20px/20px 'DM Sans',sans-serif;letter-spacing:-.6px;display:flex;
   align-items:baseline;justify-content:space-between;gap:12px}
@@ -459,9 +460,12 @@ html.enter-r body{animation:pushInR .26s cubic-bezier(.16,1,.3,1) both}
   display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .12s ease}
 .kidot.in-bag .kitick{opacity:1}
 
-/* the care symbols, in a line under the name -- the same grey as the secondary text */
-.kicare{display:flex;align-items:center;gap:16px;flex-wrap:wrap;color:var(--greytext)}
-.kicare svg{width:26px;height:26px;flex:none}
+/* The care symbols are the ISO 3758 set drawn in assets/care-symbols, used as masks so the
+   one file serves every place they appear and still takes the colour of the text around it. */
+.kicare{display:flex;align-items:center;gap:16px;flex-wrap:wrap;color:var(--greytext);
+  margin-top:4px}
+.kicare i{width:30px;height:30px;flex:none;background:currentColor;
+  -webkit-mask:var(--sym) center/contain no-repeat;mask:var(--sym) center/contain no-repeat}
 
 /* the word back after a sample is taken: a line that drops in under the header, over the
    top of the photo, and is gone in a couple of seconds */
@@ -1445,8 +1449,8 @@ body.view-1up .kgrid .sw{aspect-ratio:4/3}
       <div class="kicolors" id="ki-colors" role="group" aria-label="Culorile colecției"></div>
       <div class="kisec">
         <h3 class="kititle">Maya 02</h3>
-        <div class="kicare" id="ki-care"></div>
         <p class="kidesc"></p>
+        <div class="kicare" id="ki-care"></div>
       </div>
       <div class="kiattrs">
         <div class="kih">Indice de rezistență<span class="kiscore">4.6<span>/5</span></span></div>
@@ -1961,32 +1965,20 @@ document.documentElement.addEventListener('animationend', function(e){
   var LABEL = {pilling:'Rezistență la scămoșare', martindale:'Rezistență la abraziune (martindale)',
                light:'Rezistență la lumină'};
 
-  /* The care symbols are one set for the whole range -- these are upholstery fabrics, not
-     laundry -- with a sixth added for the collections the inventory marks water repellent or
-     easy to clean. Drawn here, at the size of the text they sit under. */
-  var CARE = {
-    wash:   ['A nu se spăla în mașină',
-             '<path d="M2.5 8.6h19l-1.4 9.1a2 2 0 0 1-2 1.7H5.9a2 2 0 0 1-2-1.7L2.5 8.6Z"/>' +
-             '<path d="M2.5 8.6 6.9 5c.9-.7 2.1-.6 2.8.2"/>', 1],
-    bleach: ['Fără înălbitor', '<path d="M12 4 21 19.4H3L12 4Z"/>', 1],
-    tumble: ['Fără uscător',
-             '<rect x="3" y="5" width="18" height="14" rx="1"/><circle cx="12" cy="12" r="5"/>', 1],
-    iron:   ['Călcare la temperatură joasă',
-             '<path d="M2.8 17.4h18.4l-1.3-7.3c-.3-1.4-1.5-2.4-2.9-2.4H9.3c-.8 0-1.6.3-2.2.8L2.8 12.3v5.1Z"/>' +
-             '<circle cx="12" cy="14.4" r=".9" fill="currentColor" stroke="none"/>', 0],
-    dry:    ['Curățare chimică profesională',
-             '<circle cx="12" cy="12" r="8.6"/><path d="M10.3 15.7V8.3h2.5a2 2 0 0 1 0 4h-2.5"/>', 0],
-    drop:   ['Respinge lichidele',
-             '<path d="M12 3.4s5.6 6 5.6 9.7a5.6 5.6 0 0 1-11.2 0C6.4 9.4 12 3.4 12 3.4Z"/>', 0]
-  };
-  function careIcon(key, label){
-    var c = CARE[key];
-    label = label || c[0];
-    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" ' +
-           'stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="' + label +
-           '"><title>' + label + '</title>' + c[1] +
-           (c[2] ? '<path d="M3.4 4.1 20.6 19.9M20.6 4.1 3.4 19.9"/>' : '') + '</svg>';
-  }
+  /* One care line for the whole range -- these are upholstery fabrics, not laundry. The
+     symbols are the ISO 3758 drawings in assets/care-symbols, pulled in as masks rather than
+     redrawn, so they stay the same everywhere they are used. */
+  var CARE = [
+    ['wash-none',   'A nu se spăla'],
+    ['bleach-none', 'A nu se înălbi'],
+    ['tumble-none', 'A nu se usca în uscător'],
+    ['iron-low',    'Călcare la temperatură scăzută'],
+    ['dryclean-p',  'Curățare chimică profesională']
+  ];
+  var CARE_HTML = CARE.map(function(c){
+    return '<i style="--sym:url(\'assets/care-symbols/' + c[0] + '.svg\')" role="img" ' +
+           'aria-label="' + c[1] + '" title="' + c[1] + '"></i>';
+  }).join('');
 
   /* the check the flow already draws on a picked tile, reused inside the circle */
   var TICK = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
@@ -2102,11 +2094,7 @@ document.documentElement.addEventListener('animationend', function(e){
       });
     }
 
-    var meta = (typeof COLLECTION_META !== 'undefined' && COLLECTION_META[coll]) || {};
-    var care = ['wash', 'bleach', 'tumble', 'iron', 'dry'].map(function(k){ return careIcon(k); });
-    if (meta.waterproof) care.push(careIcon('drop'));
-    else if (meta.easyClean) care.push(careIcon('drop', 'Se curăță ușor, cu apă'));
-    sheet.querySelector('#ki-care').innerHTML = care.join('');
+    sheet.querySelector('#ki-care').innerHTML = CARE_HTML;
 
     paintCta();
   }
