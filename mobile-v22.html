@@ -510,6 +510,16 @@ html.enter-r body{animation:pushInR .26s cubic-bezier(.16,1,.3,1) both}
    control. Up in its own corner the checkbox is unmistakably the state. */
 .kgrid .sw .tick{top:8px;right:8px;left:auto;bottom:auto;z-index:3}
 
+/* Empty, the checkbox is an offer, not a mark: a wash of white and a hairline
+   instead of the full white chip in an ink outline it was. It has to survive
+   both a bone fabric and a near-black one, so it is drawn from both sides --
+   white edge for the dark cloths, a whisper of ink outside it for the pale
+   ones. Ticked, it goes back to being loud, because then it is saying
+   something. */
+.kgrid .sw .tick{background:rgba(255,255,255,.4);border-color:rgba(255,255,255,.75);
+  box-shadow:0 0 0 1px rgba(0,0,0,.07)}
+.kgrid .sw.on .tick{background:#fff;border-color:var(--black);box-shadow:none}
+
 /* ── two up or one up, switched from the header ──
    The reference puts a View control next to Filters and we keep it there, in our
    own pill. Two up, the picture is the square it has always been. One up, there
