@@ -69,12 +69,14 @@ SOURCES = {
 
 CARD_BG = (244, 243, 241)
 
-# Breathing room around the sofa, as fractions of the finished square. Sized so
-# the piece sits inside the frame rather than filling it -- a tile cropped tight
-# to the upholstery reads as a fabric close-up, not as furniture. Slightly more
-# air below than above so the sofa sits marginally high, which stops it looking
-# like it is sliding off the bottom of the card.
-AIR_TOP, AIR_BOTTOM, AIR_LEFT = 0.11, 0.17, 0.09
+# Breathing room around the sofa, as fractions of the finished square.
+#
+# These are deliberately small. Widening them to frame the piece looked better
+# in isolation and cost more than it bought: the sofa already runs to the right
+# and bottom edges of the source render, so a wider square reaches outside the
+# 1120px frame and the crop comes back padded with black. Any increase here
+# needs source renders with more room around the subject, not a bigger crop.
+AIR_LEFT, BOTTOM_AIR = 0.05, 0.13
 
 
 def load(name):
@@ -143,10 +145,26 @@ def fill_interior(mask):
     happens a lot on the pale colourways -- a highlight on Chalk sits within
     the tolerance of its own light-grey sweep -- and each such pixel would
     otherwise survive the recolour as a bright speck of the source colour.
+
+    Seeding the flood from one corner is not enough. The sofa runs off both
+    the right and bottom edges of these renders, which cuts the backdrop into
+    disconnected pieces -- flooding from (0, 0) reaches only the piece above
+    the sofa, and everything below it gets "filled" as though it were interior.
+    That silently turned the silhouette into the whole frame, which in turn made
+    the alignment search degenerate (every offset scores IoU 1.0) and stopped
+    the background ever being recognised. So pad by a ring of background first
+    and flood from there, which reaches every edge-connected region at once.
     """
-    im = Image.fromarray(np.where(mask, 0, 255).astype(np.uint8))
+    h, w = mask.shape
+    padded = np.zeros((h + 2, w + 2), dtype=bool)
+    padded[1:-1, 1:-1] = mask
+    # .copy() and np.array() are both load-bearing. An image built by
+    # fromarray keeps the source buffer, so floodfill's in-place edit is
+    # invisible to np.asarray afterwards -- the fill silently does nothing and
+    # every pixel looks like an enclosed hole.
+    im = Image.fromarray(np.where(padded, 0, 255).astype(np.uint8)).copy()
     ImageDraw.floodfill(im, (0, 0), 128)
-    reached = np.asarray(im, dtype=np.uint8)
+    reached = np.array(im)[1:-1, 1:-1]
     return mask | (reached == 255)
 
 
@@ -197,9 +215,13 @@ def crop_left_square(img_arr, mask):
     """
     ys, xs = np.where(mask > 0.5)
     x0, y0, y1 = xs.min(), ys.min(), ys.max()
-    side = int((y1 - y0) / (1 - AIR_TOP - AIR_BOTTOM))
+    side = int((y1 - y0) * (1 + AIR_LEFT + BOTTOM_AIR))
     left = int(x0 - side * AIR_LEFT)
-    top = int(y0 - side * AIR_TOP)
+    top = int(y1 + side * BOTTOM_AIR) - side
+    # Never let the window leave the source frame; outside it, crop() returns
+    # black and every tile picks up a black edge.
+    left = max(0, min(left, SIZE - side))
+    top = max(0, min(top, SIZE - side))
     return left, top, side
 
 
