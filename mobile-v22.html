@@ -446,11 +446,18 @@ html.enter-r body{animation:pushInR .26s cubic-bezier(.16,1,.3,1) both}
 .kicolors{flex:none;display:flex;align-items:center;gap:12px;overflow-x:auto;
   padding:2px 24px 2px 0;margin-right:-24px;scrollbar-width:none;-ms-overflow-style:none}
 .kicolors::-webkit-scrollbar{display:none}
-.kidot{flex:none;width:48px;height:48px;padding:0;border:1px solid transparent;border-radius:50%;
-  background:none;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.kidot{position:relative;flex:none;width:48px;height:48px;padding:0;border:1px solid transparent;
+  border-radius:50%;background:none;display:flex;align-items:center;justify-content:center;
+  cursor:pointer}
 .kidot i{width:40px;height:40px;border-radius:50%;display:block;background-size:cover;
   background-position:center}
 .kidot.on{border-color:var(--black)}
+/* a colour already in the bag is ticked in the middle -- the grid's black-on-white check,
+   put on a disc so it holds against a swatch of any colour */
+.kidot .kitick{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:20px;height:20px;border-radius:50%;background:#fff;color:var(--black);
+  display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .12s ease}
+.kidot.in-bag .kitick{opacity:1}
 
 /* the care symbols, in a line under the name -- the same grey as the secondary text */
 .kicare{display:flex;align-items:center;gap:16px;flex-wrap:wrap;color:var(--greytext)}
@@ -1981,6 +1988,11 @@ document.documentElement.addEventListener('animationend', function(e){
            (c[2] ? '<path d="M3.4 4.1 20.6 19.9M20.6 4.1 3.4 19.9"/>' : '') + '</svg>';
   }
 
+  /* the check the flow already draws on a picked tile, reused inside the circle */
+  var TICK = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+             'stroke-width="3" stroke-linecap="round" stroke-linejoin="round">' +
+             '<path d="M20 6 9 17l-5-5"></path></svg>';
+
   var sheet = document.querySelector('.screen[data-i="11"]');
   if (!sheet) return;
   var from = 9;
@@ -2024,6 +2036,14 @@ document.documentElement.addEventListener('animationend', function(e){
     clearTimeout(toastT);
     toastT = setTimeout(function(){ t.classList.remove('on'); }, 2600);
   }
+  /* the whole row has to say what is in the bag, not only the colour being read -- a circle
+     is ticked whether it went in from here or from the grid */
+  function paintDots(){
+    sheet.querySelectorAll('.kidot').forEach(function(d){
+      var sw = cellFor(d.dataset.name);
+      d.classList.toggle('in-bag', !!(sw && sw.classList.contains('on')));
+    });
+  }
   function paintCta(){
     var cta = sheet.querySelector('.kiadd');
     var sw = cellFor(cur.name);
@@ -2031,6 +2051,7 @@ document.documentElement.addEventListener('animationend', function(e){
     cta.textContent = has ? 'Elimină din coș' : 'Adaugă în coș';
     cta.classList.toggle('is-empty', !has && !sw);
     cta.classList.toggle('in-bag', has);
+    paintDots();
   }
   function bar(pct){
     return '<span class="kbar"><i style="width:' + pct + '%"></i></span>';
@@ -2071,7 +2092,7 @@ document.documentElement.addEventListener('animationend', function(e){
         return '<button class="kidot' + (o.name === name ? ' on" aria-current="true"' : '"') +
                ' data-name="' + o.name + '" aria-label="' + o.name + '"><i style="background-color:' +
                (o.hex || '#EDEDED') + (o.src ? ";background-image:url('" + o.src + "')" : '') +
-               '"></i></button>';
+               '"></i><span class="kitick">' + TICK + '</span></button>';
       }).join('');
     } else {
       strip.querySelectorAll('.kidot').forEach(function(d){
