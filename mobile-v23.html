@@ -442,6 +442,18 @@ html.enter-r body{animation:pushInR .26s cubic-bezier(.16,1,.3,1) both}
 .kirow dd{margin:0;text-align:right}
 .kirow .kbar{width:115px}
 
+/* The three resistance rows carried a bar as well as a number, which said the same thing
+   twice and only worked for the two scored out of five -- a martindale count has no bar to
+   draw. The number is left to speak, and what it means is behind the (i) next to the name. */
+.kiq{width:16px;height:16px;padding:0;border:none;background:none;color:var(--greytext);
+  display:inline-flex;align-items:center;justify-content:center;vertical-align:-3px;
+  margin-left:6px;cursor:pointer}
+.kirow.open .kiq{color:var(--black)}
+.kirow .kinote{grid-column:1/-1;margin:8px 0 0;font:400 13px/1.4 'DM Sans',sans-serif;
+  letter-spacing:-.26px;color:var(--greytext);display:none}
+.kirow.open .kinote{display:block}
+.kirow.open{align-items:start}
+
 /* the rest of the collection, right under the photo: one circle per colour, the chosen one
    ringed. The row runs to the sheet's edge, so the negative margin undoes the 24px padding. */
 .kicolors{flex:none;display:flex;align-items:center;gap:12px;overflow-x:auto;
@@ -1457,7 +1469,7 @@ body.view-1up .kgrid .sw{aspect-ratio:4/3}
         <div class="kicare" id="ki-care"></div>
       </div>
       <div class="kiattrs">
-        <div class="kih">Indice de rezistență<span class="kiscore">4.6<span>/5</span></span></div>
+        <div class="kih">Rezistență<span class="kiscore">4.6<span>/5</span></span></div>
         <dl class="kilist" id="ki-res"></dl>
       </div>
       <div class="kiattrs">
@@ -1966,8 +1978,23 @@ document.documentElement.addEventListener('animationend', function(e){
    back arrow and the button under it both return to the sheet you came from. */
 (function(){
   var INFO = {'Enjoy Lux': {score: 4.2, pilling: 4, martindale: 95000, light: 5, gsm: 480, roll: 140, comp: '72% Poliester, 18% Poliester reciclat, 10% Bumbac', kind: 'Neted, tușeu mat', desc: 'Țesătură netedă, cu tușeu mat și fir dens. Tratată să respingă lichidele și să se curețe ușor — alegerea de zi cu zi pentru o casă cu trafic.'}, 'Luna': {score: 3.8, pilling: 4, martindale: 60000, light: 4, gsm: 410, roll: 140, comp: '65% Poliester, 35% Bumbac', kind: 'Texturat, tușeu uscat', desc: 'Țesătură texturată, cu relief vizibil și tușeu uscat. Firul gros ascunde urmele de folosință și dă canapelei un caracter cald, de in.'}, 'Manila': {score: 3.9, pilling: 4, martindale: 70000, light: 4, gsm: 445, roll: 140, comp: '100% Poliester', kind: 'Catifelat, lucios', desc: 'Catifea lucioasă, cu reflexe care se schimbă după lumină. Fir fin, suprafață densă și cea mai largă paletă de culori din colecție.'}, 'Maya': {score: 4.6, pilling: 5, martindale: 110000, light: 5, gsm: 530, roll: 140, comp: '70% Poliester, 15% Poliester reciclat, 15% Bumbac', kind: 'Catifelat, semi-lucios', desc: 'Catifea semi-lucioasă, moale la atingere. Rezistă la scămoșare și la ghearele animalelor, iar petele se șterg cu apă.'}, 'Milton': {score: 4.5, pilling: 4, martindale: 100000, light: 5, gsm: 500, roll: 140, comp: '88% Poliester, 12% Poliamidă', kind: 'Neted, semi-lucios', desc: 'Țesătură netedă, semi-lucioasă, cu un luciu discret. Tratament impermeabil, potrivită pentru living-uri luminoase.'}, 'Piano': {score: 4.7, pilling: 5, martindale: 120000, light: 5, gsm: 555, roll: 140, comp: '94% Poliester, 6% Poliamidă', kind: 'Catifelat, lucios', desc: 'Catifea lucioasă, de densitate mare. Cea mai rezistentă la abraziune din colecție și cea mai ușor de curățat.'}, 'Spello': {score: 4.3, pilling: 4, martindale: 90000, light: 4, gsm: 470, roll: 140, comp: '60% Poliester, 25% Acril, 15% Bumbac', kind: 'Texturat, mat', desc: 'Țesătură texturată, mată, cu fir neregulat. Suprafață vie, care schimbă nuanța după unghiul din care o privești.'}, 'Zoya': {score: 4.4, pilling: 5, martindale: 105000, light: 4, gsm: 515, roll: 140, comp: '80% Poliester, 20% Poliester reciclat', kind: 'Catifelat, mat', desc: 'Catifea mată, cu tușeu de piersică. Prietenoasă cu animalele, tratată împotriva petelor și a scămoșării.'}};
-  var LABEL = {pilling:'Rezistență la scămoșare', martindale:'Rezistență la abraziune (martindale)',
-               light:'Rezistență la lumină'};
+  /* The section is called Rezistență, so each row repeating it was three words of nothing.
+     The name is the property alone; what the number means sits behind the (i). */
+  var LABEL = {
+    pilling:    ['Scămoșare', 'Cât de repede face scămuțe la frecare. 5 este nota maximă — ' +
+                 'țesătura rămâne netedă și după ani de folosință.'],
+    martindale: ['Abraziune (martindale)', 'De câte ori a fost frecată țesătura în laborator ' +
+                 'până să se tocească. Peste 40.000 ajunge pentru o canapea de zi cu zi, ' +
+                 'peste 100.000 ține și într-o casă plină.'],
+    light:      ['Lumină', 'Cât ține culoarea în soare. 5 este nota maximă — poți pune ' +
+                 'canapeaua lângă fereastră fără să se decoloreze.']
+  };
+  /* the same circled i the tiles carry, at the size of the row it sits in */
+  var Q_GLYPH = '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" ' +
+                'stroke="currentColor" stroke-width="1" stroke-linecap="round" ' +
+                'stroke-linejoin="round"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 ' +
+                '11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 ' +
+                '4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z"></path></svg>';
 
   /* One care line for the whole range -- these are upholstery fabrics, not laundry. The
      symbols are the ISO 3758 drawings in assets/care-symbols, pulled in as masks rather than
@@ -2058,6 +2085,13 @@ document.documentElement.addEventListener('animationend', function(e){
     return '<div class="kirow' + (scale == null ? ' noscale' : '') + '"><dt>' + dt + '</dt><dd>' +
            dd + '</dd>' + (scale == null ? '' : bar(scale)) + '</div>';
   }
+  /* a resistance row: name, number, and the explanation folded away behind the (i) */
+  function qrow(key, dd){
+    var l = LABEL[key];
+    return '<div class="kirow noscale"><dt>' + l[0] + '<button class="kiq" aria-expanded="false" ' +
+           'aria-label="Ce înseamnă ' + l[0].toLowerCase() + '">' + Q_GLYPH + '</button></dt>' +
+           '<dd>' + dd + '</dd><p class="kinote">' + l[1] + '</p></div>';
+  }
   function paint(coll, name){
     var m = INFO[coll];
     if (!m) return;
@@ -2072,9 +2106,9 @@ document.documentElement.addEventListener('animationend', function(e){
     sheet.querySelector('.kidesc').textContent = m.desc;
     sheet.querySelector('.kiscore').innerHTML = m.score.toFixed(1) + '<span>/5</span>';
     sheet.querySelector('#ki-res').innerHTML =
-      row(LABEL.pilling, m.pilling, m.pilling / 5 * 100) +
-      row(LABEL.martindale, m.martindale.toLocaleString('ro-RO'), Math.min(100, m.martindale / 120000 * 100)) +
-      row(LABEL.light, m.light, m.light / 5 * 100);
+      qrow('pilling', m.pilling + ' din 5') +
+      qrow('martindale', m.martindale.toLocaleString('ro-RO')) +
+      qrow('light', m.light + ' din 5');
     sheet.querySelector('#ki-feat').innerHTML =
       /* the title carries the colour now, so the row that repeated it names the collection */
       row('Colecție', coll) + row('Cod', name.toUpperCase().replace(/[^A-Z0-9]/g, '')) +
@@ -2117,6 +2151,22 @@ document.documentElement.addEventListener('animationend', function(e){
     if (i){
       e.stopPropagation();
       open(i.dataset.coll, i.dataset.name);
+      return;
+    }
+    /* the (i) on a resistance row opens its explanation, and closes the one already open --
+       two of them at once would push the table apart for no reason */
+    var q = e.target.closest('.kiq');
+    if (q){
+      e.stopPropagation();
+      var qr = q.closest('.kirow'), was = qr.classList.contains('open');
+      sheet.querySelectorAll('.kirow.open').forEach(function(o){
+        o.classList.remove('open');
+        o.querySelector('.kiq').setAttribute('aria-expanded', 'false');
+      });
+      if (!was){
+        qr.classList.add('open');
+        q.setAttribute('aria-expanded', 'true');
+      }
       return;
     }
     /* another colour of the same fabric: the sheet re-reads itself, it does not travel */
