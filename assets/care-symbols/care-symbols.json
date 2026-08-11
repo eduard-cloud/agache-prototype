@@ -1,0 +1,362 @@
+{
+  "source": "https://www.c-and-a.com/eu/en/shop/care-and-washing-symbols-made-simple",
+  "standard": "ISO 3758 / GINETEX",
+  "viewBox": "0 0 48 48",
+  "groups": [
+    {
+      "id": "washing",
+      "label_en": "Washing",
+      "label_ro": "Spălare"
+    },
+    {
+      "id": "bleaching",
+      "label_en": "Bleaching",
+      "label_ro": "Înălbire"
+    },
+    {
+      "id": "drying",
+      "label_en": "Drying",
+      "label_ro": "Uscare"
+    },
+    {
+      "id": "ironing",
+      "label_en": "Ironing",
+      "label_ro": "Călcare"
+    },
+    {
+      "id": "professional",
+      "label_en": "Professional textile care",
+      "label_ro": "Curățare profesională"
+    }
+  ],
+  "symbols": [
+    {
+      "id": "wash-none",
+      "group": "washing",
+      "label_en": "Do not wash",
+      "label_ro": "A nu se spăla",
+      "desc_ro": "Materialul nu se spală nici în mașină, nici manual.",
+      "file": "wash-none.svg"
+    },
+    {
+      "id": "wash-hand",
+      "group": "washing",
+      "label_en": "Hand wash",
+      "label_ro": "Spălare manuală",
+      "desc_ro": "Se spală doar cu mâna, în apă călduță și fără frecare.",
+      "file": "wash-hand.svg"
+    },
+    {
+      "id": "wash-30",
+      "group": "washing",
+      "label_en": "Normal cycle up to 30°C",
+      "label_ro": "Program normal, maximum 30°C",
+      "desc_ro": "Spălare în mașină pe program normal, cu apă de cel mult 30°C.",
+      "file": "wash-30.svg"
+    },
+    {
+      "id": "wash-30-gentle",
+      "group": "washing",
+      "label_en": "Gentle cycle up to 30°C",
+      "label_ro": "Program delicat, maximum 30°C",
+      "desc_ro": "Program delicat, cu agitare și centrifugare reduse, la maximum 30°C.",
+      "file": "wash-30-gentle.svg"
+    },
+    {
+      "id": "wash-30-very-gentle",
+      "group": "washing",
+      "label_en": "Very gentle cycle up to 30°C",
+      "label_ro": "Program foarte delicat, maximum 30°C",
+      "desc_ro": "Program foarte delicat, cu agitare minimă și mașina încărcată pe jumătate, la maximum 30°C.",
+      "file": "wash-30-very-gentle.svg"
+    },
+    {
+      "id": "wash-40",
+      "group": "washing",
+      "label_en": "Normal cycle up to 40°C",
+      "label_ro": "Program normal, maximum 40°C",
+      "desc_ro": "Spălare în mașină pe program normal, cu apă de cel mult 40°C.",
+      "file": "wash-40.svg"
+    },
+    {
+      "id": "wash-40-gentle",
+      "group": "washing",
+      "label_en": "Gentle cycle up to 40°C",
+      "label_ro": "Program delicat, maximum 40°C",
+      "desc_ro": "Program delicat, cu agitare și centrifugare reduse, la maximum 40°C.",
+      "file": "wash-40-gentle.svg"
+    },
+    {
+      "id": "wash-40-very-gentle",
+      "group": "washing",
+      "label_en": "Very gentle cycle up to 40°C",
+      "label_ro": "Program foarte delicat, maximum 40°C",
+      "desc_ro": "Program foarte delicat, cu agitare minimă și mașina încărcată pe jumătate, la maximum 40°C.",
+      "file": "wash-40-very-gentle.svg"
+    },
+    {
+      "id": "wash-60",
+      "group": "washing",
+      "label_en": "Normal cycle up to 60°C",
+      "label_ro": "Program normal, maximum 60°C",
+      "desc_ro": "Spălare în mașină pe program normal, cu apă de cel mult 60°C.",
+      "file": "wash-60.svg"
+    },
+    {
+      "id": "wash-60-gentle",
+      "group": "washing",
+      "label_en": "Gentle cycle up to 60°C",
+      "label_ro": "Program delicat, maximum 60°C",
+      "desc_ro": "Program delicat, cu agitare și centrifugare reduse, la maximum 60°C.",
+      "file": "wash-60-gentle.svg"
+    },
+    {
+      "id": "wash-95",
+      "group": "washing",
+      "label_en": "Normal cycle up to 95°C",
+      "label_ro": "Program normal, maximum 95°C",
+      "desc_ro": "Spălare în mașină pe program normal, cu apă de cel mult 95°C.",
+      "file": "wash-95.svg"
+    },
+    {
+      "id": "bleach-none",
+      "group": "bleaching",
+      "label_en": "Do not bleach",
+      "label_ro": "A nu se înălbi",
+      "desc_ro": "Materialul nu suportă niciun fel de înălbitor.",
+      "file": "bleach-none.svg"
+    },
+    {
+      "id": "bleach-any",
+      "group": "bleaching",
+      "label_en": "Bleach allowed",
+      "label_ro": "Se poate înălbi",
+      "desc_ro": "Suportă înălbitor de orice fel, inclusiv pe bază de clor.",
+      "file": "bleach-any.svg"
+    },
+    {
+      "id": "bleach-non-chlorine",
+      "group": "bleaching",
+      "label_en": "Non-chlorine bleach",
+      "label_ro": "Înălbitor fără clor",
+      "desc_ro": "Suportă doar înălbitor pe bază de oxigen, niciodată clor.",
+      "file": "bleach-non-chlorine.svg"
+    },
+    {
+      "id": "tumble-low",
+      "group": "drying",
+      "label_en": "Tumble dry at a low temperature",
+      "label_ro": "Uscare în uscător, temperatură scăzută",
+      "desc_ro": "Se poate usca în uscător, dar numai la temperatură scăzută.",
+      "file": "tumble-low.svg"
+    },
+    {
+      "id": "tumble-medium",
+      "group": "drying",
+      "label_en": "Tumble dry at a medium temperature",
+      "label_ro": "Uscare în uscător, temperatură medie",
+      "desc_ro": "Se poate usca în uscător, la temperatură medie.",
+      "file": "tumble-medium.svg"
+    },
+    {
+      "id": "tumble-none",
+      "group": "drying",
+      "label_en": "Do not tumble dry",
+      "label_ro": "A nu se usca în uscător",
+      "desc_ro": "Nu se usucă în uscător, pentru că fibrele se strâng și se deformează.",
+      "file": "tumble-none.svg"
+    },
+    {
+      "id": "dry-line",
+      "group": "drying",
+      "label_en": "Dry on a line",
+      "label_ro": "Uscare pe sârmă",
+      "desc_ro": "Se usucă atârnat pe sârmă sau pe umeraș, după centrifugare.",
+      "file": "dry-line.svg"
+    },
+    {
+      "id": "dry-drip-line",
+      "group": "drying",
+      "label_en": "Drip dry on a line",
+      "label_ro": "Uscare pe sârmă, fără stoarcere",
+      "desc_ro": "Se atârnă ud, fără stoarcere, și se lasă să se scurgă.",
+      "file": "dry-drip-line.svg"
+    },
+    {
+      "id": "dry-flat",
+      "group": "drying",
+      "label_en": "Dry lying flat",
+      "label_ro": "Uscare pe orizontală",
+      "desc_ro": "Se usucă întins pe orizontală, ca să nu se lase în lungime.",
+      "file": "dry-flat.svg"
+    },
+    {
+      "id": "dry-drip-flat",
+      "group": "drying",
+      "label_en": "Drip dry lying flat",
+      "label_ro": "Uscare pe orizontală, fără stoarcere",
+      "desc_ro": "Se întinde ud pe orizontală, fără stoarcere și fără centrifugare.",
+      "file": "dry-drip-flat.svg"
+    },
+    {
+      "id": "dry-line-shade",
+      "group": "drying",
+      "label_en": "Line dry in the shade",
+      "label_ro": "Uscare pe sârmă, la umbră",
+      "desc_ro": "Se atârnă la uscat ferit de soare, care decolorează materialul.",
+      "file": "dry-line-shade.svg"
+    },
+    {
+      "id": "dry-drip-line-shade",
+      "group": "drying",
+      "label_en": "Drip dry on the line in the shade",
+      "label_ro": "Uscare pe sârmă la umbră, fără stoarcere",
+      "desc_ro": "Se atârnă ud și ferit de soare, fără stoarcere.",
+      "file": "dry-drip-line-shade.svg"
+    },
+    {
+      "id": "dry-flat-shade",
+      "group": "drying",
+      "label_en": "Dry lying flat in the shade",
+      "label_ro": "Uscare pe orizontală, la umbră",
+      "desc_ro": "Se usucă întins pe orizontală, la umbră.",
+      "file": "dry-flat-shade.svg"
+    },
+    {
+      "id": "dry-drip-flat-shade",
+      "group": "drying",
+      "label_en": "Drip dry lying flat in the shade",
+      "label_ro": "Uscare pe orizontală la umbră, fără stoarcere",
+      "desc_ro": "Se întinde ud pe orizontală, la umbră, fără stoarcere.",
+      "file": "dry-drip-flat-shade.svg"
+    },
+    {
+      "id": "iron-low",
+      "group": "ironing",
+      "label_en": "Iron at a low temperature",
+      "label_ro": "Călcare la temperatură scăzută",
+      "desc_ro": "Se calcă la temperatură scăzută, până în 110°C.",
+      "file": "iron-low.svg"
+    },
+    {
+      "id": "iron-medium",
+      "group": "ironing",
+      "label_en": "Iron at a medium temperature",
+      "label_ro": "Călcare la temperatură medie",
+      "desc_ro": "Se calcă la temperatură medie, până în 150°C.",
+      "file": "iron-medium.svg"
+    },
+    {
+      "id": "iron-high",
+      "group": "ironing",
+      "label_en": "Iron at a high temperature",
+      "label_ro": "Călcare la temperatură ridicată",
+      "desc_ro": "Se calcă la temperatură ridicată, până în 200°C.",
+      "file": "iron-high.svg"
+    },
+    {
+      "id": "iron-none",
+      "group": "ironing",
+      "label_en": "Do not iron",
+      "label_ro": "A nu se călca",
+      "desc_ro": "Nu se calcă, pentru că fierul strică fibrele și luciul materialului.",
+      "file": "iron-none.svg"
+    },
+    {
+      "id": "iron-no-steam",
+      "group": "ironing",
+      "label_en": "Do not steam iron",
+      "label_ro": "A nu se călca cu abur",
+      "desc_ro": "Se calcă doar uscat, fără abur și fără pulverizare cu apă.",
+      "file": "iron-no-steam.svg"
+    },
+    {
+      "id": "wetclean-none",
+      "group": "professional",
+      "label_en": "Do not wet clean",
+      "label_ro": "Fără curățare umedă profesională",
+      "desc_ro": "Nu se curăță umed profesional, chiar dacă merge la curățătorie chimică.",
+      "file": "wetclean-none.svg"
+    },
+    {
+      "id": "wetclean",
+      "group": "professional",
+      "label_en": "Professional wet clean",
+      "label_ro": "Curățare umedă profesională",
+      "desc_ro": "Se curăță umed, cu apă și detergenți speciali, într-o curățătorie profesională.",
+      "file": "wetclean.svg"
+    },
+    {
+      "id": "wetclean-delicate",
+      "group": "professional",
+      "label_en": "Wet clean, delicate",
+      "label_ro": "Curățare umedă, delicată",
+      "desc_ro": "Curățare umedă profesională, pe program delicat.",
+      "file": "wetclean-delicate.svg"
+    },
+    {
+      "id": "wetclean-very-delicate",
+      "group": "professional",
+      "label_en": "Wet clean, very delicate",
+      "label_ro": "Curățare umedă, foarte delicată",
+      "desc_ro": "Curățare umedă profesională, pe cel mai delicat program.",
+      "file": "wetclean-very-delicate.svg"
+    },
+    {
+      "id": "dryclean-p",
+      "group": "professional",
+      "label_en": "Dry clean only with PCE",
+      "label_ro": "Curățare chimică numai cu PCE",
+      "desc_ro": "Curățare chimică profesională cu percloretilenă, pe program normal.",
+      "file": "dryclean-p.svg"
+    },
+    {
+      "id": "dryclean-p-gentle",
+      "group": "professional",
+      "label_en": "Gentle dry clean with PCE",
+      "label_ro": "Curățare chimică delicată cu PCE",
+      "desc_ro": "Curățare chimică cu percloretilenă, pe program delicat.",
+      "file": "dryclean-p-gentle.svg"
+    },
+    {
+      "id": "dryclean-f",
+      "group": "professional",
+      "label_en": "Dry clean with petroleum solvent only",
+      "label_ro": "Curățare chimică numai cu solvent pe bază de petrol",
+      "desc_ro": "Curățare chimică doar cu solvent pe bază de petrol.",
+      "file": "dryclean-f.svg"
+    },
+    {
+      "id": "dryclean-f-gentle",
+      "group": "professional",
+      "label_en": "Delicate dry clean with petroleum solvent only",
+      "label_ro": "Curățare chimică delicată cu solvent pe bază de petrol",
+      "desc_ro": "Curățare chimică cu solvent pe bază de petrol, pe program delicat.",
+      "file": "dryclean-f-gentle.svg"
+    },
+    {
+      "id": "dryclean-a",
+      "group": "professional",
+      "label_en": "Dry clean with any solvent",
+      "label_ro": "Curățare chimică cu orice solvent",
+      "desc_ro": "Curățare chimică profesională cu orice solvent obișnuit.",
+      "file": "dryclean-a.svg"
+    },
+    {
+      "id": "dryclean-none",
+      "group": "professional",
+      "label_en": "Do not dry clean",
+      "label_ro": "A nu se curăța chimic",
+      "desc_ro": "Materialul nu se dă la curățătorie chimică.",
+      "file": "dryclean-none.svg"
+    },
+    {
+      "id": "dryclean-only",
+      "group": "professional",
+      "label_en": "Dry clean only",
+      "label_ro": "Numai curățare chimică",
+      "desc_ro": "Se curăță numai profesional, la curățătorie.",
+      "file": "dryclean-only.svg"
+    }
+  ]
+}
