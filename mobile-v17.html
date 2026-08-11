@@ -2402,12 +2402,14 @@ function renderSampleTray(){
   document.getElementById('sm-add-btn').disabled = sampleSel.length === 0;
 }
 /* Every "Comanda mostre" / "Alege mostre" entry point on this page opens the samples flow in
-   mobile-v20.html -- the same screens as v19, ordered through Shopify checkout instead of the
-   flow's own form. v19 is left where it is, reachable on its own. Separate flow -- the sofa
-   configurator in mobile-v18.html is untouched and still owns Configurează and the material
-   paths. The old in-page overlay is kept below as openSamplesModalLegacy, unreferenced. */
+   mobile-v22.html -- the current one: two questions instead of v20's three, and the colour
+   tiles that carry the sofa. It was still pointing at v20, so leaving the newest flow landed
+   you back here and the button handed you the old one. v19, v20 and v21 are left where they
+   are, reachable on their own from the index. Separate flow -- the sofa configurator in
+   mobile-v18.html is untouched and still owns Configurează and the material paths. The old
+   in-page overlay is kept below as openSamplesModalLegacy, unreferenced. */
 function openSamplesModal(){
-  pushTo('mobile-v20.html');
+  pushTo('mobile-v22.html');
 }
 function openSamplesModalLegacy(){
   buildSamplesGrid();
