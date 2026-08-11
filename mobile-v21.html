@@ -463,6 +463,14 @@ html.enter-r body{animation:pushInR .26s cubic-bezier(.16,1,.3,1) both}
 .hd .hdback{display:flex;align-items:center;justify-content:center;width:36px;height:36px;
   margin:0 -10px;flex:none}
 </style>
+<style>
+/* the panel's live counts: what each option would leave, and nothing where it would leave
+   nothing. A dead option is dimmed and stops taking taps -- except one already chosen, which
+   has to stay tappable to undo. */
+.crow .qt{display:block;font:400 11px/1.2 'DM Sans',sans-serif;color:var(--greyish);margin-top:2px}
+.abpill .cnt2{margin-left:2px}
+.crow.off,.abpill.off{opacity:.3;pointer-events:none}
+</style>
 </head>
 <body>
 <div class="screen" data-i="0"><div class="ph">
@@ -859,18 +867,18 @@ html.enter-r body{animation:pushInR .26s cubic-bezier(.16,1,.3,1) both}
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"></path></svg>
         </div>
         <div class="clist" style="padding:4px">
-          <span class="crow" title="Alb"><span class="dt" style="background:#EEEFE9"></span><span class="nm">Alb</span></span>
-          <span class="crow on" title="Bej"><span class="dt" style="background:#C6BCA9"></span><span class="nm">Bej</span></span>
-          <span class="crow on" title="Maro"><span class="dt" style="background:#645147"></span><span class="nm">Maro</span></span>
-          <span class="crow" title="Gri"><span class="dt" style="background:#8E8381"></span><span class="nm">Gri</span></span>
-          <span class="crow" title="Muștar"><span class="dt" style="background:#D19A22"></span><span class="nm">Muștar</span></span>
-          <span class="crow" title="Oliv"><span class="dt" style="background:#8E8A36"></span><span class="nm">Oliv</span></span>
-          <span class="crow" title="Verde"><span class="dt" style="background:#8AB0A3"></span><span class="nm">Verde</span></span>
-          <span class="crow" title="Petrol"><span class="dt" style="background:#0F6C89"></span><span class="nm">Petrol</span></span>
-          <span class="crow" title="Albastru"><span class="dt" style="background:#3F5C7A"></span><span class="nm">Albastru</span></span>
-          <span class="crow" title="Roz"><span class="dt" style="background:#C58C9C"></span><span class="nm">Roz</span></span>
-          <span class="crow" title="Roșu"><span class="dt" style="background:#8B2A2A"></span><span class="nm">Roșu</span></span>
-          <span class="crow" title="Negru"><span class="dt" style="background:#1D1D1F"></span><span class="nm">Negru</span></span>
+          <span class="crow" title="Alb"><span class="dt" style="background:#EEEFE9"></span><span class="nm">Alb</span><span class="qt"></span></span>
+          <span class="crow on" title="Bej"><span class="dt" style="background:#C6BCA9"></span><span class="nm">Bej</span><span class="qt"></span></span>
+          <span class="crow on" title="Maro"><span class="dt" style="background:#645147"></span><span class="nm">Maro</span><span class="qt"></span></span>
+          <span class="crow" title="Gri"><span class="dt" style="background:#8E8381"></span><span class="nm">Gri</span><span class="qt"></span></span>
+          <span class="crow" title="Muștar"><span class="dt" style="background:#D19A22"></span><span class="nm">Muștar</span><span class="qt"></span></span>
+          <span class="crow" title="Oliv"><span class="dt" style="background:#8E8A36"></span><span class="nm">Oliv</span><span class="qt"></span></span>
+          <span class="crow" title="Verde"><span class="dt" style="background:#8AB0A3"></span><span class="nm">Verde</span><span class="qt"></span></span>
+          <span class="crow" title="Petrol"><span class="dt" style="background:#0F6C89"></span><span class="nm">Petrol</span><span class="qt"></span></span>
+          <span class="crow" title="Albastru"><span class="dt" style="background:#3F5C7A"></span><span class="nm">Albastru</span><span class="qt"></span></span>
+          <span class="crow" title="Roz"><span class="dt" style="background:#C58C9C"></span><span class="nm">Roz</span><span class="qt"></span></span>
+          <span class="crow" title="Roșu"><span class="dt" style="background:#8B2A2A"></span><span class="nm">Roșu</span><span class="qt"></span></span>
+          <span class="crow" title="Negru"><span class="dt" style="background:#1D1D1F"></span><span class="nm">Negru</span><span class="qt"></span></span>
         </div>
       </div>
 
@@ -878,10 +886,10 @@ html.enter-r body{animation:pushInR .26s cubic-bezier(.16,1,.3,1) both}
       <div class="absec">
         <div class="abh">Proprietăți</div>
         <div class="abrow">
-          <span class="abpill"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"></path></svg>Impermeabil</span>
-          <span class="abpill on"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"></path><path d="M12 3v18"></path><circle cx="12" cy="12" r="9"></circle></svg>Easy Clean</span>
-          <span class="abpill on"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="4" r="2"></circle><circle cx="18" cy="8" r="2"></circle><circle cx="20" cy="16" r="2"></circle><path d="M9 10a5 5 0 0 1 5 5v3a3 3 0 0 1-6 0v-1a3 3 0 0 0-3-3H4a2 2 0 0 1 0-4z"></path></svg>Pet Friendly</span>
-          <span class="abpill"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.7 9a2 2 0 0 1-.6 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.2-2.7a1.9 1.9 0 0 1 2.4 0C15.4 3.8 18 5 20 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>OEKO-TEX®</span>
+          <span class="abpill" data-label="Impermeabil"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"></path></svg>Impermeabil<span class="cnt2"></span></span>
+          <span class="abpill on" data-label="Easy Clean"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"></path><path d="M12 3v18"></path><circle cx="12" cy="12" r="9"></circle></svg>Easy Clean<span class="cnt2"></span></span>
+          <span class="abpill on" data-label="Pet Friendly"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="4" r="2"></circle><circle cx="18" cy="8" r="2"></circle><circle cx="20" cy="16" r="2"></circle><path d="M9 10a5 5 0 0 1 5 5v3a3 3 0 0 1-6 0v-1a3 3 0 0 0-3-3H4a2 2 0 0 1 0-4z"></path></svg>Pet Friendly<span class="cnt2"></span></span>
+          <span class="abpill" data-label="OEKO-TEX®"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.7 9a2 2 0 0 1-.6 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.2-2.7a1.9 1.9 0 0 1 2.4 0C15.4 3.8 18 5 20 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>OEKO-TEX®<span class="cnt2"></span></span>
         </div>
         <span class="abmore">Vezi mai mult <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg></span>
       </div>
@@ -1586,6 +1594,7 @@ function groupOf(el){
   return null;
 }
 function labelOf(el){
+  if (el.dataset && el.dataset.label) return el.dataset.label;
   var nm = el.querySelector('.nm');
   if (nm) return nm.textContent.trim();
   var own = el.textContent.trim();
@@ -1684,6 +1693,41 @@ function answered(){
   return (state.needs.length ? 1 : 0) + (state.look.length ? 1 : 0);
 }
 
+/* How many colours survive a given pair of selections -- the same test passesFilters
+   applies, run against a hypothetical state rather than the live one. */
+function countWith(colors, props){
+  var n = 0;
+  CATALOG.forEach(function(item){
+    if (!item.counted) return;
+    if (colors.length && colors.indexOf(item.color) < 0) return;
+    for (var i = 0; i < props.length; i++){
+      var key = PROP_KEY[props[i]];
+      if (key && !item.meta[key]) return;      /* OEKO-TEX has no column, so it never cuts */
+    }
+    n++;
+  });
+  return n;
+}
+function paintCounts(){
+  /* A colour is counted on its own against the other sections rather than stacked onto the
+     colours already picked: colours are an OR, so stacking would only ever grow the number and
+     the count would stop meaning anything. Properties are an AND, so they do stack. */
+  document.querySelectorAll('.crow').forEach(function(el){
+    var label = labelOf(el), on = state.colors.indexOf(label) > -1;
+    var n = countWith([label], state.props);
+    var qt = el.querySelector('.qt');
+    if (qt) qt.textContent = n;
+    el.classList.toggle('off', n === 0 && !on);
+  });
+  document.querySelectorAll('.abpill').forEach(function(el){
+    var label = labelOf(el), on = state.props.indexOf(label) > -1;
+    var n = countWith(state.colors, on ? state.props : state.props.concat([label]));
+    var c = el.querySelector('.cnt2');
+    if (c) c.textContent = n;
+    el.classList.toggle('off', n === 0 && !on);
+  });
+}
+
 function applyFilters(){
   var total = answered();
   var shown = 0;
@@ -1751,6 +1795,8 @@ function applyFilters(){
   /* Screen 8 IS the no-exact-match state and screen 7 is the nothing-left state -- they are
      designed screens, so they get shown as screens instead of pieces of them being pasted
      onto the results. Only swap while the results screen is the one on show. */
+  paintCounts();
+
   if (at === 4 || at === 7){
     if (total && exact === 0 && shown > 0) { if (at !== 7) show(7); }
     else if (at === 7) show(4);
@@ -1768,6 +1814,7 @@ document.addEventListener('click', function(e){
   }
   var opt = e.target.closest('.tile,.crow,.abcard,.abpill,.abbig,.abseg span');
   if (!opt || e.target.closest(NAV)) return;
+  if (opt.classList.contains('off')) return;
   var g = groupOf(opt);
   if (!g) return;
   toggleState(g, labelOf(opt));
