@@ -2401,12 +2401,13 @@ function renderSampleTray(){
   document.getElementById('sm-count').textContent = sampleSel.length;
   document.getElementById('sm-add-btn').disabled = sampleSel.length === 0;
 }
-/* Every "Comanda mostre" / "Alege mostre" entry point on this page opens the existing
-   Design Lab samples screens in comanda-mostre-v3.html. Separate flow -- the sofa
+/* Every "Comanda mostre" / "Alege mostre" entry point on this page opens the samples flow in
+   mobile-v20.html -- the same screens as v19, ordered through Shopify checkout instead of the
+   flow's own form. v19 is left where it is, reachable on its own. Separate flow -- the sofa
    configurator in mobile-v18.html is untouched and still owns Configurează and the material
    paths. The old in-page overlay is kept below as openSamplesModalLegacy, unreferenced. */
 function openSamplesModal(){
-  pushTo('mobile-v19.html');
+  pushTo('mobile-v20.html');
 }
 function openSamplesModalLegacy(){
   buildSamplesGrid();
