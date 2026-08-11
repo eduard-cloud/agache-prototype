@@ -2056,7 +2056,9 @@ document.documentElement.addEventListener('animationend', function(e){
 
   var sheet = document.querySelector('.screen[data-i="11"]');
   if (!sheet) return;
-  var from = 9;
+  /* the screen the sheet returns to and fills the bag on -- the full grid until an (i)
+     says otherwise, never a screen with no swatches on it */
+  var from = 8;
   var cur = {coll: '', name: ''};
   /* Screen 8 holds the whole range grouped by collection, so the circles are read off it --
      screen 4 is the filtered list and would show half a collection. */
@@ -2079,18 +2081,27 @@ document.documentElement.addEventListener('animationend', function(e){
     for (i = 0; i < all.length; i++) if (all[i].name === name) return all[i];
     return null;
   }
-  /* The same colour sits in both grids. The bag being filled is the one on the screen the
-     sheet was opened from, so the swatch to flip is that screen's copy. */
+  /* The same colour sits in both grids, and the bag being filled is the one on the screen the
+     sheet was opened from -- so that screen's copy is the swatch to flip. If the sheet was
+     reached some other way and `from` points at a screen with no swatches on it, the full
+     grid answers instead. It used to return nothing there, and the button below went dead
+     with no way for anyone to see why. */
   function cellFor(name){
-    var b = screens[from] && screens[from].querySelector('.swi[data-name="' + name + '"]');
+    var sel = '.swi[data-name="' + name + '"]';
+    var b = (screens[from] && screens[from].querySelector(sel)) ||
+            (CATALOGUE && CATALOGUE.querySelector(sel));
     return b ? b.parentElement.querySelector('.sw') : null;
+  }
+  /* the bag the count is read off follows the same rule */
+  function bagScreen(){
+    return (screens[from] && screens[from].querySelector('.sw')) ? screens[from] : CATALOGUE;
   }
   /* Adding a sample used to send you back to the grid, which took the fabric away just as
      you were reading it. The sheet stays put now, so the bag has to say so itself. */
   var toastT;
   function toast(msg){
     var t = sheet.querySelector('#ki-toast');
-    var n = screens[from] ? screens[from].querySelectorAll('.sw.on').length : 0;
+    var n = bagScreen().querySelectorAll('.sw.on').length;
     t.querySelector('.kimsg').textContent = msg;
     t.querySelector('.kicount').textContent = n === 1 ? '1 mostră' : n + ' mostre';
     t.classList.add('on');
@@ -2110,7 +2121,9 @@ document.documentElement.addEventListener('animationend', function(e){
     var sw = cellFor(cur.name);
     var has = !!(sw && sw.classList.contains('on'));
     cta.textContent = has ? 'Elimină din coș' : 'Adaugă în coș';
-    cta.classList.toggle('is-empty', !has && !sw);
+    /* there is no ceiling and every colour on the strip has a swatch behind it, so there is
+       nothing left for this button to refuse */
+    cta.classList.remove('is-empty');
     cta.classList.toggle('in-bag', has);
     paintDots();
   }
@@ -2249,7 +2262,7 @@ document.documentElement.addEventListener('animationend', function(e){
       if (!sw) return;
       var had = sw.classList.contains('on');
       sw.classList.toggle('on');
-      syncBag(screens[from]);
+      syncBag(bagScreen());
       /* you stay on the sheet either way -- the next colour is one tap away */
       paintCta();
       toast(had ? 'Ai scos ' + cur.name + ' din coș' : 'Ai adăugat ' + cur.name + ' în coș');
@@ -2260,6 +2273,11 @@ document.documentElement.addEventListener('animationend', function(e){
       show(from);
     }
   }, true);
+
+  /* The sheet's markup names a colour, so the sheet starts on it. Reached any way other than
+     through an (i) it is then still a real fabric with a working button, instead of a page
+     that reads Maya 02 while knowing about no fabric at all. */
+  paint('Maya', sheet.querySelector('.kititle').textContent);
 })();
 </script>
 <script>
