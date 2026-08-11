@@ -6,120 +6,137 @@
 <title>Agache PDP Prototype</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f5f5f7;color:#121212}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;background:#f5f5f7;color:#121212}
 .wrap{max-width:480px;width:100%;padding:24px}
 h1{font-size:24px;font-weight:600;margin-bottom:8px;letter-spacing:-.02em}
-p{color:#63666e;font-size:15px;margin-bottom:32px}
-.card{display:block;background:#fff;border-radius:16px;padding:24px;margin-bottom:16px;text-decoration:none;color:inherit;box-shadow:0 2px 12px rgba(0,0,0,.06);transition:transform .15s,box-shadow .15s}
+body>.wrap>p{color:#63666e;font-size:15px;margin-bottom:32px}
+.group{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#121212;margin:0 0 12px;padding-top:16px;border-top:1px solid #e2e2e6}
+.group:first-of-type{padding-top:0;border-top:0}
+.group span{font-weight:400;text-transform:none;letter-spacing:0;color:#63666e;font-size:12px}
+.card{display:block;background:#fff;border-radius:16px;padding:20px;margin-bottom:12px;text-decoration:none;color:inherit;box-shadow:0 2px 12px rgba(0,0,0,.06);transition:transform .15s,box-shadow .15s}
 .card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.1)}
-.card .tag{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#4d35ff;margin-bottom:6px}
-.card h2{font-size:19px;font-weight:600;margin-bottom:4px}
-.card .desc{font-size:14px;color:#63666e}
+.card:last-of-type{margin-bottom:32px}
+.card h2{font-size:18px;font-weight:600;margin-bottom:4px}
+.card .desc{font-size:14px;color:#63666e;line-height:1.45}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>Agache — Canapea Boston</h1>
   <p>Prototip PDP &amp; configurator materiale</p>
+
+  <div class="group">Comandă mostre online</div>
   <a class="card" href="mobile-v22.html">
-    <div class="tag">Mostre · v22</div>
-    <h2>Comandă mostre v22 — canapeaua pe placa de culoare</h2>
-    <div class="desc">Fluxul v21, cu o singură schimbare pe plăci: culoarea se vede de două ori — țesătura de aproape și aceeași țesătură pe canapea. Una dintre ele e mare, cealaltă stă în colțul din dreapta-jos ca miniatură, iar o atingere pe ea le schimbă între ele. Miniatura e măsurată pe <b>swatches.interiordefine.com</b>: 35×35, pătrată, ramă de 1px #F2F2F2, la 9px de marginea din dreapta și 10px de cea de jos. Restul plăcii rămâne al v21 — numele, prețul și (i) dedesubt. Lângă „Filtre" a apărut <b>Afișare</b>, care trece grila de la două pe rând (pătrat) la una pe rând (4:3). <b>Canapelele sunt încă siluete plate</b>, marcate „imagine în lucru": pozele reale se pun în <code>assets/sofa/</code>, câte una pe culoare, cu numele țesăturii (<code>enjoylux-01.jpg</code>), și se aprind din <code>SOFA_PHOTOS</code>.</div>
+    <h2>v22 — canapeaua pe placa de culoare</h2>
+    <div class="desc">Culoarea se vede și pe canapea; miniatura 35×35 le schimbă între ele. Buton nou <b>Afișare</b>: două plăci pe rând sau una. Canapelele sunt încă siluete — pozele reale intră în <code>assets/sofa/</code>.</div>
   </a>
   <a class="card" href="mobile-v21.html">
-    <div class="tag">Mostre · v21</div>
-    <h2>Comandă mostre v21 — plăci Kave Home, două întrebări</h2>
-    <div class="desc">Fluxul v20, cu două schimbări. <b>Plăcile de mostre</b> sunt refăcute după panoul <i>Buy your samples</i> de pe kavehome.com (mobil), pe ambele ecrane de alegere: două pe rând, pânza pe toată placa, bifa în colțul din stânga-jos, iar sub ea numele, <b>5 lei</b> și cercul (i) care deschide fișa completă a materialului. Footer-ul rămâne al nostru — cele 5 sloturi și butonul roșu. <b>Întrebările</b> sunt două, nu trei: „Nevoi de lifestyle" (cu <i>Standard</i>) și „Cum arată" — Mat / Lucios / <i>Nu am o preferință</i>, cu țesături reale fotografiate pe aceeași culoare. Întrebarea de suprafață a picat: erau două criterii de colecție, iar 8 colecții nu pot acoperi o grilă 3×3, așa că unele combinații întorceau zero. Acum niciuna nu o face — 45 de stări, minimum 15 culori.</div>
+    <h2>v21 — plăci Kave Home, două întrebări</h2>
+    <div class="desc">Plăcile refăcute după Kave Home: pânza pe toată placa, bifă, nume, 5 lei, (i). Două întrebări în loc de trei. Nicio combinație nu mai întoarce zero rezultate.</div>
   </a>
   <a class="card" href="mobile-v20.html">
-    <div class="tag">Mostre · v20</div>
-    <h2>Comandă mostre v20 — checkout Shopify</h2>
-    <div class="desc">Fluxul din <b>mobile-v19.html</b>, neschimbat de la PDP până la coș: trei întrebări, filtre, cele 191 de culori, cele 5 sloturi. Comanda nu mai trece prin formularul nostru — mostrele pleacă drept coș spre checkout-ul Shopify (contact, livrare, metodă de livrare, Shop Pay sau card), iar confirmarea e comanda Shopify, cu voucherul de 49 lei.</div>
+    <h2>v20 — checkout Shopify</h2>
+    <div class="desc">Comanda pleacă în checkout-ul Shopify, nu în formularul nostru. Confirmarea e comanda Shopify, cu voucherul de 49 lei. Restul fluxului, identic cu v19.</div>
   </a>
-  <a class="card" href="mobile-v17.html">
-    <div class="tag">Mobil · v17</div>
-    <h2>PDP v17 — mostre online (v19), configurator neschimbat (v18)</h2>
-    <div class="desc">Fork al PDP v15 + configuratorului v16 (redenumite v17/v18). „Comanda mostre" deschide fluxul separat din <b>mobile-v20.html</b> (checkout Shopify; v19, cu formularul propriu, rămâne accesibil direct): cele 12 ecrane Design Lab, full-screen, fără bandă de navigare — trei întrebări, rezultate, livrare, confirmare. Mostrele apăsate intră în cele 5 sloturi de deasupra CTA-ului, care numără. Configuratorul de canapea (v18) e copie identică a v16 și rămâne pe „Configurează".</div>
+  <a class="card" href="mobile-v19.html">
+    <h2>v19 — fluxul Design Lab, formular propriu</h2>
+    <div class="desc">Cele 12 ecrane de mostre, legate în PDP v17. Panoul de filtre și ecranul de rezultate numără la fel. Comanda se dă prin formularul nostru.</div>
   </a>
   <a class="card" href="comanda-mostre-v3.html">
-    <div class="tag">Mostre · v3</div>
-    <h2>Comandă mostre v3 — prototip clicabil</h2>
-    <div class="desc">Pornește din PDP-ul Cezar; „Comandă mostre" deschide fluxul, „Vezi toate materialele" duce la răsfoire. Trei întrebări (nevoi de lifestyle → atingere → luciu) care ordonează, nu filtrează, filtre pe structura Airbnb, toate cele 191 de culori din inventar, apoi livrare și confirmare. Pe Design System Reference: 375px, DM Sans, CTA roșu #EB2F1E.</div>
+    <h2>v3 — prototip clicabil</h2>
+    <div class="desc">Trei întrebări care ordonează, nu filtrează. Filtre pe structura Airbnb, toate cele 191 de culori. Livrare și confirmare incluse.</div>
   </a>
   <a class="card" href="comanda-mostre-v1.html">
-    <div class="tag">Mostre · v1</div>
-    <h2>Comandă mostre v1 — planșa fluxului complet</h2>
-    <div class="desc">Prima versiune: 13 ecrane cu tot traseul de la PDP la confirmare, plus 15 alternative pe cinci zone (deschiderea genții, adăugarea din PDP, limita de 5 sloturi, compresia checkout-ului, confirmarea). Planșă de citit, fără click-through — imagini placeholder și paleta veche (mov #4d35ff).</div>
+    <h2>v1 — planșa fluxului complet</h2>
+    <div class="desc">13 ecrane, de la PDP la confirmare. 15 alternative pe cinci zone. De citit, fără click-through.</div>
   </a>
   <a class="card" href="https://claude.ai/code/artifact/666b3552-841f-4ffe-bd5b-a4ebd55cc223" target="_blank" rel="noopener">
-    <div class="tag">IA · Proces</div>
-    <h2>Mostre de țesături — arhitectura procesului</h2>
-    <div class="desc">Puncte de intrare, flux principal, swimlanes, IA/sitemap, after-sales, decizii &amp; excepții, măsurare — procesul din spate al comenzilor de mostre, nu ecranele.</div>
+    <h2>Arhitectura procesului</h2>
+    <div class="desc">Puncte de intrare și flux principal. Swimlanes, IA/sitemap, after-sales. Decizii, excepții, măsurare.</div>
   </a>
-  <a class="card" href="mobile-v15.html">
-    <div class="tag">Mobil · v15</div>
-    <h2>PDP v15 — conectat la configuratorul v16</h2>
-    <div class="desc">Copie identică a PDP v13 + configuratorului v14 (redenumite v15/v16), punct de plecare pentru o nouă iterație.</div>
+
+  <div class="group">Configurează canapeaua</div>
+  <a class="card" href="mobile-v18.html">
+    <h2>v18 — folosit de PDP v17</h2>
+    <div class="desc">Copie identică a v16. Mostrele se comandă din shell-ul configuratorului.</div>
   </a>
-  <a class="card" href="mobile-v13.html">
-    <div class="tag">Mobil · v13</div>
-    <h2>PDP v13 — conectat la configuratorul v14</h2>
-    <div class="desc">Copie identică a PDP v12 + configuratorului v11 (redenumite v13/v14), punct de plecare pentru o nouă iterație.</div>
+  <a class="card" href="mobile-v16.html">
+    <h2>v16 — filtre Airbnb</h2>
+    <div class="desc">Iconiță circulară de filtru, pill-uri de material, carduri de formă cu ramă. Slider de preț simplu, fără histogramă. Chip selectat pe fundal gri.</div>
   </a>
-  <a class="card" href="mobile-v12.html">
-    <div class="tag">Mobil · v12</div>
-    <h2>PDP v12 — conectat la configuratorul v11</h2>
-    <div class="desc">Fork al PDP v10 + configuratorului v9 (redenumite v12/v11). Pasul Materiale & Culoare redesenat stil tylko: filtre deasupra chip-urilor de material, culorile direct sub ele, grilă plată de 191 culori (fără grupare pe colecții) sortată deschis→închis. Punct de plecare pentru iterația curentă.</div>
+  <a class="card" href="mobile-v14.html">
+    <h2>v14 — prețuri reale</h2>
+    <div class="desc">Preț calculat din formă + tier de țesătură (agache.ro). Modalul „diferențe între materiale" ca în Figma, cu video. Număr de culori live sub Filtre, multi-select pe tipul de material.</div>
   </a>
-  <a class="card" href="mobile-v10.html">
-    <div class="tag">Mobil · v10</div>
-    <h2>PDP v10 — conectat la configuratorul v9</h2>
-    <div class="desc">Fork al PDP v6, redirecționat către configuratorul v9 (chip-uri de navigare stil tylko). Rămâne neschimbat — versiune pentru client.</div>
+  <a class="card" href="mobile-v11.html">
+    <h2>v11 — modalul de culoare</h2>
+    <div class="desc">Titlul e colecția + codul (Luna 01), culoarea devine subtitlu. Pill-uri KPI deasupra descrierii. Adăugarea în coș închide configuratorul și întoarce în PDP.</div>
+  </a>
+  <a class="card" href="mobile-v9.html">
+    <h2>v9 — pas Materiale/Culoare stil tylko</h2>
+    <div class="desc">Navigare pe chip-uri care urmăresc secțiunea activă. Bară CTA flotantă cu preț mare. Grilă de culori fără nume, doar pânza.</div>
+  </a>
+  <a class="card" href="mobile-v8.html">
+    <h2>v8 — modalul de materiale</h2>
+    <div class="desc">„Vezi diferențe" devine CTA principal și deschide un carusel de 3 materiale. Filtrele de culoare colorate, filtrele de Uz eliminate. „Comandă mostre" duce într-un flux real.</div>
   </a>
   <a class="card" href="mobile-v7.html">
-    <div class="tag">Mobil · v7</div>
-    <h2>Configurator v7</h2>
-    <div class="desc">Fork al configuratorului v3, folosit de PDP v6 — secțiunea "Nevoi de lifestyle" e ascunsă. v3 rămâne neschimbat pentru v4/v5.</div>
-  </a>
-  <a class="card" href="mobile-v6.html">
-    <div class="tag">Mobil · v6</div>
-    <h2>PDP v6</h2>
-    <div class="desc">La fel ca v5 — punct de plecare pentru următoarele modificări.</div>
-  </a>
-  <a class="card" href="mobile-v5.html">
-    <div class="tag">Mobil · v5</div>
-    <h2>PDP v5 — grilă de iconițe sub CTA</h2>
-    <div class="desc">La fel ca v4, cu zona de sub CTA-uri reformată ca grilă de 6 iconițe (2 rânduri × 3), după Figma.</div>
-  </a>
-  <a class="card" href="mobile-v4.html">
-    <div class="tag">Mobil · v4</div>
-    <h2>PDP v4 — zonă sub CTA redesenată</h2>
-    <div class="desc">La fel ca v2 + v3, cu zona de sub CTA-uri (livrare/retur + specificații) redesenată după Figma.</div>
-  </a>
-  <a class="card" href="mobile-v2-v3.html">
-    <div class="tag">Mobil · v2 + v3</div>
-    <h2>PDP v2 + configurator v3</h2>
-    <div class="desc">Pagina de produs v2, cu CTA-urile de dimensiune/material redirecționate către configuratorul ghidat v3.</div>
+    <h2>v7 — folosit de PDP v6</h2>
+    <div class="desc">Fork al v3, cu secțiunea „Nevoi de lifestyle" ascunsă.</div>
   </a>
   <a class="card" href="mobile-v3.html">
-    <div class="tag">Mobil · v3</div>
-    <h2>Configurator ghidat</h2>
-    <div class="desc">Configurator ghidat (config → material → culoare → sumar), inspirat de Tylko.</div>
+    <h2>v3 — configurator ghidat</h2>
+    <div class="desc">Config → material → culoare → sumar, inspirat de Tylko.</div>
   </a>
-  <a class="card" href="prototype.html">
-    <div class="tag">Desktop</div>
-    <h2>Versiune desktop</h2>
-    <div class="desc">Pagina de produs pentru ecran larg.</div>
+
+  <div class="group">PDP <span>— punctul de plecare al ambelor fluxuri</span></div>
+  <a class="card" href="mobile-v17.html">
+    <h2>PDP v17 — mostre v20, configurator v18</h2>
+    <div class="desc">„Comandă mostre" deschide fluxul separat, full-screen. „Configurează" deschide v18. Mostrele apăsate umplu cele 5 sloturi de deasupra CTA-ului.</div>
+  </a>
+  <a class="card" href="mobile-v15.html">
+    <h2>PDP v15 — configurator v16</h2>
+    <div class="desc">Copie identică a PDP v13.</div>
+  </a>
+  <a class="card" href="mobile-v13.html">
+    <h2>PDP v13 — configurator v14</h2>
+    <div class="desc">Copie identică a PDP v12.</div>
+  </a>
+  <a class="card" href="mobile-v12.html">
+    <h2>PDP v12 — configurator v11</h2>
+    <div class="desc">Pasul Materiale &amp; Culoare stil tylko: filtre deasupra chip-urilor. Grilă plată de 191 de culori, fără colecții. Sortare deschis → închis.</div>
+  </a>
+  <a class="card" href="mobile-v10.html">
+    <h2>PDP v10 — configurator v9</h2>
+    <div class="desc">Fork al v6. Versiunea pentru client, rămâne neschimbată.</div>
+  </a>
+  <a class="card" href="mobile-v6.html">
+    <h2>PDP v6 — configurator v8</h2>
+    <div class="desc">La fel ca v5.</div>
+  </a>
+  <a class="card" href="mobile-v5.html">
+    <h2>PDP v5 — iconițe sub CTA</h2>
+    <div class="desc">Zona de sub CTA-uri, grilă de 6 iconițe (2×3), după Figma.</div>
+  </a>
+  <a class="card" href="mobile-v4.html">
+    <h2>PDP v4 — zonă sub CTA redesenată</h2>
+    <div class="desc">Livrare/retur și specificații, redesenate după Figma.</div>
+  </a>
+  <a class="card" href="mobile-v2-v3.html">
+    <h2>PDP v2 + configurator v3</h2>
+    <div class="desc">CTA-urile de dimensiune și material duc în configuratorul ghidat.</div>
   </a>
   <a class="card" href="mobile-v2.html">
-    <div class="tag">Mobil · v2</div>
-    <h2>Versiune mobil — redesign</h2>
-    <div class="desc">Zona de cumpărare (preț, dimensiune, materiale, CTA) redesenată — restul paginii neschimbat.</div>
+    <h2>PDP v2 — zona de cumpărare</h2>
+    <div class="desc">Preț, dimensiune, materiale, CTA — redesenate. Restul paginii, neschimbat.</div>
   </a>
   <a class="card" href="mobile.html">
-    <div class="tag">Mobil</div>
-    <h2>Versiune mobil</h2>
-    <div class="desc">Configurator complet (8 colecții, filtre, mostre) — optimizat pentru telefon.</div>
+    <h2>PDP v1 — mobil</h2>
+    <div class="desc">Configurator complet: 8 colecții, filtre, mostre.</div>
+  </a>
+  <a class="card" href="prototype.html">
+    <h2>PDP desktop</h2>
+    <div class="desc">Pagina de produs pentru ecran larg.</div>
   </a>
 </div>
 </body>
