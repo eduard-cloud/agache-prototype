@@ -432,7 +432,9 @@ html.enter-r body{animation:pushInR .26s cubic-bezier(.16,1,.3,1) both}
 .kiattrs{display:flex;flex-direction:column;gap:8px}
 .kih{font:500 20px/20px 'DM Sans',sans-serif;letter-spacing:-.6px;display:flex;
   align-items:baseline;justify-content:space-between;gap:12px}
-.kih .kiscore span{color:var(--greytext)}
+/* the collection header carries the abrasion figure the inventory measured, in place of the
+   resistance index, which was a number nothing computed */
+.kscore .kval span{color:var(--greytext)}
 .kilist{margin:0}
 .kirow{display:grid;grid-template-columns:1fr auto 115px;align-items:center;gap:24px;
   padding:12px 0;border-bottom:1px solid var(--greybg);font:400 14px/20px 'DM Sans',sans-serif;
@@ -1127,7 +1129,7 @@ body.view-1up .kgrid .sw{aspect-ratio:4/3}
       <div class="kgroup">
         <div class="kdetails">
           <div class="krow"><span class="kcoll">Enjoy Lux</span></div>
-          <div class="kattrs"><div class="kscore"><span>Indice de rezistență:</span><span class="kbar"><i style="width:84%"></i></span><span class="kval">4.2<span>/5</span></span></div></div>
+          <div class="kattrs"><div class="kscore"><span>Abraziune:</span><span class="kval">55.000 <span>Martindale</span></span></div></div>
         </div>
         <div class="grid4 kgrid">
           <div><span class="sw" style="background:#C7C1B9" data-coll="Enjoy Lux" data-view="cloth" data-sofa="enjoylux-01"><span class="swlayer swcloth" data-layer="cloth"><img src="assets/swatches/thumb/enjoylux-01.jpg" alt="Enjoy Lux 01" loading="lazy" onerror="this.remove()"></span><span class="swlayer swsofa" data-layer="sofa" style="color:#C7C1B9"><svg viewBox="0 0 120 84" aria-hidden="true"><use href="#sofa-art"></use></svg></span><span class="tick"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span></span><span class="swn">Enjoy Lux 01</span><span class="swp">5 lei</span><button class="swi" data-coll="Enjoy Lux" data-name="Enjoy Lux 01" aria-label="Detalii despre Enjoy Lux 01"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z"></path></svg></button></div>
@@ -1160,7 +1162,7 @@ body.view-1up .kgrid .sw{aspect-ratio:4/3}
       <div class="kgroup">
         <div class="kdetails">
           <div class="krow"><span class="kcoll">Luna</span></div>
-          <div class="kattrs"><div class="kscore"><span>Indice de rezistență:</span><span class="kbar"><i style="width:76%"></i></span><span class="kval">3.8<span>/5</span></span></div></div>
+          <div class="kattrs"><div class="kscore"><span>Abraziune:</span><span class="kval">90.000 <span>Martindale</span></span></div></div>
         </div>
         <div class="grid4 kgrid">
           <div><span class="sw" style="background:#CFD0CB" data-coll="Luna" data-view="cloth" data-sofa="luna-01"><span class="swlayer swcloth" data-layer="cloth"><img src="assets/swatches/thumb/luna-01.jpg" alt="Luna 01" loading="lazy" onerror="this.remove()"></span><span class="swlayer swsofa" data-layer="sofa" style="color:#CFD0CB"><svg viewBox="0 0 120 84" aria-hidden="true"><use href="#sofa-art"></use></svg></span><span class="tick"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span></span><span class="swn">Luna 01</span><span class="swp">5 lei</span><button class="swi" data-coll="Luna" data-name="Luna 01" aria-label="Detalii despre Luna 01"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z"></path></svg></button></div>
@@ -1189,7 +1191,7 @@ body.view-1up .kgrid .sw{aspect-ratio:4/3}
       <div class="kgroup">
         <div class="kdetails">
           <div class="krow"><span class="kcoll">Manila</span></div>
-          <div class="kattrs"><div class="kscore"><span>Indice de rezistență:</span><span class="kbar"><i style="width:78%"></i></span><span class="kval">3.9<span>/5</span></span></div></div>
+          <div class="kattrs"><div class="kscore"><span>Abraziune:</span><span class="kval">58.000 <span>Martindale</span></span></div></div>
         </div>
         <div class="grid4 kgrid">
           <div><span class="sw" style="background:#EEEFE9" data-coll="Manila" data-view="cloth" data-sofa="manila-00"><span class="swlayer swcloth" data-layer="cloth"><img src="assets/swatches/thumb/manila-00.jpg" alt="Manila 00" loading="lazy" onerror="this.remove()"></span><span class="swlayer swsofa" data-layer="sofa" style="color:#EEEFE9"><svg viewBox="0 0 120 84" aria-hidden="true"><use href="#sofa-art"></use></svg></span><span class="tick"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span></span><span class="swn">Manila 00</span><span class="swp">5 lei</span><button class="swi" data-coll="Manila" data-name="Manila 00" aria-label="Detalii despre Manila 00"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z"></path></svg></button></div>
@@ -1238,7 +1240,7 @@ body.view-1up .kgrid .sw{aspect-ratio:4/3}
       <div class="kgroup">
         <div class="kdetails">
           <div class="krow"><span class="kcoll">Maya</span></div>
-          <div class="kattrs"><div class="kscore"><span>Indice de rezistență:</span><span class="kbar"><i style="width:92%"></i></span><span class="kval">4.6<span>/5</span></span></div></div>
+          <div class="kattrs"><div class="kscore"><span>Abraziune:</span><span class="kval">50.000 <span>Martindale</span></span></div></div>
         </div>
         <div class="grid4 kgrid">
           <div><span class="sw" style="background:#C9C2B8" data-coll="Maya" data-view="cloth" data-sofa="maya-01"><span class="swlayer swcloth" data-layer="cloth"><img src="assets/swatches/thumb/maya-01.jpg" alt="Maya 01" loading="lazy" onerror="this.remove()"></span><span class="swlayer swsofa" data-layer="sofa" style="color:#C9C2B8"><svg viewBox="0 0 120 84" aria-hidden="true"><use href="#sofa-art"></use></svg></span><span class="tick"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span></span><span class="swn">Maya 01</span><span class="swp">5 lei</span><button class="swi" data-coll="Maya" data-name="Maya 01" aria-label="Detalii despre Maya 01"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z"></path></svg></button></div>
@@ -1268,7 +1270,7 @@ body.view-1up .kgrid .sw{aspect-ratio:4/3}
       <div class="kgroup">
         <div class="kdetails">
           <div class="krow"><span class="kcoll">Milton</span></div>
-          <div class="kattrs"><div class="kscore"><span>Indice de rezistență:</span><span class="kbar"><i style="width:90%"></i></span><span class="kval">4.5<span>/5</span></span></div></div>
+          <div class="kattrs"><div class="kscore"><span>Abraziune:</span><span class="kval">90.000 <span>Martindale</span></span></div></div>
         </div>
         <div class="grid4 kgrid">
           <div><span class="sw" style="background:#D3C2B8" data-coll="Milton" data-view="cloth" data-sofa="milton-01"><span class="swlayer swcloth" data-layer="cloth"><img src="assets/swatches/thumb/milton-01.jpg" alt="Milton 01" loading="lazy" onerror="this.remove()"></span><span class="swlayer swsofa" data-layer="sofa" style="color:#D3C2B8"><svg viewBox="0 0 120 84" aria-hidden="true"><use href="#sofa-art"></use></svg></span><span class="tick"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span></span><span class="swn">Milton 01</span><span class="swp">5 lei</span><button class="swi" data-coll="Milton" data-name="Milton 01" aria-label="Detalii despre Milton 01"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z"></path></svg></button></div>
@@ -1309,7 +1311,7 @@ body.view-1up .kgrid .sw{aspect-ratio:4/3}
       <div class="kgroup">
         <div class="kdetails">
           <div class="krow"><span class="kcoll">Piano</span></div>
-          <div class="kattrs"><div class="kscore"><span>Indice de rezistență:</span><span class="kbar"><i style="width:94%"></i></span><span class="kval">4.7<span>/5</span></span></div></div>
+          <div class="kattrs"><div class="kscore"><span>Abraziune:</span><span class="kval">60.000 <span>Martindale</span></span></div></div>
         </div>
         <div class="grid4 kgrid">
           <div><span class="sw" style="background:#F3F1E6" data-coll="Piano" data-view="cloth" data-sofa="piano-01"><span class="swlayer swcloth" data-layer="cloth"><img src="assets/swatches/thumb/piano-01.jpg" alt="Piano 01" loading="lazy" onerror="this.remove()"></span><span class="swlayer swsofa" data-layer="sofa" style="color:#F3F1E6"><svg viewBox="0 0 120 84" aria-hidden="true"><use href="#sofa-art"></use></svg></span><span class="tick"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span></span><span class="swn">Piano 01</span><span class="swp">5 lei</span><button class="swi" data-coll="Piano" data-name="Piano 01" aria-label="Detalii despre Piano 01"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z"></path></svg></button></div>
@@ -1344,7 +1346,7 @@ body.view-1up .kgrid .sw{aspect-ratio:4/3}
       <div class="kgroup">
         <div class="kdetails">
           <div class="krow"><span class="kcoll">Spello</span></div>
-          <div class="kattrs"><div class="kscore"><span>Indice de rezistență:</span><span class="kbar"><i style="width:86%"></i></span><span class="kval">4.3<span>/5</span></span></div></div>
+          <div class="kattrs"><div class="kscore"><span>Abraziune:</span><span class="kval">60.000 <span>Martindale</span></span></div></div>
         </div>
         <div class="grid4 kgrid">
           <div><span class="sw" style="background:#B0915B" data-coll="Spello" data-view="cloth" data-sofa="spello-04"><span class="swlayer swcloth" data-layer="cloth"><img src="assets/swatches/thumb/spello-04.jpg" alt="Spello 04" loading="lazy" onerror="this.remove()"></span><span class="swlayer swsofa" data-layer="sofa" style="color:#B0915B"><svg viewBox="0 0 120 84" aria-hidden="true"><use href="#sofa-art"></use></svg></span><span class="tick"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span></span><span class="swn">Spello 04</span><span class="swp">5 lei</span><button class="swi" data-coll="Spello" data-name="Spello 04" aria-label="Detalii despre Spello 04"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z"></path></svg></button></div>
@@ -1359,7 +1361,7 @@ body.view-1up .kgrid .sw{aspect-ratio:4/3}
       <div class="kgroup">
         <div class="kdetails">
           <div class="krow"><span class="kcoll">Zoya</span></div>
-          <div class="kattrs"><div class="kscore"><span>Indice de rezistență:</span><span class="kbar"><i style="width:88%"></i></span><span class="kval">4.4<span>/5</span></span></div></div>
+          <div class="kattrs"><div class="kscore"><span>Abraziune:</span><span class="kval">50.000 <span>Martindale</span></span></div></div>
         </div>
         <div class="grid4 kgrid">
           <div><span class="sw" style="background:#BCBDB8" data-coll="Zoya" data-view="cloth" data-sofa="zoya-01"><span class="swlayer swcloth" data-layer="cloth"><img src="assets/swatches/thumb/zoya-01.jpg" alt="Zoya 01" loading="lazy" onerror="this.remove()"></span><span class="swlayer swsofa" data-layer="sofa" style="color:#BCBDB8"><svg viewBox="0 0 120 84" aria-hidden="true"><use href="#sofa-art"></use></svg></span><span class="tick"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span></span><span class="swn">Zoya 01</span><span class="swp">5 lei</span><button class="swi" data-coll="Zoya" data-name="Zoya 01" aria-label="Detalii despre Zoya 01"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z"></path></svg></button></div>
@@ -1469,7 +1471,7 @@ body.view-1up .kgrid .sw{aspect-ratio:4/3}
         <div class="kicare" id="ki-care"></div>
       </div>
       <div class="kiattrs">
-        <div class="kih">Rezistență<span class="kiscore">4.6<span>/5</span></span></div>
+        <div class="kih">Rezistență</div>
         <dl class="kilist" id="ki-res"></dl>
       </div>
       <div class="kiattrs">
@@ -1977,17 +1979,50 @@ document.documentElement.addEventListener('animationend', function(e){
    swap the rest of the flow uses, filled from the collection the tile belongs to. The
    back arrow and the button under it both return to the sheet you came from. */
 (function(){
-  var INFO = {'Enjoy Lux': {score: 4.2, pilling: 4, martindale: 95000, light: 5, gsm: 480, roll: 140, comp: '72% Poliester, 18% Poliester reciclat, 10% Bumbac', kind: 'Neted, tușeu mat', desc: 'Țesătură netedă, cu tușeu mat și fir dens. Tratată să respingă lichidele și să se curețe ușor — alegerea de zi cu zi pentru o casă cu trafic.'}, 'Luna': {score: 3.8, pilling: 4, martindale: 60000, light: 4, gsm: 410, roll: 140, comp: '65% Poliester, 35% Bumbac', kind: 'Texturat, tușeu uscat', desc: 'Țesătură texturată, cu relief vizibil și tușeu uscat. Firul gros ascunde urmele de folosință și dă canapelei un caracter cald, de in.'}, 'Manila': {score: 3.9, pilling: 4, martindale: 70000, light: 4, gsm: 445, roll: 140, comp: '100% Poliester', kind: 'Catifelat, lucios', desc: 'Catifea lucioasă, cu reflexe care se schimbă după lumină. Fir fin, suprafață densă și cea mai largă paletă de culori din colecție.'}, 'Maya': {score: 4.6, pilling: 5, martindale: 110000, light: 5, gsm: 530, roll: 140, comp: '70% Poliester, 15% Poliester reciclat, 15% Bumbac', kind: 'Catifelat, semi-lucios', desc: 'Catifea semi-lucioasă, moale la atingere. Rezistă la scămoșare și la ghearele animalelor, iar petele se șterg cu apă.'}, 'Milton': {score: 4.5, pilling: 4, martindale: 100000, light: 5, gsm: 500, roll: 140, comp: '88% Poliester, 12% Poliamidă', kind: 'Neted, semi-lucios', desc: 'Țesătură netedă, semi-lucioasă, cu un luciu discret. Tratament impermeabil, potrivită pentru living-uri luminoase.'}, 'Piano': {score: 4.7, pilling: 5, martindale: 120000, light: 5, gsm: 555, roll: 140, comp: '94% Poliester, 6% Poliamidă', kind: 'Catifelat, lucios', desc: 'Catifea lucioasă, de densitate mare. Cea mai rezistentă la abraziune din colecție și cea mai ușor de curățat.'}, 'Spello': {score: 4.3, pilling: 4, martindale: 90000, light: 4, gsm: 470, roll: 140, comp: '60% Poliester, 25% Acril, 15% Bumbac', kind: 'Texturat, mat', desc: 'Țesătură texturată, mată, cu fir neregulat. Suprafață vie, care schimbă nuanța după unghiul din care o privești.'}, 'Zoya': {score: 4.4, pilling: 5, martindale: 105000, light: 4, gsm: 515, roll: 140, comp: '80% Poliester, 20% Poliester reciclat', kind: 'Catifelat, mat', desc: 'Catifea mată, cu tușeu de piersică. Prietenoasă cu animalele, tratată împotriva petelor și a scămoșării.'}};
+  /* Every figure here is the inventory's, read out of mobile-v16.html -- the same source
+     COLLECTION_META below comes from. Where the inventory has no number, the row is left
+     out rather than filled in. A martindale range is shown at its top figure. */
+  var INFO = {
+    'Enjoy Lux': {mart: '55.000', pilling: '5/5', mace: null, rubbing: '4-5/5', light: '5/5', gsm: 467, roll: 146,
+      comp: '92% PES / 8% PA', kind: 'Neted, mat', fire: 'BS 5852: Partea 1', cert: 'Piele sensibilă (OEKO-TEX®)',
+      desc: 'Microfibră fină, cu finisaj mat și tehnologie hidrofobă care limitează absorbția lichidelor — apa, cafeaua sau vinul rămân la suprafață sub formă de picături, fiind ușor de îndepărtat. Certificată OEKO-TEX®, oferă un confort curat și durabil pentru uz zilnic.'},
+    'Luna': {mart: '90.000', pilling: null, mace: null, rubbing: null, light: null, gsm: 493, roll: 145,
+      comp: '100% Poliester', kind: 'Texturat, mat', fire: 'Test cu țigara aprinsă', cert: 'Piele sensibilă (OEKO-TEX®)',
+      desc: 'Material cu textură plăcută și elastică, realizat dintr-o țesătură tricotată durabilă, concepută pentru mobilier utilizat frecvent. Materialul oferă un echilibru foarte bun între confort, rezistență și durabilitate, fiind potrivit pentru utilizare zilnică.'},
+    'Manila': {mart: '58.000', pilling: null, mace: null, rubbing: null, light: null, gsm: 220, roll: 143,
+      comp: '100% Poliester', kind: 'Efect catifea, lucios', fire: 'Test cu țigara aprinsă', cert: 'Fără AZO/DMF',
+      desc: 'Material plușat, cu aspect fin de catifea și o gamă generoasă de peste 40 de nuanțe. Combină un aspect elegant, ușor lucios, cu un preț accesibil, fiind alegerea potrivită pentru un mobilier confortabil și primitor.'},
+    'Maya': {mart: '50.000', pilling: '4/5', mace: '5/5', rubbing: null, light: '4/5', gsm: 350, roll: 140,
+      comp: '100% Poliester', kind: 'Efect catifea, semi-lucios', fire: 'BS 5852: Partea 1', cert: null,
+      desc: 'Tricot fin, cu un aspect discret țesut și o senzație la atingere asemănătoare cașmerului. Este ușor de curățat, rezistent la lichide și potrivit pentru animale de companie, fiind alegerea ideală pentru camere de zi, dormitoare și camere pentru copii.'},
+    'Milton': {mart: '90.000', pilling: '5/5', mace: null, rubbing: null, light: '4/5', gsm: 300, roll: 140,
+      comp: '97% PES / 3% PA', kind: 'Neted, semi-lucios', fire: 'BS 5852: Partea 1', cert: null,
+      desc: 'Țesătură tricotată cu o textură fină, ușor sidefată, care lasă umbre discrete în funcție de lumină. Beneficiază de o tehnologie hidrofobă avansată și este potrivită pentru un stil de viață activ, oferind rezistență sporită la uzura de zi cu zi.'},
+    'Piano': {mart: '60.000', pilling: null, mace: null, rubbing: null, light: null, gsm: 310, roll: 142,
+      comp: '100% Poliester', kind: 'Catifea, lucios', fire: 'BS 5852: Partea 1', cert: null,
+      desc: 'Catifea tricotată, extrem de moale la atingere, care combină eleganta aspectului catifelat cu un preț accesibil. Rezistă bine la lichide și se curăță ușor cu apă, fiind o alegere practică pentru mobilierul de zi cu zi.'},
+    'Spello': {mart: '60.000', pilling: null, mace: null, rubbing: null, light: null, gsm: 430, roll: 142,
+      comp: '100% Poliester', kind: 'Texturat, mat', fire: 'BS 5852: Partea 1', cert: null,
+      desc: 'Țesătură groasă, cu o textură proeminentă și un aspect natural, mat. Oferă o rezistență bună la lichide, fiind potrivită pentru mobilierul folosit intens, cu un aer rustic-elegant.'},
+    'Zoya': {mart: '50.000', pilling: '4/5', mace: '5/5', rubbing: null, light: '4/5', gsm: 390, roll: 140,
+      comp: '100% Poliester', kind: 'Efect catifea, mat', fire: 'BS 5852: Partea 1', cert: null,
+      desc: 'Tricot cu aspect mat de catifea, rezistent la lichide și ușor de întreținut. Potrivit pentru gospodăriile cu animale de companie, oferă un echilibru excelent între confort, eleganță și durabilitate.'}
+  };
   /* The section is called Rezistență, so each row repeating it was three words of nothing.
      The name is the property alone; what the number means sits behind the (i). */
   var LABEL = {
-    pilling:    ['Scămoșare', 'Cât de repede face scămuțe la frecare. 5 este nota maximă — ' +
-                 'țesătura rămâne netedă și după ani de folosință.'],
+    pilling:    ['Scămoșare', 'Cât de repede face scămuțe la frecare, testată pe cinci trepte. ' +
+                 '5 este nota maximă — țesătura rămâne netedă și după ani de folosință.'],
+    mace:       ['Scămoșare (metoda mace)', 'Aceeași proprietate, măsurată prin a doua metodă ' +
+                 'de laborator, cu tamburul mace. Apare doar la țesăturile la care furnizorul ' +
+                 'a făcut și acest test.'],
     martindale: ['Abraziune (martindale)', 'De câte ori a fost frecată țesătura în laborator ' +
                  'până să se tocească. Peste 40.000 ajunge pentru o canapea de zi cu zi, ' +
-                 'peste 100.000 ține și într-o casă plină.'],
-    light:      ['Lumină', 'Cât ține culoarea în soare. 5 este nota maximă — poți pune ' +
-                 'canapeaua lângă fereastră fără să se decoloreze.']
+                 'peste 60.000 ține și într-o casă plină.'],
+    light:      ['Lumină', 'Cât ține culoarea în soare, testată pe cinci trepte. 5 este nota ' +
+                 'maximă — poți pune canapeaua lângă fereastră fără să se decoloreze.'],
+    rubbing:    ['Frecare', 'Cât de bine ține culoarea când țesătura este frecată — de haine, ' +
+                 'de o pernă, de spătar. 5 este nota maximă.']
   };
   /* the same circled i the tiles carry, at the size of the row it sits in */
   var Q_GLYPH = '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" ' +
@@ -2081,12 +2116,18 @@ document.documentElement.addEventListener('animationend', function(e){
   function bar(pct){
     return '<span class="kbar"><i style="width:' + pct + '%"></i></span>';
   }
+  /* a row the inventory has nothing for is not a row -- no dash, no "n/a", it is simply not
+     among the things this fabric was tested for */
   function row(dt, dd, scale){
+    if (dd == null || dd === '') return '';
     return '<div class="kirow' + (scale == null ? ' noscale' : '') + '"><dt>' + dt + '</dt><dd>' +
            dd + '</dd>' + (scale == null ? '' : bar(scale)) + '</div>';
   }
+  /* the inventory writes a grade as 4/5 or 4-5/5 */
+  function grade(v){ return v ? v.replace('/5', ' din 5') : null; }
   /* a resistance row: name, number, and the explanation folded away behind the (i) */
   function qrow(key, dd){
+    if (dd == null) return '';
     var l = LABEL[key];
     return '<div class="kirow noscale"><dt>' + l[0] + '<button class="kiq" aria-expanded="false" ' +
            'aria-label="Ce înseamnă ' + l[0].toLowerCase() + '">' + Q_GLYPH + '</button></dt>' +
@@ -2104,16 +2145,18 @@ document.documentElement.addEventListener('animationend', function(e){
     sheet.querySelector('.kimg').style.background = c.hex || '';
     sheet.querySelector('.kititle').textContent = name;
     sheet.querySelector('.kidesc').textContent = m.desc;
-    sheet.querySelector('.kiscore').innerHTML = m.score.toFixed(1) + '<span>/5</span>';
+    /* Only what the inventory measured. Four of the eight collections were tested for
+       abrasion alone, so their table is one row long -- which is the truth about them. */
     sheet.querySelector('#ki-res').innerHTML =
-      qrow('pilling', m.pilling + ' din 5') +
-      qrow('martindale', m.martindale.toLocaleString('ro-RO')) +
-      qrow('light', m.light + ' din 5');
+      qrow('pilling', grade(m.pilling)) + qrow('mace', grade(m.mace)) +
+      qrow('martindale', m.mart) +
+      qrow('light', grade(m.light)) + qrow('rubbing', grade(m.rubbing));
     sheet.querySelector('#ki-feat').innerHTML =
       /* the title carries the colour now, so the row that repeated it names the collection */
       row('Colecție', coll) + row('Cod', name.toUpperCase().replace(/[^A-Z0-9]/g, '')) +
+      row('Compoziție', m.comp) + row('Tip țesătură', m.kind) +
       row('Gramaj (g/m²)', m.gsm) + row('Lățime rolă (cm)', m.roll) +
-      row('Compoziție', m.comp) + row('Tip țesătură', m.kind);
+      row('Test la foc', m.fire) + row('Certificări', m.cert);
 
     /* The circles are rebuilt only when the collection changes -- rewriting them on every
        colour tap would throw the row back to its first swatch. */
