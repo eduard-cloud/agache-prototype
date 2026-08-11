@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Comandă mostre v22 – Agache</title>
+<title>Comandă mostre v23 – Agache</title>
 <script>document.documentElement.classList.add('enter-r');</script>
 <style>/* latin-ext */
 @font-face {
@@ -112,7 +112,11 @@ img,svg{display:block}
 .slot.full{border:none}
 .mat{width:88px;height:56px;border-radius:2px;flex:none}
 .mat.on{box-shadow:0 0 0 2px var(--black)}
-.row{display:flex;gap:8px;overflow-x:auto;flex:none;scrollbar-width:none}
+/* the bag scrolls once it holds more than six, so it needs room inside its own box for the
+   x that hangs off each slot's top-right corner -- the padding is taken back off the top so
+   the slots stay where the board put them */
+.row{display:flex;gap:8px;overflow-x:auto;flex:none;scrollbar-width:none;
+  padding:8px 8px 0 0;margin-top:-8px}
 .row::-webkit-scrollbar{display:none}
 .shp-top{flex:none;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--greybg)}
 .shp-logo img{height:18px;opacity:.94}
@@ -423,7 +427,8 @@ html.enter-r body{animation:pushInR .26s cubic-bezier(.16,1,.3,1) both}
 .kimg{width:100%;aspect-ratio:1.5;object-fit:cover;flex:none}
 .kisec{display:flex;flex-direction:column;gap:12px;margin-bottom:8px}
 .kititle{font:500 27px/27px 'DM Sans',sans-serif;letter-spacing:-.81px;margin:0}
-.kidesc{font:400 12px/18px 'DM Sans',sans-serif;letter-spacing:-.24px;margin:0}
+/* the description reads straight off the name now, so it is set as body copy, not a caption */
+.kidesc{font:400 15px/1.35 'DM Sans',sans-serif;letter-spacing:-.3px;margin:0}
 .kiattrs{display:flex;flex-direction:column;gap:8px}
 .kih{font:500 20px/20px 'DM Sans',sans-serif;letter-spacing:-.6px;display:flex;
   align-items:baseline;justify-content:space-between;gap:12px}
@@ -436,6 +441,49 @@ html.enter-r body{animation:pushInR .26s cubic-bezier(.16,1,.3,1) both}
 .kirow dt{font-weight:500}
 .kirow dd{margin:0;text-align:right}
 .kirow .kbar{width:115px}
+
+/* the rest of the collection, right under the photo: one circle per colour, the chosen one
+   ringed. The row runs to the sheet's edge, so the negative margin undoes the 24px padding. */
+.kicolors{flex:none;display:flex;align-items:center;gap:12px;overflow-x:auto;
+  padding:2px 24px 2px 0;margin-right:-24px;scrollbar-width:none;-ms-overflow-style:none}
+.kicolors::-webkit-scrollbar{display:none}
+.kidot{position:relative;flex:none;width:48px;height:48px;padding:0;border:1px solid transparent;
+  border-radius:50%;background:none;display:flex;align-items:center;justify-content:center;
+  cursor:pointer}
+.kidot i{width:40px;height:40px;border-radius:50%;display:block;background-size:cover;
+  background-position:center}
+.kidot.on{border-color:var(--black)}
+/* a colour already in the bag is ticked in the middle -- the grid's black-on-white check,
+   put on a disc so it holds against a swatch of any colour */
+.kidot .kitick{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:20px;height:20px;border-radius:50%;background:#fff;color:var(--black);
+  display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .12s ease}
+.kidot.in-bag .kitick{opacity:1}
+
+/* The care symbols are the ISO 3758 set drawn in assets/care-symbols, used as masks so the
+   one file serves every place they appear and still takes the colour of the text around it. */
+.kicare{display:flex;align-items:center;gap:16px;flex-wrap:wrap;color:var(--greytext);
+  margin-top:4px}
+/* Each symbol is drawn at its own size inside the shared 48-box -- the crossed-out ones run
+   corner to corner, the iron and the P sit well inside it -- so on one line they read as
+   five different sizes. --k scales each up to the same drawn extent. */
+.kicare i{width:30px;height:30px;flex:none;background:currentColor;
+  -webkit-mask:var(--sym) center/calc(100% * var(--k,1)) no-repeat;
+  mask:var(--sym) center/calc(100% * var(--k,1)) no-repeat}
+
+/* the word back after a sample is taken: a line that drops in under the header, over the
+   top of the photo, and is gone in a couple of seconds */
+.kibd{position:relative}
+.kitoast{position:absolute;left:24px;right:24px;top:80px;z-index:5;
+  display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;
+  background:var(--black);color:#fff;font:500 14px/20px 'DM Sans',sans-serif;
+  letter-spacing:-.28px;opacity:0;transform:translateY(-8px);pointer-events:none;
+  transition:opacity .18s ease,transform .18s ease}
+.kitoast.on{opacity:1;transform:none}
+.kitoast svg{flex:none}
+.kitoast .kicount{margin-left:auto;font-weight:400;color:rgba(255,255,255,.6)}
+/* once the sample is in, taking it out is not the page's main move -- the red goes */
+.kiadd.in-bag{background:#fff;color:var(--black);box-shadow:inset 0 0 0 1px var(--black)}
 
 </style>
 <style>
@@ -628,7 +676,7 @@ body.view-1up .kgrid .sw{aspect-ratio:4/3}
     <div class="scroll" style="display:flex;flex-direction:column;gap:24px">
       <div>
         <div class="h3">Vezi culorile acasă, la lumina ta</div>
-        <p class="cap13" style="margin:12px 0 0">5 lei mostra, până la 5 mostre. Îi scădem din prețul canapelei.</p>
+        <p class="cap13" style="margin:12px 0 0">5 lei mostra, oricâte vrei. Îi scădem din prețul canapelei.</p>
       </div>
       <div class="card ink" style="display:flex;flex-direction:column;gap:20px">
         <div>
@@ -1322,7 +1370,7 @@ body.view-1up .kgrid .sw{aspect-ratio:4/3}
     </div>
     <div class="bar">
       <div class="row"><span class="slot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></span><span class="slot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></span><span class="slot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></span><span class="slot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></span><span class="slot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></span></div>
-      <div class="cta is-empty">Alege până la 5 mostre <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2 2h2l2.7 12.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L22 7H5"></path></svg></div>
+      <div class="cta is-empty">Alege mostrele <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2 2h2l2.7 12.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L22 7H5"></path></svg></div>
     </div>
   </div>
 </div></div>
@@ -1398,13 +1446,15 @@ body.view-1up .kgrid .sw{aspect-ratio:4/3}
 </div></div>
 <div class="screen" data-i="11"><div class="ph">
   <div class="sbar"><span>9:41</span><span>▮▮▮ ▮</span></div>
-  <div class="bd">
+  <div class="bd kibd">
     <div class="khead kihead"><span class="kback"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"></path><path d="m12 19-7-7 7-7"></path></svg></span></div>
     <div class="scroll kscroll kiscroll">
       <img class="kimg" src="assets/swatches/thumb/maya-02.jpg" alt="">
+      <div class="kicolors" id="ki-colors" role="group" aria-label="Culorile colecției"></div>
       <div class="kisec">
-        <h3 class="kititle">Maya</h3>
+        <h3 class="kititle">Maya 02</h3>
         <p class="kidesc"></p>
+        <div class="kicare" id="ki-care"></div>
       </div>
       <div class="kiattrs">
         <div class="kih">Indice de rezistență<span class="kiscore">4.6<span>/5</span></span></div>
@@ -1415,7 +1465,11 @@ body.view-1up .kgrid .sw{aspect-ratio:4/3}
         <dl class="kilist" id="ki-feat"></dl>
       </div>
     </div>
-    <div class="bar kfoot kifoot"><div class="cta kiback2">Alege o mostră</div></div>
+    <div class="bar kfoot kifoot"><div class="cta kiadd">Adaugă în coș</div></div>
+    <div class="kitoast" id="ki-toast" role="status" aria-live="polite">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+      <span class="kimsg"></span><span class="kicount"></span>
+    </div>
   </div>
 </div></div>
 <script>
@@ -1456,50 +1510,46 @@ var X_GLYPH = (function(){
 /* every swatch gets a stable key so a slot can point back at the one that filled it */
 document.querySelectorAll('.sw').forEach(function(sw, i){ sw.dataset.k = 'k' + i; });
 
-var MAX = 5;
+/* The board drew five slots and the flow enforced them as a ceiling. There is no ceiling
+   now: the bag rests on five empty ones, and past that it grows a slot per sample. Six is
+   as many as the width holds, so from the seventh on the row is swiped. */
+var REST = 5;
 var UNIT = 5;
 var PLUS = (function(){
   var s = document.querySelector('.slot:not(.full)');
   return s ? s.innerHTML : '';
 })();
-function bagOf(screen){
-  var slots = screen.querySelectorAll('.bar .slot');
-  return slots.length ? slots : null;
-}
+function rowOf(screen){ return screen.querySelector('.bar .row'); }
 function picked(screen){ return Array.prototype.slice.call(screen.querySelectorAll('.sw.on')); }
 function syncBag(screen){
-  var slots = bagOf(screen);
-  if (!slots) return;
+  var row = rowOf(screen);
+  if (!row) return;
   var chosen = picked(screen);
-  Array.prototype.forEach.call(slots, function(slot, i){
-    var p = chosen[i];
-    if (p){
-      var img = p.querySelector('.swcloth img');
-      slot.classList.add('full');
-      slot.style.background = p.style.background;
-      /* the photo is cropped in 2.3x, so it has to be clipped by an inner box -- the slot
-         itself has to stay unclipped for the x to sit on its corner */
-      slot.innerHTML = img ? '<span class="im"><img src="' + img.getAttribute('src') + '" alt=""></span>' : '';
-      /* a sample can be thrown out of the bag from the bag itself, not only by finding it
-         again in the grid -- the x is the screens' own close glyph, scaled down */
-      var rm = document.createElement('button');
-      rm.className = 'slot-rm';
-      rm.setAttribute('aria-label', 'Elimină mostra');
-      rm.innerHTML = X_GLYPH;
-      slot.appendChild(rm);
-      slot.dataset.swatch = p.dataset.k;
-    } else {
-      slot.removeAttribute('data-swatch');
-      slot.classList.remove('full');
-      slot.style.background = '';
-      slot.innerHTML = PLUS;
-    }
-  });
+  var out = [], i, p, img;
+  for (i = 0; i < Math.max(REST, chosen.length); i++){
+    p = chosen[i];
+    if (!p){ out.push('<span class="slot">' + PLUS + '</span>'); continue; }
+    img = p.querySelector('.swcloth img');
+    /* the photo is cropped in 2.3x, so an inner box has to clip it -- the slot itself stays
+       unclipped so the x can sit on its corner. The x throws a sample out of the bag from
+       the bag itself, not only by finding it again in the grid; it is the screens' own
+       close glyph, scaled down. */
+    out.push('<span class="slot full" data-swatch="' + p.dataset.k + '" style="background:' +
+             p.style.background + '">' +
+             (img ? '<span class="im"><img src="' + img.getAttribute('src') + '" alt=""></span>' : '') +
+             '<button class="slot-rm" aria-label="Elimină mostra">' + X_GLYPH + '</button></span>');
+  }
+  var grew = chosen.length > (Number(row.dataset.n) || 0);
+  row.dataset.n = chosen.length;
+  row.innerHTML = out.join('');
+  /* past the sixth the newest sample lands off-screen, so the row is run to its end -- after
+     the paint, or the layout that follows the rewrite puts it back at the start */
+  if (grew) requestAnimationFrame(function(){ row.scrollLeft = row.scrollWidth; });
   var cta = screen.querySelector('.bar .cta');
   if (cta){
     var n = chosen.length;
     var icon = cta.querySelector('svg');
-    cta.textContent = n === 0 ? 'Alege până la 5 mostre'
+    cta.textContent = n === 0 ? 'Alege mostrele'
                     : n === 1 ? 'Comandă 1 mostră — ' + UNIT + ' lei'
                               : 'Comandă ' + n + ' mostre — ' + (n * UNIT) + ' lei';
     if (icon) cta.appendChild(icon);
@@ -1522,9 +1572,6 @@ document.addEventListener('click', function(e){
     /* filter and question options are owned by the filtering listener below, which keeps the
        panel and the question screens in one state -- toggling here too would undo it */
     if (groupOf(sel)) return;
-    /* a sample is a place in the bag, and there are only five of them */
-    if (sel.classList.contains('sw') && !sel.classList.contains('on') && bagOf(screen)
-        && picked(screen).length >= MAX) return;
     sel.classList.toggle('on');
     if (sel.classList.contains('sw')) syncBag(screen);
     return;
@@ -1921,9 +1968,89 @@ document.documentElement.addEventListener('animationend', function(e){
   var INFO = {'Enjoy Lux': {score: 4.2, pilling: 4, martindale: 95000, light: 5, gsm: 480, roll: 140, comp: '72% Poliester, 18% Poliester reciclat, 10% Bumbac', kind: 'Neted, tușeu mat', desc: 'Țesătură netedă, cu tușeu mat și fir dens. Tratată să respingă lichidele și să se curețe ușor — alegerea de zi cu zi pentru o casă cu trafic.'}, 'Luna': {score: 3.8, pilling: 4, martindale: 60000, light: 4, gsm: 410, roll: 140, comp: '65% Poliester, 35% Bumbac', kind: 'Texturat, tușeu uscat', desc: 'Țesătură texturată, cu relief vizibil și tușeu uscat. Firul gros ascunde urmele de folosință și dă canapelei un caracter cald, de in.'}, 'Manila': {score: 3.9, pilling: 4, martindale: 70000, light: 4, gsm: 445, roll: 140, comp: '100% Poliester', kind: 'Catifelat, lucios', desc: 'Catifea lucioasă, cu reflexe care se schimbă după lumină. Fir fin, suprafață densă și cea mai largă paletă de culori din colecție.'}, 'Maya': {score: 4.6, pilling: 5, martindale: 110000, light: 5, gsm: 530, roll: 140, comp: '70% Poliester, 15% Poliester reciclat, 15% Bumbac', kind: 'Catifelat, semi-lucios', desc: 'Catifea semi-lucioasă, moale la atingere. Rezistă la scămoșare și la ghearele animalelor, iar petele se șterg cu apă.'}, 'Milton': {score: 4.5, pilling: 4, martindale: 100000, light: 5, gsm: 500, roll: 140, comp: '88% Poliester, 12% Poliamidă', kind: 'Neted, semi-lucios', desc: 'Țesătură netedă, semi-lucioasă, cu un luciu discret. Tratament impermeabil, potrivită pentru living-uri luminoase.'}, 'Piano': {score: 4.7, pilling: 5, martindale: 120000, light: 5, gsm: 555, roll: 140, comp: '94% Poliester, 6% Poliamidă', kind: 'Catifelat, lucios', desc: 'Catifea lucioasă, de densitate mare. Cea mai rezistentă la abraziune din colecție și cea mai ușor de curățat.'}, 'Spello': {score: 4.3, pilling: 4, martindale: 90000, light: 4, gsm: 470, roll: 140, comp: '60% Poliester, 25% Acril, 15% Bumbac', kind: 'Texturat, mat', desc: 'Țesătură texturată, mată, cu fir neregulat. Suprafață vie, care schimbă nuanța după unghiul din care o privești.'}, 'Zoya': {score: 4.4, pilling: 5, martindale: 105000, light: 4, gsm: 515, roll: 140, comp: '80% Poliester, 20% Poliester reciclat', kind: 'Catifelat, mat', desc: 'Catifea mată, cu tușeu de piersică. Prietenoasă cu animalele, tratată împotriva petelor și a scămoșării.'}};
   var LABEL = {pilling:'Rezistență la scămoșare', martindale:'Rezistență la abraziune (martindale)',
                light:'Rezistență la lumină'};
+
+  /* One care line for the whole range -- these are upholstery fabrics, not laundry. The
+     symbols are the ISO 3758 drawings in assets/care-symbols, pulled in as masks rather than
+     redrawn, so they stay the same everywhere they are used. */
+  /* the third number brings each drawing up to the same extent: the three crossed-out ones
+     already run to the edges of their box, the iron and the P are drawn well inside theirs */
+  var CARE = [
+    ['wash-none',   'A nu se spăla',                  1],
+    ['bleach-none', 'A nu se înălbi',                 1],
+    ['tumble-none', 'A nu se usca în uscător',        1],
+    ['iron-low',    'Călcare la temperatură scăzută', 1.3],
+    ['dryclean-p',  'Curățare chimică profesională',  1.3]
+  ];
+  var CARE_HTML = CARE.map(function(c){
+    return '<i style="--sym:url(\'assets/care-symbols/' + c[0] + '.svg\');--k:' + c[2] +
+           '" role="img" aria-label="' + c[1] + '" title="' + c[1] + '"></i>';
+  }).join('');
+
+  /* the check the flow already draws on a picked tile, reused inside the circle */
+  var TICK = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+             'stroke-width="3" stroke-linecap="round" stroke-linejoin="round">' +
+             '<path d="M20 6 9 17l-5-5"></path></svg>';
+
   var sheet = document.querySelector('.screen[data-i="11"]');
   if (!sheet) return;
   var from = 9;
+  var cur = {coll: '', name: ''};
+  /* Screen 8 holds the whole range grouped by collection, so the circles are read off it --
+     screen 4 is the filtered list and would show half a collection. */
+  var CATALOGUE = document.querySelector('.screen[data-i="8"]');
+
+  function colorsOf(coll){
+    var out = [];
+    if (!CATALOGUE) return out;
+    CATALOGUE.querySelectorAll('.swi[data-coll="' + coll + '"]').forEach(function(b){
+      var cell = b.parentElement, sw = cell.querySelector('.sw');
+      var img = cell.querySelector('.swcloth img');
+      var hex = ((sw && sw.getAttribute('style')) || '').match(/#[0-9A-Fa-f]{6}/);
+      out.push({name: b.dataset.name, hex: hex ? hex[0] : '',
+                src: img ? img.getAttribute('src') : ''});
+    });
+    return out;
+  }
+  function colorOf(coll, name){
+    var all = colorsOf(coll), i;
+    for (i = 0; i < all.length; i++) if (all[i].name === name) return all[i];
+    return null;
+  }
+  /* The same colour sits in both grids. The bag being filled is the one on the screen the
+     sheet was opened from, so the swatch to flip is that screen's copy. */
+  function cellFor(name){
+    var b = screens[from] && screens[from].querySelector('.swi[data-name="' + name + '"]');
+    return b ? b.parentElement.querySelector('.sw') : null;
+  }
+  /* Adding a sample used to send you back to the grid, which took the fabric away just as
+     you were reading it. The sheet stays put now, so the bag has to say so itself. */
+  var toastT;
+  function toast(msg){
+    var t = sheet.querySelector('#ki-toast');
+    var n = screens[from] ? screens[from].querySelectorAll('.sw.on').length : 0;
+    t.querySelector('.kimsg').textContent = msg;
+    t.querySelector('.kicount').textContent = n === 1 ? '1 mostră' : n + ' mostre';
+    t.classList.add('on');
+    clearTimeout(toastT);
+    toastT = setTimeout(function(){ t.classList.remove('on'); }, 2600);
+  }
+  /* the whole row has to say what is in the bag, not only the colour being read -- a circle
+     is ticked whether it went in from here or from the grid */
+  function paintDots(){
+    sheet.querySelectorAll('.kidot').forEach(function(d){
+      var sw = cellFor(d.dataset.name);
+      d.classList.toggle('in-bag', !!(sw && sw.classList.contains('on')));
+    });
+  }
+  function paintCta(){
+    var cta = sheet.querySelector('.kiadd');
+    var sw = cellFor(cur.name);
+    var has = !!(sw && sw.classList.contains('on'));
+    cta.textContent = has ? 'Elimină din coș' : 'Adaugă în coș';
+    cta.classList.toggle('is-empty', !has && !sw);
+    cta.classList.toggle('in-bag', has);
+    paintDots();
+  }
   function bar(pct){
     return '<span class="kbar"><i style="width:' + pct + '%"></i></span>';
   }
@@ -1931,12 +2058,17 @@ document.documentElement.addEventListener('animationend', function(e){
     return '<div class="kirow' + (scale == null ? ' noscale' : '') + '"><dt>' + dt + '</dt><dd>' +
            dd + '</dd>' + (scale == null ? '' : bar(scale)) + '</div>';
   }
-  function open(coll, name, src, hex){
+  function paint(coll, name){
     var m = INFO[coll];
     if (!m) return;
-    sheet.querySelector('.kimg').src = src;
-    sheet.querySelector('.kimg').style.background = hex || '';
-    sheet.querySelector('.kititle').textContent = coll;
+    cur.coll = coll; cur.name = name;
+    /* the line names a colour, so it goes the moment another one is picked */
+    clearTimeout(toastT);
+    sheet.querySelector('#ki-toast').classList.remove('on');
+    var c = colorOf(coll, name) || {src: '', hex: ''};
+    sheet.querySelector('.kimg').src = c.src;
+    sheet.querySelector('.kimg').style.background = c.hex || '';
+    sheet.querySelector('.kititle').textContent = name;
     sheet.querySelector('.kidesc').textContent = m.desc;
     sheet.querySelector('.kiscore').innerHTML = m.score.toFixed(1) + '<span>/5</span>';
     sheet.querySelector('#ki-res').innerHTML =
@@ -1944,22 +2076,72 @@ document.documentElement.addEventListener('animationend', function(e){
       row(LABEL.martindale, m.martindale.toLocaleString('ro-RO'), Math.min(100, m.martindale / 120000 * 100)) +
       row(LABEL.light, m.light, m.light / 5 * 100);
     sheet.querySelector('#ki-feat').innerHTML =
-      row('Culoare', name) + row('Cod', name.toUpperCase().replace(/[^A-Z0-9]/g, '')) +
+      /* the title carries the colour now, so the row that repeated it names the collection */
+      row('Colecție', coll) + row('Cod', name.toUpperCase().replace(/[^A-Z0-9]/g, '')) +
       row('Gramaj (g/m²)', m.gsm) + row('Lățime rolă (cm)', m.roll) +
       row('Compoziție', m.comp) + row('Tip țesătură', m.kind);
+
+    /* The circles are rebuilt only when the collection changes -- rewriting them on every
+       colour tap would throw the row back to its first swatch. */
+    var strip = sheet.querySelector('#ki-colors');
+    if (strip.dataset.coll !== coll){
+      strip.dataset.coll = coll;
+      strip.innerHTML = colorsOf(coll).map(function(o){
+        return '<button class="kidot' + (o.name === name ? ' on" aria-current="true"' : '"') +
+               ' data-name="' + o.name + '" aria-label="' + o.name + '"><i style="background-color:' +
+               (o.hex || '#EDEDED') + (o.src ? ";background-image:url('" + o.src + "')" : '') +
+               '"></i><span class="kitick">' + TICK + '</span></button>';
+      }).join('');
+    } else {
+      strip.querySelectorAll('.kidot').forEach(function(d){
+        var on = d.dataset.name === name;
+        d.classList.toggle('on', on);
+        if (on) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current');
+      });
+    }
+
+    sheet.querySelector('#ki-care').innerHTML = CARE_HTML;
+
+    paintCta();
+  }
+  function open(coll, name){
+    if (!INFO[coll]) return;
     from = at;
+    paint(coll, name);
     show(11);
+    var on = sheet.querySelector('.kidot.on');
+    if (on && on.scrollIntoView) on.scrollIntoView({block: 'nearest', inline: 'center'});
   }
   document.addEventListener('click', function(e){
     var i = e.target.closest('.swi');
     if (i){
       e.stopPropagation();
-      var cell = i.parentElement, sw = cell.querySelector('.sw'), img = cell.querySelector('.swcloth img');
-      var hex = (sw.getAttribute('style') || '').match(/#[0-9A-Fa-f]{6}/);
-      open(i.dataset.coll, i.dataset.name, img ? img.getAttribute('src') : '', hex ? hex[0] : '');
+      open(i.dataset.coll, i.dataset.name);
       return;
     }
-    if (e.target.closest('.kback') || e.target.closest('.kiback2')){
+    /* another colour of the same fabric: the sheet re-reads itself, it does not travel */
+    var dot = e.target.closest('.kidot');
+    if (dot){
+      e.stopPropagation();
+      paint(cur.coll, dot.dataset.name);
+      return;
+    }
+    /* the sample goes into the same bag the grid fills, so the swatch there is what flips */
+    var add = e.target.closest('.kiadd');
+    if (add){
+      e.stopPropagation();
+      if (add.classList.contains('is-empty')) return;
+      var sw = cellFor(cur.name);
+      if (!sw) return;
+      var had = sw.classList.contains('on');
+      sw.classList.toggle('on');
+      syncBag(screens[from]);
+      /* you stay on the sheet either way -- the next colour is one tap away */
+      paintCta();
+      toast(had ? 'Ai scos ' + cur.name + ' din coș' : 'Ai adăugat ' + cur.name + ' în coș');
+      return;
+    }
+    if (e.target.closest('.kback')){
       e.stopPropagation();
       show(from);
     }
