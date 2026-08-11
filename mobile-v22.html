@@ -112,7 +112,11 @@ img,svg{display:block}
 .slot.full{border:none}
 .mat{width:88px;height:56px;border-radius:2px;flex:none}
 .mat.on{box-shadow:0 0 0 2px var(--black)}
-.row{display:flex;gap:8px;overflow-x:auto;flex:none;scrollbar-width:none}
+/* the bag scrolls once it holds more than six, so it needs room inside its own box for the
+   x that hangs off each slot's top-right corner -- the padding is taken back off the top so
+   the slots stay where the board put them */
+.row{display:flex;gap:8px;overflow-x:auto;flex:none;scrollbar-width:none;
+  padding:8px 8px 0 0;margin-top:-8px}
 .row::-webkit-scrollbar{display:none}
 .shp-top{flex:none;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--greybg)}
 .shp-logo img{height:18px;opacity:.94}
@@ -657,7 +661,7 @@ body.view-1up .kgrid .sw{aspect-ratio:4/3}
     <div class="scroll" style="display:flex;flex-direction:column;gap:24px">
       <div>
         <div class="h3">Vezi culorile acasă, la lumina ta</div>
-        <p class="cap13" style="margin:12px 0 0">5 lei mostra, până la 5 mostre. Îi scădem din prețul canapelei.</p>
+        <p class="cap13" style="margin:12px 0 0">5 lei mostra, oricâte vrei. Îi scădem din prețul canapelei.</p>
       </div>
       <div class="card ink" style="display:flex;flex-direction:column;gap:20px">
         <div>
@@ -1351,7 +1355,7 @@ body.view-1up .kgrid .sw{aspect-ratio:4/3}
     </div>
     <div class="bar">
       <div class="row"><span class="slot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></span><span class="slot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></span><span class="slot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></span><span class="slot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></span><span class="slot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></span></div>
-      <div class="cta is-empty">Alege până la 5 mostre <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2 2h2l2.7 12.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L22 7H5"></path></svg></div>
+      <div class="cta is-empty">Alege mostrele <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2 2h2l2.7 12.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L22 7H5"></path></svg></div>
     </div>
   </div>
 </div></div>
@@ -1491,50 +1495,46 @@ var X_GLYPH = (function(){
 /* every swatch gets a stable key so a slot can point back at the one that filled it */
 document.querySelectorAll('.sw').forEach(function(sw, i){ sw.dataset.k = 'k' + i; });
 
-var MAX = 5;
+/* The board drew five slots and the flow enforced them as a ceiling. There is no ceiling
+   now: the bag rests on five empty ones, and past that it grows a slot per sample. Six is
+   as many as the width holds, so from the seventh on the row is swiped. */
+var REST = 5;
 var UNIT = 5;
 var PLUS = (function(){
   var s = document.querySelector('.slot:not(.full)');
   return s ? s.innerHTML : '';
 })();
-function bagOf(screen){
-  var slots = screen.querySelectorAll('.bar .slot');
-  return slots.length ? slots : null;
-}
+function rowOf(screen){ return screen.querySelector('.bar .row'); }
 function picked(screen){ return Array.prototype.slice.call(screen.querySelectorAll('.sw.on')); }
 function syncBag(screen){
-  var slots = bagOf(screen);
-  if (!slots) return;
+  var row = rowOf(screen);
+  if (!row) return;
   var chosen = picked(screen);
-  Array.prototype.forEach.call(slots, function(slot, i){
-    var p = chosen[i];
-    if (p){
-      var img = p.querySelector('.swcloth img');
-      slot.classList.add('full');
-      slot.style.background = p.style.background;
-      /* the photo is cropped in 2.3x, so it has to be clipped by an inner box -- the slot
-         itself has to stay unclipped for the x to sit on its corner */
-      slot.innerHTML = img ? '<span class="im"><img src="' + img.getAttribute('src') + '" alt=""></span>' : '';
-      /* a sample can be thrown out of the bag from the bag itself, not only by finding it
-         again in the grid -- the x is the screens' own close glyph, scaled down */
-      var rm = document.createElement('button');
-      rm.className = 'slot-rm';
-      rm.setAttribute('aria-label', 'Elimină mostra');
-      rm.innerHTML = X_GLYPH;
-      slot.appendChild(rm);
-      slot.dataset.swatch = p.dataset.k;
-    } else {
-      slot.removeAttribute('data-swatch');
-      slot.classList.remove('full');
-      slot.style.background = '';
-      slot.innerHTML = PLUS;
-    }
-  });
+  var out = [], i, p, img;
+  for (i = 0; i < Math.max(REST, chosen.length); i++){
+    p = chosen[i];
+    if (!p){ out.push('<span class="slot">' + PLUS + '</span>'); continue; }
+    img = p.querySelector('.swcloth img');
+    /* the photo is cropped in 2.3x, so an inner box has to clip it -- the slot itself stays
+       unclipped so the x can sit on its corner. The x throws a sample out of the bag from
+       the bag itself, not only by finding it again in the grid; it is the screens' own
+       close glyph, scaled down. */
+    out.push('<span class="slot full" data-swatch="' + p.dataset.k + '" style="background:' +
+             p.style.background + '">' +
+             (img ? '<span class="im"><img src="' + img.getAttribute('src') + '" alt=""></span>' : '') +
+             '<button class="slot-rm" aria-label="Elimină mostra">' + X_GLYPH + '</button></span>');
+  }
+  var grew = chosen.length > (Number(row.dataset.n) || 0);
+  row.dataset.n = chosen.length;
+  row.innerHTML = out.join('');
+  /* past the sixth the newest sample lands off-screen, so the row is run to its end -- after
+     the paint, or the layout that follows the rewrite puts it back at the start */
+  if (grew) requestAnimationFrame(function(){ row.scrollLeft = row.scrollWidth; });
   var cta = screen.querySelector('.bar .cta');
   if (cta){
     var n = chosen.length;
     var icon = cta.querySelector('svg');
-    cta.textContent = n === 0 ? 'Alege până la 5 mostre'
+    cta.textContent = n === 0 ? 'Alege mostrele'
                     : n === 1 ? 'Comandă 1 mostră — ' + UNIT + ' lei'
                               : 'Comandă ' + n + ' mostre — ' + (n * UNIT) + ' lei';
     if (icon) cta.appendChild(icon);
@@ -1557,9 +1557,6 @@ document.addEventListener('click', function(e){
     /* filter and question options are owned by the filtering listener below, which keeps the
        panel and the question screens in one state -- toggling here too would undo it */
     if (groupOf(sel)) return;
-    /* a sample is a place in the bag, and there are only five of them */
-    if (sel.classList.contains('sw') && !sel.classList.contains('on') && bagOf(screen)
-        && picked(screen).length >= MAX) return;
     sel.classList.toggle('on');
     if (sel.classList.contains('sw')) syncBag(screen);
     return;
@@ -2022,7 +2019,7 @@ document.documentElement.addEventListener('animationend', function(e){
     var t = sheet.querySelector('#ki-toast');
     var n = screens[from] ? screens[from].querySelectorAll('.sw.on').length : 0;
     t.querySelector('.kimsg').textContent = msg;
-    t.querySelector('.kicount').textContent = n + ' din ' + MAX;
+    t.querySelector('.kicount').textContent = n === 1 ? '1 mostră' : n + ' mostre';
     t.classList.add('on');
     clearTimeout(toastT);
     toastT = setTimeout(function(){ t.classList.remove('on'); }, 2600);
@@ -2031,11 +2028,8 @@ document.documentElement.addEventListener('animationend', function(e){
     var cta = sheet.querySelector('.kiadd');
     var sw = cellFor(cur.name);
     var has = !!(sw && sw.classList.contains('on'));
-    var full = screens[from] && screens[from].querySelectorAll('.sw.on').length >= MAX;
-    cta.textContent = has ? 'Elimină din coș'
-                    : full ? 'Coșul e plin — ' + MAX + ' mostre'
-                           : 'Adaugă în coș';
-    cta.classList.toggle('is-empty', !has && !!(full || !sw));
+    cta.textContent = has ? 'Elimină din coș' : 'Adaugă în coș';
+    cta.classList.toggle('is-empty', !has && !sw);
     cta.classList.toggle('in-bag', has);
   }
   function bar(pct){
