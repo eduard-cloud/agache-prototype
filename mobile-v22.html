@@ -464,8 +464,12 @@ html.enter-r body{animation:pushInR .26s cubic-bezier(.16,1,.3,1) both}
    one file serves every place they appear and still takes the colour of the text around it. */
 .kicare{display:flex;align-items:center;gap:16px;flex-wrap:wrap;color:var(--greytext);
   margin-top:4px}
+/* Each symbol is drawn at its own size inside the shared 48-box -- the crossed-out ones run
+   corner to corner, the iron and the P sit well inside it -- so on one line they read as
+   five different sizes. --k scales each up to the same drawn extent. */
 .kicare i{width:30px;height:30px;flex:none;background:currentColor;
-  -webkit-mask:var(--sym) center/contain no-repeat;mask:var(--sym) center/contain no-repeat}
+  -webkit-mask:var(--sym) center/calc(100% * var(--k,1)) no-repeat;
+  mask:var(--sym) center/calc(100% * var(--k,1)) no-repeat}
 
 /* the word back after a sample is taken: a line that drops in under the header, over the
    top of the photo, and is gone in a couple of seconds */
@@ -1968,16 +1972,18 @@ document.documentElement.addEventListener('animationend', function(e){
   /* One care line for the whole range -- these are upholstery fabrics, not laundry. The
      symbols are the ISO 3758 drawings in assets/care-symbols, pulled in as masks rather than
      redrawn, so they stay the same everywhere they are used. */
+  /* the third number brings each drawing up to the same extent: the three crossed-out ones
+     already run to the edges of their box, the iron and the P are drawn well inside theirs */
   var CARE = [
-    ['wash-none',   'A nu se spăla'],
-    ['bleach-none', 'A nu se înălbi'],
-    ['tumble-none', 'A nu se usca în uscător'],
-    ['iron-low',    'Călcare la temperatură scăzută'],
-    ['dryclean-p',  'Curățare chimică profesională']
+    ['wash-none',   'A nu se spăla',                  1],
+    ['bleach-none', 'A nu se înălbi',                 1],
+    ['tumble-none', 'A nu se usca în uscător',        1],
+    ['iron-low',    'Călcare la temperatură scăzută', 1.3],
+    ['dryclean-p',  'Curățare chimică profesională',  1.3]
   ];
   var CARE_HTML = CARE.map(function(c){
-    return '<i style="--sym:url(\'assets/care-symbols/' + c[0] + '.svg\')" role="img" ' +
-           'aria-label="' + c[1] + '" title="' + c[1] + '"></i>';
+    return '<i style="--sym:url(\'assets/care-symbols/' + c[0] + '.svg\');--k:' + c[2] +
+           '" role="img" aria-label="' + c[1] + '" title="' + c[1] + '"></i>';
   }).join('');
 
   /* the check the flow already draws on a picked tile, reused inside the circle */
