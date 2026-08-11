@@ -1572,9 +1572,21 @@ function labelOf(el){
   if (sib) return sib.textContent.trim();
   return '';
 }
+/* "Standard" and "Nu am o preferință" say "no requirement", so they cannot sit beside a
+   requirement -- ticked together, the escape hatch silently swallowed the real answer and the
+   question stopped meaning anything. Picking one now clears the specific answers, and picking
+   a specific answer clears it. Nothing is greyed out: every tile stays one tap away, which is
+   the same reason the questions have an escape hatch in the first place. */
+var ANY_OF = { needs: 'Standard', look: ANY_ANSWER };
 function toggleState(group, label){
   var a = state[group], i = a.indexOf(label);
-  if (i > -1) a.splice(i, 1); else a.push(label);
+  if (i > -1){ a.splice(i, 1); return; }
+  var any = ANY_OF[group];
+  if (any){
+    if (label === any) a.length = 0;
+    else { var j = a.indexOf(any); if (j > -1) a.splice(j, 1); }
+  }
+  a.push(label);
 }
 /* The board drew the Selectate chips as a fixed row, so taking one off only deleted the pill
    and left the option ticked underneath it. The chips are the ticked options, drawn: one per
