@@ -996,7 +996,13 @@ function nearestColorName(hex){
 /* ══════════ fabricAsset (copied verbatim from mobile-v2.html:2099-2109) ══════════ */
 function fabricAsset(name){
   var s = SWATCH_INDEX[name];
-  if (s) return 'assets/' + (s.collection.assetSlug || s.slug) + '-' + s.code + '.png';
+  /* The catalog swatches come from assets/swatches/dropin/ -- the 191 plates rebuilt from
+     photographs, 320px, with the fold and the sheen on them. assets/<slug>-<code>.png is the
+     first generation, flat and 160px, and it is still what every earlier version reads: those
+     files are shared all the way back to mobile.html and some of those versions are frozen,
+     so this points at the new folder rather than copying over the old one. Same names, so
+     only the directory moves. */
+  if (s) return 'assets/swatches/dropin/' + (s.collection.assetSlug || s.slug) + '-' + s.code + '.png';
   /* legacy fallback: the untouched PDP swatch strip + hidden "Vazute recent" rows still use
      old unpadded "Luna N" names that predate the real catalog — resolve them exactly like the
      old lunaAsset() did, so that no-touch zone keeps rendering identically. */
