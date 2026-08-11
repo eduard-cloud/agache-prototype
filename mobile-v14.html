@@ -41,9 +41,9 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 /* ══ shared components reused verbatim from mobile-v2.html ══ */
 .circ-btn{width:32px;height:32px;border-radius:50%;background:#fff;border:1px solid #e3e3e3;display:flex;align-items:center;justify-content:center}
 .hbar{width:134px;height:5px;background:#d9d9d9;border-radius:3px;margin:8px auto 8px}
-/* Sizing/spacing checked against tylko's own "Wähle die Ausrichtung" section: tile row gap
+/* Sizing/spacing checked against the reference configurator's own orientation section: tile row gap
    8px (matches already), smaller 84px tiles instead of 92px, and a single compact 14px caption
-   line instead of a bold-name + grey-dimension pair (tylko's own "Ausrichtung: rechts" caption
+   line instead of a bold-name + grey-dimension pair (the reference's own orientation caption
    is one plain 14px line, mb 12px -- not a two-line label block). */
 .cfg-shape-row{display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:0 0 4px;margin-bottom:12px;scroll-snap-type:x proximity}
 .cfg-shape-row::-webkit-scrollbar{display:none}
@@ -88,14 +88,14 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-handle{flex:0 0 auto;display:flex;justify-content:center;touch-action:none;padding-top:4px}
 .cfg-chips{flex:0 0 auto;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:0 16px 16px;border-bottom:1px solid var(--hair);scroll-behavior:smooth}
 .cfg-chips::-webkit-scrollbar{display:none}
-/* Tylko-style nav chips: no outline on unselected (just ink text on transparent bg), and the
+/* Nav chips: no outline on unselected (just ink text on transparent bg), and the
    selected pill's checkmark lives in a permanently-reserved slot (fixed width, animated via
    opacity/scale only) so a chip never changes size on select/deselect -- neighbors never get
    pushed left or right, they just sit still while the pill fades to black underneath them. */
 .cfg-chip{flex:0 0 auto;display:flex;align-items:center;gap:5px;background:transparent;border:none;border-radius:9999px;padding:9px 16px 9px 12px;font-size:14px;letter-spacing:-.28px;white-space:nowrap;color:var(--ink);transition:background-color .15s,color .15s,transform .12s ease,filter .12s ease}
 /* Slot itself is a fixed 14px (that's what keeps the chip's total width constant, so
    selecting never pushes neighbors) -- but the checkmark inside it grows in from width:0,
-   same technique tylko uses on its own tab icons, just clipped to a slot that doesn't move. */
+   same technique the reference uses on its own tab icons, just clipped to a slot that doesn't move. */
 .cfg-chip .chip-check{width:14px;height:14px;flex:0 0 auto;overflow:hidden}
 .cfg-chip .chip-check svg{width:14px;height:14px;display:block;transform-origin:0 50%;transform:scaleX(0);transition:transform .14s linear}
 .cfg-chip.on{background:var(--ink);color:#fff}
@@ -352,9 +352,9 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 #sm-add-btn:disabled{opacity:.4}
 .sm-shipnote{text-align:center;font-size:12px;color:var(--gray);margin-top:12px}
 
-/* ── material detail modal ("Vezi diferențe materiale") -- Tylko-style: three separate, physically
+/* ── material detail modal ("Vezi diferențe materiale") -- three separate, physically
    distinct cards in one horizontal native-scroll-snap track. Each card is narrower than the
-   viewport so the next/previous card's edge peeks in on both sides, exactly like the Tylko
+   viewport so the next/previous card's edge peeks in on both sides, exactly like the reference
    configurator carousel -- this is what makes it read as "3 individual widgets" rather than one
    panel whose content swaps. Native overflow-x scroll + scroll-snap drives the swipe (real
    momentum + rubber-banding), dots below sync to whichever card is nearest-centered. */
@@ -433,7 +433,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-samples-primary svg{flex:0 0 auto}
 #cfg-sum-color-sw,#cfg-sum-shape-sw{width:32px;height:32px;border-radius:50%;flex:0 0 auto}
 
-/* ── cta bar -- tylko's floating bar: just a big price + a pill button, nothing else ── */
+/* ── cta bar -- the reference's floating bar: just a big price + a pill button, nothing else ── */
 .cfg-cta{flex:0 0 auto;background:#fff;border-top:1px solid var(--hair);display:flex;align-items:center;justify-content:space-between;padding:14px 24px}
 .cfg-cta .pr{font-size:24px;font-weight:500;letter-spacing:-.72px;color:var(--ink)}
 .cfg-cta .bb{height:46px;background:var(--red);color:#fff;border-radius:23px;padding:0 20px;font-size:14px;font-weight:500;display:flex;align-items:center}
@@ -1907,9 +1907,9 @@ function scrollCfgTo(sec, instant, targetId){
   setActiveCfgChip(sec, instant);
 }
 function setActiveCfgChip(sec, instant, followNav){
-  /* Tapping a chip never scrolls the row itself (tylko doesn't either -- you tapped what you
+  /* Tapping a chip never scrolls the row itself (the reference doesn't either -- you tapped what you
      could already see). But scrolling the content one-handed, without ever touching the chip
-     row, is a different story: tylko's own scroll-spy leaves the active chip stranded off-
+     row, is a different story: the reference's own scroll-spy leaves the active chip stranded off-
      screen once you're a few sections down, which reads as broken rather than intentional. We
      follow the active chip into view here (call site: the #cfg-scroll scroll-spy listener),
      nudging the row just enough to keep it visible instead of re-centering on every change. */

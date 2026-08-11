@@ -233,7 +233,7 @@ img,svg{display:block}
 .ftile .fchk2{position:absolute;right:4px;bottom:4px;width:16px;height:16px;border-radius:50%;background:var(--black);color:#fff;display:none;align-items:center;justify-content:center}
 .ftile.on .fchk2{display:flex}
 
-/* ── filter page, structured like Airbnb's mobile Filters sheet ── */
+/* ── filter page, full-page mobile filters sheet ── */
 .abhead{height:56px;flex:none;display:flex;align-items:center;justify-content:center;position:relative;border-bottom:1px solid var(--greybg)}
 .abhead .t{font:500 16px 'DM Sans',sans-serif;letter-spacing:-.48px}
 .abhead .x{position:absolute;right:16px}
@@ -319,7 +319,7 @@ html,body{height:100%;margin:0;background:#fff;overflow:hidden}
     border:1px solid #D8D5D0;border-radius:28px;box-shadow:0 6px 22px rgba(0,0,0,.07)}
   .screen .ph .sbar{display:flex}
 }
-/* samples, presented the Noah way: the woven cloth itself, three to a row, name under,
+/* samples, presented this way: the woven cloth itself, three to a row, name under,
    check in the top-right corner of the ones you picked. Swatch tiles only -- every other
    screen keeps the board's own layout. */
 /* Square corners, no hairline: nothing frames an unpicked sample, so the eye goes to the
@@ -360,8 +360,8 @@ html,body{height:100%;margin:0;background:#fff;overflow:hidden}
 html.enter-r body{animation:pushInR .26s cubic-bezier(.16,1,.3,1) both}
 </style>
 <style>
-/* ══════════ Comandă mostre, rebuilt as Kave Home's "Buy your samples" sheet ══════════
-   Their box model to the pixel -- 24px sheet padding, a two-up grid on a 16px gutter,
+/* ══════════ Comandă mostre, rebuilt as a "Buy your samples" sheet ══════════
+   The box model to the pixel -- 24px sheet padding, a two-up grid on a 16px gutter,
    square tiles, a checkbox 8px in from the tile's bottom-left corner, the name and the
    price stacked under it at 12/18 with the info circle on the right, a 24px rule between
    collections and a footer that carries the count, the total and the button. Our DM Sans
@@ -439,7 +439,7 @@ html.enter-r body{animation:pushInR .26s cubic-bezier(.16,1,.3,1) both}
 
 </style>
 <style>
-/* Question 1, on Airbnb's stacked card: full width, icon left, title and one grey line under
+/* Question 1, on the stacked card: full width, icon left, title and one grey line under
    it. .abbig already carries that geometry -- this only stacks them and sizes the icon. The
    active border grows 1px and the padding loses 1px, so nothing shifts when you tap. */
 .qlist{display:flex;flex-direction:column;gap:12px}
