@@ -504,8 +504,11 @@ html.enter-r body{animation:pushInR .26s cubic-bezier(.16,1,.3,1) both}
 .swsofa.is-photo{background:#fff}
 .swsofa.is-photo svg{display:none}
 
-/* the tick keeps its corner; the swap thumbnail took the other one */
-.kgrid .sw .tick{z-index:3}
+/* The checkbox moves to the top-right corner. It sat bottom-left, diagonally
+   across from the swap thumbnail, and the two still read as a pair down there --
+   two small squares on the same edge of the picture, one a state and one a
+   control. Up in its own corner the checkbox is unmistakably the state. */
+.kgrid .sw .tick{top:8px;right:8px;left:auto;bottom:auto;z-index:3}
 
 /* ── two up or one up, switched from the header ──
    The reference puts a View control next to Filters and we keep it there, in our
