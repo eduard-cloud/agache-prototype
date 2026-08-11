@@ -702,7 +702,7 @@ body.view-1up .kgrid .sw{aspect-ratio:4/3}
       </div>
     </div>
     <div class="bar" style="border-top:none">
-      <div style="display:flex;align-items:center;gap:12px" data-go="8">
+      <div style="display:flex;align-items:center;gap:12px" class="seeall">
         <span class="stack"><span style="background:#A0978E"></span><span style="background:#0F6C89"></span><span style="background:#E1C8B0"></span></span>
         <span class="b16" style="flex:1">Vezi toate materialele și culorile</span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
@@ -1591,6 +1591,17 @@ document.addEventListener('click', function(e){
     if (sel.classList.contains('sw')) syncBag(screen);
     return;
   }
+  /* "Vezi toate materialele" used to jump to the plain catalogue on screen 8, which has
+     neither the filter button nor the view switch -- so the shortcut past the questions was
+     also a shortcut past the controls. It lands on the results screen now, with nothing
+     answered and nothing filtered: the same view, all the colours. */
+  if (e.target.closest('.seeall')){
+    Object.keys(state).forEach(function(k){ state[k].length = 0; });
+    repaintOptions();
+    show(4);
+    applyFilters();
+    return;
+  }
   var go = e.target.closest('[data-go]');
   if (go) return show(Number(go.dataset.go));
   var nav = e.target.closest(NAV);
@@ -1921,8 +1932,13 @@ function applyFilters(){
   if (heads[0]){
     heads[0].classList.remove('msub12');
     heads[0].classList.add('h3');
-    heads[0].textContent = exact === 1 ? 'Am găsit o culoare pentru tine'
-                                       : 'Am găsit ' + exact + ' culori pentru tine';
+    /* nothing was asked and nothing was ticked, so nothing was found -- this is the whole
+       range, and the heading says that instead of claiming a match */
+    var asked = total || state.colors.length || state.props.length;
+    heads[0].textContent = !asked
+      ? 'Toate cele ' + exact + ' de culori'
+      : exact === 1 ? 'Am găsit o culoare pentru tine'
+                    : 'Am găsit ' + exact + ' culori pentru tine';
   }
   /* the second group is everything that did not match -- it says so, and stays the small
      label so the two groups do not read as two titles of equal weight */
@@ -1933,7 +1949,12 @@ function applyFilters(){
     /* with nothing left out there is no second group, so its heading and the note under it
        would sit on an empty grid */
     var sib = heads[1].parentElement;
-    (sib && sib !== GRID_REST ? sib : heads[1]).style.display = rest ? '' : 'none';
+    var sec = (sib && sib !== GRID_REST) ? sib : heads[1];
+    sec.style.display = rest ? '' : 'none';
+    /* the rule between the two groups has nothing left to separate once the second is gone --
+       it was leaving a stray line under the last row, and its gap under that */
+    var rule = sec.previousElementSibling;
+    if (rule && rule.classList.contains('line')) rule.style.display = rest ? '' : 'none';
   }
 
   /* the designed empty state, shown in place rather than as a screen you cannot reach */
