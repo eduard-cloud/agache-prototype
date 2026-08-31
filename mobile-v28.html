@@ -2637,9 +2637,12 @@ function renderFabGrid(){
   wrap.querySelectorAll('.cfg-fabcard').forEach(function(card){
     card.onclick = function(){ pickCollection(card.dataset.slug, card); };
   });
-  document.getElementById('cfg-fabgrid-sub').textContent = slugs.length === COLLECTION_ORDER.length
-    ? 'Toată canapeaua se face dintr-o singură colecție. Alege-o pe a ta.'
-    : slugs.length + ' colecții potrivite filtrelor tale.';
+  /* No standing blurb -- the line only appears when filters have actually cut the list down,
+     and then it says by how much. */
+  var sub = document.getElementById('cfg-fabgrid-sub');
+  var filtered = slugs.length !== COLLECTION_ORDER.length;
+  sub.style.display = filtered ? '' : 'none';
+  sub.textContent = filtered ? slugs.length + ' colecții potrivite filtrelor tale.' : '';
 }
 /* Picking a collection re-dresses the whole sofa in it: every zone moves to that collection's
    first colour, because a zone can't keep a colour that no longer exists. */
