@@ -299,7 +299,13 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 }
 
 .fsheet-overlay{display:none;position:fixed;inset:0;max-width:480px;margin:0 auto;background:rgba(0,0,0,.45);z-index:65;align-items:flex-end}
-.fsheet-overlay.open{display:flex}
+/* v27: the sheet rises from the bottom edge instead of appearing in place -- the pinned filter
+   button opens it from anywhere in the flow now, so the movement is what tells you where it
+   came from and where it will go back to. */
+.fsheet-overlay.open{display:flex;animation:fsheetFade .18s ease both}
+.fsheet-overlay.open .fsheet-sheet{animation:fsheetUp .28s cubic-bezier(.32,.72,0,1) both}
+@keyframes fsheetFade{from{background:rgba(0,0,0,0)}to{background:rgba(0,0,0,.45)}}
+@keyframes fsheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .fsheet-sheet{background:#fff;border-radius:24px 24px 0 0;width:100%;max-height:80vh;display:flex;flex-direction:column}
 .fsheet-head{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0}
 .fsheet-title{font-size:18px;font-weight:600}
@@ -619,7 +625,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
          at any point while reading the colour grid. The Filtre chip that used to ride along in
          the scrolling row is gone; this is the same button, always reachable. -->
     <div class="cfg-navbar">
-      <button type="button" class="cfg-navfilter" id="cfg-nav-filter-chip" onclick="openFilterSheetFromNav()" aria-label="Filtre">
+      <button type="button" class="cfg-navfilter" id="cfg-nav-filter-chip" onclick="openFilterSheet()" aria-label="Filtre">
         <svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.3337 4.66666H7.33366M9.33366 11.3333H3.33366M9.33366 11.3333C9.33366 12.4379 10.2291 13.3333 11.3337 13.3333C12.4382 13.3333 13.3337 12.4379 13.3337 11.3333C13.3337 10.2288 12.4382 9.33332 11.3337 9.33332C10.2291 9.33332 9.33366 10.2288 9.33366 11.3333ZM6.66699 4.66666C6.66699 5.77123 5.77156 6.66666 4.66699 6.66666C3.56242 6.66666 2.66699 5.77123 2.66699 4.66666C2.66699 3.56209 3.56242 2.66666 4.66699 2.66666C5.77156 2.66666 6.66699 3.56209 6.66699 4.66666Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <span class="nav-cnt" id="cfg-nav-filter-cnt">0</span>
       </button>
@@ -2657,10 +2663,8 @@ function setActiveCfgChip(sec, instant, followNav){
    sub-split inside it (fabric-type chips = Materiale, the thin inline Filtre row = Filtre,
    the grids below = Culoare). Now that Culoare is its own card, each chip maps to a whole
    section again and the generic .cfg-sec spy below is enough -- resolveColorSec is gone.
-   Filtre keeps no scroll zone of its own: it was only ever the ~50px band around the toolbar,
-   and anchoring it there now would fight the Culoare chip, which lands on the same card's
-   title. It's an action chip -- it lights up when tapped (openFilterSheetFromNav) and hands
-   back to the spy on the next scroll. */
+   Filtre isn't in this row at all as of v27 -- it's the pinned button beside it, an action
+   rather than a place, so the spy has nothing to say about it. */
 (function(){
   var scroll = document.getElementById('cfg-scroll');
   var lastSec = '';
@@ -2679,19 +2683,6 @@ function setActiveCfgChip(sec, instant, followNav){
     if (sec !== lastSec){ lastSec = sec; setActiveCfgChip(sec, false, true); }
   });
 })();
-/* Filtre in the top nav: scroll to the in-section Filtre row first so the sheet doesn't pop
-   up out of nowhere, then open it -- both finish in well under a second. */
-function openFilterSheetFromNav(){
-  var scroll = document.getElementById('cfg-scroll');
-  var target = document.getElementById('cfg-filter-btn');
-  if (target){
-    var top = target.getBoundingClientRect().top - scroll.getBoundingClientRect().top + scroll.scrollTop;
-    scroll.scrollTo({ top: Math.max(0, top - 90), behavior: 'smooth' });
-  }
-  setActiveCfgChip('filtre', false);
-  setTimeout(openFilterSheet, 350);
-}
-
 /* ══════════ Free-drag resize (adapted from mobile-v2.html:1773-1800) ══════════ */
 (function(){
   var cfgEl = document.getElementById('cfg');
