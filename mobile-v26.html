@@ -84,9 +84,9 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-dim-track{position:relative;flex:1 1 auto;height:52px;background:#fff;border:1px solid var(--hair);border-radius:10px;overflow:hidden}
 .cfg-dim-fill{position:absolute;top:0;bottom:0;left:0;right:0;background:#ECECEC}
 /* The handle is a rounded grey bar sitting ON the fill's near edge, with white showing
-   either side of it -- at the minimum it isn't flush against the track wall, it rests well
-   inside. That's why the travel is inset 20px at both ends rather than running 0->100%. */
-.cfg-dim-fill::after{content:'';position:absolute;left:-22px;top:11px;bottom:11px;width:4px;border-radius:2px;background:#C6C6C6}
+   either side of it: the handle sits in the middle of that 20px of white, never against the
+   track wall, so the grey always begins 10px past the handle's centre. */
+.cfg-dim-fill::after{content:'';position:absolute;left:-12px;top:11px;bottom:11px;width:4px;border-radius:2px;background:#C6C6C6}
 .cfg-dim-val{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:15px;color:var(--ink);pointer-events:none}
 .cfg-dim-track input[type=range]{position:absolute;inset:0;width:100%;height:100%;margin:0;background:none;-webkit-appearance:none;appearance:none;opacity:0;cursor:pointer}
 .cfg-dim-track input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:40px;height:52px}
@@ -1451,8 +1451,10 @@ function renderLayoutGrid(){
 function paintDim(which){
   var input = document.getElementById('dim-' + which);
   var pct = (input.value - input.min) / (input.max - input.min) * 100;
-  /* travel is inset 20px at each end so the handle never gets near the track's wall */
-  document.getElementById('dim-' + which + '-fill').style.left = 'calc(' + (pct / 100) + ' * (100% - 40px) + 20px)';
+  /* The handle's centre travels 10px -> (100% - 10px); the grey starts 10px past it, which
+     leaves the handle centred in the white at the minimum and 10px off the far wall at the
+     maximum. */
+  document.getElementById('dim-' + which + '-fill').style.left = 'calc(' + (pct / 100) + ' * (100% - 20px) + 20px)';
   document.getElementById('dim-' + which + '-val').textContent = input.value + ' cm';
 }
 function renderSizeSliders(){
