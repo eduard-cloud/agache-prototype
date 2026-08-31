@@ -69,7 +69,11 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
    redundant now and hidden rather than removed, in case that treatment ever comes back. */
 .cfg-shape-check{display:none !important;position:absolute;right:6px;bottom:6px;width:18px;height:18px;border-radius:50%;background:var(--ink);align-items:center;justify-content:center}
 .cfg-shape-label{margin-top:0}
-.cfg-shape-label + .cfg-dim{margin-top:20px}
+/* v26: the Layout card now carries three sub-blocks -- shape, island length, arms -- so they
+   get real air between them, otherwise a label and the next block's control read as one lump. */
+#sec-layout .cfg-shape-label + .cfg-dim{margin-top:30px}
+#sec-layout .cfg-shape-row{margin-bottom:14px}
+#sec-layout .cfg-shape-label + .cfg-subtitle{margin-top:34px}
 /* v26: a size that has no real variant for the current layout (4 seats on a straight sofa)
    stays visible but out of reach, with one line under the grid saying why. */
 .cfg-shape-tile.off{opacity:.32;pointer-events:none}
@@ -98,8 +102,8 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-dim-edit{flex:0 0 auto;width:52px;height:52px;border:1px solid var(--hair);border-radius:10px;background:#fff;color:var(--ink);display:flex;align-items:center;justify-content:center}
 .cfg-dim-edit:active{background:var(--chipbg)}
 /* the fixed main run: same label, but the value reads as a spec, not a control */
-.cfg-subtitle{font-size:15px;font-weight:600;letter-spacing:-.2px;color:var(--ink);margin:26px 0 12px}
-.cfg-dim + .cfg-subtitle{margin-top:24px}
+.cfg-subtitle{font-size:15px;font-weight:600;letter-spacing:-.2px;color:var(--ink);margin:34px 0 14px}
+.cfg-dim + .cfg-subtitle{margin-top:34px}
 .cfg-dim-fixed{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-bottom:18px;border-bottom:1px solid var(--hair)}
 .cfg-dim-fixed + .cfg-dim{margin-top:18px}
 .cfg-dim-fixed .cfg-dim-lab{margin-bottom:0}
