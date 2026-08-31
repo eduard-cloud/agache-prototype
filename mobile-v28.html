@@ -188,6 +188,38 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-sec h3{font-size:18px;font-weight:600;letter-spacing:-.4px;line-height:1.15}
 .cfg-delivery-pill{width:100%;display:flex;align-items:center;gap:10px;background:#fff;border:none;border-radius:12px;padding:14px 16px;margin-top:16px;font-size:14px;font-weight:500;color:var(--ink)}
 .cfg-sec .cfg-sec-sub{font-size:14px;line-height:1.5;color:var(--gray);margin-top:6px}
+
+/* ══ v28: Accesorii ══
+   Figma node 1147:12322. The design draws each accessory on a #f7f7f7 card with an #f2f2f2
+   hairline, which is what it reads as on white -- inside the configurator that same grey is
+   already the section card underneath, so the accessory card flips to white on grey and keeps
+   the hairline. Same move .cfg-matdiff-btn already makes. Everything else is the design's own
+   spec: 80px thumb at radius 4, 16px/500 name, 14px price, 32px round swatches at 6px gap,
+   40px stepper pill and a red pill CTA that takes the rest of the row. */
+.cfg-acc{display:flex;flex-direction:column;gap:12px}
+.cfg-acc-card{background:#fff;border:1px solid var(--graysec);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:20px}
+.cfg-acc-top{display:flex;gap:16px;align-items:center}
+.cfg-acc-thumb{flex:0 0 auto;width:80px;height:80px;border-radius:4px;overflow:hidden;background:#fff}
+.cfg-acc-thumb img{width:100%;height:100%;object-fit:cover}
+.cfg-acc-body{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:14px}
+.cfg-acc-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.cfg-acc-name{font-size:16px;font-weight:500;letter-spacing:-.64px;line-height:1.15}
+.cfg-acc-price{font-size:14px;letter-spacing:-.42px;line-height:1.15;white-space:nowrap}
+.cfg-acc-sw{display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:1px}
+.cfg-acc-sw::-webkit-scrollbar{display:none}
+/* The selected swatch is ring-on-ring in the design (black outline, white gap, fabric): the
+   gap is padding on the button rather than an inset shadow, which would paint under the img. */
+.cfg-acc-dot{flex:0 0 auto;width:32px;height:32px;padding:0;border-radius:999px;border:1px solid var(--hair);background:#fff;overflow:hidden}
+.cfg-acc-dot img{width:100%;height:100%;object-fit:cover;border-radius:999px}
+.cfg-acc-dot.on{border-color:var(--ink);padding:2px}
+.cfg-acc-bot{display:flex;gap:8px;align-items:center}
+.cfg-acc-qty{flex:0 0 auto;height:40px;display:flex;align-items:center;gap:8px;padding:0 8px;border:1px solid var(--hair);border-radius:999px;background:#fff}
+.cfg-acc-qty button{width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:var(--ink)}
+.cfg-acc-qty button:disabled{color:var(--gray2);cursor:default}
+.cfg-acc-qty button:disabled:active{transform:none;filter:none}
+.cfg-acc-qty .n{min-width:14px;text-align:center;font-size:16px;font-weight:500;letter-spacing:-.64px;line-height:1.15}
+.cfg-acc-add{flex:1 1 auto;min-width:0;height:40px;display:flex;align-items:center;justify-content:center;gap:8px;padding:0 24px;border-radius:999px;background:var(--red);color:#fff;font-size:16px;font-weight:500;letter-spacing:-.64px;line-height:1.15}
+.cfg-acc-add.added{background:var(--ink)}
 /* Apple-style config title: bold lead word(s) + period, then the description continues
    inline in grey as part of the same sentence/paragraph, instead of a bold heading with a
    separate grey line underneath. */
@@ -670,6 +702,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
       <button class="cfg-chip" data-sec="color" onclick="scrollCfgTo('color')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Material</button>
       <button class="cfg-chip" data-sec="collection" onclick="scrollCfgTo('collection')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Colecție</button>
       <button class="cfg-chip" data-sec="colors-grid" onclick="scrollCfgTo('colors-grid')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Culoare</button>
+      <button class="cfg-chip" data-sec="accessories" onclick="scrollCfgTo('accessories')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Accesorii<span class="nav-cnt" id="cfg-acc-cnt">0</span></button>
       <button class="cfg-chip" data-sec="summary" onclick="scrollCfgTo('summary')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Sumar</button>
       </div>
     </div>
@@ -809,6 +842,15 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
         </div>
 
         <div class="cfg-fabric-divider" style="display:none"></div>
+      </section>
+
+      <!-- v28: Accesorii. Sits between the colour grid and Sumar because it's the last thing
+           you add to a sofa you've already dressed -- and because every accessory is offered in
+           the same fabrics, so it only makes sense once a colour exists. Each one is its own
+           cart line (own quantity, own "Adaugă în coș"), not a line on the sofa's price. -->
+      <section class="cfg-sec" id="sec-accessories">
+        <h3 class="cfg-title">Accesorii pentru canapeaua ta</h3>
+        <div class="cfg-acc" id="cfg-acc"></div>
       </section>
 
       <section class="cfg-sec" id="sec-summary">
@@ -1563,6 +1605,7 @@ function updateSummary(){
   /* Floating CTA bar mirrors the PDP's own price style (see mobile-v12.html .p-price) --
      no decimals there, so match it here instead of reusing the 2-decimal summary format. */
   document.getElementById('cfg-price').textContent = (c ? '' : 'de la ') + Math.round(price).toLocaleString('ro-RO') + ' lei';
+  syncAccessories();
 }
 
 /* ══ v26: layout x length ══
@@ -2810,11 +2853,147 @@ function pickFabricSwatch(el, slug){
   pressFeedback(el);
 }
 
+/* ══════════ v28: Accesorii (Figma 1147:12322) ══════════ */
+/* Two add-ons, both upholstered, so both carry the same fabric strip the sofa does. They are
+   separate cart lines: quantity and "Adaugă în coș" per card, and nothing here touches the
+   sofa's own price bar. */
+var ACCESSORIES = [
+  { id:'tetiera', name:'Tetieră mobilă', price:149, img:'assets/acc-tetiera.png' },
+  /* The cushion has no product photo of its own -- it's made in the fabric you pick, so its
+     thumbnail is that fabric's own swatch plate rather than a stand-in shot of another one. */
+  { id:'perna',   name:'Pernă decorativă', price:129, img:null }
+];
+var accState = {};
+ACCESSORIES.forEach(function(a){ accState[a.id] = { color:null, qty:1, added:false, touched:false }; });
+
+/* Offered in whatever the sofa's collection offers; before a collection is picked the whole
+   catalogue is open, so the strip shows an even sweep across it rather than 191 circles. */
+function accSwatchList(){
+  var c = COLLECTIONS[sel.collectionSlug];
+  if (c) return c.colors.map(function(pair){ return SWATCH_INDEX[c.name + ' ' + pair[0]]; });
+  var step = Math.max(1, Math.round(ALL_SWATCHES.length / 14));
+  return ALL_SWATCHES.filter(function(s, i){ return i % step === 0; }).slice(0, 14);
+}
+function accSetAdded(id, on){
+  accState[id].added = on;
+  var card = document.querySelector('.cfg-acc-card[data-acc="' + id + '"]');
+  if (!card) return;
+  var btn = card.querySelector('.cfg-acc-add');
+  btn.classList.toggle('added', on);
+  btn.innerHTML = on
+    ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg><span>Adăugat în coș</span>'
+    : accAddLabel();
+  updateAccCount();
+}
+function accAddLabel(){
+  return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M1 2h3.2l2.4 12.2a1.6 1.6 0 0 0 1.6 1.3h9.2a1.6 1.6 0 0 0 1.6-1.3L21 6H5"/></svg><span>Adaugă în coș</span>';
+}
+function accSetQty(id, delta){
+  var st = accState[id];
+  st.qty = Math.max(1, Math.min(9, st.qty + delta));
+  var card = document.querySelector('.cfg-acc-card[data-acc="' + id + '"]');
+  card.querySelector('.cfg-acc-qty .n').textContent = st.qty;
+  card.querySelector('.cfg-acc-minus').disabled = st.qty <= 1;
+  /* Changing what you'd be adding un-does the "Adăugat" state -- the line in the cart no
+     longer matches the card. */
+  if (st.added) accSetAdded(id, false);
+}
+function accPickColor(id, name, el){
+  var st = accState[id];
+  st.color = name;
+  st.touched = true;
+  var card = el.closest('.cfg-acc-card');
+  card.querySelectorAll('.cfg-acc-dot').forEach(function(d){ d.classList.toggle('on', d === el); });
+  var acc = ACCESSORIES.filter(function(a){ return a.id === id; })[0];
+  if (!acc.img) card.querySelector('.cfg-acc-thumb img').src = fabricAsset(name);
+  if (st.added) accSetAdded(id, false);
+  pressFeedback(el);
+}
+function accAdd(id, btn){
+  var acc = ACCESSORIES.filter(function(a){ return a.id === id; })[0];
+  accSetAdded(id, true);
+  toast('Am adăugat ' + acc.name.toLowerCase() + ' în coș');
+}
+function updateAccCount(){
+  var n = 0;
+  ACCESSORIES.forEach(function(a){ if (accState[a.id].added) n += accState[a.id].qty; });
+  var chip = document.querySelector('.cfg-chip[data-sec="accessories"]');
+  if (!chip) return;
+  chip.classList.toggle('has-count', n > 0);
+  document.getElementById('cfg-acc-cnt').textContent = n;
+}
+function renderAccessories(list){
+  var wrap = document.getElementById('cfg-acc');
+  wrap.innerHTML = '';
+  ACCESSORIES.forEach(function(acc){
+    var st = accState[acc.id];
+    /* Follows the sofa's colour until the shopper picks a different one for the accessory
+       itself; a fabric that leaves the strip (collection changed) falls back the same way. */
+    var names = list.map(function(s){ return s.name; });
+    var was = st.color;
+    if (!st.touched || names.indexOf(st.color) === -1) st.color = names.indexOf(sel.colorName) > -1 ? sel.colorName : names[0];
+    /* A card that's already in the cart and then changes fabric under it -- because the sofa
+       moved and it was following, or because its own fabric left the collection -- no longer
+       matches that cart line, so it goes back to "Adaugă în coș". */
+    if (was && was !== st.color) st.added = false;
+
+    var card = document.createElement('div');
+    card.className = 'cfg-acc-card';
+    card.dataset.acc = acc.id;
+    card.innerHTML =
+      '<div class="cfg-acc-top">' +
+        '<div class="cfg-acc-thumb"><img src="' + (acc.img || fabricAsset(st.color)) + '" alt="' + acc.name + '"></div>' +
+        '<div class="cfg-acc-body">' +
+          '<div class="cfg-acc-head"><div class="cfg-acc-name">' + acc.name + '</div>' +
+            '<div class="cfg-acc-price">' + acc.price + ' lei</div></div>' +
+          '<div class="cfg-acc-sw"></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="cfg-acc-bot">' +
+        '<div class="cfg-acc-qty">' +
+          '<button type="button" class="cfg-acc-minus" aria-label="Scade cantitatea"' + (st.qty <= 1 ? ' disabled' : '') + '><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>' +
+          '<span class="n">' + st.qty + '</span>' +
+          '<button type="button" class="cfg-acc-plus" aria-label="Crește cantitatea"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>' +
+        '</div>' +
+        '<button type="button" class="cfg-acc-add">' + accAddLabel() + '</button>' +
+      '</div>';
+
+    var strip = card.querySelector('.cfg-acc-sw');
+    list.forEach(function(sw){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'cfg-acc-dot' + (sw.name === st.color ? ' on' : '');
+      b.title = sw.name;
+      b.setAttribute('aria-label', sw.name);
+      b.innerHTML = '<img src="' + fabricAsset(sw.name) + '" alt="">';
+      b.onclick = function(){ accPickColor(acc.id, sw.name, b); };
+      strip.appendChild(b);
+    });
+    card.querySelector('.cfg-acc-minus').onclick = function(){ accSetQty(acc.id, -1); };
+    card.querySelector('.cfg-acc-plus').onclick = function(){ accSetQty(acc.id, 1); };
+    card.querySelector('.cfg-acc-add').onclick = function(){ accAdd(acc.id, this); };
+    wrap.appendChild(card);
+    if (st.added) accSetAdded(acc.id, true);
+  });
+  updateAccCount();
+}
+/* updateSummary() runs on every pick, and re-rendering the strips on each one would throw away
+   the shopper's place in them -- so only rebuild when the offer or the sofa's colour actually
+   moved. */
+var accSig = null;
+function syncAccessories(){
+  var list = accSwatchList();
+  var sig = list.map(function(s){ return s.name; }).join(',') + '|' + (sel.colorName || '');
+  if (sig === accSig) return;
+  accSig = sig;
+  renderAccessories(list);
+}
+
 /* ══════════ Chip scroll-spy (adapted from mobile-v2.html:1804-1846) ══════════ */
 /* How far each section should sit below the sticky chip nav when scrolled to -- 0 for
    "Layout" so it lands flush at the very top, a little breathing room for "Materiale" so
    the "Material." title isn't jammed against the chips. */
-var SCROLL_SEC_PAD = { color: 16, collection: 16, 'colors-grid': 16 };
+var SCROLL_SEC_PAD = { color: 16, collection: 16, 'colors-grid': 16, accessories: 16 };
 function scrollCfgTo(sec, instant, targetId){
   var scroll = document.getElementById('cfg-scroll');
   var target = document.getElementById(targetId || ('sec-' + sec));
@@ -2983,7 +3162,7 @@ function setActiveCfgChip(sec, instant, followNav){
   updateSummary();
 
   var hashSec = location.hash.replace('#', '');
-  if (['layout','needs','color','collection','colors-grid','summary'].indexOf(hashSec) > -1){
+  if (['layout','needs','color','collection','colors-grid','accessories','summary'].indexOf(hashSec) > -1){
     scrollCfgTo(hashSec, true);
   }
 })();
