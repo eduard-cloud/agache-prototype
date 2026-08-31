@@ -1850,8 +1850,11 @@ var MATERIAL_AVAILABLE = null;
 /* True while the grid is pinned to one collection -- because the shopper chose it, or because
    zones need every swatch to come from the same fabric. */
 function collectionNarrowed(){
-  return !!sel.collectionSlug && (sel.collectionLocked || sel.zoneMode);
+  return !SUSPEND_COLLECTION_NARROW && !!sel.collectionSlug && (sel.collectionLocked || sel.zoneMode);
 }
+/* Judging which collections survive the filters can't be done through a lens that already
+   discards every collection but the chosen one -- that would leave exactly one card standing. */
+var SUSPEND_COLLECTION_NARROW = false;
 function swatchPasses(sw, pillDefs, colourFams, propFilters, priceMin, priceMax){
   var c = sw.collection;
   /* v28: the collection is part of what a swatch has to pass, so every count and every
@@ -2155,6 +2158,7 @@ function applyFabricFilters(){
     MATERIAL_AVAILABLE = availableMaterials(byCat.culoare, byCat.prop, priceMin, priceMax);
   }
 
+  renderFabGrid();
   syncColorPillRow();
   syncFabricPillRow();
   renderFsheetColorPills();
@@ -2666,12 +2670,25 @@ function collectionCardHtml(slug){
     '</button>';
 }
 /* Which collections the texture pills currently allow. No pill = all eight. */
+/* A collection stays on screen while at least one of its colours passes everything the shopper
+   has set -- material pills, properties, colour families and the price range alike. Before, only
+   the material pills were consulted, so filtering by Pet friendly or by price left all eight
+   cards standing. */
 function visibleCollections(){
   var pills = FABRIC_PILLS.filter(function(p){ return activeFabricPills.indexOf(p.key) > -1; });
-  return COLLECTION_ORDER.filter(function(slug){
-    if (!pills.length) return true;
-    return pills.indexOf(materialTypeMatch(COLLECTIONS[slug])) > -1;
+  var fams = appliedFilters.filter(function(f){ return FAMILY_ORDER.indexOf(f) > -1; });
+  var props = appliedFilters.filter(function(f){ return FAMILY_ORDER.indexOf(f) === -1; });
+  var minEl = document.getElementById('price-min'), maxEl = document.getElementById('price-max');
+  var priceMin = minEl ? parseInt(minEl.value, 10) : PRICE_MIN_DEFAULT;
+  var priceMax = maxEl ? parseInt(maxEl.value, 10) : PRICE_MAX_DEFAULT;
+  SUSPEND_COLLECTION_NARROW = true;
+  var out = COLLECTION_ORDER.filter(function(slug){
+    return ALL_SWATCHES.some(function(sw){
+      return sw.slug === slug && swatchPasses(sw, pills, fams, props, priceMin, priceMax);
+    });
   });
+  SUSPEND_COLLECTION_NARROW = false;
+  return out;
 }
 function renderFabGrid(){
   var wrap = document.getElementById('cfg-fabgrid');
