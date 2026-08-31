@@ -1932,11 +1932,29 @@ function syncFabricPillRow(){
   });
 }
 function syncColorPillRow(){
-  document.querySelectorAll('#cfg-color-pillrow .cfg-seg').forEach(function(seg){
+  var row = document.getElementById('cfg-color-pillrow');
+  var segs = Array.prototype.slice.call(row.querySelectorAll('.cfg-seg'));
+  segs.forEach(function(seg){
     var fam = seg.dataset.fam;
     seg.classList.toggle('is-unavailable', !!COLOR_FAMILY_AVAILABLE && !COLOR_FAMILY_AVAILABLE[fam]);
     seg.classList.toggle('on', appliedFilters.indexOf(fam) > -1);
   });
+  /* Families the current collection actually has come first; the dead ones fall to the end of
+     the strip rather than sitting between two live ones. Order inside each half stays
+     FAMILY_ORDER, so the row never shuffles beyond that split. Appending moves the node, and
+     the row is left scrolled back to the start so the live options are the ones in view. */
+  /* Sort each half by FAMILY_ORDER, not by where the pills happen to sit now -- otherwise the
+     row keeps whatever order the last collection left behind once everything is live again. */
+  var canonical = segs.slice().sort(function(a, b){
+    return FAMILY_ORDER.indexOf(a.dataset.fam) - FAMILY_ORDER.indexOf(b.dataset.fam);
+  });
+  var live = canonical.filter(function(sg){ return !sg.classList.contains('is-unavailable'); });
+  var dead = canonical.filter(function(sg){ return sg.classList.contains('is-unavailable'); });
+  var order = live.concat(dead);
+  var changed = order.some(function(sg, i){ return segs[i] !== sg; });
+  if (!changed) return;
+  order.forEach(function(sg){ row.appendChild(sg); });
+  row.scrollLeft = 0;
 }
 function setColorGridCols(n, el){
   document.getElementById('cfg-fabric-sections').classList.toggle('cfg-grid3', n === 3);
