@@ -251,18 +251,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-seg.is-unavailable.on, .cfg-fpill.is-unavailable.on{opacity:.6;pointer-events:auto}
 
 .cfg-fabric-divider{margin-top:60px}
-.cfg-fabric-toolrow{display:flex;align-items:center;justify-content:flex-end;margin-bottom:12px}
-/* v27: the filter step's own control -- full width, so it reads as the card's action rather
-   than a utility button parked beside a counter. */
-.cfg-filter-open{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;height:52px;padding:0 16px;background:#fff;border:1px solid var(--hair);border-radius:12px;margin-top:16px}
-.cfg-filter-open-l{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;color:var(--ink)}
-.cfg-filter-open .cnt{display:none;min-width:22px;height:22px;padding:0 6px;border-radius:11px;background:var(--ink);color:#fff;font-size:12px;align-items:center;justify-content:center}
-.cfg-filter-open.has-count .cnt{display:flex}
-.cfg-filter-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.cfg-filter-tags:empty{display:none}
-.cfg-filter-tag{display:flex;align-items:center;gap:6px;background:var(--chipbg);border:none;border-radius:9999px;padding:7px 10px 7px 12px;font-size:12.5px;color:var(--ink)}
-.cfg-filter-tag svg{opacity:.5}
-.cfg-filter-result{margin-top:14px;font-size:12.5px;color:var(--gray)}
+.cfg-fabric-toolrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .cfg-toolrow-right{display:flex;align-items:center;gap:8px;order:1}
 .cfg-color-count{font-size:13px;color:var(--gray);white-space:nowrap}
 /* grid density toggle hidden for now -- re-enable by dropping this rule */
@@ -621,8 +610,8 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
       <button class="cfg-chip on" data-sec="layout" onclick="scrollCfgTo('layout')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Layout</button>
       <!-- Nevoi de lifestyle chip removed per request, kept in markup below for easy restore -->
       <button class="cfg-chip" data-sec="needs" onclick="scrollCfgTo('needs')" style="display:none"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Nevoi</button>
-      <button class="cfg-chip" type="button" id="cfg-nav-filter-chip" data-sec="filtre" onclick="scrollCfgTo('filtre')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Filtre<span class="nav-cnt" id="cfg-nav-filter-cnt">0</span></button>
       <button class="cfg-chip" data-sec="color" onclick="scrollCfgTo('color')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Material</button>
+      <button class="cfg-chip" type="button" id="cfg-nav-filter-chip" data-sec="filtre" onclick="openFilterSheetFromNav()"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Filtre<span class="nav-cnt" id="cfg-nav-filter-cnt">0</span></button>
       <button class="cfg-chip" data-sec="colors-grid" onclick="scrollCfgTo('colors-grid')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Culoare</button>
       <button class="cfg-chip" data-sec="summary" onclick="scrollCfgTo('summary')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Sumar</button>
     </div>
@@ -687,20 +676,6 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
         <div class="cfg-needs-label" id="cfg-needs-label"></div>
       </section>
 
-      <!-- v27: filtering used to be a button tucked into the colour card's toolbar, which put it
-           after the two choices it exists to narrow. It's a step of its own now, and it sits
-           ahead of Material: decide what matters (pets, kids, budget), then look at what's left. -->
-      <section class="cfg-sec" id="sec-filtre">
-        <h3 class="cfg-title">Restrânge opțiunile</h3>
-        <p class="cfg-sec-sub">Spune-ne ce contează și îți arătăm doar materialele potrivite.</p>
-        <button type="button" class="cfg-filter-open" id="cfg-filter-btn" onclick="openFilterSheet()">
-          <span class="cfg-filter-open-l"><svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.3337 4.66666H7.33366M9.33366 11.3333H3.33366M9.33366 11.3333C9.33366 12.4379 10.2291 13.3333 11.3337 13.3333C12.4382 13.3333 13.3337 12.4379 13.3337 11.3333C13.3337 10.2288 12.4382 9.33332 11.3337 9.33332C10.2291 9.33332 9.33366 10.2288 9.33366 11.3333ZM6.66699 4.66666C6.66699 5.77123 5.77156 6.66666 4.66699 6.66666C3.56242 6.66666 2.66699 5.77123 2.66699 4.66666C2.66699 3.56209 3.56242 2.66666 4.66699 2.66666C5.77156 2.66666 6.66699 3.56209 6.66699 4.66666Z" stroke="#1D1D1F" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Filtre</span></span>
-          <span class="cnt" id="cfg-filter-cnt">0</span>
-        </button>
-        <div class="cfg-filter-tags" id="cfg-filter-tags"></div>
-        <div class="cfg-filter-result" id="cfg-filter-result"></div>
-      </section>
-
       <section class="cfg-sec" id="sec-color">
         <div class="cfg-fabric-head">
           <h3 class="cfg-title">Alege materialul</h3>
@@ -752,6 +727,10 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
         <div class="cfg-fabric-pillrow" id="cfg-color-pillrow"></div>
 
         <div class="cfg-fabric-toolrow">
+          <button type="button" class="cfg-filter-btn" id="cfg-filter-btn" onclick="openFilterSheet()" aria-label="Filtre">
+            <svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.3337 4.66666H7.33366M9.33366 11.3333H3.33366M9.33366 11.3333C9.33366 12.4379 10.2291 13.3333 11.3337 13.3333C12.4382 13.3333 13.3337 12.4379 13.3337 11.3333C13.3337 10.2288 12.4382 9.33332 11.3337 9.33332C10.2291 9.33332 9.33366 10.2288 9.33366 11.3333ZM6.66699 4.66666C6.66699 5.77123 5.77156 6.66666 4.66699 6.66666C3.56242 6.66666 2.66699 5.77123 2.66699 4.66666C2.66699 3.56209 3.56242 2.66666 4.66699 2.66666C5.77156 2.66666 6.66699 3.56209 6.66699 4.66666Z" stroke="#1D1D1F" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="cnt" id="cfg-filter-cnt">0</span>
+          </button>
           <div class="cfg-toolrow-right">
             <div class="cfg-color-count" id="cfg-color-sub"></div>
             <div class="cfg-gridtoggle" id="cfg-gridtoggle">
@@ -2024,44 +2003,6 @@ function markFirstVisibleSection(){
     if (isFirst) found = true;
   });
 }
-/* v27: what's currently narrowing the list, spelled out on the filter card itself and
-   removable from there -- otherwise the only way to see or undo a filter is to reopen the
-   sheet you set it in. */
-function removeFilterTag(kind, value){
-  if (kind === 'mat') activeFabricPills = activeFabricPills.filter(function(k){ return k !== value; });
-  else if (kind === 'price'){
-    document.getElementById('price-min').value = PRICE_MIN_DEFAULT;
-    document.getElementById('price-max').value = PRICE_MAX_DEFAULT;
-    updatePriceSlider();
-  } else appliedFilters = appliedFilters.filter(function(f){ return f !== value; });
-  renderFabricPillRow();
-  renderFabricSections();
-  applyFabricFilters();
-}
-function renderFilterTags(priceFiltered, priceMin, priceMax, visibleCount){
-  var wrap = document.getElementById('cfg-filter-tags');
-  if (!wrap) return;
-  wrap.innerHTML = '';
-  var tags = [];
-  activeFabricPills.forEach(function(k){
-    var def = FABRIC_PILLS.filter(function(p){ return p.key === k; })[0];
-    if (def) tags.push({ kind:'mat', value:k, label:def.label });
-  });
-  appliedFilters.forEach(function(f){ tags.push({ kind:'f', value:f, label:f }); });
-  if (priceFiltered) tags.push({ kind:'price', value:'', label:Math.round(priceMin).toLocaleString('ro-RO') + ' - ' + Math.round(priceMax).toLocaleString('ro-RO') + ' lei' });
-  tags.forEach(function(t){
-    var b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'cfg-filter-tag';
-    b.innerHTML = '<span>' + t.label + '</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
-    b.onclick = function(){ removeFilterTag(t.kind, t.value); };
-    wrap.appendChild(b);
-  });
-  var res = document.getElementById('cfg-filter-result');
-  if (res) res.textContent = tags.length
-    ? visibleCount + (visibleCount === 1 ? ' culoare potrivită' : ' culori potrivite')
-    : 'Momentan îți arătăm toate opțiunile.';
-}
 function applyFabricFilters(){
   var priceMinEl = document.getElementById('price-min');
   var priceMaxEl = document.getElementById('price-max');
@@ -2168,7 +2109,6 @@ function applyFabricFilters(){
      .cfg-col-section.first-visible solves, and for the same reason a CSS :first-of-type can't:
      hidden groups are display:none, not removed. */
   if (firstShownTitle) firstShownTitle.classList.add('first-visible');
-  renderFilterTags(priceFiltered, priceMin, priceMax, visibleCount);
   var noFilters = !pillDefs.length && !appliedFilters.length && !priceFiltered;
   var optionCount = noFilters ? totalColorCount() : visibleCount;
   document.getElementById('cfg-color-sub').textContent = optionCount + (optionCount === 1 ? ' opțiune' : ' opțiuni');
@@ -2652,7 +2592,7 @@ function pickFabricSwatch(el, slug){
 /* How far each section should sit below the sticky chip nav when scrolled to -- 0 for
    "Layout" so it lands flush at the very top, a little breathing room for "Materiale" so
    the "Material." title isn't jammed against the chips. */
-var SCROLL_SEC_PAD = { filtre: 16, color: 16, 'colors-grid': 16 };
+var SCROLL_SEC_PAD = { color: 16, 'colors-grid': 16 };
 function scrollCfgTo(sec, instant, targetId){
   var scroll = document.getElementById('cfg-scroll');
   var target = document.getElementById(targetId || ('sec-' + sec));
@@ -2699,8 +2639,10 @@ function setActiveCfgChip(sec, instant, followNav){
    sub-split inside it (fabric-type chips = Materiale, the thin inline Filtre row = Filtre,
    the grids below = Culoare). Now that Culoare is its own card, each chip maps to a whole
    section again and the generic .cfg-sec spy below is enough -- resolveColorSec is gone.
-   Filtre has a card of its own as of v27, so it is a plain scroll target like the rest -- no
-   action-chip special case left. */
+   Filtre keeps no scroll zone of its own: it was only ever the ~50px band around the toolbar,
+   and anchoring it there now would fight the Culoare chip, which lands on the same card's
+   title. It's an action chip -- it lights up when tapped (openFilterSheetFromNav) and hands
+   back to the spy on the next scroll. */
 (function(){
   var scroll = document.getElementById('cfg-scroll');
   var lastSec = '';
@@ -2719,6 +2661,18 @@ function setActiveCfgChip(sec, instant, followNav){
     if (sec !== lastSec){ lastSec = sec; setActiveCfgChip(sec, false, true); }
   });
 })();
+/* Filtre in the top nav: scroll to the in-section Filtre row first so the sheet doesn't pop
+   up out of nowhere, then open it -- both finish in well under a second. */
+function openFilterSheetFromNav(){
+  var scroll = document.getElementById('cfg-scroll');
+  var target = document.getElementById('cfg-filter-btn');
+  if (target){
+    var top = target.getBoundingClientRect().top - scroll.getBoundingClientRect().top + scroll.scrollTop;
+    scroll.scrollTo({ top: Math.max(0, top - 90), behavior: 'smooth' });
+  }
+  setActiveCfgChip('filtre', false);
+  setTimeout(openFilterSheet, 350);
+}
 
 /* ══════════ Free-drag resize (adapted from mobile-v2.html:1773-1800) ══════════ */
 (function(){
@@ -2786,7 +2740,7 @@ function setActiveCfgChip(sec, instant, followNav){
   updateSummary();
 
   var hashSec = location.hash.replace('#', '');
-  if (['layout','filtre','needs','color','colors-grid','summary'].indexOf(hashSec) > -1){
+  if (['layout','needs','color','colors-grid','summary'].indexOf(hashSec) > -1){
     scrollCfgTo(hashSec, true);
   }
 })();
