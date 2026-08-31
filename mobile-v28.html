@@ -188,6 +188,9 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-sec h3{font-size:18px;font-weight:600;letter-spacing:-.4px;line-height:1.15}
 .cfg-delivery-pill{width:100%;display:flex;align-items:center;gap:10px;background:#fff;border:none;border-radius:12px;padding:14px 16px;margin-top:16px;font-size:14px;font-weight:500;color:var(--ink)}
 .cfg-sec .cfg-sec-sub{font-size:14px;line-height:1.5;color:var(--gray);margin-top:6px}
+/* The accessory lines in Sumar carry a name, a qty x price sub-line and a swatch, so the
+   money on the right has to stay on one line the way every other row's value does. */
+#cfg-sum-acc .v{white-space:nowrap}
 
 /* ══ v28: Accesorii ══
    Figma node 1147:12322. The design draws each accessory on a #f7f7f7 card with an #f2f2f2
@@ -702,7 +705,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
       <button class="cfg-chip" data-sec="color" onclick="scrollCfgTo('color')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Material</button>
       <button class="cfg-chip" data-sec="collection" onclick="scrollCfgTo('collection')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Colecție</button>
       <button class="cfg-chip" data-sec="colors-grid" onclick="scrollCfgTo('colors-grid')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Culoare</button>
-      <button class="cfg-chip" data-sec="accessories" onclick="scrollCfgTo('accessories')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Accesorii<span class="nav-cnt" id="cfg-acc-cnt">0</span></button>
+      <button class="cfg-chip" data-sec="accessories" onclick="scrollCfgTo('accessories')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Accesorii</button>
       <button class="cfg-chip" data-sec="summary" onclick="scrollCfgTo('summary')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Sumar</button>
       </div>
     </div>
@@ -873,6 +876,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
             <div class="vv"><span id="cfg-sum-color-sw"><img id="cfg-sum-color-img" style="width:100%;height:100%;object-fit:cover;border-radius:50%" alt=""></span><div class="v" id="cfg-sum-color-name"></div></div>
           </div>
           <div id="cfg-sum-zones"></div>
+          <div id="cfg-sum-acc"></div>
           <div class="rz-row" style="border-bottom:none">
             <div class="k">Preț total</div>
             <div class="vv"><div class="v" id="cfg-sum-price"></div></div>
@@ -1561,6 +1565,7 @@ function updatePreview(){
 }
 
 function updateSummary(){
+  syncAccessories();
   var c = COLLECTIONS[sel.collectionSlug];
   var swInfo = SWATCH_INDEX[sel.colorName];
   if (sel.shapeEl){
@@ -1599,13 +1604,31 @@ function updateSummary(){
       zoneWrap.appendChild(row);
     });
   }
+  /* Anything added from the Accesorii card gets its own line here, under the sofa's own
+     rows -- so the summary lists the whole order, not just the sofa -- and counts toward the
+     total, which is why the price bar moves when you add one. */
+  var accWrap = document.getElementById('cfg-sum-acc');
+  var accTotal = 0;
+  accWrap.innerHTML = '';
+  ACCESSORIES.forEach(function(acc){
+    var st = accState[acc.id];
+    if (!st.added) return;
+    accTotal += acc.price * st.qty;
+    var info = SWATCH_INDEX[st.color];
+    var row = document.createElement('div');
+    row.className = 'rz-row';
+    row.innerHTML = '<div class="k">' + acc.name + '<em>' + st.qty + ' x ' + Math.round(acc.price) + ' lei' +
+        (st.color ? ' · ' + st.color : '') + '</em></div>' +
+      '<div class="vv">' + (info ? '<span class="cfg-sum-zone-sw"><img src="' + fabricAsset(st.color) + '" alt=""></span>' : '') +
+      '<div class="v">' + formatPrice(acc.price * st.qty) + ' lei</div></div>';
+    accWrap.appendChild(row);
+  });
   /* No collection yet -- quote the cheapest one this sofa can be made in, marked "de la". */
-  var price = c ? collectionPrice(sel.collectionSlug) : cheapestPrice();
+  var price = (c ? collectionPrice(sel.collectionSlug) : cheapestPrice()) + accTotal;
   document.getElementById('cfg-sum-price').textContent = (c ? '' : 'de la ') + formatPrice(price) + ' lei';
   /* Floating CTA bar mirrors the PDP's own price style (see mobile-v12.html .p-price) --
      no decimals there, so match it here instead of reusing the 2-decimal summary format. */
   document.getElementById('cfg-price').textContent = (c ? '' : 'de la ') + Math.round(price).toLocaleString('ro-RO') + ' lei';
-  syncAccessories();
 }
 
 /* ══ v26: layout x length ══
@@ -2859,9 +2882,7 @@ function pickFabricSwatch(el, slug){
    sofa's own price bar. */
 var ACCESSORIES = [
   { id:'tetiera', name:'Tetieră mobilă', price:149, img:'assets/acc-tetiera.png' },
-  /* The cushion has no product photo of its own -- it's made in the fabric you pick, so its
-     thumbnail is that fabric's own swatch plate rather than a stand-in shot of another one. */
-  { id:'perna',   name:'Pernă decorativă', price:129, img:null }
+  { id:'fotoliu', name:'Fotoliu extensibil copii', price:250, img:'assets/acc-fotoliu.png' }
 ];
 var accState = {};
 ACCESSORIES.forEach(function(a){ accState[a.id] = { color:null, qty:1, added:false, touched:false }; });
@@ -2883,7 +2904,6 @@ function accSetAdded(id, on){
   btn.innerHTML = on
     ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg><span>Adăugat în coș</span>'
     : accAddLabel();
-  updateAccCount();
 }
 function accAddLabel(){
   return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M1 2h3.2l2.4 12.2a1.6 1.6 0 0 0 1.6 1.3h9.2a1.6 1.6 0 0 0 1.6-1.3L21 6H5"/></svg><span>Adaugă în coș</span>';
@@ -2897,6 +2917,7 @@ function accSetQty(id, delta){
   /* Changing what you'd be adding un-does the "Adăugat" state -- the line in the cart no
      longer matches the card. */
   if (st.added) accSetAdded(id, false);
+  updateSummary();
 }
 function accPickColor(id, name, el){
   var st = accState[id];
@@ -2904,23 +2925,15 @@ function accPickColor(id, name, el){
   st.touched = true;
   var card = el.closest('.cfg-acc-card');
   card.querySelectorAll('.cfg-acc-dot').forEach(function(d){ d.classList.toggle('on', d === el); });
-  var acc = ACCESSORIES.filter(function(a){ return a.id === id; })[0];
-  if (!acc.img) card.querySelector('.cfg-acc-thumb img').src = fabricAsset(name);
   if (st.added) accSetAdded(id, false);
+  updateSummary();
   pressFeedback(el);
 }
 function accAdd(id, btn){
   var acc = ACCESSORIES.filter(function(a){ return a.id === id; })[0];
   accSetAdded(id, true);
+  updateSummary();
   toast('Am adăugat ' + acc.name.toLowerCase() + ' în coș');
-}
-function updateAccCount(){
-  var n = 0;
-  ACCESSORIES.forEach(function(a){ if (accState[a.id].added) n += accState[a.id].qty; });
-  var chip = document.querySelector('.cfg-chip[data-sec="accessories"]');
-  if (!chip) return;
-  chip.classList.toggle('has-count', n > 0);
-  document.getElementById('cfg-acc-cnt').textContent = n;
 }
 function renderAccessories(list){
   var wrap = document.getElementById('cfg-acc');
@@ -2942,7 +2955,7 @@ function renderAccessories(list){
     card.dataset.acc = acc.id;
     card.innerHTML =
       '<div class="cfg-acc-top">' +
-        '<div class="cfg-acc-thumb"><img src="' + (acc.img || fabricAsset(st.color)) + '" alt="' + acc.name + '"></div>' +
+        '<div class="cfg-acc-thumb"><img src="' + acc.img + '" alt="' + acc.name + '"></div>' +
         '<div class="cfg-acc-body">' +
           '<div class="cfg-acc-head"><div class="cfg-acc-name">' + acc.name + '</div>' +
             '<div class="cfg-acc-price">' + acc.price + ' lei</div></div>' +
@@ -2975,7 +2988,6 @@ function renderAccessories(list){
     wrap.appendChild(card);
     if (st.added) accSetAdded(acc.id, true);
   });
-  updateAccCount();
 }
 /* updateSummary() runs on every pick, and re-rendering the strips on each one would throw away
    the shopper's place in them -- so only rebuild when the offer or the sofa's colour actually
