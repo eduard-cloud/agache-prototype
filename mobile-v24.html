@@ -172,7 +172,7 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
    No dim: it floats over the page the way the reference does, anchored under
    the card it belongs to, so the page stays readable behind it. */
 #voicenote{position:relative}
-#vntx{position:absolute;left:-1px;right:-1px;top:calc(100% + 8px);background:var(--f7);border:1px solid var(--stroke);border-radius:8px;padding:20px;box-shadow:0 6px 24px rgba(0,0,0,.10),0 1px 3px rgba(0,0,0,.06);opacity:0;pointer-events:none;transform:translateY(-4px);transition:opacity .18s,transform .18s;z-index:40}
+#vntx{position:absolute;left:-1px;right:-1px;top:-1px;background:var(--f7);border:1px solid var(--stroke);border-radius:8px;padding:20px;box-shadow:0 6px 24px rgba(0,0,0,.10),0 1px 3px rgba(0,0,0,.06);opacity:0;pointer-events:none;transform:translateY(-4px);transition:opacity .18s,transform .18s;z-index:5}
 #vntx.on{opacity:1;pointer-events:auto;transform:translateY(0)}
 #vntx h3{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;color:var(--black);padding-right:32px}
 #vntx p{font-size:14px;font-weight:400;letter-spacing:var(--ls-14);line-height:1.4;color:var(--slate);margin-top:12px}
