@@ -2913,7 +2913,10 @@ function setActiveCfgChip(sec, instant, followNav){
 
   window.addEventListener('resize', function(){ setSheetH(sheet.getBoundingClientRect().height); });
 
-  setSheetH(cfgEl.clientHeight * 0.6);
+  /* v28: the sheet opens at 68% rather than 60% -- the preview above it was holding a fifth of
+     the screen for a sofa that reads fine 20% smaller, while the card below it was cut off mid
+     question on a phone. Drag still overrides this in both directions. */
+  setSheetH(cfgEl.clientHeight * 0.68);
 })();
 
 /* ══════════ Init ══════════ */
