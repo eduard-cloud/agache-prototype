@@ -18,9 +18,9 @@
   --black:#1D1D1F; --f7:#f7f7f7; --stroke:#f2f2f2; --c8:#c8cbd0; --beige:#F2F0E9;
   /* tracking: Figma stores %, these are the px equivalents at each size */
   --ls-12:-.24px; --ls-13:-.26px; --ls-14:-.42px;
-  --ls-16:-.64px; --ls-20:-.8px;  --ls-24:-.96px;
+  --ls-16:-.64px; --ls-18:-.72px; --ls-20:-.8px;  --ls-24:-.96px;
 }
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;overflow-x:hidden}
 body{font-family:'DM Sans',sans-serif;color:var(--ink);background:#fff;overflow-x:hidden}
 button{cursor:pointer;border:none;background:none;font-family:inherit;color:inherit}
 a{text-decoration:none;color:inherit}
@@ -266,17 +266,20 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
 #vidsec .cap{position:absolute;left:20px;bottom:24px;font-size:12px;letter-spacing:.84px;color:rgba(255,255,255,.85);font-weight:500}
 
 /* construite — exact per node 212:19467 */
-#construit{background:#fff;padding:40px 0}
-#construit .chead{display:flex;flex-direction:column;padding:0 20px}
-#construit .chead .lead{font-size:18px;font-weight:500;letter-spacing:-.54px;line-height:1.2;color:#1D1D1F}
-#construit .rail{margin-top:32px;gap:8px}
+/* v24: rebuilt to Figma 1127:12007 -- beige ground, white 300x450 cards,
+   the .dsc subtext restored from mobile.html, which is where it last lived */
+#construit{background:var(--beige);padding:64px 0}
+#construit .chead{display:flex;flex-direction:column;padding:0 16px}
+#construit .chead .lead{font-size:18px;font-weight:500;letter-spacing:var(--ls-18);line-height:1.2;color:var(--black)}
+#construit .rail{margin-top:32px;gap:12px}
 .rail{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:0 20px;scroll-padding:0 20px;margin-top:36px}
 .rail::-webkit-scrollbar{display:none}
-#crail{gap:12px;padding:0 20px;margin-top:32px}
-.ccard{flex:0 0 260px;width:260px;height:360px;background:#EBFDFF;overflow:hidden;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:space-between;align-items:center}
-.ccard .ctxt{display:flex;flex-direction:column;gap:16px;padding:32px 20px;width:100%}
-.ccard .tag{font-size:16px;font-weight:500;letter-spacing:-.48px;line-height:1.2;color:var(--red)}
-.ccard .ttl{font-size:24px;font-weight:500;letter-spacing:-.72px;line-height:1.05;color:#1D1D1F}
+#crail{gap:12px;padding:0 16px;margin-top:32px;scroll-padding:0 16px}
+.ccard{flex:0 0 300px;width:300px;height:450px;background:#fff;border-radius:16px;overflow:hidden;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:space-between;align-items:center}
+.ccard .ctxt{display:flex;flex-direction:column;gap:16px;padding:32px 24px;width:100%}
+.ccard .tag{font-size:16px;font-weight:500;letter-spacing:var(--ls-16);line-height:1.2;color:var(--black)}
+.ccard .ttl{font-size:24px;font-weight:600;letter-spacing:0;line-height:1.1;color:var(--black)}
+.ccard .dsc{font-size:16px;font-weight:500;letter-spacing:var(--ls-16);line-height:1.2;color:var(--gray)}
 .ccard .ph{flex:0 0 auto}
 .ccard .ph img{object-fit:cover;width:100%;height:100%}
 .ph-garantie{width:274px;height:183px;margin-bottom:16px}
@@ -285,7 +288,7 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
 .ph-captuseala{width:384px;height:256px;border-radius:0 0 16px 16px;overflow:hidden}
 .ph-strips{display:flex;gap:3px;height:195px}
 .ph-strips video{width:100.66px;height:201px;object-fit:cover;border-radius:12px 12px 0 0}
-.rail-nav{display:flex;justify-content:flex-end;gap:16px;padding:0 20px;margin-top:32px;align-items:center}
+.rail-nav{display:flex;justify-content:flex-end;gap:16px;padding:0 16px;margin-top:32px;align-items:center}
 .rn-prev,.rn-next{width:40px;height:40px;padding:0}
 .rn-prev img,.rn-next img{width:40px;height:40px;display:block}
 
@@ -855,6 +858,7 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
         <div class="ctxt">
           <div class="tag">Garanție extinsă</div>
           <div class="ttl">10 ani de garanție structurală</div>
+          <div class="dsc">Garanția noastră extinsă acoperă orice problemă legată de structura de lemn solid a canapelei.</div>
         </div>
         <div class="ph ph-garantie"><img src="assets/construit-garantie.png" alt="Structura canapelei"></div>
       </div>
@@ -862,6 +866,7 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
         <div class="ctxt">
           <div class="tag">Canapea modulară</div>
           <div class="ttl">Sistem de arcuri si spuma</div>
+          <div class="dsc">Am gândit canapelele noastre pentru diverse cerințe - rezista pana la 130kg pe persoana.</div>
         </div>
         <div class="ph ph-arcuri"><img src="assets/construit-arcuri.png" alt="Sistem de arcuri"></div>
       </div>
@@ -869,13 +874,15 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
         <div class="ctxt">
           <div class="tag">Atentie la detalii</div>
           <div class="ttl">Tesatura French</div>
+          <div class="dsc">Am gândit canapelele noastre pentru diverse cerințe - rezista pana la 130kg pe persoana.</div>
         </div>
         <div class="ph ph-tesatura"><img src="assets/construit-tesatura.png" alt="Tesatura French" style="object-position:0 93%"></div>
       </div>
       <div class="ccard">
         <div class="ctxt">
           <div class="tag">Materiale și culori</div>
-          <div class="ttl">300 de culori vibrante</div>
+          <div class="ttl">300 de culori</div>
+          <div class="dsc">De la piele italiană la cord francez - limita până la care poți customiza rămâne imaginația ta. Și acolo însă te putem ajuta.</div>
         </div>
         <div class="ph-strips">
           <video src="vela.mp4" autoplay muted loop playsinline></video>
@@ -887,6 +894,7 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
         <div class="ctxt">
           <div class="tag">Captuseala</div>
           <div class="ttl">Captusit pe toate partile</div>
+          <div class="dsc">Am gândit canapelele noastre pentru diverse cerințe - rezista pana la 130kg pe persoana.</div>
         </div>
         <div class="ph ph-captuseala"><img src="assets/construit-captuseala.png" alt="Captuseala"></div>
       </div>
