@@ -236,13 +236,13 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
 
 /* v23: samples card is horizontal, grey, rounded (Figma Order samples frame) */
 #mostrar{margin:40px 20px;background:var(--f7);border:1px solid var(--stroke);border-radius:8px;padding:20px;color:var(--ink);display:flex;flex-direction:column;gap:24px}
-#mostrar .ms-top{display:flex;align-items:flex-start;gap:16px}
-#mostrar img{width:80px;height:80px;flex:0 0 80px;border-radius:6px;object-fit:cover;aspect-ratio:auto}
-#mostrar .ms-txt{flex:1;min-width:0}
-#mostrar h2{font-size:18px;font-weight:700;letter-spacing:-.72px;line-height:1.2;color:var(--ink)}
-#mostrar p{font-size:12px;font-weight:400;letter-spacing:var(--ls-12);line-height:1.2;margin-top:10px;color:var(--slate)}
+#mostrar .ms-top{display:flex;align-items:center;gap:16px}
+#mostrar img{width:80px;height:80px;flex:0 0 80px;border-radius:4px;object-fit:cover;object-position:bottom;aspect-ratio:auto}
+#mostrar .ms-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:12px}
+#mostrar h2{font-size:18px;font-weight:600;letter-spacing:-.54px;line-height:1.2;color:var(--ink)}
+#mostrar p{font-size:12px;font-weight:400;letter-spacing:var(--ls-12);line-height:1.2;color:var(--slate)}
 #mostrar button svg{width:16px;height:16px;display:block}
-#mostrar button{background:#fff;border:none;color:var(--red);border-radius:9999px;height:48px;padding:0 24px;font-size:16px;letter-spacing:var(--ls-16);line-height:1.2;font-weight:500;display:flex;align-items:center;justify-content:center;gap:8px;width:100%}
+#mostrar button{background:#fff;border:none;color:var(--red);border-radius:9999px;padding:16px 20px;font-size:16px;letter-spacing:var(--ls-16);line-height:1.2;font-weight:500;display:flex;align-items:center;justify-content:center;gap:8px;width:100%}
 
 /* comfort metrics */
 #comfort{padding:56px 0}
@@ -835,7 +835,7 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
   <!-- Samples card: sits on the page, not inside #deep -->
   <div id="mostrar">
     <div class="ms-top">
-      <img src="assets/v2/mostrar-fabrics.png" alt="Mostre de culori">
+      <img src="assets/v2/mostrar-samples.png" alt="Mostre de culori">
       <div class="ms-txt">
         <h2>Comanda mostre</h2>
         <p>Vrei sa vezi si sa atingi materialul? Comandă un mostrar de culori si in 48 de ore este la tine acasa.</p>
