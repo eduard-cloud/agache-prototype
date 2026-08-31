@@ -159,6 +159,10 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
 /* the playhead marks where you are stopped, so it goes away while running */
 #voicenote.playing .vn-head{display:none}
 #voicenote .vn-av{width:32px;height:32px;flex:0 0 32px;border-radius:50%;object-fit:cover}
+/* while it is running the avatar gives way to the speed control */
+#voicenote .vn-speed{display:none;height:32px;min-width:32px;padding:0 8px;border-radius:8px;background:var(--black);color:#fff;font-size:12px;font-weight:500;letter-spacing:var(--ls-12);line-height:1;align-items:center;justify-content:center;flex:0 0 auto}
+#voicenote.playing .vn-av{display:none}
+#voicenote.playing .vn-speed{display:flex}
 #voicenote .vn-meta{display:flex;align-items:center;justify-content:space-between;width:100%;font-size:10px;font-weight:400;letter-spacing:-.2px;line-height:1.2;color:var(--black);white-space:nowrap}
 #voicenote .vn-l{display:flex;align-items:center;gap:16px;width:153px}
 /* This DM Sans has no tabular figures -- "11:11" renders half the width of
@@ -650,6 +654,7 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
           <svg viewBox="0 0 213 33" fill="none" preserveAspectRatio="none"><line class="vn-b" x1="3.000" y1="10.00" x2="3.000" y2="23.00"/><line class="vn-b" x1="7.976" y1="10.00" x2="7.976" y2="23.00"/><line class="vn-b" x1="12.952" y1="10.00" x2="12.952" y2="23.00"/><line class="vn-b" x1="17.929" y1="10.00" x2="17.929" y2="23.00"/><line class="vn-b" x1="22.905" y1="6.00" x2="22.905" y2="27.00"/><line class="vn-b" x1="27.881" y1="12.00" x2="27.881" y2="21.00"/><line class="vn-b" x1="32.857" y1="6.00" x2="32.857" y2="27.00"/><line class="vn-b" x1="37.833" y1="1.00" x2="37.833" y2="32.00"/><line class="vn-b" x1="42.810" y1="12.00" x2="42.810" y2="21.00"/><line class="vn-b" x1="47.786" y1="6.00" x2="47.786" y2="27.00"/><line class="vn-b" x1="52.762" y1="6.00" x2="52.762" y2="27.00"/><line class="vn-b" x1="57.738" y1="6.00" x2="57.738" y2="27.00"/><line class="vn-b" x1="62.714" y1="10.00" x2="62.714" y2="23.00"/><line class="vn-b" x1="67.690" y1="12.00" x2="67.690" y2="21.00"/><line class="vn-b" x1="72.667" y1="12.00" x2="72.667" y2="21.00"/><line class="vn-b" x1="77.643" y1="12.00" x2="77.643" y2="21.00"/><line class="vn-b" x1="82.619" y1="10.00" x2="82.619" y2="23.00"/><line class="vn-b" x1="87.595" y1="6.00" x2="87.595" y2="27.00"/><line class="vn-b" x1="92.571" y1="12.00" x2="92.571" y2="21.00"/><line class="vn-b" x1="97.548" y1="6.00" x2="97.548" y2="27.00"/><line class="vn-b" x1="102.524" y1="1.00" x2="102.524" y2="32.00"/><line class="vn-b" x1="107.500" y1="12.00" x2="107.500" y2="21.00"/><line class="vn-b" x1="112.476" y1="12.00" x2="112.476" y2="21.00"/><line class="vn-b" x1="117.452" y1="6.00" x2="117.452" y2="27.00"/><line class="vn-b" x1="122.429" y1="6.00" x2="122.429" y2="27.00"/><line class="vn-b" x1="127.405" y1="10.00" x2="127.405" y2="23.00"/><line class="vn-b" x1="132.381" y1="6.00" x2="132.381" y2="27.00"/><line class="vn-b" x1="137.357" y1="6.00" x2="137.357" y2="27.00"/><line class="vn-b" x1="142.333" y1="6.00" x2="142.333" y2="27.00"/><line class="vn-b" x1="147.310" y1="10.00" x2="147.310" y2="23.00"/><line class="vn-b" x1="152.286" y1="12.00" x2="152.286" y2="21.00"/><line class="vn-b" x1="157.262" y1="6.00" x2="157.262" y2="27.00"/><line class="vn-b" x1="162.238" y1="6.00" x2="162.238" y2="27.00"/><line class="vn-b" x1="167.214" y1="10.00" x2="167.214" y2="23.00"/><line class="vn-b" x1="172.190" y1="10.00" x2="172.190" y2="23.00"/><line class="vn-b" x1="177.167" y1="12.00" x2="177.167" y2="21.00"/><line class="vn-b" x1="182.143" y1="6.00" x2="182.143" y2="27.00"/><line class="vn-b" x1="187.119" y1="6.00" x2="187.119" y2="27.00"/><line class="vn-b" x1="192.095" y1="10.00" x2="192.095" y2="23.00"/><line class="vn-b" x1="197.071" y1="10.00" x2="197.071" y2="23.00"/><line class="vn-b" x1="202.048" y1="6.00" x2="202.048" y2="27.00"/><line class="vn-b" x1="207.024" y1="12.00" x2="207.024" y2="21.00"/><line class="vn-b" x1="212.000" y1="14.00" x2="212.000" y2="19.00"/><line class="vn-head" id="vn-head" x1="0.5" y1="3.5" x2="0.5" y2="29.5"/></svg>
         </div>
         <img class="vn-av" src="assets/v2/voice/avatar.png" alt="Andrei Agache">
+        <button class="vn-speed" id="vn-speed" aria-label="Viteza de redare" onclick="vnCycleSpeed()">1x</button>
       </div>
       <div class="vn-meta">
         <span class="vn-l"><span id="vn-time">00:15</span><button class="vn-tr" onclick="openTranscript()">Transcript</button></span>
@@ -2551,6 +2556,14 @@ function vnInit(){
     var up = function(){ wave.removeEventListener('pointermove', mv); wave.removeEventListener('pointerup', up); };
     wave.addEventListener('pointermove', mv); wave.addEventListener('pointerup', up);
   });
+}
+var VN_RATES = [1, 1.2, 1.5], vnRateIx = 0;
+function vnCycleSpeed(){
+  vnRateIx = (vnRateIx + 1) % VN_RATES.length;
+  var r = VN_RATES[vnRateIx];
+  if (vnAudio) vnAudio.playbackRate = r;
+  /* comma decimal -- the page is Romanian, so 1,2x not 1.2x */
+  document.getElementById('vn-speed').textContent = String(r).replace('.', ',') + 'x';
 }
 function vnFmt(s){
   if (!isFinite(s)) s = 0;
