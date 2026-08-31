@@ -74,17 +74,17 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-shape-tile.off{opacity:.32;pointer-events:none}
 /* ── v26: the length sliders ──
    A bordered track that reads as one field: the value sits inside it, right-aligned, and the
-   part already spent is filled. The reference greys the part to the RIGHT of the handle; we
-   fill the left instead, which is what a slider means everywhere else -- same picture at mid
-   travel, none of the "why is my remaining length highlighted" hesitation in testing.
-   The native input rides invisibly on top so the whole track stays draggable. */
+   grey runs from the handle to the far end -- the length still available to pull out, not the
+   length already used. At the minimum the track is almost entirely grey, which is exactly how
+   the reference draws it. The native input rides invisibly on top so the whole track stays
+   draggable. */
 .cfg-dim + .cfg-dim{margin-top:18px}
 .cfg-dim-lab{font-size:14px;font-weight:500;color:var(--ink);margin-bottom:8px}
 .cfg-dim-line{display:flex;align-items:center;gap:10px}
 .cfg-dim-track{position:relative;flex:1 1 auto;height:52px;background:#fff;border:1px solid var(--hair);border-radius:10px;overflow:hidden}
-.cfg-dim-fill{position:absolute;top:0;bottom:0;left:0;width:0;background:#ECECEC}
-/* the handle: a thin bar at the fill's edge, the way the reference draws it */
-.cfg-dim-fill::after{content:'';position:absolute;right:-1px;top:12px;bottom:12px;width:2px;border-radius:1px;background:#9A9A9A}
+.cfg-dim-fill{position:absolute;top:0;bottom:0;left:0;right:0;background:#ECECEC}
+/* the handle: a thin bar at the fill's near edge, the way the reference draws it */
+.cfg-dim-fill::after{content:'';position:absolute;left:-1px;top:12px;bottom:12px;width:3px;border-radius:2px;background:#B4B4B4}
 .cfg-dim-val{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:15px;color:var(--ink);pointer-events:none}
 .cfg-dim-track input[type=range]{position:absolute;inset:0;width:100%;height:100%;margin:0;background:none;-webkit-appearance:none;appearance:none;opacity:0;cursor:pointer}
 .cfg-dim-track input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:34px;height:52px}
@@ -94,7 +94,6 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-dim-input:focus{outline:none}
 .cfg-dim-edit{flex:0 0 auto;width:52px;height:52px;border:1px solid var(--hair);border-radius:10px;background:#fff;color:var(--ink);display:flex;align-items:center;justify-content:center}
 .cfg-dim-edit:active{background:var(--chipbg)}
-#sec-size .cfg-shape-label{margin-top:18px}
 #dim-isl-row{display:none}
 #dim-isl-row.on{display:block}
 .cfg-shape-label strong{font-size:14px;font-weight:600;display:block}
@@ -627,10 +626,6 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
             </div>
             <button type="button" class="cfg-dim-edit" onclick="editDim('isl')" aria-label="Scrie lungimea insulei"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
           </div>
-        </div>
-        <div class="cfg-shape-label">
-          <strong id="cfg-shape-sel-name">Canapea 3 locuri</strong>
-          <span id="cfg-shape-sel-dim">245 x 100 cm</span>
         </div>
       </section>
 
@@ -1454,7 +1449,7 @@ function renderLayoutGrid(){
 function paintDim(which){
   var input = document.getElementById('dim-' + which);
   var pct = (input.value - input.min) / (input.max - input.min) * 100;
-  document.getElementById('dim-' + which + '-fill').style.width = pct + '%';
+  document.getElementById('dim-' + which + '-fill').style.left = pct + '%';
   document.getElementById('dim-' + which + '-val').textContent = input.value + ' cm';
 }
 function renderSizeSliders(){
@@ -1528,8 +1523,6 @@ function pickCfgShape(el){
   document.querySelectorAll('#shape-grid .cfg-shape-tile').forEach(function(t){ t.classList.remove('on'); });
   el.classList.add('on');
   sel.shapeEl = el;
-  document.getElementById('cfg-shape-sel-name').textContent = el.dataset.name;
-  document.getElementById('cfg-shape-sel-dim').textContent = currentDims();
   updatePreview();
   updateSummary();
   updatePriceSliderBounds();
