@@ -776,7 +776,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
         <!-- Nothing to colour until a collection is picked -- so the step says so, and hands
              the shopper back to the step that unlocks it. -->
         <div class="cfg-nocol" id="cfg-nocol">
-          <p>Întâi alege colecția. Apoi îți arătăm culorile ei.</p>
+          <p>Pentru culori diferite pe zone, alege întâi o colecție — toate zonele se fac din aceeași.</p>
           <button type="button" onclick="scrollCfgTo('collection')">Alege colecția</button>
         </div>
         <div class="cfg-fabric-pillrow" id="cfg-color-pillrow"></div>
@@ -1445,7 +1445,7 @@ function toast(msg){
 }
 
 /* ══════════ v3-specific: configurator state + rendering ══════════ */
-var sel = { shapeEl: null, collectionSlug: null, colorName: null, needs: [], zoneMode: true, zone: 'sezut', zones: {} };
+var sel = { shapeEl: null, collectionSlug: null, colorName: null, needs: [], zoneMode: false, zone: 'sezut', zones: {} };
 /* Grouped by actual fabric structure (per agache.ro's own material descriptions), not by
    price tier and not by the old Catifea/Velur/Bucle split -- that split had real velvet
    (Piano) lumped in with velvet-*look* wovens (Manila/Zoya/Maya), and called plain thick
@@ -2152,9 +2152,11 @@ function applyFabricFilters(){
     var priceOK = collectionPrice(s.slug) >= priceMin && collectionPrice(s.slug) <= priceMax;
     var visible = matOK && propOK && priceOK;
     if (visible && byCat.culoare.length) visible = byCat.culoare.indexOf(colorFamilyRO(s.hex)) > -1;
-    /* v28: the collection is picked one step earlier, so the colour grid only ever holds that
-       collection -- zones or no zones. Nothing here can put two fabrics on one sofa. */
-    if (visible) visible = s.slug === sel.collectionSlug;
+    /* v28: one colour for the whole sofa needs no collection at all -- every swatch is a valid
+       sofa, and picking one settles the collection by itself. The grid only narrows once the
+       shopper asks for different colours per zone, because that's the only case where two
+       swatches have to come from the same fabric. */
+    if (visible && sel.zoneMode && sel.collectionSlug) visible = s.slug === sel.collectionSlug;
     tile.style.display = visible ? '' : 'none';
     if (visible) visibleCount++;
   });
@@ -2178,9 +2180,8 @@ function applyFabricFilters(){
      .cfg-col-section.first-visible solves, and for the same reason a CSS :first-of-type can't:
      hidden groups are display:none, not removed. */
   if (firstShownTitle) firstShownTitle.classList.add('first-visible');
-  /* The grid is always one collection deep now, so the count above it is always what's on
-     screen -- never the catalogue total. */
-  var noFilters = false;
+  /* Zone mode narrows the grid to one collection, so it counts as a filter for the total. */
+  var noFilters = !pillDefs.length && !appliedFilters.length && !priceFiltered && !sel.zoneMode;
   var optionCount = noFilters ? totalColorCount() : visibleCount;
   document.getElementById('cfg-color-sub').textContent = optionCount + (optionCount === 1 ? ' opțiune' : ' opțiuni');
 
@@ -2683,16 +2684,17 @@ function renderMatNote(){
   var el = document.getElementById('cfg-matnote');
   if (!el) return;
   var c = COLLECTIONS[sel.collectionSlug];
-  var picked = !!c;
-  el.style.display = picked ? '' : 'none';
-  document.getElementById('cfg-nocol').style.display = picked ? 'none' : '';
-  document.getElementById('cfg-zone-switch').style.display = picked ? '' : 'none';
-  document.getElementById('cfg-fabric-sections').style.display = picked ? '' : 'none';
-  document.querySelector('#sec-colors-grid .cfg-fabric-toolrow').style.display = picked ? '' : 'none';
-  document.getElementById('cfg-color-pillrow').style.display = picked ? '' : 'none';
-  if (!picked) return;
-  el.innerHTML = 'Culorile din colecția <strong>' + c.name + '</strong> (' + materialTypeLabel(c).toLowerCase() +
-    '). Toată canapeaua se face din ea. <button type="button" onclick="scrollCfgTo(\'collection\')">Schimbă colecția</button>';
+  /* The only dead end is asking for different colours per zone before any fabric is settled:
+     zones have to share one collection, and there isn't one yet. Everything else just works. */
+  var blocked = sel.zoneMode && !c;
+  document.getElementById('cfg-nocol').style.display = blocked ? '' : 'none';
+  document.getElementById('cfg-fabric-sections').style.display = blocked ? 'none' : '';
+  document.querySelector('#sec-colors-grid .cfg-fabric-toolrow').style.display = blocked ? 'none' : '';
+  document.getElementById('cfg-color-pillrow').style.display = blocked ? 'none' : '';
+  el.style.display = (sel.zoneMode && c) ? '' : 'none';
+  if (!(sel.zoneMode && c)) return;
+  el.innerHTML = 'Zonele se fac toate din colecția <strong>' + c.name + '</strong> (' + materialTypeLabel(c).toLowerCase() +
+    '), așa că îți arătăm doar culorile ei. <button type="button" onclick="scrollCfgTo(\'collection\')">Schimbă colecția</button>';
 }
 function renderZoneUI(){
   var sw = document.getElementById('cfg-zone-switch');
@@ -2871,9 +2873,9 @@ function setActiveCfgChip(sec, instant, followNav){
   renderNeeds();
   renderFabricPillRow();
   renderColorPillRow();
-  /* Zones are on from the start: the sofa opens with one colour on all three, so the switch
-     being on costs nothing, and the tabs are what tell a shopper the zones exist at all. */
-  sel.zoneMode = true;
+  /* Zones off to start with: most people want one colour, and that path needs no collection
+     and no narrowing -- the whole catalogue is open. */
+  sel.zoneMode = false;
   sel.zone = 'sezut';
   sel.zones = {};
   renderFabGrid();
