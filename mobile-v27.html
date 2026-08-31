@@ -2084,9 +2084,13 @@ function applyFabricFilters(){
     var priceOK = collectionPrice(s.slug) >= priceMin && collectionPrice(s.slug) <= priceMax;
     var visible = matOK && propOK && priceOK;
     if (visible && byCat.culoare.length) visible = byCat.culoare.indexOf(colorFamilyRO(s.hex)) > -1;
-    /* v27: same fabric across every zone -- so once zones are on, nothing from another
-       collection is offered at all. */
-    if (visible && sel.zoneMode) visible = s.slug === sel.collectionSlug;
+    /* v27: every zone is upholstered in the same material, so once zones are on the grid drops
+       to the material type already chosen -- Neted, Texturat, Catifea or Efect catifea. Colours
+       stay free to differ inside it. */
+    if (visible && sel.zoneMode){
+      var picked = materialTypeMatch(COLLECTIONS[sel.collectionSlug]);
+      visible = !picked || materialTypeMatch(c) === picked;
+    }
     tile.style.display = visible ? '' : 'none';
     if (visible) visibleCount++;
   });
@@ -2110,7 +2114,7 @@ function applyFabricFilters(){
      .cfg-col-section.first-visible solves, and for the same reason a CSS :first-of-type can't:
      hidden groups are display:none, not removed. */
   if (firstShownTitle) firstShownTitle.classList.add('first-visible');
-  /* Zone mode narrows the grid to one collection, so it counts as a filter here -- otherwise
+  /* Zone mode narrows the grid to one material type, so it counts as a filter here -- otherwise
      the total above the grid would still claim all 191 colours. */
   var noFilters = !pillDefs.length && !appliedFilters.length && !priceFiltered && !sel.zoneMode;
   var optionCount = noFilters ? totalColorCount() : visibleCount;
@@ -2503,8 +2507,8 @@ function openMaterialGroupDetail(key){
    Material is a sofa-level decision; colour is a per-zone one. Boston's zones are the body
    (lada, brațe, spătar), the seat cushions and the headrests. The constraint the factory
    actually has is that every zone is cut from the same fabric, so in zone mode the grid simply
-   stops offering anything from another collection -- a rule you can't break is better than a
-   rule explained in a disabled state. */
+   stops offering anything of another material type (Neted, Texturat, Catifea, Efect catifea)
+   -- a rule you can't break is better than a rule explained in a disabled state. */
 var ZONES = [
   { key:'sezut',   label:'Șezut' },
   { key:'corp',    label:'Ladă, brațe și spătar' },
