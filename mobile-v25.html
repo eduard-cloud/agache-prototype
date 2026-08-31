@@ -203,6 +203,11 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
    thumb and hides the fact that the colour exists at all -- it just isn't in this fabric.
    pointer-events:none also takes care of the press feedback, so a dead pill never animates. */
 .cfg-seg.is-unavailable, .cfg-fpill.is-unavailable{opacity:.4;pointer-events:none}
+/* Still selected, but no longer contributing anything -- reads as "this is doing nothing right
+   now". It has to keep its tap target: greying is no reason to trap a filter in the on state,
+   and this is the one pill in the row you'd actually want to switch off. Lifted a little out of
+   the dim so the ink border and checkmark stay legible. */
+.cfg-seg.is-unavailable.on, .cfg-fpill.is-unavailable.on{opacity:.6;pointer-events:auto}
 
 .cfg-fabric-divider{margin-top:60px}
 .cfg-fabric-toolrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
@@ -1419,17 +1424,32 @@ var COLOR_FAMILY_AVAILABLE = null;
    filtering by fabric first greys out the colours it doesn't come in. Ignores the material
    filter itself, for the same reason its twin ignores the colour filter. */
 var MATERIAL_AVAILABLE = null;
+/* The whole filter predicate in one place, so the two availability sets, the dead-end check and
+   the grid can't drift apart. Each facet is OR within itself and AND against the others; an
+   empty facet means "not filtering on this", not "matches nothing". */
+function swatchPasses(sw, pillDefs, colourFams, propFilters, priceMin, priceMax){
+  var c = sw.collection;
+  if (pillDefs.length && !pillDefs.some(function(pd){
+    return pd.stems.some(function(stem){ return c.materialTypes.some(function(t){ return t.indexOf(stem) > -1; }); });
+  })) return false;
+  if (propFilters.length && !propFilters.every(function(f){ return propMatch(f, c); })) return false;
+  var pr = collectionPrice(sw.slug);
+  if (pr < priceMin || pr > priceMax) return false;
+  if (colourFams.length && colourFams.indexOf(colorFamilyRO(sw.hex)) === -1) return false;
+  return true;
+}
+function countMatches(pillDefs, colourFams, propFilters, priceMin, priceMax){
+  var n = 0;
+  ALL_SWATCHES.forEach(function(sw){
+    if (swatchPasses(sw, pillDefs, colourFams, propFilters, priceMin, priceMax)) n++;
+  });
+  return n;
+}
 function availableMaterials(colourFams, propFilters, priceMin, priceMax){
   var out = {};
   FABRIC_PILLS.forEach(function(pd){
     out[pd.key] = ALL_SWATCHES.some(function(sw){
-      var c = sw.collection;
-      if (!pd.stems.some(function(stem){ return c.materialTypes.some(function(t){ return t.indexOf(stem) > -1; }); })) return false;
-      if (propFilters.length && !propFilters.every(function(f){ return propMatch(f, c); })) return false;
-      var pr = collectionPrice(sw.slug);
-      if (pr < priceMin || pr > priceMax) return false;
-      if (colourFams.length && colourFams.indexOf(colorFamilyRO(sw.hex)) === -1) return false;
-      return true;
+      return swatchPasses(sw, [pd], colourFams, propFilters, priceMin, priceMax);
     });
   });
   return out;
@@ -1437,15 +1457,7 @@ function availableMaterials(colourFams, propFilters, priceMin, priceMax){
 function availableColorFamilies(pillDefs, propFilters, priceMin, priceMax){
   var fams = {};
   ALL_SWATCHES.forEach(function(sw){
-    var c = sw.collection;
-    var matOK = !pillDefs.length || pillDefs.some(function(pd){
-      return pd.stems.some(function(stem){ return c.materialTypes.some(function(t){ return t.indexOf(stem) > -1; }); });
-    });
-    if (!matOK) return;
-    if (propFilters.length && !propFilters.every(function(f){ return propMatch(f, c); })) return;
-    var pr = collectionPrice(sw.slug);
-    if (pr < priceMin || pr > priceMax) return;
-    fams[colorFamilyRO(sw.hex)] = true;
+    if (swatchPasses(sw, pillDefs, [], propFilters, priceMin, priceMax)) fams[colorFamilyRO(sw.hex)] = true;
   });
   return fams;
 }
@@ -1654,34 +1666,45 @@ function applyFabricFilters(){
   });
   var pillDefs = FABRIC_PILLS.filter(function(p){ return activeFabricPills.indexOf(p.key) > -1; });
 
-  /* Cross-filter: material (plus properties and price) decides which colour families exist at
-     all, and a family that just went out of reach can't stay selected -- it would be an
-     invisible filter still emptying the grid, sitting behind a pill that's now greyed out.
-     Drop it and let the other filters stand. Counting happens after this, so the Filtre badge
-     never counts a colour that no longer has a pill. */
+  /* Cross-filter, both ways: material decides which colour families are worth offering and the
+     colour selection decides which materials are, each computed ignoring its own facet (score
+     a facet against itself and only the option you just tapped survives). This drives the
+     greying alone -- an option that would add nothing goes inert, selected or not. */
   COLOR_FAMILY_AVAILABLE = availableColorFamilies(pillDefs, byCat.prop, priceMin, priceMax);
-  var reachable = byCat.culoare.filter(function(f){ return COLOR_FAMILY_AVAILABLE[f]; });
-  if (reachable.length !== byCat.culoare.length){
-    byCat.culoare = reachable;
-    appliedFilters = appliedFilters.filter(function(f){
-      return FAMILY_ORDER.indexOf(f) === -1 || COLOR_FAMILY_AVAILABLE[f];
-    });
-  }
-  /* Now the same in reverse, off the colour selection that just survived. Materials can only
-     ever get *looser* here, which can only widen the reachable colours -- never narrow them --
-     so a colour that made it through above still holds, and one recompute is enough to keep
-     the greyed-out set honest rather than one pass behind. */
   MATERIAL_AVAILABLE = availableMaterials(byCat.culoare, byCat.prop, priceMin, priceMax);
-  var liveMats = activeFabricPills.filter(function(k){ return MATERIAL_AVAILABLE[k]; });
-  if (liveMats.length !== activeFabricPills.length){
-    activeFabricPills = liveMats;
-    pillDefs = FABRIC_PILLS.filter(function(pp){ return activeFabricPills.indexOf(pp.key) > -1; });
+
+  /* Dropping something the user picked is reserved for an actual dead end -- a combination that
+     shows nothing at all. Anything short of that stays: with Neted and Catifea both on, adding
+     Albastru leaves Neted's blues on screen, so Catifea contributes nothing but breaks nothing,
+     and it keeps its place in the row, greyed, rather than being taken away. Unreachable
+     options are inert, so this can't be walked into from either strip; the price slider is what
+     gets here, by moving the range out from under a material/colour pair that was fine a moment
+     ago. Colours go first (the narrower, easier-to-restore choice), materials only if that
+     wasn't enough. */
+  if (countMatches(pillDefs, byCat.culoare, byCat.prop, priceMin, priceMax) === 0){
+    var reachable = byCat.culoare.filter(function(f){ return COLOR_FAMILY_AVAILABLE[f]; });
+    if (reachable.length !== byCat.culoare.length){
+      byCat.culoare = reachable;
+      appliedFilters = appliedFilters.filter(function(f){
+        return FAMILY_ORDER.indexOf(f) === -1 || COLOR_FAMILY_AVAILABLE[f];
+      });
+    }
+    if (countMatches(pillDefs, byCat.culoare, byCat.prop, priceMin, priceMax) === 0){
+      var liveMats = activeFabricPills.filter(function(k){ return MATERIAL_AVAILABLE[k]; });
+      if (liveMats.length !== activeFabricPills.length){
+        activeFabricPills = liveMats;
+        pillDefs = FABRIC_PILLS.filter(function(pp){ return activeFabricPills.indexOf(pp.key) > -1; });
+        /* The grid is grouped by material type whenever 2+ are on, so dropping one has to
+           redraw the sections -- otherwise a heading survives for a material that is no longer
+           selected. Safe from here: it rebuilds tiles but never re-enters applyFabricFilters,
+           and it runs before the visibility pass below, which then filters the fresh tiles. */
+        renderFabricSections();
+      }
+    }
+    /* Both sets were measured against the pre-prune selection; refresh them so the greying
+       reflects what is actually still applied. */
     COLOR_FAMILY_AVAILABLE = availableColorFamilies(pillDefs, byCat.prop, priceMin, priceMax);
-    /* The grid is grouped by material type whenever 2+ are on, so dropping one has to redraw
-       the sections -- otherwise a heading survives for a material that is no longer selected.
-       Safe to call from here: it rebuilds tiles but never re-enters applyFabricFilters, and it
-       runs before the visibility pass below, which then filters the fresh tiles. */
-    renderFabricSections();
+    MATERIAL_AVAILABLE = availableMaterials(byCat.culoare, byCat.prop, priceMin, priceMax);
   }
 
   syncColorPillRow();
