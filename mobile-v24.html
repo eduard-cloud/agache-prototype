@@ -144,7 +144,7 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
 .sw-samples svg{width:14px;height:14px;display:block;flex:0 0 14px}
 
 /* ══ Voice note (Figma 1122:11892) ══ */
-#voicenote{background:var(--stroke);border:1px solid var(--stroke);border-radius:8px;overflow:hidden;padding:12px 16px 10px;display:flex;flex-direction:column;gap:8px;justify-content:center;width:100%}
+#voicenote{background:var(--stroke);border:1px solid var(--stroke);border-radius:8px;padding:12px 16px 10px;display:flex;flex-direction:column;gap:8px;justify-content:center;width:100%}
 #voicenote .vn-top{display:flex;align-items:center;justify-content:space-between;width:100%}
 #voicenote .vn-play{width:27.71px;height:32px;padding:0;display:flex;align-items:center;justify-content:center;flex:0 0 27.71px;color:#1D1E1F}
 #voicenote .vn-play svg{display:block}
@@ -168,9 +168,12 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
 #voicenote .vn-tr{text-decoration:underline;padding:0;font-size:10px;letter-spacing:-.2px;line-height:1.2;color:var(--black)}
 #vn-rule{height:1px;background:var(--stroke);width:100%;margin:20px 0}
 
-/* ══ Transcript overlay (opened from the voice note) ══ */
-#vntx{position:fixed;left:50%;top:50%;transform:translate(-50%,-46%);width:calc(100% - 40px);max-width:335px;background:var(--f7);border:1px solid var(--stroke);border-radius:8px;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:90}
-#vntx.on{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}
+/* ══ Transcript overlay (opened from the voice note) ══
+   No dim: it floats over the page the way the reference does, anchored under
+   the card it belongs to, so the page stays readable behind it. */
+#voicenote{position:relative}
+#vntx{position:absolute;left:-1px;right:-1px;top:calc(100% + 8px);background:var(--f7);border:1px solid var(--stroke);border-radius:8px;padding:20px;box-shadow:0 6px 24px rgba(0,0,0,.10),0 1px 3px rgba(0,0,0,.06);opacity:0;pointer-events:none;transform:translateY(-4px);transition:opacity .18s,transform .18s;z-index:40}
+#vntx.on{opacity:1;pointer-events:auto;transform:translateY(0)}
 #vntx h3{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;color:var(--black);padding-right:32px}
 #vntx p{font-size:14px;font-weight:400;letter-spacing:var(--ls-14);line-height:1.4;color:var(--slate);margin-top:12px}
 #vntx .vntx-x{position:absolute;top:14px;right:14px;width:24px;height:24px;padding:0;display:flex;align-items:center;justify-content:center;color:var(--black)}
@@ -650,6 +653,11 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
       </div>
       <!-- preload=auto, not metadata: at 416KB it buffers in one go, so scrubbing
            works even on a server that ignores Range requests (the local preview does) -->
+<div id="vntx" role="dialog" aria-modal="true" aria-labelledby="vntx-h">
+        <button class="vntx-x" aria-label="Închide" onclick="closeTranscript()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+        <h3 id="vntx-h">Transcript notă vocală</h3>
+        <p>Boston e canapeaua pe care nu trebuie s-o menajezi. O faci pe forma camerei tale și îi alegi materialul după cum se trăiește la voi: în doi, cu copii mici sau cu pisică. Are 12 centimetri de spumă pe arcuri, deci nu se lasă în mijloc, oricât ați sta pe ea. Când vin musafirii, se desface în pat pentru doi, iar dedesubt mai ai două lăzi de depozitare.</p>
+      </div>
       <audio id="vn-audio" preload="auto" src="assets/audio/boston-voice-note.m4a"></audio>
     </div>
     <div id="vn-rule"></div>
@@ -1363,12 +1371,7 @@ Ai 14 zile calendaristice pentru retur, fără să explici motivul. Termenul în
   <button class="mv-ht-cta" onclick="closeHeartTip()">Am înțeles</button>
 </div>
 
-<div id="vntx" role="dialog" aria-modal="true" aria-labelledby="vntx-h">
-  <button class="vntx-x" aria-label="Închide" onclick="closeTranscript()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
-  <h3 id="vntx-h">Transcript notă vocală</h3>
-  <p>Boston e canapeaua pe care nu trebuie s-o menajezi. O faci pe forma camerei tale și îi alegi materialul după cum se trăiește la voi: în doi, cu copii mici sau cu pisică. Are 12 centimetri de spumă pe arcuri, deci nu se lasă în mijloc, oricât v-ați trânti pe ea. Când vin musafirii, se desface în pat pentru doi, iar dedesubt mai ai două lăzi de depozitare.</p>
-</div>
-<div id="dim" onclick="closeSheet();closeModal();closeTranscript()"></div>
+<div id="dim" onclick="closeSheet();closeModal()"></div>
 <div id="fsheet">
   <div id="fs-head"><span class="t">Filtre</span><button onclick="resetFilters()">Resetează</button></div>
   <div id="fs-scroll">
@@ -2610,19 +2613,16 @@ vnInit();
 vnRealWave();
 
 function openTranscript(){
-  var el = document.getElementById('vntx');
-  el.classList.add('on'); bringToFront(el);
-  document.getElementById('dim').classList.add('on');
-  document.body.style.overflow = 'hidden';
+  document.getElementById('vntx').classList.add('on');
+  setTimeout(function(){ document.addEventListener('click', vnOutside); }, 0);
 }
 function closeTranscript(){
   document.getElementById('vntx').classList.remove('on');
-  if (!document.getElementById('fsheet').classList.contains('on')
-   && !document.getElementById('samplesmodal').classList.contains('on')
-   && !document.getElementById('smodal').classList.contains('on')) {
-    document.getElementById('dim').classList.remove('on');
-  }
-  if (!document.querySelector('.view.open')) document.body.style.overflow = '';
+  document.removeEventListener('click', vnOutside);
+}
+function vnOutside(e){
+  var el = document.getElementById('vntx');
+  if (!el.contains(e.target) && !e.target.closest('.vn-tr')) closeTranscript();
 }
 document.addEventListener('keydown', function(e){
   if (e.key === 'Escape' && document.getElementById('vntx').classList.contains('on')) closeTranscript();
