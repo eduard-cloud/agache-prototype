@@ -69,6 +69,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
    redundant now and hidden rather than removed, in case that treatment ever comes back. */
 .cfg-shape-check{display:none !important;position:absolute;right:6px;bottom:6px;width:18px;height:18px;border-radius:50%;background:var(--ink);align-items:center;justify-content:center}
 .cfg-shape-label{margin-top:0}
+.cfg-shape-label + .cfg-dim{margin-top:20px}
 /* v26: a size that has no real variant for the current layout (4 seats on a straight sofa)
    stays visible but out of reach, with one line under the grid saying why. */
 .cfg-shape-tile.off{opacity:.32;pointer-events:none}
@@ -97,6 +98,8 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-dim-edit{flex:0 0 auto;width:52px;height:52px;border:1px solid var(--hair);border-radius:10px;background:#fff;color:var(--ink);display:flex;align-items:center;justify-content:center}
 .cfg-dim-edit:active{background:var(--chipbg)}
 /* the fixed main run: same label, but the value reads as a spec, not a control */
+.cfg-subtitle{font-size:15px;font-weight:600;letter-spacing:-.2px;color:var(--ink);margin:26px 0 12px}
+.cfg-dim + .cfg-subtitle{margin-top:24px}
 .cfg-dim-fixed{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-bottom:18px;border-bottom:1px solid var(--hair)}
 .cfg-dim-fixed + .cfg-dim{margin-top:18px}
 .cfg-dim-fixed .cfg-dim-lab{margin-bottom:0}
@@ -570,7 +573,6 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
     <div class="cfg-handle" id="cfg-handle"><div class="hbar"></div></div>
     <div class="cfg-chips" id="cfg-chips">
       <button class="cfg-chip on" data-sec="layout" onclick="scrollCfgTo('layout')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Layout</button>
-      <button class="cfg-chip" data-sec="size" onclick="scrollCfgTo('size')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Mărime</button>
       <!-- Nevoi de lifestyle chip removed per request, kept in markup below for easy restore -->
       <button class="cfg-chip" data-sec="needs" onclick="scrollCfgTo('needs')" style="display:none"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Nevoi</button>
       <button class="cfg-chip" data-sec="color" onclick="scrollCfgTo('color')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Material</button>
@@ -585,12 +587,36 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
            #shape-grid below stays as the canonical variant registry -- one hidden tile per
            real Shopify variant -- so pricing, preview and summary keep reading exactly what
            they always read; layout x size just resolves to one of those tiles. -->
+      <!-- v26: everything about the sofa's body lives on one card -- its shape, how long the
+           island is, and what the arms look like. "Mărime" as a separate step is gone: with the
+           main run fixed there was only ever one slider in it, and a whole tab for one control
+           made the sofa feel more configurable than it is. -->
       <section class="cfg-sec" id="sec-layout">
         <h3 class="cfg-title">Alege forma canapelei</h3>
         <div class="cfg-shape-row" id="layout-grid"></div>
         <div class="cfg-shape-label">
           <strong id="cfg-layout-sel-name">Canapea dreaptă</strong>
         </div>
+
+        <!-- Only the island can grow or shrink, so it only shows up on a colțar. -->
+        <div class="cfg-dim" id="dim-isl-row">
+          <div class="cfg-dim-lab" id="dim-isl-lab">Lungime pe stânga</div>
+          <div class="cfg-dim-line">
+            <div class="cfg-dim-track">
+              <div class="cfg-dim-fill" id="dim-isl-fill"></div>
+              <span class="cfg-dim-val" id="dim-isl-val">170 cm</span>
+              <input type="range" id="dim-isl" min="143" max="197" step="27" value="170" aria-label="Lungimea insulei" oninput="onDimInput()">
+            </div>
+            <button type="button" class="cfg-dim-edit" onclick="editDim('isl')" aria-label="Scrie lungimea insulei"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
+          </div>
+        </div>
+
+        <h4 class="cfg-subtitle">Alege cotierele</h4>
+        <div class="cfg-shape-row" id="arm-grid"></div>
+        <div class="cfg-shape-label">
+          <strong>Cotiere: <span id="cfg-arm-sel-name">standard</span></strong>
+        </div>
+
         <div class="cfg-shape-row" id="shape-grid" style="display:none">
           <button class="cfg-shape-tile on" data-name="Canapea 3 locuri" data-dim="245 x 100 cm" onclick="pickCfgShape(this)">
             <span class="cfg-shape-imw"><img src="assets/shape-3seat.png" alt="Canapea 3 locuri"><span class="cfg-shape-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span></span>
@@ -604,32 +630,6 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
           <button class="cfg-shape-tile" data-name="Coltar 4 locuri" data-dim="255 x 255 cm" onclick="pickCfgShape(this)">
             <span class="cfg-shape-imw"><img src="assets/shape-corner-4seat.png" alt="Coltar 4 locuri"><span class="cfg-shape-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span></span>
           </button>
-        </div>
-      </section>
-
-      <section class="cfg-sec" id="sec-size">
-        <h3 class="cfg-title">Alege mărimea</h3>
-        <!-- Boston's main run is built to one length -- it can't grow or shrink, so it's a
-             read-out, not a slider. The only length the shopper can actually move is the
-             island, and only on a colțar: 143, 170 or 197 cm, a module at a time. A straight
-             sofa therefore has nothing to size at all. -->
-        <!-- The main run is fixed, so it isn't shown at all -- a read-out nobody can act on
-             was just one more line to read past. Kept in the markup, hidden, in case it turns
-             out testers want to see the number they're buying. -->
-        <div class="cfg-dim-fixed" style="display:none">
-          <span class="cfg-dim-lab">Lungime</span>
-          <span class="cfg-dim-fixed-val" id="dim-len-val">245 cm</span>
-        </div>
-        <div class="cfg-dim" id="dim-isl-row">
-          <div class="cfg-dim-lab" id="dim-isl-lab">Lungime pe stânga</div>
-          <div class="cfg-dim-line">
-            <div class="cfg-dim-track">
-              <div class="cfg-dim-fill" id="dim-isl-fill"></div>
-              <span class="cfg-dim-val" id="dim-isl-val">170 cm</span>
-              <input type="range" id="dim-isl" min="143" max="197" step="27" value="170" aria-label="Lungimea insulei" oninput="onDimInput()">
-            </div>
-            <button type="button" class="cfg-dim-edit" onclick="editDim('isl')" aria-label="Scrie lungimea insulei"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
-          </div>
         </div>
       </section>
 
@@ -697,6 +697,10 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
           <div class="rz-row">
             <div class="k">Formă<em id="cfg-sum-shape-dim"></em></div>
             <div class="vv"><span id="cfg-sum-shape-sw"><img id="cfg-sum-shape-img" style="width:100%;height:100%;object-fit:cover;border-radius:50%" alt=""></span><div class="v" id="cfg-sum-shape-name"></div></div>
+          </div>
+          <div class="rz-row">
+            <div class="k">Cotiere</div>
+            <div class="vv"><div class="v" id="cfg-sum-arm"></div></div>
           </div>
           <div class="rz-row">
             <div class="k">Material<em id="cfg-sum-mat-texture"></em></div>
@@ -1394,6 +1398,8 @@ function updateSummary(){
     document.getElementById('cfg-sum-shape-dim').textContent = currentDims();
     document.getElementById('cfg-sum-shape-img').src = sel.shapeEl.querySelector('img').src;
   }
+  document.getElementById('cfg-sum-arm').textContent =
+    (ARMS.filter(function(a){ return a.key === sel.arm; })[0] || ARMS[2]).label;
   document.getElementById('cfg-sum-mat-name').textContent = c.name;
   document.getElementById('cfg-sum-mat-texture').textContent = textureLabel(c) + ' · ' + durabilityLabel(c);
   if (swInfo){
@@ -1462,14 +1468,48 @@ function paintDim(which){
   document.getElementById('dim-' + which + '-fill').style.left = 'calc(' + (pct / 100) + ' * (100% - 20px) + 20px)';
   document.getElementById('dim-' + which + '-val').textContent = input.value + ' cm';
 }
+/* Three arms, the way the reference offers them: none at all, a slim 10 cm one, or the
+   standard arm the sofa ships with. Drawn rather than photographed -- the difference is 10 cm
+   of width, which a photo at tile size can't show but a diagram can. */
+var ARMS = [
+  { key:'none', label:'fără',            w:0 },
+  { key:'slim', label:'subțiri (10 cm)', w:5 },
+  { key:'std',  label:'standard',        w:11 }
+];
+/* The seat block stays the same size in all three tiles -- only the arms beside it change, so
+   the tiles read as "the same sofa, three arms" rather than three different sofas. */
+function armSvg(w){
+  var seatW = 44, cx = 42, left = cx - seatW / 2;
+  var svg = '<rect x="' + left + '" y="22" width="' + seatW + '" height="13" rx="3" fill="#C9C9C9"/>' +
+            '<rect x="' + left + '" y="35" width="' + seatW + '" height="23" rx="4" fill="#DCDCDC"/>';
+  if (w) svg += '<rect x="' + (left - w) + '" y="29" width="' + w + '" height="29" rx="3" fill="#A6A6A6"/>' +
+                '<rect x="' + (left + seatW) + '" y="29" width="' + w + '" height="29" rx="3" fill="#A6A6A6"/>';
+  return '<svg width="84" height="84" viewBox="0 0 84 84" fill="none" xmlns="http://www.w3.org/2000/svg">' + svg + '</svg>';
+}
+function renderArmGrid(){
+  var row = document.getElementById('arm-grid');
+  row.innerHTML = '';
+  ARMS.forEach(function(a){
+    var t = document.createElement('button');
+    t.type = 'button';
+    t.className = 'cfg-shape-tile' + (a.key === sel.arm ? ' on' : '');
+    t.dataset.arm = a.key;
+    t.innerHTML = '<span class="cfg-shape-imw">' + armSvg(a.w) +
+      '<span class="cfg-shape-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span></span>';
+    t.onclick = function(){ pickArm(a.key, t); };
+    row.appendChild(t);
+  });
+  document.getElementById('cfg-arm-sel-name').textContent =
+    (ARMS.filter(function(a){ return a.key === sel.arm; })[0] || ARMS[2]).label;
+}
+function pickArm(key, el){
+  sel.arm = key;
+  renderArmGrid();
+  updateSummary();
+  if (el) pressFeedback(el);
+}
 function renderSizeSliders(){
   var corner = isCorner();
-  /* A straight sofa has no length to set, so "Alege mărimea" doesn't appear at all -- neither
-     the card nor its chip. An empty step reads as a step you failed to complete. */
-  document.getElementById('sec-size').style.display = corner ? '' : 'none';
-  var chip = document.querySelector('.cfg-chip[data-sec="size"]');
-  if (chip) chip.style.display = corner ? '' : 'none';
-  document.getElementById('dim-len-val').textContent = sel.len + ' cm';
   document.getElementById('dim-isl-row').classList.toggle('on', corner);
   document.getElementById('dim-isl-lab').textContent = sel.layout === 'dreapta' ? 'Lungime pe dreapta' : 'Lungime pe stânga';
   document.getElementById('dim-isl').value = sel.isl;
@@ -2514,8 +2554,10 @@ function openFilterSheetFromNav(){
   sel.layout = 'drept';
   sel.len = LAYOUTS[0].len;
   sel.isl = LAYOUTS[1].isl;
+  sel.arm = 'std';
   renderLayoutGrid();
   renderSizeSliders();
+  renderArmGrid();
   sel.collectionSlug = 'luna';
   sel.colorName = 'Luna ' + COLLECTIONS.luna.colors[0][0];
   renderNeeds();
@@ -2526,7 +2568,7 @@ function openFilterSheetFromNav(){
   updateSummary();
 
   var hashSec = location.hash.replace('#', '');
-  if (['layout','size','needs','color','colors-grid','summary'].indexOf(hashSec) > -1){
+  if (['layout','needs','color','colors-grid','summary'].indexOf(hashSec) > -1){
     scrollCfgTo(hashSec, true);
   }
 })();
