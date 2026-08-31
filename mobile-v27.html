@@ -570,7 +570,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-sum-zone-sw img{width:100%;height:100%;object-fit:cover}
 
 /* ══ v27: zone switch and zone tabs ══ */
-.cfg-zone-switch{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;background:none;border:none;padding:0 0 16px;text-align:left}
+.cfg-zone-switch{display:flex;align-items:center;justify-content:flex-start;gap:12px;width:100%;background:none;border:none;padding:0 0 16px;text-align:left}
 .cfg-zone-switch-text{display:flex;flex-direction:column;gap:2px;min-width:0}
 .cfg-zone-switch-text strong{font-size:14px;font-weight:500;color:var(--ink)}
 .cfg-switch{flex:0 0 auto;width:44px;height:26px;border-radius:13px;background:#DDD;position:relative;transition:background-color .16s}
@@ -719,10 +719,10 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 
         <!-- Most people want one colour, so zones stay folded away until asked for. -->
         <button type="button" class="cfg-zone-switch" id="cfg-zone-switch" onclick="toggleZoneMode()" aria-pressed="false">
+          <span class="cfg-switch"><span class="knob"></span></span>
           <span class="cfg-zone-switch-text">
             <strong>Culori diferite pe zone</strong>
           </span>
-          <span class="cfg-switch"><span class="knob"></span></span>
         </button>
 
         <div class="cfg-zonetabs" id="cfg-zonetabs"></div>
@@ -2112,11 +2112,9 @@ function applyFabricFilters(){
      .cfg-col-section.first-visible solves, and for the same reason a CSS :first-of-type can't:
      hidden groups are display:none, not removed. */
   if (firstShownTitle) firstShownTitle.classList.add('first-visible');
-  /* In zone mode the grid is down to one collection, so the running total above it has to say
-     what's actually on screen rather than the catalogue's full 191. */
-  if (sel.zoneMode) document.getElementById('cfg-color-sub').textContent =
-    visibleCount + (visibleCount === 1 ? ' opțiune' : ' opțiuni');
-  var noFilters = !pillDefs.length && !appliedFilters.length && !priceFiltered;
+  /* Zone mode narrows the grid to one collection, so it counts as a filter here -- otherwise
+     the total above the grid would still claim all 191 colours. */
+  var noFilters = !pillDefs.length && !appliedFilters.length && !priceFiltered && !sel.zoneMode;
   var optionCount = noFilters ? totalColorCount() : visibleCount;
   document.getElementById('cfg-color-sub').textContent = optionCount + (optionCount === 1 ? ' opțiune' : ' opțiuni');
 
