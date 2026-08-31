@@ -1430,7 +1430,14 @@ function show(n){
   var sc = screens[at].querySelector('.scroll');
   if (sc) sc.scrollTop = 0;
 }
-function leave(){ location.href = 'mobile-v17.html'; }
+/* Go back to whichever PDP sent us here — its pushTo() leaves the filename in
+   sessionStorage, the same handshake the configurator uses (mobile-v18.html
+   closeConfigurator). Without this the flow always dumped you on v17. */
+function leave(){
+  var origin = sessionStorage.getItem('pdpOrigin');
+  sessionStorage.removeItem('pdpOrigin');
+  location.href = origin || 'mobile-v17.html';
+}
 
 /* The board drew the bag above the CTA in a fixed state, because a static screen has nothing
    to react to. Here a tap has to land in it: the picked swatches fill the slots in order,
