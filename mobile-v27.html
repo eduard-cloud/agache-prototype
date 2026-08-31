@@ -1392,7 +1392,7 @@ function toast(msg){
 }
 
 /* ══════════ v3-specific: configurator state + rendering ══════════ */
-var sel = { shapeEl: null, collectionSlug: 'luna', colorName: null, needs: [], zoneMode: false, zone: 'sezut', zones: {} };
+var sel = { shapeEl: null, collectionSlug: 'luna', colorName: null, needs: [], zoneMode: true, zone: 'sezut', zones: {} };
 /* Grouped by actual fabric structure (per agache.ro's own material descriptions), not by
    price tier and not by the old Catifea/Velur/Bucle split -- that split had real velvet
    (Piano) lumped in with velvet-*look* wovens (Manila/Zoya/Maya), and called plain thick
@@ -2722,11 +2722,14 @@ function setActiveCfgChip(sec, instant, followNav){
   renderNeeds();
   renderFabricPillRow();
   renderColorPillRow();
-  sel.zoneMode = false;
+  /* Zones are on from the start: the sofa opens with one colour on all three, so the switch
+     being on costs nothing, and the tabs are what tell a shopper the zones exist at all. */
+  sel.zoneMode = true;
   sel.zone = 'sezut';
   sel.zones = { corp:sel.colorName, sezut:sel.colorName, tetiere:sel.colorName };
   renderFabricSections();
   renderZoneUI();
+  applyFabricFilters();
   updatePreview();
   updateSummary();
 
