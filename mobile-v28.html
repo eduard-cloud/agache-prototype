@@ -247,6 +247,12 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-seg.sm.on{padding:3px 11px 3px 3px}
 .cfg-seg.sm .dot{width:26px;height:26px}
 .cfg-seg.sm .nm{font-size:13px}
+/* v28: the colour-family strip in the Culoare card runs at the compact size -- it's a filter
+   over the grid below it, not a choice in its own right, so it shouldn't outweigh the swatches. */
+#cfg-color-pillrow .cfg-seg{gap:6px;padding:4px 12px 4px 4px}
+#cfg-color-pillrow .cfg-seg.on{padding:3px 11px 3px 3px}
+#cfg-color-pillrow .cfg-seg .dot{width:26px;height:26px}
+#cfg-color-pillrow .cfg-seg .nm{font-size:13px}
 /* A colour family the current material can't produce stays on screen, greyed and inert,
    rather than disappearing: a row that loses pills as you change material reflows under your
    thumb and hides the fact that the colour exists at all -- it just isn't in this fabric.
