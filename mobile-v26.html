@@ -614,8 +614,11 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
         <!-- Boston's main run is built to one length -- it can't grow or shrink, so it's a
              read-out, not a slider. The only length the shopper can actually move is the
              island, and only on a colțar: 140, 170 or 200 cm, a module at a time. A straight
-             sofa therefore has nothing to slide at all. -->
-        <div class="cfg-dim-fixed">
+             sofa therefore has nothing to size at all. -->
+        <!-- The main run is fixed, so it isn't shown at all -- a read-out nobody can act on
+             was just one more line to read past. Kept in the markup, hidden, in case it turns
+             out testers want to see the number they're buying. -->
+        <div class="cfg-dim-fixed" style="display:none">
           <span class="cfg-dim-lab">Lungime</span>
           <span class="cfg-dim-fixed-val" id="dim-len-val">245 cm</span>
         </div>
