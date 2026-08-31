@@ -1374,7 +1374,9 @@ function totalColorCount(){
    exact same chip -- photo dot + label + checkmark -- just at two sizes. */
 function buildFabricSeg(p, small, onPicked){
   var seg = document.createElement('div');
-  seg.className = 'cfg-seg' + (small ? ' sm' : '') + (activeFabricPills.indexOf(p.key) > -1 ? ' on' : '');
+  seg.dataset.key = p.key;
+  seg.className = 'cfg-seg' + (small ? ' sm' : '') + (activeFabricPills.indexOf(p.key) > -1 ? ' on' : '')
+    + (MATERIAL_AVAILABLE && !MATERIAL_AVAILABLE[p.key] ? ' is-unavailable' : '');
   seg.innerHTML =
     '<span class="dot" style="background-image:url(\'' + p.asset + '\');background-size:' + (p.zoom || 650) + '%"></span>' +
     '<span class="nm">' + p.label + '</span>';
@@ -1412,6 +1414,26 @@ function renderFabricPillRow(){
    null until the first applyFabricFilters run, which reads as "everything is available" --
    correct, since nothing is filtered before then. */
 var COLOR_FAMILY_AVAILABLE = null;
+/* And the mirror of it, because the two entry points are equally likely: someone who filters
+   by colour first has to be told which fabrics that colour actually comes in, the same way
+   filtering by fabric first greys out the colours it doesn't come in. Ignores the material
+   filter itself, for the same reason its twin ignores the colour filter. */
+var MATERIAL_AVAILABLE = null;
+function availableMaterials(colourFams, propFilters, priceMin, priceMax){
+  var out = {};
+  FABRIC_PILLS.forEach(function(pd){
+    out[pd.key] = ALL_SWATCHES.some(function(sw){
+      var c = sw.collection;
+      if (!pd.stems.some(function(stem){ return c.materialTypes.some(function(t){ return t.indexOf(stem) > -1; }); })) return false;
+      if (propFilters.length && !propFilters.every(function(f){ return propMatch(f, c); })) return false;
+      var pr = collectionPrice(sw.slug);
+      if (pr < priceMin || pr > priceMax) return false;
+      if (colourFams.length && colourFams.indexOf(colorFamilyRO(sw.hex)) === -1) return false;
+      return true;
+    });
+  });
+  return out;
+}
 function availableColorFamilies(pillDefs, propFilters, priceMin, priceMax){
   var fams = {};
   ALL_SWATCHES.forEach(function(sw){
@@ -1460,6 +1482,13 @@ function renderColorPillRow(){
    rebuild would snap it back to "Bej" every time you tapped something you'd scrolled to.
    Called from applyFabricFilters, so the strip also follows changes made in the Filtre sheet
    or by Resetează. */
+function syncFabricPillRow(){
+  document.querySelectorAll('#cfg-fabric-pillrow .cfg-seg').forEach(function(seg){
+    var key = seg.dataset.key;
+    seg.classList.toggle('is-unavailable', !!MATERIAL_AVAILABLE && !MATERIAL_AVAILABLE[key]);
+    seg.classList.toggle('on', activeFabricPills.indexOf(key) > -1);
+  });
+}
 function syncColorPillRow(){
   document.querySelectorAll('#cfg-color-pillrow .cfg-seg').forEach(function(seg){
     var fam = seg.dataset.fam;
@@ -1612,7 +1641,6 @@ function markFirstVisibleSection(){
   });
 }
 function applyFabricFilters(){
-  renderFsheetMaterialPill();
   var priceMinEl = document.getElementById('price-min');
   var priceMaxEl = document.getElementById('price-max');
   var priceMin = priceMinEl ? parseInt(priceMinEl.value, 10) : PRICE_MIN_DEFAULT;
@@ -1639,8 +1667,27 @@ function applyFabricFilters(){
       return FAMILY_ORDER.indexOf(f) === -1 || COLOR_FAMILY_AVAILABLE[f];
     });
   }
+  /* Now the same in reverse, off the colour selection that just survived. Materials can only
+     ever get *looser* here, which can only widen the reachable colours -- never narrow them --
+     so a colour that made it through above still holds, and one recompute is enough to keep
+     the greyed-out set honest rather than one pass behind. */
+  MATERIAL_AVAILABLE = availableMaterials(byCat.culoare, byCat.prop, priceMin, priceMax);
+  var liveMats = activeFabricPills.filter(function(k){ return MATERIAL_AVAILABLE[k]; });
+  if (liveMats.length !== activeFabricPills.length){
+    activeFabricPills = liveMats;
+    pillDefs = FABRIC_PILLS.filter(function(pp){ return activeFabricPills.indexOf(pp.key) > -1; });
+    COLOR_FAMILY_AVAILABLE = availableColorFamilies(pillDefs, byCat.prop, priceMin, priceMax);
+    /* The grid is grouped by material type whenever 2+ are on, so dropping one has to redraw
+       the sections -- otherwise a heading survives for a material that is no longer selected.
+       Safe to call from here: it rebuilds tiles but never re-enters applyFabricFilters, and it
+       runs before the visibility pass below, which then filters the fresh tiles. */
+    renderFabricSections();
+  }
+
   syncColorPillRow();
+  syncFabricPillRow();
   renderFsheetColorPills();
+  renderFsheetMaterialPill();
 
   var totalFilters = appliedFilters.length + activeFabricPills.length + (priceFiltered ? 1 : 0);
   var btn = document.getElementById('cfg-filter-btn');
