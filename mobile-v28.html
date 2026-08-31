@@ -569,6 +569,10 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-sum-zone-sw{width:32px;height:32px;border-radius:50%;flex:0 0 auto;overflow:hidden;display:block}
 .cfg-sum-zone-sw img{width:100%;height:100%;object-fit:cover}
 
+.cfg-nocol{text-align:center;padding:6px 0 4px}
+.cfg-nocol p{font-size:13px;line-height:1.45;color:var(--gray);margin-bottom:12px}
+.cfg-nocol button{height:44px;padding:0 20px;border:1px solid var(--ink);border-radius:22px;background:#fff;font-size:14px;font-weight:500;color:var(--ink)}
+
 /* ══ v28: the fabric cards ══ */
 .cfg-fabgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 .cfg-fabcard{position:relative;display:flex;flex-direction:column;text-align:left;background:#fff;border:1.5px solid var(--hair);border-radius:14px;padding:8px 8px 10px;transition:border-color .15s}
@@ -760,6 +764,12 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
         <div class="cfg-zonetabs" id="cfg-zonetabs"></div>
 
         <p class="cfg-matnote" id="cfg-matnote"></p>
+        <!-- Nothing to colour until a collection is picked -- so the step says so, and hands
+             the shopper back to the step that unlocks it. -->
+        <div class="cfg-nocol" id="cfg-nocol">
+          <p>Întâi alege colecția. Apoi îți arătăm culorile ei.</p>
+          <button type="button" onclick="scrollCfgTo('collection')">Alege colecția</button>
+        </div>
         <div class="cfg-fabric-pillrow" id="cfg-color-pillrow"></div>
 
         <div class="cfg-fabric-toolrow">
@@ -1115,6 +1125,11 @@ function sizeSteps(){
 function currentShapeName(){
   return sel.shapeEl ? sel.shapeEl.dataset.name : 'Canapea 3 locuri';
 }
+function cheapestPrice(){
+  return COLLECTION_ORDER.reduce(function(min, slug){
+    return Math.min(min, collectionPrice(slug));
+  }, Infinity);
+}
 function collectionPrice(slug, shapeName){
   return SHAPE_TIER_PRICE[shapeName || baseVariantName()][COLLECTIONS[slug].tier] + STEP_LEI * sizeSteps();
 }
@@ -1421,7 +1436,7 @@ function toast(msg){
 }
 
 /* ══════════ v3-specific: configurator state + rendering ══════════ */
-var sel = { shapeEl: null, collectionSlug: 'luna', colorName: null, needs: [], zoneMode: true, zone: 'sezut', zones: {} };
+var sel = { shapeEl: null, collectionSlug: null, colorName: null, needs: [], zoneMode: true, zone: 'sezut', zones: {} };
 /* Grouped by actual fabric structure (per agache.ro's own material descriptions), not by
    price tier and not by the old Catifea/Velur/Bucle split -- that split had real velvet
    (Piano) lumped in with velvet-*look* wovens (Manila/Zoya/Maya), and called plain thick
@@ -1480,6 +1495,7 @@ function updatePreview(){
   img.src = previewBaseSrc();
   img.alt = sel.shapeEl ? sel.shapeEl.dataset.name : 'Canapea Boston';
   var swInfo = SWATCH_INDEX[sel.colorName];
+  document.getElementById('cfg-fabric-pill').style.display = swInfo ? '' : 'none';
   if (swInfo){
     document.getElementById('cfg-fabric-thumb-img').src = fabricAsset(sel.colorName);
     document.getElementById('cfg-fabric-name').textContent = swInfo.name;
@@ -1496,12 +1512,18 @@ function updateSummary(){
   }
   document.getElementById('cfg-sum-arm').textContent =
     (ARMS.filter(function(a){ return a.key === sel.arm; })[0] || ARMS[2]).label;
-  document.getElementById('cfg-sum-mat-name').textContent = c.name;
-  document.getElementById('cfg-sum-mat-texture').textContent = textureLabel(c) + ' · ' + durabilityLabel(c);
+  document.getElementById('cfg-sum-mat-name').textContent = c ? c.name : 'Nealeasă';
+  document.getElementById('cfg-sum-mat-texture').textContent = c ? textureLabel(c) + ' · ' + durabilityLabel(c) : '';
   if (swInfo){
     document.getElementById('cfg-sum-color-name').textContent = nearestColorName(swInfo.hex) + ' (' + sel.colorName + ')';
     document.getElementById('cfg-sum-color-img').src = fabricAsset(sel.colorName);
+  } else {
+    /* Dropping the collection drops the colour with it -- the summary can't keep quoting a
+       swatch the sofa no longer has. */
+    document.getElementById('cfg-sum-color-name').textContent = 'Nealeasă';
+    document.getElementById('cfg-sum-color-img').removeAttribute('src');
   }
+  document.getElementById('cfg-sum-color-sw').style.visibility = swInfo ? '' : 'hidden';
   /* One "Culoare" row for a single-colour sofa; one row per zone once they differ. */
   var zoneWrap = document.getElementById('cfg-sum-zones');
   var perZone = sel.zoneMode && ZONES.some(function(z){ return sel.zones[z.key] !== sel.zones.corp; });
@@ -1519,11 +1541,12 @@ function updateSummary(){
       zoneWrap.appendChild(row);
     });
   }
-  var price = collectionPrice(sel.collectionSlug);
-  document.getElementById('cfg-sum-price').textContent = formatPrice(price) + ' lei';
+  /* No collection yet -- quote the cheapest one this sofa can be made in, marked "de la". */
+  var price = c ? collectionPrice(sel.collectionSlug) : cheapestPrice();
+  document.getElementById('cfg-sum-price').textContent = (c ? '' : 'de la ') + formatPrice(price) + ' lei';
   /* Floating CTA bar mirrors the PDP's own price style (see mobile-v12.html .p-price) --
      no decimals there, so match it here instead of reusing the 2-decimal summary format. */
-  document.getElementById('cfg-price').textContent = Math.round(price).toLocaleString('ro-RO') + ' lei';
+  document.getElementById('cfg-price').textContent = (c ? '' : 'de la ') + Math.round(price).toLocaleString('ro-RO') + ' lei';
 }
 
 /* ══ v26: layout x length ══
@@ -2621,10 +2644,18 @@ function renderFabGrid(){
 /* Picking a collection re-dresses the whole sofa in it: every zone moves to that collection's
    first colour, because a zone can't keep a colour that no longer exists. */
 function pickCollection(slug, el){
-  sel.collectionSlug = slug;
-  var first = COLLECTIONS[slug].name + ' ' + COLLECTIONS[slug].colors[0][0];
-  sel.colorName = first;
-  ZONES.forEach(function(z){ sel.zones[z.key] = first; });
+  /* Tapping the collection you're already on takes it off again -- the sofa goes back to
+     having no fabric chosen, the price back to "de la". Nothing here is a one-way door. */
+  var deselect = slug === sel.collectionSlug;
+  sel.collectionSlug = deselect ? null : slug;
+  if (deselect){
+    sel.colorName = null;
+    sel.zones = {};
+  } else {
+    var first = COLLECTIONS[slug].name + ' ' + COLLECTIONS[slug].colors[0][0];
+    sel.colorName = first;
+    ZONES.forEach(function(z){ sel.zones[z.key] = first; });
+  }
   renderFabGrid();
   renderFabricSections();
   applyFabricFilters();
@@ -2640,6 +2671,14 @@ function renderMatNote(){
   var el = document.getElementById('cfg-matnote');
   if (!el) return;
   var c = COLLECTIONS[sel.collectionSlug];
+  var picked = !!c;
+  el.style.display = picked ? '' : 'none';
+  document.getElementById('cfg-nocol').style.display = picked ? 'none' : '';
+  document.getElementById('cfg-zone-switch').style.display = picked ? '' : 'none';
+  document.getElementById('cfg-fabric-sections').style.display = picked ? '' : 'none';
+  document.querySelector('#sec-colors-grid .cfg-fabric-toolrow').style.display = picked ? '' : 'none';
+  document.getElementById('cfg-color-pillrow').style.display = picked ? '' : 'none';
+  if (!picked) return;
   el.innerHTML = 'Culorile din colecția <strong>' + c.name + '</strong> (' + materialTypeLabel(c).toLowerCase() +
     '). Toată canapeaua se face din ea. <button type="button" onclick="scrollCfgTo(\'collection\')">Schimbă colecția</button>';
 }
@@ -2649,7 +2688,7 @@ function renderZoneUI(){
   sw.setAttribute('aria-pressed', sel.zoneMode ? 'true' : 'false');
   renderMatNote();
   var tabs = document.getElementById('cfg-zonetabs');
-  tabs.classList.toggle('on', !!sel.zoneMode);
+  tabs.classList.toggle('on', !!sel.zoneMode && !!sel.collectionSlug);
   tabs.innerHTML = '';
   if (sel.zoneMode){
     ZONES.forEach(function(z){
@@ -2813,8 +2852,10 @@ function setActiveCfgChip(sec, instant, followNav){
   renderLayoutGrid();
   renderSizeSliders();
   renderArmGrid();
-  sel.collectionSlug = 'luna';
-  sel.colorName = 'Luna ' + COLLECTIONS.luna.colors[0][0];
+  /* v28: the sofa starts without a collection. The price bar reads "de la", the colour step
+     waits, and picking a collection is what starts the fabric half of the flow. */
+  sel.collectionSlug = null;
+  sel.colorName = null;
   renderNeeds();
   renderFabricPillRow();
   renderColorPillRow();
@@ -2822,7 +2863,7 @@ function setActiveCfgChip(sec, instant, followNav){
      being on costs nothing, and the tabs are what tell a shopper the zones exist at all. */
   sel.zoneMode = true;
   sel.zone = 'sezut';
-  sel.zones = { corp:sel.colorName, sezut:sel.colorName, tetiere:sel.colorName };
+  sel.zones = {};
   renderFabGrid();
   renderFabricSections();
   renderZoneUI();
