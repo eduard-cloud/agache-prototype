@@ -2690,8 +2690,8 @@ function renderMatNote(){
   document.getElementById('cfg-color-pillrow').style.display = blocked ? 'none' : '';
   el.style.display = (sel.zoneMode && c) ? '' : 'none';
   if (!(sel.zoneMode && c)) return;
-  el.innerHTML = 'Zonele se fac toate din colecția <strong>' + c.name + '</strong> (' + materialTypeLabel(c).toLowerCase() +
-    '), așa că îți arătăm doar culorile ei. <button type="button" onclick="scrollCfgTo(\'collection\')">Schimbă colecția</button>';
+  el.innerHTML = 'Doar culorile din <strong>' + c.name + '</strong>. ' +
+    '<button type="button" onclick="scrollCfgTo(\'collection\')">Schimbă colecția</button>';
 }
 function renderZoneUI(){
   var sw = document.getElementById('cfg-zone-switch');
@@ -2732,6 +2732,10 @@ function pickFabricSwatch(el, slug){
     sel.collectionSlug = slug;
     sel.colorName = el.dataset.name;
     ZONES.forEach(function(z){ sel.zones[z.key] = el.dataset.name; });
+    /* Picking a colour out of the open catalogue settles the collection too, so the collection
+       step has to light up the card it just landed on -- otherwise "Schimbă colecția" takes you
+       to eight cards with nothing selected. */
+    renderFabGrid();
     renderZoneUI();
   }
   syncSwatchSelection();
