@@ -634,7 +634,9 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
         <span class="vn-l"><span id="vn-time">00:15</span><button class="vn-tr" onclick="toast('Transcriptul urmează')">Transcript</button></span>
         <span>Andrei Agache</span>
       </div>
-      <audio id="vn-audio" preload="metadata" src="assets/v2/voice/note.m4a"></audio>
+      <!-- preload=auto, not metadata: at 416KB it buffers in one go, so scrubbing
+           works even on a server that ignores Range requests (the local preview does) -->
+      <audio id="vn-audio" preload="auto" src="assets/audio/boston-voice-note.m4a"></audio>
     </div>
     <div id="vn-rule"></div>
 
@@ -2488,16 +2490,20 @@ function vnInit(){
   vnBars  = Array.prototype.slice.call(document.querySelectorAll('#voicenote .vn-b'));
   vnHead  = document.getElementById('vn-head');
   if (!vnAudio) return;
-  vnAudio.addEventListener('loadedmetadata', function(){
-    if (isFinite(vnAudio.duration)) { vnReady = true; vnPaint(0); }
-  });
+  var vnMeta = function(){
+    if (isFinite(vnAudio.duration) && vnAudio.duration > 0) { vnReady = true; vnPaint(0); }
+  };
+  vnAudio.addEventListener('loadedmetadata', vnMeta);
+  /* A cached file can be ready before this runs, and then loadedmetadata never
+     fires for us -- so check the state we may have already missed. */
+  if (vnAudio.readyState >= 1) vnMeta();
   vnAudio.addEventListener('error', function(){ vnReady = false; });
   vnAudio.addEventListener('timeupdate', function(){ vnPaint(vnAudio.currentTime / vnAudio.duration); });
   /* timeupdate does not fire while paused, so a seek would leave the bars stale */
   vnAudio.addEventListener('seeked', function(){ vnPaint(vnAudio.currentTime / vnAudio.duration); });
   vnAudio.addEventListener('ended', function(){
     document.getElementById('voicenote').classList.remove('playing');
-    vnPaint(0); vnAudio.currentTime = 0;
+    vnAudio.currentTime = 0; vnPaint(0);
   });
   var wave = document.getElementById('vn-wave');
   var seek = function(e){
@@ -2524,7 +2530,12 @@ function vnPaint(p){
   vnBars.forEach(function(b, i){ b.classList.toggle('on', i < cut); });
   vnHead.setAttribute('x1', VN_X0 + p * (VN_X1 - VN_X0));
   vnHead.setAttribute('x2', VN_X0 + p * (VN_X1 - VN_X0));
-  if (vnReady) document.getElementById('vn-time').textContent = vnFmt(vnAudio.currentTime);
+  /* At rest the label is the note's length, the way the design shows it;
+     once it is running it counts up. */
+  if (vnReady) {
+    var atStart = vnAudio.paused && vnAudio.currentTime === 0;
+    document.getElementById('vn-time').textContent = vnFmt(atStart ? vnAudio.duration : vnAudio.currentTime);
+  }
 }
 function vnToggle(){
   var card = document.getElementById('voicenote');
