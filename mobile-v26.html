@@ -101,8 +101,6 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-dim-fixed + .cfg-dim{margin-top:18px}
 .cfg-dim-fixed .cfg-dim-lab{margin-bottom:0}
 .cfg-dim-fixed-val{font-size:15px;color:var(--gray)}
-.cfg-size-note{margin-top:14px;font-size:12.5px;line-height:1.4;color:var(--gray);display:none}
-.cfg-size-note.on{display:block}
 #dim-isl-row{display:none}
 #dim-isl-row.on{display:block}
 .cfg-shape-label strong{font-size:14px;font-weight:600;display:block}
@@ -633,7 +631,6 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
             <button type="button" class="cfg-dim-edit" onclick="editDim('isl')" aria-label="Scrie lungimea insulei"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
           </div>
         </div>
-        <p class="cfg-size-note" id="cfg-size-note">Canapeaua dreaptă se face într-o singură mărime. Alege un colțar dacă vrei să reglezi lungimea.</p>
       </section>
 
       <!-- Nevoi de lifestyle section removed per request, kept in markup for easy restore -->
@@ -1467,9 +1464,13 @@ function paintDim(which){
 }
 function renderSizeSliders(){
   var corner = isCorner();
+  /* A straight sofa has no length to set, so "Alege mărimea" doesn't appear at all -- neither
+     the card nor its chip. An empty step reads as a step you failed to complete. */
+  document.getElementById('sec-size').style.display = corner ? '' : 'none';
+  var chip = document.querySelector('.cfg-chip[data-sec="size"]');
+  if (chip) chip.style.display = corner ? '' : 'none';
   document.getElementById('dim-len-val').textContent = sel.len + ' cm';
   document.getElementById('dim-isl-row').classList.toggle('on', corner);
-  document.getElementById('cfg-size-note').classList.toggle('on', !corner);
   document.getElementById('dim-isl-lab').textContent = sel.layout === 'dreapta' ? 'Lungime pe dreapta' : 'Lungime pe stânga';
   document.getElementById('dim-isl').value = sel.isl;
   paintDim('isl');
