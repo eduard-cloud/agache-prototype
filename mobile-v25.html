@@ -198,6 +198,11 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-seg.sm.on{padding:3px 11px 3px 3px}
 .cfg-seg.sm .dot{width:26px;height:26px}
 .cfg-seg.sm .nm{font-size:13px}
+/* A colour family the current material can't produce stays on screen, greyed and inert,
+   rather than disappearing: a row that loses pills as you change material reflows under your
+   thumb and hides the fact that the colour exists at all -- it just isn't in this fabric.
+   pointer-events:none also takes care of the press feedback, so a dead pill never animates. */
+.cfg-seg.is-unavailable, .cfg-fpill.is-unavailable{opacity:.4;pointer-events:none}
 
 .cfg-fabric-divider{margin-top:60px}
 .cfg-fabric-toolrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
@@ -1401,9 +1406,9 @@ function renderFabricPillRow(){
    Dots are real fabric rather than a flat colour circle, for the reason the material pills
    are real texture: a photo of an actual beige tells you more than a beige disc. */
 /* Which colour families are still reachable, given every active filter EXCEPT the colour one.
-   Catifea carries no pink, so with Catifea on there is no "Roz" to offer and the pill has no
-   business being on screen. Deliberately ignores the colour filter itself: scoring against it
-   too would leave only the family you just tapped, collapsing the strip to a single pill.
+   Catifea carries no pink, so with Catifea on there is no "Roz" to offer and its pill goes
+   inert. Deliberately ignores the colour filter itself: scoring against it too would leave
+   only the family you just tapped and grey out every other pill in the strip.
    null until the first applyFabricFilters run, which reads as "everything is available" --
    correct, since nothing is filtered before then. */
 var COLOR_FAMILY_AVAILABLE = null;
@@ -1458,7 +1463,7 @@ function renderColorPillRow(){
 function syncColorPillRow(){
   document.querySelectorAll('#cfg-color-pillrow .cfg-seg').forEach(function(seg){
     var fam = seg.dataset.fam;
-    seg.style.display = (!COLOR_FAMILY_AVAILABLE || COLOR_FAMILY_AVAILABLE[fam]) ? '' : 'none';
+    seg.classList.toggle('is-unavailable', !!COLOR_FAMILY_AVAILABLE && !COLOR_FAMILY_AVAILABLE[fam]);
     seg.classList.toggle('on', appliedFilters.indexOf(fam) > -1);
   });
 }
@@ -1535,8 +1540,9 @@ function renderFsheetColorPills(){
   var culWrap = document.getElementById('fsheet-culoare');
   culWrap.innerHTML = '';
   FILTER_GROUPS[0].options.forEach(function(opt){
-    if (COLOR_FAMILY_AVAILABLE && !COLOR_FAMILY_AVAILABLE[opt]) return;
-    culWrap.appendChild(makeFsheetPill(opt));
+    var pill = makeFsheetPill(opt);
+    if (COLOR_FAMILY_AVAILABLE && !COLOR_FAMILY_AVAILABLE[opt]) pill.classList.add('is-unavailable');
+    culWrap.appendChild(pill);
   });
 }
 function renderFsheetPills(){
@@ -1622,7 +1628,7 @@ function applyFabricFilters(){
 
   /* Cross-filter: material (plus properties and price) decides which colour families exist at
      all, and a family that just went out of reach can't stay selected -- it would be an
-     invisible filter still emptying the grid, with no pill left on screen to switch it off.
+     invisible filter still emptying the grid, sitting behind a pill that's now greyed out.
      Drop it and let the other filters stand. Counting happens after this, so the Filtre badge
      never counts a colour that no longer has a pill. */
   COLOR_FAMILY_AVAILABLE = availableColorFamilies(pillDefs, byCat.prop, priceMin, priceMax);
