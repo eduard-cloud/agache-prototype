@@ -569,18 +569,10 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-sum-zone-sw{width:32px;height:32px;border-radius:50%;flex:0 0 auto;overflow:hidden;display:block}
 .cfg-sum-zone-sw img{width:100%;height:100%;object-fit:cover}
 
-/* ══ v27: material lock, zone switch, zone tabs ══ */
-.cfg-matlock{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--hair);border-radius:12px;padding:10px 12px;margin-bottom:14px}
-.cfg-matlock-thumb{width:40px;height:40px;border-radius:8px;overflow:hidden;flex:0 0 auto;background:var(--chipbg)}
-.cfg-matlock-thumb img{width:100%;height:100%;object-fit:cover}
-.cfg-matlock-text{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px}
-.cfg-matlock-text strong{font-size:14px;font-weight:500;color:var(--ink)}
-.cfg-matlock-text span{font-size:11.5px;line-height:1.35;color:var(--gray)}
-.cfg-matlock-link{flex:0 0 auto;background:none;border:none;padding:0;font-size:13px;font-weight:500;color:var(--ink);text-decoration:underline}
+/* ══ v27: zone switch and zone tabs ══ */
 .cfg-zone-switch{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;background:none;border:none;padding:0 0 16px;text-align:left}
 .cfg-zone-switch-text{display:flex;flex-direction:column;gap:2px;min-width:0}
 .cfg-zone-switch-text strong{font-size:14px;font-weight:500;color:var(--ink)}
-.cfg-zone-switch-text span{font-size:11.5px;line-height:1.35;color:var(--gray)}
 .cfg-switch{flex:0 0 auto;width:44px;height:26px;border-radius:13px;background:#DDD;position:relative;transition:background-color .16s}
 .cfg-switch .knob{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .16s}
 .cfg-zone-switch.on .cfg-switch{background:var(--ink)}
@@ -725,23 +717,10 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
       <section class="cfg-sec" id="sec-colors-grid">
         <h3 class="cfg-title">Alege culoarea</h3>
 
-        <!-- v27: the material is settled by now, so it stops being a choice here and becomes a
-             header that states the rule once, in the positive: same material everywhere, colours
-             free to differ. Cheaper than discovering the constraint by hitting a disabled tile. -->
-        <div class="cfg-matlock" id="cfg-matlock">
-          <span class="cfg-matlock-thumb"><img id="cfg-matlock-img" alt=""></span>
-          <span class="cfg-matlock-text">
-            <strong id="cfg-matlock-name">Luna</strong>
-            <span>Toate zonele sunt din același material. Culorile pot fi diferite.</span>
-          </span>
-          <button type="button" class="cfg-matlock-link" onclick="scrollCfgTo('color')">Schimbă</button>
-        </div>
-
         <!-- Most people want one colour, so zones stay folded away until asked for. -->
         <button type="button" class="cfg-zone-switch" id="cfg-zone-switch" onclick="toggleZoneMode()" aria-pressed="false">
           <span class="cfg-zone-switch-text">
             <strong>Culori diferite pe zone</strong>
-            <span id="cfg-zone-switch-sub">Acum toată canapeaua are o singură culoare</span>
           </span>
           <span class="cfg-switch"><span class="knob"></span></span>
         </button>
@@ -2133,6 +2112,10 @@ function applyFabricFilters(){
      .cfg-col-section.first-visible solves, and for the same reason a CSS :first-of-type can't:
      hidden groups are display:none, not removed. */
   if (firstShownTitle) firstShownTitle.classList.add('first-visible');
+  /* In zone mode the grid is down to one collection, so the running total above it has to say
+     what's actually on screen rather than the catalogue's full 191. */
+  if (sel.zoneMode) document.getElementById('cfg-color-sub').textContent =
+    visibleCount + (visibleCount === 1 ? ' opțiune' : ' opțiuni');
   var noFilters = !pillDefs.length && !appliedFilters.length && !priceFiltered;
   var optionCount = noFilters ? totalColorCount() : visibleCount;
   document.getElementById('cfg-color-sub').textContent = optionCount + (optionCount === 1 ? ' opțiune' : ' opțiuni');
@@ -2563,9 +2546,6 @@ function renderZoneUI(){
   var sw = document.getElementById('cfg-zone-switch');
   sw.classList.toggle('on', !!sel.zoneMode);
   sw.setAttribute('aria-pressed', sel.zoneMode ? 'true' : 'false');
-  document.getElementById('cfg-zone-switch-sub').textContent = sel.zoneMode
-    ? 'Toate zonele rămân din același material'
-    : 'Acum toată canapeaua are o singură culoare';
   var tabs = document.getElementById('cfg-zonetabs');
   tabs.classList.toggle('on', !!sel.zoneMode);
   tabs.innerHTML = '';
@@ -2583,9 +2563,6 @@ function renderZoneUI(){
       tabs.appendChild(b);
     });
   }
-  var c = COLLECTIONS[sel.collectionSlug];
-  document.getElementById('cfg-matlock-name').textContent = c.name;
-  document.getElementById('cfg-matlock-img').src = fabricAsset(sel.colorName);
 }
 /* The lit tile follows whichever zone is being edited, not the sofa as a whole. */
 function syncSwatchSelection(){
