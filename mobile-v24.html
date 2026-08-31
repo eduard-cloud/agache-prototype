@@ -143,6 +143,25 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
 .sw-samples span{text-decoration:underline}
 .sw-samples svg{width:14px;height:14px;display:block;flex:0 0 14px}
 
+/* ══ Voice note (Figma 1122:11892) ══ */
+#voicenote{background:var(--stroke);border:1px solid var(--stroke);border-radius:8px;overflow:hidden;padding:12px 16px 10px;display:flex;flex-direction:column;gap:8px;justify-content:center;width:100%}
+#voicenote .vn-top{display:flex;align-items:center;justify-content:space-between;width:100%}
+#voicenote .vn-play{width:27.71px;height:32px;padding:0;display:flex;align-items:center;justify-content:center;flex:0 0 27.71px;color:#1D1E1F}
+#voicenote .vn-play svg{display:block}
+#voicenote .vn-play .vn-pause{display:none}
+#voicenote.playing .vn-play .vn-ico{display:none}
+#voicenote.playing .vn-play .vn-pause{display:block}
+#voicenote .vn-wave{width:211px;height:32px;flex:0 0 211px;cursor:pointer;touch-action:none}
+#voicenote .vn-wave svg{display:block;width:100%;height:100%;overflow:visible}
+#voicenote .vn-b{stroke:var(--c8);stroke-width:2;stroke-linecap:round}
+#voicenote .vn-b.on{stroke:#1D1E1F}
+#voicenote .vn-head{stroke:#1D1E1F;stroke-width:1;stroke-linecap:round}
+#voicenote .vn-av{width:32px;height:32px;flex:0 0 32px;border-radius:50%;object-fit:cover}
+#voicenote .vn-meta{display:flex;align-items:center;justify-content:space-between;width:100%;font-size:10px;font-weight:400;letter-spacing:-.2px;line-height:1.2;color:var(--black);white-space:nowrap}
+#voicenote .vn-l{display:flex;align-items:center;gap:16px;width:153px}
+#voicenote .vn-tr{text-decoration:underline;padding:0;font-size:10px;letter-spacing:-.2px;line-height:1.2;color:var(--black)}
+#vn-rule{height:1px;background:var(--stroke);width:100%;margin:20px 0}
+
 /* CTAs */
 #ctas{margin-top:40px;display:flex;flex-direction:column;gap:8px}
 .btn-buy{background:var(--red);color:#fff;border-radius:9999px;font-size:16px;font-weight:500;letter-spacing:var(--ls-16);line-height:1.2;padding:20px 24px;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;transition:transform .1s,background .2s}
@@ -599,6 +618,26 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
 
   <!-- Product info (v2 buy-box, redesigned per Figma 750:8627) -->
   <div id="buybox" class="px">
+    <!-- Voice note (Figma 1122:11892) -->
+    <div id="voicenote">
+      <div class="vn-top">
+        <button class="vn-play" id="vn-play" aria-label="Redă nota vocală" onclick="vnToggle()">
+          <svg class="vn-ico" width="27.71" height="32" viewBox="0 0 27.7128 32" fill="currentColor"><path d="M26.2128 13.2102c2 1.1547 2 4.0415 0 5.1962L7.5 29.2102C5.5 30.3649 3 28.9216 3 26.6122V5.00447C3 2.69507 5.5 1.2517 7.5 2.4064L26.2128 13.2102Z"/></svg>
+          <svg class="vn-pause" width="24" height="28" viewBox="0 0 24 28" fill="currentColor"><rect x="2" y="1" width="7.5" height="26" rx="3.75"/><rect x="14.5" y="1" width="7.5" height="26" rx="3.75"/></svg>
+        </button>
+        <div class="vn-wave" id="vn-wave">
+          <svg viewBox="0 0 213 33" fill="none" preserveAspectRatio="none"><line class="vn-b" x1="3" y1="10" x2="3" y2="23"/><line class="vn-b" x1="8" y1="10" x2="8" y2="23"/><line class="vn-b" x1="14" y1="10" x2="14" y2="23"/><line class="vn-b" x1="20" y1="6" x2="20" y2="27"/><line class="vn-b" x1="26" y1="12" x2="26" y2="21"/><line class="vn-b" x1="32" y1="6" x2="32" y2="27"/><line class="vn-b" x1="38" y1="1" x2="38" y2="32"/><line class="vn-b" x1="44" y1="12" x2="44" y2="21"/><line class="vn-b" x1="50" y1="6" x2="50" y2="27"/><line class="vn-b" x1="56" y1="6" x2="56" y2="27"/><line class="vn-b" x1="62" y1="10" x2="62" y2="23"/><line class="vn-b" x1="68" y1="12" x2="68" y2="21"/><line class="vn-b" x1="74" y1="12" x2="74" y2="21"/><line class="vn-b" x1="80" y1="10" x2="80" y2="23"/><line class="vn-b" x1="86" y1="6" x2="86" y2="27"/><line class="vn-b" x1="92" y1="12" x2="92" y2="21"/><line class="vn-b" x1="98" y1="6" x2="98" y2="27"/><line class="vn-b" x1="104" y1="1" x2="104" y2="32"/><line class="vn-b" x1="110" y1="12" x2="110" y2="21"/><line class="vn-b" x1="116" y1="6" x2="116" y2="27"/><line class="vn-b" x1="122" y1="6" x2="122" y2="27"/><line class="vn-b" x1="128" y1="10" x2="128" y2="23"/><line class="vn-b" x1="134" y1="6" x2="134" y2="27"/><line class="vn-b" x1="140" y1="6" x2="140" y2="27"/><line class="vn-b" x1="146" y1="10" x2="146" y2="23"/><line class="vn-b" x1="152" y1="12" x2="152" y2="21"/><line class="vn-b" x1="158" y1="6" x2="158" y2="27"/><line class="vn-b" x1="164" y1="6" x2="164" y2="27"/><line class="vn-b" x1="170" y1="10" x2="170" y2="23"/><line class="vn-b" x1="176" y1="12" x2="176" y2="21"/><line class="vn-b" x1="182" y1="6" x2="182" y2="27"/><line class="vn-b" x1="188" y1="6" x2="188" y2="27"/><line class="vn-b" x1="194" y1="10" x2="194" y2="23"/><line class="vn-b" x1="200" y1="6" x2="200" y2="27"/><line class="vn-b" x1="206" y1="12" x2="206" y2="21"/><line class="vn-b" x1="212" y1="14" x2="212" y2="19"/><line class="vn-head" id="vn-head" x1="0.5" y1="3.5" x2="0.5" y2="29.5"/></svg>
+        </div>
+        <img class="vn-av" src="assets/v2/voice/avatar.png" alt="Andrei Agache">
+      </div>
+      <div class="vn-meta">
+        <span class="vn-l"><span id="vn-time">00:15</span><button class="vn-tr" onclick="toast('Transcriptul urmează')">Transcript</button></span>
+        <span>Andrei Agache</span>
+      </div>
+      <audio id="vn-audio" preload="metadata" src="assets/v2/voice/note.m4a"></audio>
+    </div>
+    <div id="vn-rule"></div>
+
     <div class="p-rate-row">
       <div class="p-rate">
         <svg class="star" width="14" height="14" viewBox="0 0 24 24" fill="#121212"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
@@ -2439,6 +2478,67 @@ function toggleFavorite(btn){
   var on = btn.classList.toggle('on');
   toast(on ? 'Adăugat la favorite' : 'Eliminat din favorite');
 }
+
+/* ══ Voice note ══ shell: the file drops in at assets/v2/voice/note.m4a.
+   Until it does, the card still reads exactly as the design and a tap says so. */
+var vnAudio, vnBars, vnHead, vnReady = false;
+var VN_X0 = 0.5, VN_X1 = 212;
+function vnInit(){
+  vnAudio = document.getElementById('vn-audio');
+  vnBars  = Array.prototype.slice.call(document.querySelectorAll('#voicenote .vn-b'));
+  vnHead  = document.getElementById('vn-head');
+  if (!vnAudio) return;
+  vnAudio.addEventListener('loadedmetadata', function(){
+    if (isFinite(vnAudio.duration)) { vnReady = true; vnPaint(0); }
+  });
+  vnAudio.addEventListener('error', function(){ vnReady = false; });
+  vnAudio.addEventListener('timeupdate', function(){ vnPaint(vnAudio.currentTime / vnAudio.duration); });
+  /* timeupdate does not fire while paused, so a seek would leave the bars stale */
+  vnAudio.addEventListener('seeked', function(){ vnPaint(vnAudio.currentTime / vnAudio.duration); });
+  vnAudio.addEventListener('ended', function(){
+    document.getElementById('voicenote').classList.remove('playing');
+    vnPaint(0); vnAudio.currentTime = 0;
+  });
+  var wave = document.getElementById('vn-wave');
+  var seek = function(e){
+    if (!vnReady) return;
+    var r = wave.getBoundingClientRect();
+    var p = Math.max(0, Math.min(1, ((e.touches ? e.touches[0].clientX : e.clientX) - r.left) / r.width));
+    vnAudio.currentTime = p * vnAudio.duration; vnPaint(p);
+  };
+  wave.addEventListener('pointerdown', function(e){
+    seek(e); wave.setPointerCapture(e.pointerId);
+    var mv = function(ev){ seek(ev); };
+    var up = function(){ wave.removeEventListener('pointermove', mv); wave.removeEventListener('pointerup', up); };
+    wave.addEventListener('pointermove', mv); wave.addEventListener('pointerup', up);
+  });
+}
+function vnFmt(s){
+  if (!isFinite(s)) s = 0;
+  var m = Math.floor(s / 60), r = Math.floor(s % 60);
+  return (m < 10 ? '0' : '') + m + ':' + (r < 10 ? '0' : '') + r;
+}
+function vnPaint(p){
+  p = Math.max(0, Math.min(1, p || 0));
+  var cut = p * vnBars.length;
+  vnBars.forEach(function(b, i){ b.classList.toggle('on', i < cut); });
+  vnHead.setAttribute('x1', VN_X0 + p * (VN_X1 - VN_X0));
+  vnHead.setAttribute('x2', VN_X0 + p * (VN_X1 - VN_X0));
+  if (vnReady) document.getElementById('vn-time').textContent = vnFmt(vnAudio.currentTime);
+}
+function vnToggle(){
+  var card = document.getElementById('voicenote');
+  if (!vnReady){ toast('Nota vocală nu este încă încărcată'); return; }
+  if (vnAudio.paused){
+    var v = document.querySelector('#hero video'); if (v && !v.paused) v.pause();
+    vnAudio.play().then(function(){ card.classList.add('playing'); })
+                  .catch(function(){ toast('Nota vocală nu poate fi redată'); });
+  } else {
+    vnAudio.pause(); card.classList.remove('playing');
+  }
+}
+vnInit();
+
 function addExtra(btn, label){
   var on = btn.classList.toggle('on');
   btn.style.background = on ? '#1D1D1F' : '';
