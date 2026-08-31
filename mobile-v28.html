@@ -2879,7 +2879,7 @@ function setActiveCfgChip(sec, instant, followNav){
   var cfgEl = document.getElementById('cfg');
   var sheet = document.getElementById('cfg-sheet');
   var handle = document.getElementById('cfg-handle');
-  var startY = 0, startH = 0, dragging = false;
+  var startY = 0, startH = 0, dragging = false, baseH = 0;
 
   function minMax(){
     var total = cfgEl.clientHeight;
@@ -2907,16 +2907,40 @@ function setActiveCfgChip(sec, instant, followNav){
     if (!dragging) return;
     dragging = false;
     sheet.classList.remove('dragging');
+    /* Where the shopper left it becomes the new resting height the scroll collapse works from. */
+    baseH = sheet.getBoundingClientRect().height;
   }
   handle.addEventListener('pointerup', endDrag);
   handle.addEventListener('pointercancel', endDrag);
 
-  window.addEventListener('resize', function(){ setSheetH(sheet.getBoundingClientRect().height); });
+  window.addEventListener('resize', function(){
+    baseH = cfgEl.clientHeight * REST_RATIO;
+    setSheetH(baseH);
+  });
 
-  /* v28: the sheet opens at 68% rather than 60% -- the preview above it was holding a fifth of
-     the screen for a sofa that reads fine 20% smaller, while the card below it was cut off mid
-     question on a phone. Drag still overrides this in both directions. */
-  setSheetH(cfgEl.clientHeight * 0.68);
+  /* v28: the preview gives way as you read. Scrolling the sheet grows it centimetre for
+     centimetre with the scroll, so the sofa shrinks to a thumbnail while you're deep in the
+     colour grid and comes back the moment you scroll to the top -- the reference does the same
+     thing. Growing the sheet only reveals more content at its bottom, so scrollTop doesn't move
+     and there's no feedback loop between the two. */
+  var scrollEl = document.getElementById('cfg-scroll');
+  var ticking = false;
+  scrollEl.addEventListener('scroll', function(){
+    if (dragging || ticking) return;
+    ticking = true;
+    requestAnimationFrame(function(){
+      ticking = false;
+      var room = minMax().max - baseH;
+      if (room <= 0) return;
+      setSheetH(baseH + Math.min(scrollEl.scrollTop, room));
+    });
+  }, { passive: true });
+
+  /* The sheet opens at 68% rather than 60% -- the preview was holding a fifth of the screen for
+     a sofa that reads fine 20% smaller, while the card below was cut off mid question. */
+  var REST_RATIO = 0.68;
+  baseH = cfgEl.clientHeight * REST_RATIO;
+  setSheetH(baseH);
 })();
 
 /* ══════════ Init ══════════ */
