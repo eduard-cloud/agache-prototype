@@ -570,6 +570,8 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
       <section class="cfg-sec" id="sec-colors-grid">
         <h3 class="cfg-title">Alege culoarea</h3>
 
+        <div class="cfg-fabric-pillrow" id="cfg-color-pillrow"></div>
+
         <div class="cfg-fabric-toolrow">
           <button type="button" class="cfg-filter-btn" id="cfg-filter-btn" onclick="openFilterSheet()" aria-label="Filtre">
             <svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.3337 4.66666H7.33366M9.33366 11.3333H3.33366M9.33366 11.3333C9.33366 12.4379 10.2291 13.3333 11.3337 13.3333C12.4382 13.3333 13.3337 12.4379 13.3337 11.3333C13.3337 10.2288 12.4382 9.33332 11.3337 9.33332C10.2291 9.33332 9.33366 10.2288 9.33366 11.3333ZM6.66699 4.66666C6.66699 5.77123 5.77156 6.66666 4.66699 6.66666C3.56242 6.66666 2.66699 5.77123 2.66699 4.66666C2.66699 3.56209 3.56242 2.66666 4.66699 2.66666C5.77156 2.66666 6.66699 3.56209 6.66699 4.66666Z" stroke="#1D1D1F" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1390,6 +1392,76 @@ function renderFabricPillRow(){
     }));
   });
 }
+
+/* ══ Colour strip under "Alege culoarea" -- the Culoare families from the Filtre sheet,
+   rebuilt as the same .cfg-seg pill the material strip above uses, so both cards open the
+   same way: a scrollable row of photo + label chips. It writes to appliedFilters, the very
+   same state the sheet's Culoare group writes to, so the two can never disagree -- pick
+   "Verde" here and the sheet opens with Verde already on (and the Filtre count reflects it).
+   Dots are real fabric rather than a flat colour circle, for the reason the material pills
+   are real texture: a photo of an actual beige tells you more than a beige disc. */
+/* Which colour families are still reachable, given every active filter EXCEPT the colour one.
+   Catifea carries no pink, so with Catifea on there is no "Roz" to offer and the pill has no
+   business being on screen. Deliberately ignores the colour filter itself: scoring against it
+   too would leave only the family you just tapped, collapsing the strip to a single pill.
+   null until the first applyFabricFilters run, which reads as "everything is available" --
+   correct, since nothing is filtered before then. */
+var COLOR_FAMILY_AVAILABLE = null;
+function availableColorFamilies(pillDefs, propFilters, priceMin, priceMax){
+  var fams = {};
+  ALL_SWATCHES.forEach(function(sw){
+    var c = sw.collection;
+    var matOK = !pillDefs.length || pillDefs.some(function(pd){
+      return pd.stems.some(function(stem){ return c.materialTypes.some(function(t){ return t.indexOf(stem) > -1; }); });
+    });
+    if (!matOK) return;
+    if (propFilters.length && !propFilters.every(function(f){ return propMatch(f, c); })) return;
+    var pr = collectionPrice(sw.slug);
+    if (pr < priceMin || pr > priceMax) return;
+    fams[colorFamilyRO(sw.hex)] = true;
+  });
+  return fams;
+}
+function buildColorSeg(fam){
+  var seg = document.createElement('div');
+  seg.className = 'cfg-seg' + (appliedFilters.indexOf(fam) > -1 ? ' on' : '');
+  seg.dataset.fam = fam;
+  /* The dot is the family's own colour, straight off FAMILY_CHIP_STYLE -- the exact swatch
+     the Filtre sheet's Culoare chips are painted with, so "Roz" is pink in both places. It was
+     briefly a photo of a real fabric from the family (mirroring the material strip, which
+     shows real texture); that fails here, because the catalogue's pink and red fabrics are
+     dusty and dark, and a dark plum circle labelled "Roz" is worse than no picture. Texture
+     carries a material; a colour just needs to be the colour. .cfg-seg .dot already carries an
+     inset hairline, which is what keeps the palest of these (Bej, Verde, Gri) from dissolving
+     into the white pill. */
+  var style = FAMILY_CHIP_STYLE[fam];
+  seg.innerHTML =
+    '<span class="dot" style="background:' + (style ? style.bg : '#e6e6e6') + '"></span>' +
+    '<span class="nm">' + fam + '</span>';
+  seg.onclick = function(){
+    var i = appliedFilters.indexOf(fam);
+    if (i > -1) appliedFilters.splice(i, 1); else appliedFilters.push(fam);
+    renderFsheetPills();
+    applyFabricFilters();
+  };
+  return seg;
+}
+function renderColorPillRow(){
+  var wrap = document.getElementById('cfg-color-pillrow');
+  wrap.innerHTML = '';
+  FAMILY_ORDER.forEach(function(fam){ wrap.appendChild(buildColorSeg(fam)); });
+}
+/* Selection is toggled in place rather than rebuilt: the row is wider than the card, and a
+   rebuild would snap it back to "Bej" every time you tapped something you'd scrolled to.
+   Called from applyFabricFilters, so the strip also follows changes made in the Filtre sheet
+   or by Resetează. */
+function syncColorPillRow(){
+  document.querySelectorAll('#cfg-color-pillrow .cfg-seg').forEach(function(seg){
+    var fam = seg.dataset.fam;
+    seg.style.display = (!COLOR_FAMILY_AVAILABLE || COLOR_FAMILY_AVAILABLE[fam]) ? '' : 'none';
+    seg.classList.toggle('on', appliedFilters.indexOf(fam) > -1);
+  });
+}
 function setColorGridCols(n, el){
   document.getElementById('cfg-fabric-sections').classList.toggle('cfg-grid3', n === 3);
   document.querySelectorAll('.cfg-gridbtn').forEach(function(b){ b.classList.remove('on'); });
@@ -1459,11 +1531,17 @@ function renderFsheetMaterialPill(){
     }));
   });
 }
-function renderFsheetPills(){
-  renderFsheetMaterialPill();
+function renderFsheetColorPills(){
   var culWrap = document.getElementById('fsheet-culoare');
   culWrap.innerHTML = '';
-  FILTER_GROUPS[0].options.forEach(function(opt){ culWrap.appendChild(makeFsheetPill(opt)); });
+  FILTER_GROUPS[0].options.forEach(function(opt){
+    if (COLOR_FAMILY_AVAILABLE && !COLOR_FAMILY_AVAILABLE[opt]) return;
+    culWrap.appendChild(makeFsheetPill(opt));
+  });
+}
+function renderFsheetPills(){
+  renderFsheetMaterialPill();
+  renderFsheetColorPills();
   var propWrap = document.getElementById('fsheet-prop');
   propWrap.innerHTML = '';
   FILTER_GROUPS[1].options.forEach(function(opt){ propWrap.appendChild(makeFsheetPill(opt)); });
@@ -1534,6 +1612,30 @@ function applyFabricFilters(){
   var priceMin = priceMinEl ? parseInt(priceMinEl.value, 10) : PRICE_MIN_DEFAULT;
   var priceMax = priceMaxEl ? parseInt(priceMaxEl.value, 10) : PRICE_MAX_DEFAULT;
   var priceFiltered = priceMin > PRICE_MIN_DEFAULT || priceMax < PRICE_MAX_DEFAULT;
+
+  var byCat = { culoare: [], prop: [] };
+  appliedFilters.forEach(function(f){
+    if (FAMILY_ORDER.indexOf(f) > -1) byCat.culoare.push(f);
+    else byCat.prop.push(f);
+  });
+  var pillDefs = FABRIC_PILLS.filter(function(p){ return activeFabricPills.indexOf(p.key) > -1; });
+
+  /* Cross-filter: material (plus properties and price) decides which colour families exist at
+     all, and a family that just went out of reach can't stay selected -- it would be an
+     invisible filter still emptying the grid, with no pill left on screen to switch it off.
+     Drop it and let the other filters stand. Counting happens after this, so the Filtre badge
+     never counts a colour that no longer has a pill. */
+  COLOR_FAMILY_AVAILABLE = availableColorFamilies(pillDefs, byCat.prop, priceMin, priceMax);
+  var reachable = byCat.culoare.filter(function(f){ return COLOR_FAMILY_AVAILABLE[f]; });
+  if (reachable.length !== byCat.culoare.length){
+    byCat.culoare = reachable;
+    appliedFilters = appliedFilters.filter(function(f){
+      return FAMILY_ORDER.indexOf(f) === -1 || COLOR_FAMILY_AVAILABLE[f];
+    });
+  }
+  syncColorPillRow();
+  renderFsheetColorPills();
+
   var totalFilters = appliedFilters.length + activeFabricPills.length + (priceFiltered ? 1 : 0);
   var btn = document.getElementById('cfg-filter-btn');
   var cnt = document.getElementById('cfg-filter-cnt');
@@ -1542,13 +1644,6 @@ function applyFabricFilters(){
   var navChip = document.getElementById('cfg-nav-filter-chip');
   document.getElementById('cfg-nav-filter-cnt').textContent = totalFilters;
   navChip.classList.toggle('has-count', totalFilters > 0);
-
-  var byCat = { culoare: [], prop: [] };
-  appliedFilters.forEach(function(f){
-    if (FAMILY_ORDER.indexOf(f) > -1) byCat.culoare.push(f);
-    else byCat.prop.push(f);
-  });
-  var pillDefs = FABRIC_PILLS.filter(function(p){ return activeFabricPills.indexOf(p.key) > -1; });
 
   var visibleCount = 0;
   document.querySelectorAll('#cfg-fabric-sections .mtile').forEach(function(tile){
@@ -2101,6 +2196,7 @@ function openFilterSheetFromNav(){
   sel.colorName = 'Luna ' + COLLECTIONS.luna.colors[0][0];
   renderNeeds();
   renderFabricPillRow();
+  renderColorPillRow();
   renderFabricSections();
   updatePreview();
   updateSummary();
