@@ -190,7 +190,17 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-sec .cfg-sec-sub{font-size:14px;line-height:1.5;color:var(--gray);margin-top:6px}
 /* The accessory lines in Sumar carry a name, a qty x price sub-line and a swatch, so the
    money on the right has to stay on one line the way every other row's value does. */
-#cfg-sum-acc .v{white-space:nowrap}
+/* v28: Sumar, laid out like the reference's overview -- a dimension line straight under the
+   headline, an underlined text toggle, then plain label/value lines under a bold group heading
+   with a single hairline beneath it. No per-row dividers and no swatches: the rows are read as
+   a spec sheet, and the fabric is already on screen in the pill above the sheet. */
+.cfg-sum-dims{font-size:15px;line-height:1.4;color:var(--ink);margin:-16px 0 10px}
+.cfg-sum-more{padding:0;font-size:15px;line-height:1.15;color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+.cfg-sum-grp{margin-top:26px}
+.cfg-sum-grp h4{font-size:15px;font-weight:600;letter-spacing:-.2px;line-height:1.15;padding-bottom:12px;border-bottom:1px solid var(--hair-on-card)}
+.cfg-sum-line{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:9px 0;font-size:15px;line-height:1.15}
+.cfg-sum-line .vl{text-align:right}
+.cfg-sum-line.total{margin-top:10px;padding-top:16px;border-top:1px solid var(--hair-on-card);font-weight:600}
 
 /* ══ v28: Accesorii ══
    Figma node 1147:12322. The design draws each accessory on a #f7f7f7 card with an #f2f2f2
@@ -856,36 +866,21 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
         <div class="cfg-acc" id="cfg-acc"></div>
       </section>
 
+      <!-- v28: Sumar follows the reference configurator's own overview -- the headline, the one
+           dimension line under it, a "Mai multe detalii" toggle and the delivery pill, with the
+           full spec kept folded away underneath in labelled groups (Layout, Dimensiuni, Culoare
+           și material, Accesorii). The old flat list of bold rows with swatches said everything
+           at once and read as a receipt; this says "you're done" first and keeps the receipt one
+           tap away. -->
       <section class="cfg-sec" id="sec-summary">
         <h3 class="cfg-title">Gata! Canapeaua ta arată superb.</h3>
-        <div id="cfg-summary-body">
-          <div class="rz-row">
-            <div class="k">Formă<em id="cfg-sum-shape-dim"></em></div>
-            <div class="vv"><span id="cfg-sum-shape-sw"><img id="cfg-sum-shape-img" style="width:100%;height:100%;object-fit:cover;border-radius:50%" alt=""></span><div class="v" id="cfg-sum-shape-name"></div></div>
-          </div>
-          <div class="rz-row">
-            <div class="k">Cotiere</div>
-            <div class="vv"><div class="v" id="cfg-sum-arm"></div></div>
-          </div>
-          <div class="rz-row">
-            <div class="k">Material<em id="cfg-sum-mat-texture"></em></div>
-            <div class="vv"><div class="v" id="cfg-sum-mat-name"></div></div>
-          </div>
-          <div class="rz-row" id="cfg-sum-color-row">
-            <div class="k">Culoare</div>
-            <div class="vv"><span id="cfg-sum-color-sw"><img id="cfg-sum-color-img" style="width:100%;height:100%;object-fit:cover;border-radius:50%" alt=""></span><div class="v" id="cfg-sum-color-name"></div></div>
-          </div>
-          <div id="cfg-sum-zones"></div>
-          <div id="cfg-sum-acc"></div>
-          <div class="rz-row" style="border-bottom:none">
-            <div class="k">Preț total</div>
-            <div class="vv"><div class="v" id="cfg-sum-price"></div></div>
-          </div>
-        </div>
+        <p class="cfg-sum-dims" id="cfg-sum-dims"></p>
+        <button type="button" class="cfg-sum-more" id="cfg-sum-more" aria-expanded="false" onclick="toggleSummaryDetails()">Mai multe detalii</button>
         <button type="button" class="cfg-delivery-pill">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="7" width="13" height="10"/><path d="M14 10h4l3 3v4h-7z"/><circle cx="6" cy="19" r="1.8"/><circle cx="17.5" cy="19" r="1.8"/></svg>
           <span>Livrare estimată în 3-4 săptămâni</span>
         </button>
+        <div id="cfg-sum-details" hidden></div>
       </section>
 
       <!-- Scroll room so the last card can still be brought to the top of the sheet. Lives
@@ -1568,67 +1563,71 @@ function updateSummary(){
   syncAccessories();
   var c = COLLECTIONS[sel.collectionSlug];
   var swInfo = SWATCH_INDEX[sel.colorName];
-  if (sel.shapeEl){
-    document.getElementById('cfg-sum-shape-name').textContent = sel.shapeEl.dataset.name;
-    document.getElementById('cfg-sum-shape-dim').textContent = currentDims();
-    document.getElementById('cfg-sum-shape-img').src = sel.shapeEl.querySelector('img').src;
-  }
-  document.getElementById('cfg-sum-arm').textContent =
-    (ARMS.filter(function(a){ return a.key === sel.arm; })[0] || ARMS[2]).label;
-  document.getElementById('cfg-sum-mat-name').textContent = c ? c.name : 'Nealeasă';
-  document.getElementById('cfg-sum-mat-texture').textContent = c ? textureLabel(c) + ' · ' + durabilityLabel(c) : '';
-  if (swInfo){
-    document.getElementById('cfg-sum-color-name').textContent = nearestColorName(swInfo.hex) + ' (' + sel.colorName + ')';
-    document.getElementById('cfg-sum-color-img').src = fabricAsset(sel.colorName);
-  } else {
-    /* Dropping the collection drops the colour with it -- the summary can't keep quoting a
-       swatch the sofa no longer has. */
-    document.getElementById('cfg-sum-color-name').textContent = 'Nealeasă';
-    document.getElementById('cfg-sum-color-img').removeAttribute('src');
-  }
-  document.getElementById('cfg-sum-color-sw').style.visibility = swInfo ? '' : 'hidden';
-  /* One "Culoare" row for a single-colour sofa; one row per zone once they differ. */
-  var zoneWrap = document.getElementById('cfg-sum-zones');
+  var colorLabel = swInfo ? nearestColorName(swInfo.hex) + ' (' + sel.colorName + ')' : 'Nealeasă';
+
+  document.getElementById('cfg-sum-dims').textContent = 'Dimensiuni: ' + currentDims();
+
+  var groups = [];
+  groups.push({ title:'Layout', lines:[
+    ['Formă', sel.shapeEl ? sel.shapeEl.dataset.name : layoutDef().label],
+    ['Cotiere', (ARMS.filter(function(a){ return a.key === sel.arm; })[0] || ARMS[2]).label]
+  ]});
+
+  var dims = [['Lungime', sel.len + ' cm']];
+  if (isCorner()) dims.push(['Lungime insulă', sel.isl + ' cm']);
+  dims.push(['Adâncime', VARIANT_DIMS['Canapea 3 locuri'].depth + ' cm']);
+  groups.push({ title:'Dimensiuni', lines:dims });
+
+  /* One "Culoare" line for a single-colour sofa; one line per zone once they differ. */
+  var mat = [['Material', c ? c.name : 'Nealeasă']];
+  if (c) mat.push(['Textură', textureLabel(c)]);
   var perZone = sel.zoneMode && ZONES.some(function(z){ return sel.zones[z.key] !== sel.zones.corp; });
-  document.getElementById('cfg-sum-color-row').style.display = perZone ? 'none' : '';
-  zoneWrap.innerHTML = '';
   if (perZone){
     ZONES.forEach(function(z){
       var name = sel.zones[z.key];
       var info = SWATCH_INDEX[name];
-      var row = document.createElement('div');
-      row.className = 'rz-row';
-      row.innerHTML = '<div class="k">' + z.label + '</div>' +
-        '<div class="vv"><span class="cfg-sum-zone-sw"><img src="' + fabricAsset(name) + '" alt=""></span>' +
-        '<div class="v">' + (info ? nearestColorName(info.hex) + ' (' + name + ')' : name) + '</div></div>';
-      zoneWrap.appendChild(row);
+      mat.push([z.label, info ? nearestColorName(info.hex) + ' (' + name + ')' : name]);
     });
+  } else {
+    mat.push(['Culoare', colorLabel]);
   }
-  /* Anything added from the Accesorii card gets its own line here, under the sofa's own
-     rows -- so the summary lists the whole order, not just the sofa -- and counts toward the
-     total, which is why the price bar moves when you add one. */
-  var accWrap = document.getElementById('cfg-sum-acc');
-  var accTotal = 0;
-  accWrap.innerHTML = '';
+  groups.push({ title:'Culoare și material', lines:mat });
+
+  /* Anything added from the Accesorii card gets its own line -- so the summary lists the whole
+     order, not just the sofa -- and counts toward the total, which is why the price bar moves
+     when you add one. */
+  var accLines = [], accTotal = 0;
   ACCESSORIES.forEach(function(acc){
     var st = accState[acc.id];
     if (!st.added) return;
     accTotal += acc.price * st.qty;
-    var info = SWATCH_INDEX[st.color];
-    var row = document.createElement('div');
-    row.className = 'rz-row';
-    row.innerHTML = '<div class="k">' + acc.name + '<em>' + st.qty + ' x ' + Math.round(acc.price) + ' lei' +
-        (st.color ? ' · ' + st.color : '') + '</em></div>' +
-      '<div class="vv">' + (info ? '<span class="cfg-sum-zone-sw"><img src="' + fabricAsset(st.color) + '" alt=""></span>' : '') +
-      '<div class="v">' + formatPrice(acc.price * st.qty) + ' lei</div></div>';
-    accWrap.appendChild(row);
+    accLines.push([acc.name + (st.qty > 1 ? ' x ' + st.qty : ''), formatPrice(acc.price * st.qty) + ' lei']);
   });
+  if (accLines.length) groups.push({ title:'Accesorii', lines:accLines });
+
   /* No collection yet -- quote the cheapest one this sofa can be made in, marked "de la". */
   var price = (c ? collectionPrice(sel.collectionSlug) : cheapestPrice()) + accTotal;
-  document.getElementById('cfg-sum-price').textContent = (c ? '' : 'de la ') + formatPrice(price) + ' lei';
+
+  var wrap = document.getElementById('cfg-sum-details');
+  wrap.innerHTML = groups.map(function(g){
+    return '<div class="cfg-sum-grp"><h4>' + g.title + '</h4>' + g.lines.map(function(l){
+      return '<div class="cfg-sum-line"><span class="lb">' + l[0] + '</span><span class="vl">' + l[1] + '</span></div>';
+    }).join('') + '</div>';
+  }).join('') +
+    '<div class="cfg-sum-line total"><span class="lb">Preț total</span><span class="vl">' +
+    (c ? '' : 'de la ') + formatPrice(price) + ' lei</span></div>';
+
   /* Floating CTA bar mirrors the PDP's own price style (see mobile-v12.html .p-price) --
      no decimals there, so match it here instead of reusing the 2-decimal summary format. */
   document.getElementById('cfg-price').textContent = (c ? '' : 'de la ') + Math.round(price).toLocaleString('ro-RO') + ' lei';
+}
+function toggleSummaryDetails(){
+  var wrap = document.getElementById('cfg-sum-details');
+  var btn = document.getElementById('cfg-sum-more');
+  var open = wrap.hidden;
+  wrap.hidden = !open;
+  btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  btn.textContent = open ? 'Ascunde detaliile' : 'Mai multe detalii';
 }
 
 /* ══ v26: layout x length ══
