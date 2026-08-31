@@ -1357,7 +1357,10 @@ var FAMILY_CHIP_STYLE = {
   'Gri':          { bg:'#DADCDF', fg:'#4A4D52' },
   'Negru':        { bg:'#1D1D1F', fg:'#ffffff' }
 };
-var PROP_OPTIONS = ['Impermeabil', 'Easy Clean', 'Pet Friendly', 'Piele sensibilă (OEKO-TEX®)'];
+/* 'Piele sensibilă (OEKO-TEX®)' dropped from the Proprietăți group per request. propMatch and
+   PROP_ICONS still know it, and the collections still carry it as a certification (it keeps
+   showing in a swatch's Detalii), so restoring the filter is just this one string. */
+var PROP_OPTIONS = ['Impermeabil', 'Easy Clean', 'Pet Friendly'];
 var FILTER_GROUPS = [
   { key:'culoare', label:'Culoare', options: FAMILY_ORDER },
   { key:'prop', label:'Proprietăți', options: PROP_OPTIONS }
