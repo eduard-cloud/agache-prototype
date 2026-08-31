@@ -453,7 +453,13 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
    scroll-container quirk), so the last card would end up flush against the right edge no matter
    what margin/padding it's given. A real trailing spacer element is the only reliable fix: its
    own box-width participates in scrollWidth like any other flex child. */
-.matd-slide{flex:0 0 85%;scroll-snap-align:center;min-width:0;height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;border-radius:20px;background:#fff;border:1px solid var(--hair)}
+.matd-slide{flex:0 0 85%;scroll-snap-align:center;min-width:0;height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;border-radius:20px;background:#fff;border:1px solid var(--hair);transition:filter .25s ease}
+/* The cards on either side are darkened so the centred one reads as the one in focus rather
+   than as one of three equals. brightness() rather than opacity: these sit on white, and fading
+   toward the sheet would wash the neighbours out instead of pushing them back. The class is set
+   from matdUpdateDots, the single place the current index changes, so it follows a tap on a dot
+   and a swipe alike -- after the snap settles, which is what the transition covers. */
+.matd-slide:not(.is-active){filter:brightness(.88)}
 .matd-slide:first-child{margin-left:20px}
 /* Video mode's single card -- edge-to-edge player, not the 4:3 hero strip used by the text
    cards. The card itself is sized to the video's own intrinsic ratio (height:auto, centered
@@ -479,10 +485,6 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .matd-spacer{flex:0 0 12px}
 .matd-hero{aspect-ratio:4/3;background-size:cover;background-position:center;border-radius:20px 20px 0 0}
 .matd-dots{flex:0 0 auto;display:flex;justify-content:center;gap:6px;padding:16px 0 20px}
-/* Video mode has a single card and so renders no dots. The empty row still held its 36px of
-   padding, which pushed the centred video card off-centre in a sheet now sized for the text
-   cards. */
-.matd-dots:empty{display:none}
 .matd-dots button{width:22px;height:3px;padding:0;border-radius:2px;border:none;background:rgba(0,0,0,.15)}
 .matd-dots button.on{background:var(--ink)}
 .matd-body{padding:20px 20px 28px}
@@ -2109,6 +2111,7 @@ function buildMaterialDetail(){
 }
 function matdUpdateDots(){
   Array.prototype.forEach.call(document.getElementById('matd-dots').children, function(b, k){ b.classList.toggle('on', k === matdIdx); });
+  Array.prototype.forEach.call(document.querySelectorAll('#matd-track .matd-slide'), function(sl, k){ sl.classList.toggle('is-active', k === matdIdx); });
 }
 /* Native scroll-snap drives the swipe itself (real momentum/rubber-banding); this just figures
    out which card ended up nearest-centered after the user drags, so the dots stay in sync
