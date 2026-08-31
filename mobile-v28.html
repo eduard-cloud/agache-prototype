@@ -625,9 +625,14 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-zonetab.on .cfg-zonetab-name{color:var(--ink);font-weight:600}
 
 /* ── cta bar -- the reference's floating bar: just a big price + a pill button, nothing else ── */
-.cfg-cta{flex:0 0 auto;background:#fff;border-top:1px solid var(--hair);display:flex;align-items:center;justify-content:space-between;padding:14px 24px}
-.cfg-cta .pr{font-size:24px;font-weight:500;letter-spacing:-.72px;color:var(--ink)}
-.cfg-cta .bb{height:46px;background:var(--red);color:#fff;border-radius:23px;padding:0 20px;font-size:14px;font-weight:500;display:flex;align-items:center}
+.cfg-cta{flex:0 0 auto;background:#fff;border-top:1px solid var(--hair);display:flex;align-items:center;justify-content:space-between;padding:14px 24px;transition:padding .18s ease}
+.cfg-cta .pr{font-size:24px;font-weight:500;letter-spacing:-.72px;color:var(--ink);transition:font-size .18s ease}
+.cfg-cta .bb{height:46px;background:var(--red);color:#fff;border-radius:23px;padding:0 20px;font-size:14px;font-weight:500;display:flex;align-items:center;transition:height .18s ease,padding .18s ease}
+/* v28: the bar stays put but gives up height once you start reading -- same move as the
+   reference, where the price block condenses on scroll so the sheet gets the room back. */
+.cfg-cta.condensed{padding:8px 20px}
+.cfg-cta.condensed .pr{font-size:19px}
+.cfg-cta.condensed .bb{height:40px;padding:0 16px}
 </style>
 </head>
 <body>
@@ -2930,6 +2935,9 @@ function setActiveCfgChip(sec, instant, followNav){
     ticking = true;
     requestAnimationFrame(function(){
       ticking = false;
+      /* The CTA bar condenses past the first bit of scroll, and stays condensed until you
+         come back to the top. */
+      document.getElementById('cfg-cta').classList.toggle('condensed', scrollEl.scrollTop > 24);
       var room = minMax().max - baseH;
       if (room <= 0) return;
       setSheetH(baseH + Math.min(scrollEl.scrollTop, room));
