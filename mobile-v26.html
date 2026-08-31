@@ -72,8 +72,31 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 /* v26: a size that has no real variant for the current layout (4 seats on a straight sofa)
    stays visible but out of reach, with one line under the grid saying why. */
 .cfg-shape-tile.off{opacity:.32;pointer-events:none}
-.cfg-size-note{margin-top:10px;font-size:12.5px;line-height:1.4;color:var(--gray);display:none}
-.cfg-size-note.on{display:block}
+/* ── v26: the length sliders ──
+   A bordered track that reads as one field: the value sits inside it, right-aligned, and the
+   part already spent is filled. The reference greys the part to the RIGHT of the handle; we
+   fill the left instead, which is what a slider means everywhere else -- same picture at mid
+   travel, none of the "why is my remaining length highlighted" hesitation in testing.
+   The native input rides invisibly on top so the whole track stays draggable. */
+.cfg-dim + .cfg-dim{margin-top:18px}
+.cfg-dim-lab{font-size:14px;font-weight:500;color:var(--ink);margin-bottom:8px}
+.cfg-dim-line{display:flex;align-items:center;gap:10px}
+.cfg-dim-track{position:relative;flex:1 1 auto;height:52px;background:#fff;border:1px solid var(--hair);border-radius:10px;overflow:hidden}
+.cfg-dim-fill{position:absolute;top:0;bottom:0;left:0;width:0;background:#ECECEC}
+/* the handle: a thin bar at the fill's edge, the way the reference draws it */
+.cfg-dim-fill::after{content:'';position:absolute;right:-1px;top:12px;bottom:12px;width:2px;border-radius:1px;background:#9A9A9A}
+.cfg-dim-val{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:15px;color:var(--ink);pointer-events:none}
+.cfg-dim-track input[type=range]{position:absolute;inset:0;width:100%;height:100%;margin:0;background:none;-webkit-appearance:none;appearance:none;opacity:0;cursor:pointer}
+.cfg-dim-track input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:34px;height:52px}
+.cfg-dim-track input[type=range]::-moz-range-thumb{width:34px;height:52px;border:none}
+/* typed entry: the pencil swaps the read-only value for a real input in the same spot */
+.cfg-dim-input{position:absolute;right:16px;top:50%;transform:translateY(-50%);width:96px;text-align:right;font-size:15px;font-family:inherit;color:var(--ink);border:none;background:none;padding:0;z-index:2}
+.cfg-dim-input:focus{outline:none}
+.cfg-dim-edit{flex:0 0 auto;width:52px;height:52px;border:1px solid var(--hair);border-radius:10px;background:#fff;color:var(--ink);display:flex;align-items:center;justify-content:center}
+.cfg-dim-edit:active{background:var(--chipbg)}
+#sec-size .cfg-shape-label{margin-top:18px}
+#dim-isl-row{display:none}
+#dim-isl-row.on{display:block}
 .cfg-shape-label strong{font-size:14px;font-weight:600;display:block}
 .cfg-shape-label span{font-size:12px;color:var(--gray);margin-top:2px;display:block}
 .fchip{display:flex;align-items:center;gap:7px;background:var(--chipbg);border-radius:8px;height:30px;padding:0 10px;font-size:13px}
@@ -580,12 +603,35 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 
       <section class="cfg-sec" id="sec-size">
         <h3 class="cfg-title">Alege mărimea</h3>
-        <div class="cfg-shape-row" id="size-grid"></div>
+        <!-- One slider per length the shopper can actually move. A straight sofa has a single
+             run, so it gets one; a colțar adds the island, and which side it is named after
+             follows the layout. Depth is fixed on Boston, so it never becomes a slider. -->
+        <div class="cfg-dim" id="dim-len-row">
+          <div class="cfg-dim-lab">Lungime</div>
+          <div class="cfg-dim-line">
+            <div class="cfg-dim-track">
+              <div class="cfg-dim-fill" id="dim-len-fill"></div>
+              <span class="cfg-dim-val" id="dim-len-val">245 cm</span>
+              <input type="range" id="dim-len" min="185" max="305" step="30" value="245" aria-label="Lungime" oninput="onDimInput()">
+            </div>
+            <button type="button" class="cfg-dim-edit" onclick="editDim('len')" aria-label="Scrie lungimea"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
+          </div>
+        </div>
+        <div class="cfg-dim" id="dim-isl-row">
+          <div class="cfg-dim-lab" id="dim-isl-lab">Lungime pe stânga</div>
+          <div class="cfg-dim-line">
+            <div class="cfg-dim-track">
+              <div class="cfg-dim-fill" id="dim-isl-fill"></div>
+              <span class="cfg-dim-val" id="dim-isl-val">170 cm</span>
+              <input type="range" id="dim-isl" min="140" max="260" step="30" value="170" aria-label="Lungimea insulei" oninput="onDimInput()">
+            </div>
+            <button type="button" class="cfg-dim-edit" onclick="editDim('isl')" aria-label="Scrie lungimea insulei"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
+          </div>
+        </div>
         <div class="cfg-shape-label">
           <strong id="cfg-shape-sel-name">Canapea 3 locuri</strong>
           <span id="cfg-shape-sel-dim">245 x 100 cm</span>
         </div>
-        <p class="cfg-size-note" id="cfg-size-note">Varianta de 4 locuri se face doar pe colțar.</p>
       </section>
 
       <!-- Nevoi de lifestyle section removed per request, kept in markup for easy restore -->
@@ -947,8 +993,30 @@ var SHAPE_TIER_PRICE = {
 function currentShapeName(){
   return sel.shapeEl ? sel.shapeEl.dataset.name : 'Canapea 3 locuri';
 }
+/* Reference dimensions of each real variant, and what a centimetre of length costs.
+   Agache sells four fixed SKUs; the sliders let a shopper land between them, so the price has
+   to interpolate. The rate isn't invented: the only pair of variants that differ by length
+   alone is Coltar 3 locuri -> Coltar 4 locuri (the island grows 170 -> 255 cm), so each tier's
+   own real price gap over those 85 cm is the per-cm rate for that tier. Every one of the four
+   real combinations therefore still prices at exactly its live Shopify price; only the
+   in-between lengths are interpolated, and the curve is continuous across the 3->4 seat
+   switchover because both sides measure from their own variant's reference dims. */
+var VARIANT_DIMS = {
+  'Canapea 3 locuri':                     { len:245, isl:0,   depth:100 },
+  'Coltar 3 locuri cu insula pe stanga':  { len:255, isl:170, depth:170 },
+  'Coltar 3 locuri cu insula pe dreapta': { len:255, isl:170, depth:170 },
+  'Coltar 4 locuri':                      { len:255, isl:255, depth:255 }
+};
+function cmRate(tier){
+  return (SHAPE_TIER_PRICE['Coltar 4 locuri'][tier] - SHAPE_TIER_PRICE['Coltar 3 locuri cu insula pe stanga'][tier]) / 85;
+}
 function collectionPrice(slug, shapeName){
-  return SHAPE_TIER_PRICE[shapeName || currentShapeName()][COLLECTIONS[slug].tier];
+  var name = shapeName || currentShapeName();
+  var tier = COLLECTIONS[slug].tier;
+  var base = SHAPE_TIER_PRICE[name][tier];
+  var ref = VARIANT_DIMS[name];
+  var extra = (sel.len - ref.len) + (ref.isl ? (sel.isl - ref.isl) : 0);
+  return Math.round((base + cmRate(tier) * extra) / 5) * 5;
 }
 function shapePriceRange(shapeName){
   var t = SHAPE_TIER_PRICE[shapeName || currentShapeName()];
@@ -1322,7 +1390,7 @@ function updateSummary(){
   var swInfo = SWATCH_INDEX[sel.colorName];
   if (sel.shapeEl){
     document.getElementById('cfg-sum-shape-name').textContent = sel.shapeEl.dataset.name;
-    document.getElementById('cfg-sum-shape-dim').textContent = sel.shapeEl.dataset.dim;
+    document.getElementById('cfg-sum-shape-dim').textContent = currentDims();
     document.getElementById('cfg-sum-shape-img').src = sel.shapeEl.querySelector('img').src;
   }
   document.getElementById('cfg-sum-mat-name').textContent = c.name;
@@ -1338,39 +1406,33 @@ function updateSummary(){
   document.getElementById('cfg-price').textContent = Math.round(price).toLocaleString('ro-RO') + ' lei';
 }
 
-/* ══ v26: layout x size ══
-   Layout = how the sofa is arranged, Mărime = how many seats. Together they resolve to one
-   of the four real variants in #shape-grid, which is what everything downstream (price,
-   preview, summary) still reads. Straight + 4 seats isn't a variant Agache sells, so that
-   one tile switches off instead of silently redirecting the shopper somewhere else. */
+/* ══ v26: layout x length ══
+   Layout says how the sofa is arranged; the sliders in "Mărime" say how long it is. Together
+   they resolve to one of the four real variants in #shape-grid, which is still what preview,
+   summary and pricing read. A straight sofa has one run and so one slider; a colțar adds the
+   island, and past ~212 cm of island it stops being the 3-seat corner and becomes the 4-seat
+   one -- the same switch the shopper would make by hand on the old tile grid. */
 var LAYOUTS = [
-  { key:'drept',   label:'Canapea dreaptă',   img:'assets/shape-3seat.png' },
-  { key:'stanga',  label:'Colțar pe stânga',  img:'assets/shape-corner-left.png' },
-  { key:'dreapta', label:'Colțar pe dreapta', img:'assets/shape-corner-right.png' }
+  { key:'drept',   label:'Canapea dreaptă',   img:'assets/shape-3seat.png',        len:245, lenMin:185, lenMax:305 },
+  { key:'stanga',  label:'Colțar pe stânga',  img:'assets/shape-corner-left.png',  len:255, isl:170, lenMin:195, lenMax:315 },
+  { key:'dreapta', label:'Colțar pe dreapta', img:'assets/shape-corner-right.png', len:255, isl:170, lenMin:195, lenMax:315 }
 ];
-var SIZES = [
-  { key:'3', label:'3 locuri' },
-  { key:'4', label:'4 locuri' }
-];
-var VARIANT_BY_COMBO = {
-  'drept|3':   'Canapea 3 locuri',
-  'stanga|3':  'Coltar 3 locuri cu insula pe stanga',
-  'dreapta|3': 'Coltar 3 locuri cu insula pe dreapta',
-  'stanga|4':  'Coltar 4 locuri',
-  'dreapta|4': 'Coltar 4 locuri'
-};
-/* Which picture a size tile shows depends on the layout you're already on -- picking
-   "3 locuri" under "Colțar pe stânga" should show that corner, not a straight sofa. */
-function comboImage(layoutKey, sizeKey){
-  var name = VARIANT_BY_COMBO[layoutKey + '|' + sizeKey];
-  if (!name) name = VARIANT_BY_COMBO[layoutKey + '|3'];
-  var tile = document.querySelector('#shape-grid .cfg-shape-tile[data-name="' + name + '"]');
-  return tile ? tile.querySelector('img').getAttribute('src') : 'assets/shape-3seat.png';
+/* Halfway between the 3-seat island (170) and the 4-seat one (255). */
+var ISLAND_4SEAT_FROM = 212;
+function layoutDef(key){
+  return LAYOUTS.filter(function(l){ return l.key === (key || sel.layout); })[0] || LAYOUTS[0];
 }
-function shapeTileFor(layoutKey, sizeKey){
-  return document.querySelector('#shape-grid .cfg-shape-tile[data-name="' + VARIANT_BY_COMBO[layoutKey + '|' + sizeKey] + '"]');
+function isCorner(key){ return (key || sel.layout) !== 'drept'; }
+function variantName(){
+  if (!isCorner()) return 'Canapea 3 locuri';
+  if (sel.isl >= ISLAND_4SEAT_FROM) return 'Coltar 4 locuri';
+  return sel.layout === 'stanga' ? 'Coltar 3 locuri cu insula pe stanga'
+                                 : 'Coltar 3 locuri cu insula pe dreapta';
 }
-function shapeTileMarkup(src, alt, on){
+function currentDims(){
+  return sel.len + ' x ' + (isCorner() ? sel.isl : VARIANT_DIMS['Canapea 3 locuri'].depth) + ' cm';
+}
+function shapeTileMarkup(src, alt){
   return '<span class="cfg-shape-imw"><img src="' + src + '" alt="' + alt + '">' +
          '<span class="cfg-shape-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span></span>';
 }
@@ -1386,42 +1448,78 @@ function renderLayoutGrid(){
     t.onclick = function(){ pickLayout(l.key, t); };
     row.appendChild(t);
   });
-  document.getElementById('cfg-layout-sel-name').textContent =
-    (LAYOUTS.filter(function(l){ return l.key === sel.layout; })[0] || LAYOUTS[0]).label;
+  document.getElementById('cfg-layout-sel-name').textContent = layoutDef().label;
 }
-function renderSizeGrid(){
-  var row = document.getElementById('size-grid');
-  row.innerHTML = '';
-  SIZES.forEach(function(z){
-    var available = !!VARIANT_BY_COMBO[sel.layout + '|' + z.key];
-    var t = document.createElement('button');
-    t.type = 'button';
-    t.className = 'cfg-shape-tile' + (z.key === sel.size ? ' on' : '') + (available ? '' : ' off');
-    t.dataset.size = z.key;
-    t.disabled = !available;
-    t.innerHTML = shapeTileMarkup(comboImage(sel.layout, z.key), z.label);
-    t.onclick = function(){ pickSize(z.key, t); };
-    row.appendChild(t);
-  });
-  var note = document.getElementById('cfg-size-note');
-  note.classList.toggle('on', !VARIANT_BY_COMBO[sel.layout + '|4']);
+/* Both sliders are painted the same way: fill to the handle, value inside the track. */
+function paintDim(which){
+  var input = document.getElementById('dim-' + which);
+  var pct = (input.value - input.min) / (input.max - input.min) * 100;
+  document.getElementById('dim-' + which + '-fill').style.width = pct + '%';
+  document.getElementById('dim-' + which + '-val').textContent = input.value + ' cm';
+}
+function renderSizeSliders(){
+  var corner = isCorner();
+  /* 30 cm a step -- one module, the distance between two stitch lines on the seat. Each
+     layout's range is anchored on its own real length (245 straight, 255 colțar) so the
+     variant Agache actually stocks is always one of the stops, never a value between two. */
+  var def = layoutDef();
+  var lenInput = document.getElementById('dim-len');
+  lenInput.min = def.lenMin;
+  lenInput.max = def.lenMax;
+  document.getElementById('dim-isl-row').classList.toggle('on', corner);
+  document.getElementById('dim-isl-lab').textContent = sel.layout === 'dreapta' ? 'Lungime pe dreapta' : 'Lungime pe stânga';
+  document.getElementById('dim-len').value = sel.len;
+  document.getElementById('dim-isl').value = sel.isl;
+  paintDim('len');
+  paintDim('isl');
+}
+function onDimInput(){
+  sel.len = +document.getElementById('dim-len').value;
+  sel.isl = +document.getElementById('dim-isl').value;
+  paintDim('len');
+  paintDim('isl');
+  applyCombo();
+}
+/* The pencil is for shoppers who already know their wall: it swaps the read-only value for a
+   real number field, then snaps whatever they type back onto the slider's own range. */
+function editDim(which){
+  var track = document.getElementById('dim-' + which).parentNode;
+  if (track.querySelector('.cfg-dim-input')) return;
+  var input = document.getElementById('dim-' + which);
+  var val = track.querySelector('.cfg-dim-val');
+  var box = document.createElement('input');
+  box.type = 'number';
+  box.className = 'cfg-dim-input';
+  box.value = input.value;
+  box.min = input.min; box.max = input.max; box.step = input.step;
+  val.style.visibility = 'hidden';
+  track.appendChild(box);
+  box.focus();
+  box.select();
+  function commit(){
+    var n = +box.value;
+    if (!isNaN(n) && n){
+      n = Math.min(+input.max, Math.max(+input.min, Math.round(n / +input.step) * +input.step));
+      input.value = n;
+      onDimInput();
+    }
+    box.remove();
+    val.style.visibility = '';
+  }
+  box.addEventListener('blur', commit);
+  box.addEventListener('keydown', function(e){ if (e.key === 'Enter') box.blur(); });
 }
 function applyCombo(){
-  var tile = shapeTileFor(sel.layout, sel.size);
+  var tile = document.querySelector('#shape-grid .cfg-shape-tile[data-name="' + variantName() + '"]');
   if (tile) pickCfgShape(tile);
 }
 function pickLayout(key, el){
+  var def = layoutDef(key);
   sel.layout = key;
-  /* Straight sofas only come as 3 seats -- fall back rather than leave a dead selection. */
-  if (!VARIANT_BY_COMBO[sel.layout + '|' + sel.size]) sel.size = '3';
+  sel.len = def.len;
+  sel.isl = def.isl || LAYOUTS[1].isl;
   renderLayoutGrid();
-  renderSizeGrid();
-  applyCombo();
-  if (el) pressFeedback(el);
-}
-function pickSize(key, el){
-  sel.size = key;
-  renderSizeGrid();
+  renderSizeSliders();
   applyCombo();
   if (el) pressFeedback(el);
 }
@@ -1431,7 +1529,7 @@ function pickCfgShape(el){
   el.classList.add('on');
   sel.shapeEl = el;
   document.getElementById('cfg-shape-sel-name').textContent = el.dataset.name;
-  document.getElementById('cfg-shape-sel-dim').textContent = el.dataset.dim;
+  document.getElementById('cfg-shape-sel-dim').textContent = currentDims();
   updatePreview();
   updateSummary();
   updatePriceSliderBounds();
@@ -2416,9 +2514,10 @@ function openFilterSheetFromNav(){
 (function(){
   sel.shapeEl = document.querySelector('#shape-grid .cfg-shape-tile[data-name="Canapea 3 locuri"]');
   sel.layout = 'drept';
-  sel.size = '3';
+  sel.len = LAYOUTS[0].len;
+  sel.isl = LAYOUTS[1].isl;
   renderLayoutGrid();
-  renderSizeGrid();
+  renderSizeSliders();
   sel.collectionSlug = 'luna';
   sel.colorName = 'Luna ' + COLLECTIONS.luna.colors[0][0];
   renderNeeds();
