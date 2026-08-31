@@ -358,7 +358,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
    renderFabricSections), so each material's colors get their own labeled block instead of
    being mixed into one grid. */
 .cfg-matgroup-title{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:17px;font-weight:600;letter-spacing:-.2px;color:var(--ink);margin-top:28px}
-.cfg-matgroup-name{flex:1 1 auto;min-width:0}
+.cfg-matgroup-name{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:6px}
 /* the material rides on the right of the collection's name, in the quieter weight of a spec */
 .cfg-matgroup-right{flex:0 0 auto;display:flex;align-items:center;gap:2px;font-size:13px;font-weight:400;letter-spacing:0;color:var(--gray)}
 .cfg-matgroup-title:first-of-type,.cfg-matgroup-title.first-visible{margin-top:0}
@@ -2233,12 +2233,14 @@ function renderFabricSections(){
     var pillDef = materialTypeMatch(c);
     var h = document.createElement('div');
     h.className = 'cfg-matgroup-title';
-    h.innerHTML = '<span class="cfg-matgroup-name">' + c.name + '</span>' +
-      '<span class="cfg-matgroup-right">' + (pillDef ? pillDef.label : '') +
-        (pillDef ? '<button type="button" class="cfg-matgroup-info" aria-label="Detalii ' + pillDef.label + '" onclick="openMaterialGroupDetail(\'' + pillDef.key + '\')">' +
+    /* The info button belongs to the collection, so it sits right after its name; the material
+       stays on the far right as a plain label. */
+    h.innerHTML = '<span class="cfg-matgroup-name">' + c.name +
+        (pillDef ? '<button type="button" class="cfg-matgroup-info" aria-label="Detalii ' + c.name + '" onclick="openMaterialGroupDetail(\'' + pillDef.key + '\')">' +
           '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 11v5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7.7" r="1.1" fill="currentColor"/></svg>' +
         '</button>' : '') +
-      '</span>';
+      '</span>' +
+      '<span class="cfg-matgroup-right">' + (pillDef ? pillDef.label : '') + '</span>';
     wrap.appendChild(h);
     appendFabricGrid(wrap, swatches);
   });
