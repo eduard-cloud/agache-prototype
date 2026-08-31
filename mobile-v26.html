@@ -1,0 +1,2454 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Configurator Boston – Agache</title>
+<script>document.documentElement.classList.add('enter-r');</script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
+<style>
+html{overflow-x:hidden}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --purple:#4d35ff; --ink:#121212; --gray:#707173; --gray2:#b6b9be;
+  --hair:#ececec; --chipbg:#f2f2f2; --graysec:#f5f5f7;
+  /* v25: the grey card each main configurator section now sits on, and the hairline that
+     still has to read as a divider once it's drawn on that card instead of on white. */
+  --seccard:#f7f7f7; --hair-on-card:rgba(0,0,0,.09);
+  --yellow:#feffbe; --yellow2:#ffffe0; --lav:#f6f5ff; --lavchip:#ebe8ff;
+  --blue:#eefbff; --cream:#f9f2df; --orange:#fa7800;
+  --red:#eb2f1e; --slate:#363944;
+}
+html,body{height:100%;-webkit-text-size-adjust:100%;overflow-x:hidden;overscroll-behavior-x:none}
+body{font-family:'DM Sans',sans-serif;color:var(--ink);background:#fff}
+button{cursor:pointer;border:none;background:none;font-family:inherit;color:inherit;-webkit-tap-highlight-color:transparent;transition:transform .12s ease,filter .12s ease}
+a{text-decoration:none;color:inherit}
+img,video{display:block;max-width:100%}
+
+/* ══ Universal "while pressing" feedback -- every button (plus the two div-based tap targets,
+   .cfg-seg material pills and .mtile/.sm-tile swatch tiles, which aren't <button> elements)
+   darkens and shrinks slightly for as long as it's held down, mirroring native touch feedback.
+   filter:brightness() darkens the rendered pixels directly instead of fading toward white the
+   way opacity would on light backgrounds, so it reads as "pressed" no matter the button's own
+   color. .mtile .info-i and .matd-video-playbtn self-center via transform:translate(-50%,-50%),
+   so they get their own override that keeps the centering and layers the press-scale on top
+   instead of replacing it. */
+button:active, .cfg-seg:active, .mtile:active, .sm-tile:active{transform:scale(.96);filter:brightness(.93)}
+.mtile .info-i:active, .matd-video-playbtn:active{transform:translate(-50%,-50%) scale(.9);filter:brightness(.93)}
+
+/* ══ Cross-page push transition (PDP ↔ v3 configurator) ══ */
+@keyframes pushInR{from{transform:translateX(100%)}to{transform:translateX(0)}}
+@keyframes pushOutR{to{transform:translateX(100%)}}
+html.enter-r body{animation:pushInR .26s cubic-bezier(.16,1,.3,1) both}
+body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
+
+/* ══ shared components reused verbatim from mobile-v2.html ══ */
+.circ-btn{width:32px;height:32px;border-radius:50%;background:#fff;border:1px solid #e3e3e3;display:flex;align-items:center;justify-content:center}
+.hbar{width:134px;height:5px;background:#d9d9d9;border-radius:3px;margin:8px auto 8px}
+/* Sizing/spacing checked against the reference configurator's own orientation section: tile row gap
+   8px (matches already), smaller 84px tiles instead of 92px, and a single compact 14px caption
+   line instead of a bold-name + grey-dimension pair (the reference's own orientation caption
+   is one plain 14px line, mb 12px -- not a two-line label block). */
+.cfg-shape-row{display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:0 0 4px;margin-bottom:12px;scroll-snap-type:x proximity}
+.cfg-shape-row::-webkit-scrollbar{display:none}
+.cfg-shape-tile{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start}
+.cfg-shape-imw{position:relative;width:84px;height:84px;overflow:hidden;display:flex;align-items:center;justify-content:center;transition:background-color .15s,border-color .15s;scroll-snap-align:start;background:#fff;border-radius:12px;border:1px solid var(--hair)}
+.cfg-shape-imw img{width:100%;height:100%;object-fit:contain}
+.cfg-shape-tile.on .cfg-shape-imw{border:2px solid var(--ink);background:#fff}
+/* Formă and material-type chips both get the reference's grey fill on actual selection (matches the
+   "Free parking" reference card exactly); Proprietăți pills alone stay border-only white per
+   earlier feedback, so don't copy this fill onto those. Press-only feedback (:active, plus
+   :hover as its desktop stand-in) still stays white/no-fill, so only committing the tap turns
+   the card grey -- press alone never looks already selected. */
+.cfg-shape-tile:not(.on):active .cfg-shape-imw{border:2px solid var(--ink);background:#fff}
+@media (hover:hover) and (pointer:fine){
+  .cfg-shape-tile:not(.on):hover .cfg-shape-imw{border:2px solid var(--ink);background:#fff}
+}
+/* Badge itself stays in markup (harmless, unused) -- the bordered/tinted tile from the card
+   redesign already communicates selection on its own, so the corner checkmark badge is
+   redundant now and hidden rather than removed, in case that treatment ever comes back. */
+.cfg-shape-check{display:none !important;position:absolute;right:6px;bottom:6px;width:18px;height:18px;border-radius:50%;background:var(--ink);align-items:center;justify-content:center}
+.cfg-shape-label{margin-top:0}
+/* v26: a size that has no real variant for the current layout (4 seats on a straight sofa)
+   stays visible but out of reach, with one line under the grid saying why. */
+.cfg-shape-tile.off{opacity:.32;pointer-events:none}
+.cfg-size-note{margin-top:10px;font-size:12.5px;line-height:1.4;color:var(--gray);display:none}
+.cfg-size-note.on{display:block}
+.cfg-shape-label strong{font-size:14px;font-weight:600;display:block}
+.cfg-shape-label span{font-size:12px;color:var(--gray);margin-top:2px;display:block}
+.fchip{display:flex;align-items:center;gap:7px;background:var(--chipbg);border-radius:8px;height:30px;padding:0 10px;font-size:13px}
+.rz-row{display:flex;align-items:center;justify-content:space-between;padding:20px 17px;border-bottom:1px solid var(--hair)}
+.rz-row .k{font-size:15px;font-weight:600}
+.rz-row .k em{display:block;font-style:normal;font-weight:400;font-size:13px;color:var(--gray);margin-top:3px}
+.rz-row .vv{display:flex;align-items:center;gap:10px}
+.rz-row .v{font-size:14px;font-weight:600}
+.rz-row .v i{font-style:normal;color:var(--gray2);font-weight:400}
+.ig{display:flex;gap:8px;color:var(--slate)}
+#toast{position:fixed;left:50%;bottom:34px;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;font-size:14px;padding:12px 22px;border-radius:22px;transition:transform .3s;z-index:120;white-space:nowrap}
+#toast.on{transform:translateX(-50%) translateY(0)}
+
+/* ══ #cfg shell ══ */
+#cfg{position:fixed;inset:0;max-width:480px;margin:0 auto;display:flex;flex-direction:column;height:100dvh;background:#fff;overflow:hidden}
+
+/* ── preview zone ── */
+#cfg-preview{position:relative;flex:1 1 auto;min-height:120px;overflow:hidden;background:var(--graysec)}
+#cfg-shape-img{width:100%;height:100%;object-fit:contain;background:var(--graysec)}
+#cfg-close{position:absolute;left:20px;top:20px;z-index:2;background:rgba(255,255,255,.9);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);border:none}
+#cfg-measure{position:absolute;right:20px;top:20px;z-index:2;width:40px;height:40px;padding:0;border-radius:50%;overflow:hidden;border:none}
+#cfg-measure img{width:100%;height:100%}
+#cfg-3d{position:absolute;right:20px;top:68px;z-index:2;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.85);box-shadow:0 1px 4px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
+#cfg-fabric-pill{position:absolute;left:16px;bottom:16px;z-index:2;display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.82);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);border-radius:9999px;padding:6px 16px 6px 6px;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+#cfg-fabric-pill .cfg-fabric-thumb{width:32px;height:32px;border-radius:50%;overflow:hidden;flex:0 0 auto}
+#cfg-fabric-pill .cfg-fabric-thumb img{width:100%;height:100%;object-fit:cover}
+#cfg-fabric-pill span#cfg-fabric-name{font-size:14px;font-weight:500;white-space:nowrap}
+
+/* ── bottom sheet ── */
+#cfg-sheet{position:relative;flex:0 0 auto;height:var(--sheet-h);background:#fff;border-radius:24px 24px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.14);display:flex;flex-direction:column;overflow:hidden;z-index:3}
+#cfg-sheet.dragging{transition:none}
+.cfg-handle{flex:0 0 auto;display:flex;justify-content:center;touch-action:none;padding-top:4px}
+.cfg-chips{flex:0 0 auto;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:0 16px 16px;border-bottom:1px solid var(--hair);scroll-behavior:smooth}
+.cfg-chips::-webkit-scrollbar{display:none}
+/* Nav chips: no outline on unselected (just ink text on transparent bg), and the
+   selected pill's checkmark lives in a permanently-reserved slot (fixed width, animated via
+   opacity/scale only) so a chip never changes size on select/deselect -- neighbors never get
+   pushed left or right, they just sit still while the pill fades to black underneath them. */
+.cfg-chip{flex:0 0 auto;display:flex;align-items:center;gap:5px;background:transparent;border:none;border-radius:9999px;padding:9px 16px 9px 12px;font-size:14px;letter-spacing:-.28px;white-space:nowrap;color:var(--ink);transition:background-color .15s,color .15s,transform .12s ease,filter .12s ease}
+/* Slot itself is a fixed 14px (that's what keeps the chip's total width constant, so
+   selecting never pushes neighbors) -- but the checkmark inside it grows in from width:0,
+   same technique the reference uses on its own tab icons, just clipped to a slot that doesn't move. */
+.cfg-chip .chip-check{width:14px;height:14px;flex:0 0 auto;overflow:hidden}
+.cfg-chip .chip-check svg{width:14px;height:14px;display:block;transform-origin:0 50%;transform:scaleX(0);transition:transform .14s linear}
+.cfg-chip.on{background:var(--ink);color:#fff}
+.cfg-chip.on .chip-check svg{transform:scaleX(1)}
+.cfg-chip .nav-cnt{display:none;width:18px;height:18px;border-radius:999px;background:#1D1D1F;color:#fff;font-size:11px;font-weight:400;align-items:center;justify-content:center;flex:0 0 auto}
+.cfg-chip.has-count .nav-cnt{display:flex}
+.cfg-chip.on .nav-cnt{background:#fff;color:#1D1D1F}
+/* ══ v25: every main section is its own grey card ══
+   Sections used to be separated by a hairline with 40px of air above and below, all on the
+   sheet's white. Here each one becomes a filled card instead -- the reference configurator's
+   pattern: a near-white fill (rgba(0,0,0,.03) over white, i.e. #f7f7f7), a soft radius, its
+   own padding, and a small gap to the next card, with no dividers anywhere. The scroll
+   container gives up most of its own side padding to the cards, so the content indent only
+   moves 24px -> 28px and the 4-across colour grid keeps essentially the same tile size.
+   Radius is 16px rather than the reference's 8px so the cards sit in the same radius family
+   as the rest of the configurator (.cfg-matdiff-btn 16px, the sheet itself 24px). */
+.cfg-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 12px 0}
+.cfg-sec{scroll-margin-top:12px;background:var(--seccard);border-radius:16px;padding:20px 16px 24px;margin:0 0 12px;border-bottom:none}
+.cfg-sec:last-of-type{margin-bottom:0}
+/* Hairlines drawn *inside* a card can't stay #ececec -- against #f7f7f7 that's a 1.5% step and
+   the row separators in Sumar simply disappear. They keep the same weight, just enough
+   contrast to survive the new background. The 17px side padding those rows carry from when
+   they were a full-bleed list on white goes too -- inside a card it left the labels indented
+   from both the card's own title and the ends of their own divider lines. */
+.cfg-sec .rz-row{border-bottom-color:var(--hair-on-card);padding-left:0;padding-right:0}
+.cfg-sec h3{font-size:18px;font-weight:600;letter-spacing:-.4px;line-height:1.15}
+.cfg-delivery-pill{width:100%;display:flex;align-items:center;gap:10px;background:#fff;border:none;border-radius:12px;padding:14px 16px;margin-top:16px;font-size:14px;font-weight:500;color:var(--ink)}
+.cfg-sec .cfg-sec-sub{font-size:14px;line-height:1.5;color:var(--gray);margin-top:6px}
+/* Apple-style config title: bold lead word(s) + period, then the description continues
+   inline in grey as part of the same sentence/paragraph, instead of a bold heading with a
+   separate grey line underneath. */
+h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.4;color:var(--ink);margin-bottom:24px}
+.cfg-fabric-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:24px}
+.cfg-fabric-head h3.cfg-title{margin-bottom:0}
+/* Card format matches Figma node 899:7869 exactly: 16px outer radius, 8px padding, 16px gap,
+   60x60 8px-radius thumbnail, two-line underlined label + trailing chevron. */
+.cfg-matdiff-btn{width:100%;display:flex;align-items:center;gap:16px;background:#fff;border:1px solid var(--graysec);border-radius:16px;padding:8px;text-align:left;margin-bottom:24px}
+.cfg-matdiff-swatch{position:relative;width:60px;height:60px;border-radius:8px;overflow:hidden;flex:0 0 auto;background:#fff}
+/* Loops just the 10s-12.7s window (see the swatch's inline JS below) -- a clean, static-camera
+   talking-head stretch with her hands down, before the clip cuts to a title card. The source
+   has a caption band burned in near the bottom of every frame, so this crop zooms in on just
+   the face, keeping the caption (and the title-card text elsewhere in the clip) out of frame. */
+.cfg-matdiff-swatch video{width:100%;height:100%;object-fit:cover;object-position:50% 0%;display:block;transform:scale(1.44);transform-origin:45% 45%}
+.cfg-matdiff-text{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;font-size:16px;font-weight:500;line-height:1.15;letter-spacing:-.03em;color:#1d1d1f}
+.cfg-matdiff-text span{text-decoration:underline;text-decoration-skip-ink:auto}
+.cfg-matdiff-plus{flex:0 0 auto;color:#1d1d1f}
+/* Last thing in the material card -- its own 24px would stack on the card's 24px padding. */
+.cfg-sec .cfg-matdiff-btn:last-child{margin-bottom:0}
+
+/* ── section 2a: household needs ── */
+.cfg-needs-row{display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:0 0 4px;margin-bottom:12px;scroll-snap-type:x proximity}
+.cfg-needs-row::-webkit-scrollbar{display:none}
+.cfg-needs-tile{flex:0 0 auto;width:92px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center}
+.cfg-needs-imw{position:relative;width:92px;height:92px;border-radius:4px;border:1px solid var(--hair);color:var(--ink);overflow:hidden;display:flex;align-items:center;justify-content:center;transition:box-shadow .15s;scroll-snap-align:start}
+.cfg-needs-imw svg{height:50px;width:auto;max-width:70%}
+.cfg-needs-tile.on .cfg-needs-imw{box-shadow:inset 0 0 0 2px var(--ink)}
+.cfg-needs-check{display:none;position:absolute;right:6px;bottom:6px;width:20px;height:20px;border-radius:50%;background:var(--ink);align-items:center;justify-content:center}
+.cfg-needs-tile.on .cfg-needs-check{display:flex}
+.cfg-needs-tile-name{display:block;font-size:12px;margin-top:6px;color:var(--ink);text-align:center}
+.cfg-needs-label{margin-top:14px;font-size:13px;color:var(--gray)}
+
+/* ── section 2b/3: fabric picker — top fabric-type pills, a Filtre sheet button, all collections stacked ── */
+.cfg-badge{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--slate)}
+.cfg-badge svg{flex:0 0 auto;width:14px;height:14px}
+
+.cfg-eyebrow{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);font-weight:600;margin:18px 0 8px}
+
+/* material-type picker: pill chips with a real close-up crop of that texture family plus a
+   label -- white fill w/ a light grey outline, unselected; grey-tinted fill w/ a black outline,
+   selected -- same reference amenity-card treatment as the Proprietăți pills and the Formă shape
+   cards, so every selectable chip in the configurator reads as one consistent pattern. A black
+   outline on the UNSELECTED state read as "already active" in usability testing (Diana,
+   2026-07); that finding is still respected here since black only ever appears once a pill is
+   actually on, not by default. Labels like "Neted" vs "Catifea" don't mean anything on their
+   own to someone who hasn't felt the fabric, so the photo carries the actual distinction and
+   the text just names it. */
+.cfg-fabric-pillrow{display:flex;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;gap:4px;margin-bottom:12px}
+.cfg-fabric-pillrow::-webkit-scrollbar{display:none}
+.cfg-seg{flex:0 0 auto;display:inline-flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--hair);border-radius:9999px;padding:6px 18px 6px 6px;color:var(--ink);transition:background-color .15s,color .15s,border-color .15s,transform .12s ease,filter .12s ease}
+.cfg-seg.on{background:#fff;border:2px solid var(--ink);color:var(--ink);padding:5px 17px 5px 5px}
+.cfg-seg .dot{width:36px;height:36px;border-radius:50%;flex:0 0 auto;background-size:650%;background-position:center;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.cfg-seg .nm{font-size:15px;font-weight:500;letter-spacing:-.2px;white-space:nowrap}
+/* same chip, smaller -- used in the Filtre sheet's Material group, wraps to a 2nd row if all 4 don't fit on one */
+.cfg-seg.sm{gap:6px;padding:4px 12px 4px 4px}
+.cfg-seg.sm.on{padding:3px 11px 3px 3px}
+.cfg-seg.sm .dot{width:26px;height:26px}
+.cfg-seg.sm .nm{font-size:13px}
+/* A colour family the current material can't produce stays on screen, greyed and inert,
+   rather than disappearing: a row that loses pills as you change material reflows under your
+   thumb and hides the fact that the colour exists at all -- it just isn't in this fabric.
+   pointer-events:none also takes care of the press feedback, so a dead pill never animates. */
+.cfg-seg.is-unavailable, .cfg-fpill.is-unavailable{opacity:.4;pointer-events:none}
+/* Still selected, but no longer contributing anything -- reads as "this is doing nothing right
+   now". It has to keep its tap target: greying is no reason to trap a filter in the on state,
+   and this is the one pill in the row you'd actually want to switch off. Lifted a little out of
+   the dim so the ink border and checkmark stay legible. */
+.cfg-seg.is-unavailable.on, .cfg-fpill.is-unavailable.on{opacity:.6;pointer-events:auto}
+
+.cfg-fabric-divider{margin-top:60px}
+.cfg-fabric-toolrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cfg-toolrow-right{display:flex;align-items:center;gap:8px;order:1}
+.cfg-color-count{font-size:13px;color:var(--gray);white-space:nowrap}
+/* grid density toggle hidden for now -- re-enable by dropping this rule */
+.cfg-gridtoggle{display:none;align-items:center;gap:4px}
+.cfg-gridbtn{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#707173}
+.cfg-gridbtn.on{color:#3d3d3f}
+.cfg-gridbtn.on{background:var(--chipbg)}
+
+/* Circular filter icon: no outline while unused, a black circle border once at
+   least one filter is applied, plus the active-filter count as a small black badge overlaid on
+   the top-right edge of the circle -- border and badge both key off .has-count together. */
+.cfg-filter-btn{order:2;flex:0 0 auto;position:relative;display:flex;align-items:center;justify-content:center;background:none;border:1.5px solid transparent;border-radius:50%;width:40px;height:40px;padding:0;color:#1D1D1F}
+.cfg-filter-btn.has-count{border-color:#121212}
+.cfg-filter-btn .cnt{display:none;position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:999px;background:#1D1D1F;color:#fff;font-size:11px;font-weight:600;align-items:center;justify-content:center;border:2px solid #fff}
+.cfg-filter-btn.has-count .cnt{display:flex}
+
+.cfg-filter-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+#fsheet-material{flex-wrap:wrap}
+#fsheet-culoare{gap:10px}
+.cfg-fpill-color{height:32px;padding:0 12px;border-radius:10px}
+.cfg-fpill-color.on{box-shadow:inset 0 0 0 2px var(--ink)}
+.cfg-fpill-color .fp-chk{display:none;width:14px;height:14px;border-radius:50%;background:#fff;align-items:center;justify-content:center;flex:0 0 auto}
+.cfg-fpill-color.on .fp-chk{display:flex}
+.cfg-fpill.on{background:var(--ink);color:#fff}
+/* Proprietăți pills recreated as reference-style amenity pills -- icon + label inside a full
+   rounded, bordered capsule. Selected state only thickens the border (1px->2px, ink) and stays
+   white -- no background fill -- instead of inverting to solid ink, since a solid fill on an
+   icon+text pill this size reads closer to a disabled state than an on state. Padding drops by
+   1px to match the thicker border so the pill doesn't grow and reflow its neighbors. */
+.cfg-fpill-amenity{height:48px;padding:0 20px;border-radius:9999px;border:1px solid var(--hair);background:#fff;gap:10px}
+.cfg-fpill-amenity .fp-icon{display:flex;flex:0 0 auto;color:var(--ink)}
+.cfg-fpill-amenity .fp-icon svg{width:20px;height:20px}
+.cfg-fpill-amenity span{font-size:14px;font-weight:500;white-space:nowrap}
+.cfg-fpill-amenity.on{border:2px solid var(--ink);background:#fff;color:var(--ink);padding:0 19px}
+@media (hover:hover) and (pointer:fine){
+  .cfg-fpill-amenity:not(.on):hover{background:var(--chipbg)}
+}
+
+.fsheet-overlay{display:none;position:fixed;inset:0;max-width:480px;margin:0 auto;background:rgba(0,0,0,.45);z-index:65;align-items:flex-end}
+.fsheet-overlay.open{display:flex}
+.fsheet-sheet{background:#fff;border-radius:24px 24px 0 0;width:100%;max-height:80vh;display:flex;flex-direction:column}
+.fsheet-head{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0}
+.fsheet-title{font-size:18px;font-weight:600}
+.fsheet-body{padding:16px 20px;flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.fsheet-group-h{font-size:13px;font-weight:600;margin-top:18px;padding-top:18px;border-top:1px solid var(--hair)}
+#fsheet-material-h{margin-top:0;padding-top:0;border-top:none}
+.fsheet-foot{display:flex;gap:10px;padding:14px 20px;border-top:1px solid var(--hair)}
+.fsheet-reset{flex:0 0 auto;font-size:14px;font-weight:500;color:var(--gray);padding:12px 8px}
+.fsheet-apply{flex:1 1 auto;background:var(--ink);color:#fff;border-radius:9999px;padding:12px;font-size:14px;font-weight:500;transition:opacity .15s,transform .12s ease}
+.fsheet-apply:disabled{opacity:.4}
+.price-slider{margin-top:12px;padding-bottom:32px}
+.fsheet-result-count{margin-top:-16px;font-size:13px;color:var(--gray)}
+.price-slider-vals{display:flex;justify-content:space-between;font-size:14px;font-weight:500;color:var(--ink);margin-bottom:14px}
+.price-slider-track{position:relative;height:20px}
+.price-slider-track::before{content:'';position:absolute;top:50%;left:0;right:0;height:4px;background:var(--hair);border-radius:2px;transform:translateY(-50%)}
+.price-slider-range{position:absolute;top:50%;height:4px;background:var(--ink);border-radius:2px;transform:translateY(-50%)}
+.price-slider-track input[type=range]{position:absolute;top:0;left:0;width:100%;height:20px;margin:0;background:none;pointer-events:none;-webkit-appearance:none;appearance:none}
+.price-slider-track input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;pointer-events:auto;width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.25);cursor:pointer}
+.price-slider-track input[type=range]::-moz-range-thumb{pointer-events:auto;width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.25);cursor:pointer;box-sizing:border-box}
+.price-slider-track input[type=range]::-webkit-slider-runnable-track{-webkit-appearance:none;background:none}
+.fsheet-empty{display:none;align-items:flex-start;gap:10px;background:var(--chipbg);border-radius:12px;padding:14px;margin-bottom:20px;color:var(--ink)}
+.fsheet-empty.show{display:flex}
+.fsheet-empty svg{flex:0 0 auto;margin-top:1px}
+.fsheet-empty p{font-size:13px;line-height:1.5}
+
+.cfg-col-section{padding-top:28px;border-top:1px solid var(--hair);margin-top:24px}
+/* Can't use :first-of-type here -- filtering hides sections via display:none rather than
+   removing them, so the first *visible* section is often not the first in DOM order and would
+   otherwise keep its border-top, leaving a stray divider line floating above it with nothing
+   above to divide from. JS toggles this class onto whichever section is actually first-visible. */
+.cfg-col-section.first-visible{border-top:none;margin-top:0}
+.cfg-col-head{display:flex;align-items:baseline;justify-content:space-between}
+.cfg-col-head .t{font-size:17px;font-weight:600;display:flex;align-items:center;gap:6px}
+.cfg-col-mattype-link{font-size:13px;font-weight:500;text-decoration:underline;color:var(--ink);background:none;border:none;padding:0;white-space:nowrap}
+.cfg-col-usps{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+.cfg-col-kpis{display:flex;align-items:center;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;column-gap:10px;margin-top:4px;-webkit-mask-image:linear-gradient(to right,#000 92%,transparent 100%);mask-image:linear-gradient(to right,#000 92%,transparent 100%)}
+.cfg-col-kpis::-webkit-scrollbar{display:none}
+.cfg-col-kpis .kpi{font-size:13px;font-weight:500;text-transform:uppercase;letter-spacing:.3px;color:var(--slate);white-space:nowrap;flex:0 0 auto}
+.cfg-col-kpis .kpi-sep{color:var(--gray2);flex:0 0 auto}
+.cfg-col-empty{padding:16px 0;font-size:13px;color:var(--gray)}
+
+/* ── color swatch tiles (shared by every collection's grid) ── */
+/* Material-type group title -- only rendered when 2+ fabric-type pills are active (see
+   renderFabricSections), so each material's colors get their own labeled block instead of
+   being mixed into one grid. */
+.cfg-matgroup-title{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:600;letter-spacing:-.2px;color:var(--ink);margin-top:28px}
+.cfg-matgroup-title:first-of-type,.cfg-matgroup-title.first-visible{margin-top:0}
+.cfg-matgroup-info{flex:0 0 auto;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#1d1d1f}
+.cfg-color-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 8px;margin-top:12px}
+#cfg-fabric-sections.cfg-grid3 .cfg-color-grid{grid-template-columns:repeat(3,1fr);gap:12px 10px}
+.mtile{position:relative;transition:transform .12s ease,filter .12s ease}
+.mtile .imw{position:relative;aspect-ratio:1;overflow:hidden}
+/* Source swatch photos are only 160x160 and mostly flat-looking at that size -- scaling the
+   image up within its cropped square magnifies whatever weave/nap texture is actually there,
+   which reads far more distinctly than the un-zoomed, nearly-flat crop did. */
+.mtile img{width:100%;height:100%;object-fit:cover;transform:scale(2.3);transform-origin:center}
+.mtile.on .imw::after{content:"";position:absolute;inset:0;border:2px solid var(--ink);box-shadow:inset 0 0 0 4px #fff}
+.mtile .lr{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+/* Main color grid: swatch only, no name underneath -- grid gap (set on .cfg-color-grid above)
+   is untouched, so tiles keep the exact same horizontal/vertical spacing, just shorter. */
+#cfg-fabric-sections .mtile .lr{display:none}
+.mtile .nm{font-size:12px}
+.mtile .info-i{display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:32px;height:32px;padding:0;background:none;border:none;box-shadow:none;z-index:2}
+.mtile.on .info-i{display:block}
+.info-i svg{width:32px;height:32px;pointer-events:none;display:block}
+
+/* ── individual swatch info modal (opened from a color tile's info button) ── */
+.swm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:60;align-items:flex-end}
+.swm-overlay.open{display:flex}
+.swm-sheet{background:#fff;border-radius:24px 24px 0 0;width:100%;max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 -8px 30px rgba(0,0,0,.14)}
+.swm-hero{position:relative;height:260px}
+.swm-hero img{width:100%;height:100%;object-fit:cover;display:block}
+.swm-close{position:absolute;right:16px;top:16px}
+.swm-body{padding:20px}
+.swm-title-row{display:flex;align-items:baseline;justify-content:space-between}
+.swm-title{font-size:20px;font-weight:600;letter-spacing:-.4px}
+.swm-sub{font-size:13px;color:var(--gray)}
+.swm-desc{font-size:14px;line-height:1.5;color:var(--slate);margin-top:8px}
+.swm-body .rz-head{display:flex;align-items:center;justify-content:space-between;margin-top:24px;padding-bottom:12px;border-bottom:1px solid var(--hair)}
+.swm-body .rz-head .t{font-size:15px;font-weight:600}
+.swm-body .rz-head .s{font-size:14px;font-weight:600}
+.swm-body .rz-head .s i{font-style:normal;color:var(--gray2);font-weight:400}
+.swm-body .bar{position:relative;width:64px;height:4px;border-radius:2px;background:var(--hair);overflow:hidden;flex:0 0 auto}
+.swm-body .bar i{position:absolute;left:0;top:0;height:100%;background:var(--ink);border-radius:2px;font-style:normal}
+.swm-feat-h,.swm-body .mt-h{font-size:15px;font-weight:600;margin-top:24px;padding-bottom:12px;border-bottom:1px solid var(--hair)}
+.swm-body .ft-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--hair);font-size:13px}
+.swm-body .ft-row .k{color:var(--gray)}
+.swm-body .ft-row .v{font-weight:500;text-align:right}
+.swm-body .mt-p{font-size:13px;line-height:1.6;color:var(--slate);margin-top:12px}
+
+/* ── collection detail modal (exact copy of mobile-v2.html's "Collection view": st-hero/mh-trk/st-dots/st-body/yl-band/rz-head/rz-row/ft-h/ft-row/mt-h/mt-p) ── */
+.colm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:70;align-items:flex-end}
+.colm-overlay.open{display:flex}
+.colm-sheet{background:#fff;border-radius:24px 24px 0 0;width:100%;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 -8px 30px rgba(0,0,0,.14)}
+.st-hero{position:relative;height:373px;touch-action:pan-y}
+.st-hero img{width:100%;height:100%;object-fit:cover}
+.mh-trk{display:flex;height:100%;transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.mh-trk img{flex:0 0 100%;width:100%;height:100%;object-fit:cover;-webkit-user-drag:none;user-select:none}
+.colm-close{position:absolute;right:16px;top:16px;z-index:2}
+.st-dots{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:2}
+.st-dots button{width:20px;height:12px;padding:0;display:flex;align-items:center}
+.st-dots button i{width:20px;height:3px;background:rgba(255,255,255,.75);border-radius:2px;display:block}
+.st-dots button.on i{background:var(--ink)}
+.st-body{padding:22px 17px 0}
+.st-title-row{display:flex;align-items:baseline;justify-content:space-between}
+.st-title{font-size:28px;font-weight:600;letter-spacing:-.4px}
+.st-desc{font-size:14px;line-height:17.5px;margin-top:14px;color:var(--ink)}
+.st-chip{margin-top:20px;display:inline-flex;align-items:center;gap:8px;background:var(--lavchip);border-radius:8px;height:34px;padding:0 14px;color:var(--purple);font-size:14px}
+.st-chip span{text-decoration:underline}
+.yl-band{margin-top:28px;background:var(--yellow2);display:flex;padding:22px 0}
+.yl-band .c{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--purple);font-size:14px;font-weight:500;text-align:center;line-height:19px;padding:0 6px}
+.yl-band .c+.c{border-left:1px solid rgba(77,53,255,.35)}
+.yl-band.grey{background:var(--chipbg);border-radius:12px}
+.yl-band.grey .c{color:var(--ink)}
+.yl-band.grey .c+.c{border-left:1px solid rgba(0,0,0,.12)}
+.see-more{display:flex;align-items:center;gap:6px;justify-content:center;margin:26px auto 0;font-size:15px;text-decoration:underline}
+.ft-h{font-size:22px;font-weight:600;padding:44px 17px 0}
+#collection-modal .rz-head{display:flex;align-items:baseline;justify-content:space-between;padding:34px 17px 0}
+#collection-modal .rz-head .t{font-size:22px;font-weight:600;letter-spacing:-.3px}
+#collection-modal .rz-head .s{font-size:22px;font-weight:700}
+#collection-modal .rz-head .s i{font-style:normal;color:var(--gray2);font-weight:400}
+#collection-modal .bar{width:60px;height:6px;background:#dcdcdc;border-radius:3px;overflow:hidden}
+#collection-modal .bar i{display:block;height:100%;background:var(--ink);border-radius:3px}
+#collection-modal .ft-row{display:flex;justify-content:space-between;gap:20px;padding:18px 17px;border-bottom:1px solid var(--hair)}
+#collection-modal .ft-row .k{font-size:15px}
+#collection-modal .ft-row .v{font-size:14px;text-align:right;line-height:18px;color:var(--ink)}
+#collection-modal .mt-h{font-size:24px;font-weight:600;padding:48px 17px 0}
+#collection-modal .mt-p{font-size:14px;line-height:17.5px;padding:16px 17px 60px}
+
+/* ── samples modal (order up to 5 free fabric swatches) -- adapted from mobile-v6.html's
+   #samplesmodal, same real 191-swatch data, wired to this file's own overlay conventions ── */
+.sm-overlay{display:none;position:fixed;inset:0;max-width:480px;margin:0 auto;background:rgba(0,0,0,.45);z-index:75;align-items:flex-end}
+.sm-overlay.open{display:flex}
+.sm-sheet{position:relative;background:#fff;border-radius:20px 20px 0 0;width:100%;max-height:92vh;display:flex;flex-direction:column;overflow:hidden}
+.sm-top{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;flex-shrink:0}
+.sm-top .st-title{font-size:22px;font-weight:600;letter-spacing:-.3px}
+.sm-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.sm-body .col-head{display:flex;align-items:baseline;justify-content:space-between;padding:28px 20px 0}
+.sm-body .col-head .t{font-size:17px;font-weight:600}
+.sm-body .mgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px 10px;padding:14px 20px 0}
+.sm-tile{position:relative;transition:transform .12s ease,filter .12s ease}
+.sm-tile .imw{position:relative;aspect-ratio:1;overflow:hidden;border-radius:4px}
+.sm-tile img{width:100%;height:100%;object-fit:cover;display:block}
+.sm-check{position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:#fff;border:1.5px solid #c8cbd0;display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s}
+.sm-check svg{opacity:0}
+.sm-tile.on .sm-check{background:var(--ink);border-color:var(--ink)}
+.sm-tile.on .sm-check svg{opacity:1}
+.sm-tile .nm{font-size:12px;margin-top:6px}
+.sm-sticky{flex-shrink:0;background:#fff;border-top:1px solid var(--hair);padding:14px 20px calc(14px + env(safe-area-inset-bottom))}
+.sm-tray{display:none;gap:8px;overflow-x:auto;padding-bottom:14px}
+.sm-tray.on{display:flex}
+.sm-tray-item{position:relative;width:52px;height:52px;flex:0 0 52px;border-radius:6px;overflow:hidden}
+.sm-tray-item img{width:100%;height:100%;object-fit:cover}
+.sm-tray-item .rm{position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:#fff;border:1px solid #e3e3e3;display:flex;align-items:center;justify-content:center}
+.sm-total{display:flex;align-items:baseline;justify-content:space-between;font-size:13px;color:var(--gray);margin-bottom:10px}
+.sm-total b{font-size:15px;color:var(--ink);font-weight:600}
+#sm-add-btn{width:100%;height:52px;background:var(--red);color:#fff;border-radius:26px;font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .2s}
+#sm-add-btn:disabled{opacity:.4}
+.sm-shipnote{text-align:center;font-size:12px;color:var(--gray);margin-top:12px}
+
+/* ── material detail modal ("Vezi diferențe materiale") -- three separate, physically
+   distinct cards in one horizontal native-scroll-snap track. Each card is narrower than the
+   viewport so the next/previous card's edge peeks in on both sides, exactly like the reference
+   configurator carousel -- this is what makes it read as "3 individual widgets" rather than one
+   panel whose content swaps. Native overflow-x scroll + scroll-snap drives the swipe (real
+   momentum + rubber-banding), dots below sync to whichever card is nearest-centered. */
+/* This used to be a full-bleed dark, blurred overlay with the carousel and the Video/Text pill
+   floating loose over it. It's a white bottom sheet now, built like the Filtre and swatch
+   sheets above it -- dim scrim, sheet pinned to the bottom edge, 24px top corners -- with the
+   segmented control sitting in the sheet's own head rather than over the content. */
+.matd-overlay{display:none;position:fixed;inset:0;max-width:480px;margin:0 auto;background:rgba(0,0,0,.45);z-index:78;align-items:flex-end}
+.matd-overlay.open{display:flex}
+/* One height for both modes, so switching Video/Text moves the thumb and nothing else -- a
+   sheet that resized under the toggle made the control itself jump. It also has to be a
+   definite height rather than the content's: the text cards are long (specs + îngrijire) and
+   each scrolls inside itself, which an auto-height parent can't give them. */
+.matd-sheet{position:relative;width:100%;height:86dvh;background:#fff;border-radius:24px 24px 0 0;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 -8px 30px rgba(0,0,0,.14)}
+@keyframes matdUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.matd-overlay.open .matd-sheet{animation:matdUp .28s cubic-bezier(.16,1,.3,1) both}
+/* min-height covers the segmented control below, which is absolutely positioned and so
+   doesn't otherwise count toward this bar's auto height -- without it the taller pill hangs
+   past the head's flow height and overlaps the card carousel underneath. */
+.matd-head{position:relative;flex:0 0 auto;display:flex;align-items:center;justify-content:flex-end;padding:16px 16px 12px;min-height:72px;z-index:2}
+.matd-head .circ-btn{width:40px;height:40px}
+/* Apple-style segmented control (text/video toggle) -- centered in the head, independent of the
+   close button, which stays pinned right by the head's own flex layout. On the old dark overlay
+   this was a white pill with a grey thumb; on a white sheet that reads as nothing, so it flips
+   to the usual arrangement for a light surface: grey track, white thumb. */
+.matd-seg{position:absolute;left:50%;top:16px;transform:translateX(-50%);display:flex;height:40px;background:var(--chipbg);border-radius:9999px;padding:4px}
+.matd-seg-thumb{position:absolute;top:4px;left:4px;width:72px;height:calc(100% - 8px);background:#fff;border-radius:9999px;box-shadow:0 1px 3px rgba(0,0,0,.14);transition:transform .25s cubic-bezier(.4,0,.2,1)}
+.matd-seg.mode-text .matd-seg-thumb{transform:translateX(72px)}
+.matd-seg-btn{position:relative;z-index:1;width:72px;height:100%;border-radius:9999px;font-size:15px;font-weight:500;color:var(--gray);text-align:center;transition:color .2s,transform .12s ease,filter .12s ease}
+.matd-seg-btn.on{color:var(--ink)}
+.matd-viewport{flex:1 1 auto;min-height:0;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.matd-viewport::-webkit-scrollbar{display:none}
+.matd-track{display:flex;gap:8px;height:100%}
+/* Left edge spacing is a margin on the first card, which scroll containers respect. The right
+   edge can't use the same trick -- margin/padding trailing the last child in a horizontally
+   scrolling flex track gets silently dropped from scrollWidth in every engine (a long-standing
+   scroll-container quirk), so the last card would end up flush against the right edge no matter
+   what margin/padding it's given. A real trailing spacer element is the only reliable fix: its
+   own box-width participates in scrollWidth like any other flex child. */
+.matd-slide{flex:0 0 85%;scroll-snap-align:center;min-width:0;height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;border-radius:20px;background:#fff;border:1px solid var(--hair);transition:filter .25s ease}
+/* The cards on either side are darkened so the centred one reads as the one in focus rather
+   than as one of three equals. brightness() rather than opacity: these sit on white, and fading
+   toward the sheet would wash the neighbours out instead of pushing them back. The class is set
+   from matdUpdateDots, the single place the current index changes, so it follows a tap on a dot
+   and a swipe alike -- after the snap settles, which is what the transition covers. */
+.matd-slide:not(.is-active){filter:brightness(.88)}
+.matd-slide:first-child{margin-left:20px}
+/* Video mode's single card -- edge-to-edge player, not the 4:3 hero strip used by the text
+   cards. The card itself is sized to the video's own intrinsic ratio (height:auto, centered
+   in the track via align-self) instead of stretching to the full slide height, so the card is
+   exactly as tall as the video. Centred rather than top-aligned, so the room left over in a
+   sheet sized for the taller text cards falls evenly above and below it. */
+.matd-slide.video-only{flex-basis:calc(100% - 40px);height:auto;align-self:center;overflow:hidden}
+.matd-video-wrap{position:relative;width:100%}
+.matd-video-frame{position:relative;width:100%;overflow:hidden;line-height:0}
+/* Source footage has a faint dark hairline baked into its outer edge -- a hair of
+   overscan (scale) crops it out without being a noticeable zoom. */
+.matd-video-frame video{width:100%;height:auto;display:block;transform:scale(1.02);transform-origin:center}
+/* Play/pause stays hidden until the viewer taps the video, then fades back out on its own
+   (see matdToggleControls) -- matches the tap-to-reveal convention of most video players
+   instead of permanently covering the footage. */
+.matd-video-playbtn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:56px;height:56px;border-radius:50%;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;color:#fff;opacity:0;pointer-events:none;transition:opacity .2s}
+.matd-video-frame.show-controls .matd-video-playbtn{opacity:1;pointer-events:auto}
+.matd-video-playbtn .ic-pause{display:none}
+.matd-video-frame.playing .matd-video-playbtn .ic-play{display:none}
+.matd-video-frame.playing .matd-video-playbtn .ic-pause{display:block}
+.matd-video-timeline{position:absolute;left:16px;right:16px;bottom:16px;height:3px;background:rgba(255,255,255,.3);border-radius:2px}
+.matd-video-progress{height:100%;width:0%;background:#fff;border-radius:2px}
+.matd-spacer{flex:0 0 12px}
+.matd-hero{aspect-ratio:4/3;background-size:cover;background-position:center;border-radius:20px 20px 0 0}
+.matd-dots{flex:0 0 auto;display:flex;justify-content:center;gap:6px;padding:16px 0 20px}
+.matd-dots button{width:22px;height:3px;padding:0;border-radius:2px;border:none;background:rgba(0,0,0,.15)}
+.matd-dots button.on{background:var(--ink)}
+.matd-body{padding:20px 20px 28px}
+.matd-body h2{font-size:24px;font-weight:600;letter-spacing:-.4px}
+.matd-desc{font-size:14px;line-height:1.5;color:var(--ink);margin-top:14px}
+.matd-specs{margin-top:24px;border-top:1px solid var(--hair)}
+.matd-specs .row{display:flex;justify-content:space-between;gap:20px;padding:14px 0;border-bottom:1px solid var(--hair)}
+.matd-specs .k{font-size:14px;color:var(--gray);flex:0 0 auto}
+.matd-specs .v{font-size:14px;text-align:right;color:var(--ink)}
+.matd-usps{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.matd-usps span{background:var(--chipbg);border-radius:9999px;padding:6px 12px;font-size:12.5px;color:var(--ink)}
+.matd-care{margin-top:24px}
+.matd-care h3{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--gray)}
+.matd-care p{font-size:14px;line-height:1.5;color:var(--ink);margin-top:8px}
+
+/* ── section 4: summary ── */
+.cfg-samples-btn{display:block;width:100%;height:48px;border:1px solid var(--ink);border-radius:24px;font-size:14px;font-weight:500;margin-top:20px}
+/* material section's own compare/sample row: outline secondary + orange primary, same shape
+   language as the PDP's Suna-ne / Comandă mostre row */
+.cfg-samples-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+/* plain underlined link, no button chrome, hugs the left edge */
+.cfg-samples-outline{flex:0 0 auto;height:auto;padding:0;border:none;background:none;color:var(--ink);font-size:14px;font-weight:500;text-decoration:underline}
+/* same pill appearance the link used to have */
+.cfg-samples-primary{flex:0 0 auto;height:auto;padding:8px 14px;border:1px solid var(--ink);border-radius:24px;background:#fff;color:var(--ink);font-size:14px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px}
+.cfg-samples-primary svg{flex:0 0 auto}
+#cfg-sum-color-sw,#cfg-sum-shape-sw{width:32px;height:32px;border-radius:50%;flex:0 0 auto}
+
+/* ── cta bar -- the reference's floating bar: just a big price + a pill button, nothing else ── */
+.cfg-cta{flex:0 0 auto;background:#fff;border-top:1px solid var(--hair);display:flex;align-items:center;justify-content:space-between;padding:14px 24px}
+.cfg-cta .pr{font-size:24px;font-weight:500;letter-spacing:-.72px;color:var(--ink)}
+.cfg-cta .bb{height:46px;background:var(--red);color:#fff;border-radius:23px;padding:0 20px;font-size:14px;font-weight:500;display:flex;align-items:center}
+</style>
+</head>
+<body>
+
+<div id="cfg">
+  <div id="cfg-preview">
+    <button class="circ-btn" id="cfg-close" onclick="closeConfigurator()" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <button id="cfg-measure" aria-label="Dimensiuni"><img src="assets/btn-measure.png" alt=""></button>
+    <button id="cfg-3d" onclick="pressFeedback(this)" aria-label="Vizualizare 3D">3D</button>
+    <img id="cfg-shape-img" src="assets/shape-3seat.png" alt="Canapea Boston">
+    <div id="cfg-fabric-pill">
+      <span class="cfg-fabric-thumb"><img id="cfg-fabric-thumb-img" src="" alt=""></span>
+      <span id="cfg-fabric-name"></span>
+    </div>
+  </div>
+
+  <div id="cfg-sheet">
+    <div class="cfg-handle" id="cfg-handle"><div class="hbar"></div></div>
+    <div class="cfg-chips" id="cfg-chips">
+      <button class="cfg-chip on" data-sec="layout" onclick="scrollCfgTo('layout')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Layout</button>
+      <button class="cfg-chip" data-sec="size" onclick="scrollCfgTo('size')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Mărime</button>
+      <!-- Nevoi de lifestyle chip removed per request, kept in markup below for easy restore -->
+      <button class="cfg-chip" data-sec="needs" onclick="scrollCfgTo('needs')" style="display:none"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Nevoi</button>
+      <button class="cfg-chip" data-sec="color" onclick="scrollCfgTo('color')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Material</button>
+      <button class="cfg-chip" type="button" id="cfg-nav-filter-chip" data-sec="filtre" onclick="openFilterSheetFromNav()"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Filtre<span class="nav-cnt" id="cfg-nav-filter-cnt">0</span></button>
+      <button class="cfg-chip" data-sec="colors-grid" onclick="scrollCfgTo('colors-grid')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Culoare</button>
+      <button class="cfg-chip" data-sec="summary" onclick="scrollCfgTo('summary')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Sumar</button>
+    </div>
+    <div class="cfg-scroll" id="cfg-scroll">
+
+      <!-- v26: "Formă" is split in two cards -- Layout (the arrangement: straight, corner
+           left, corner right) and Mărime (how many seats, and the cm that come with it).
+           #shape-grid below stays as the canonical variant registry -- one hidden tile per
+           real Shopify variant -- so pricing, preview and summary keep reading exactly what
+           they always read; layout x size just resolves to one of those tiles. -->
+      <section class="cfg-sec" id="sec-layout">
+        <h3 class="cfg-title">Alege forma canapelei</h3>
+        <div class="cfg-shape-row" id="layout-grid"></div>
+        <div class="cfg-shape-label">
+          <strong id="cfg-layout-sel-name">Canapea dreaptă</strong>
+        </div>
+        <div class="cfg-shape-row" id="shape-grid" style="display:none">
+          <button class="cfg-shape-tile on" data-name="Canapea 3 locuri" data-dim="245 x 100 cm" onclick="pickCfgShape(this)">
+            <span class="cfg-shape-imw"><img src="assets/shape-3seat.png" alt="Canapea 3 locuri"><span class="cfg-shape-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span></span>
+          </button>
+          <button class="cfg-shape-tile" data-name="Coltar 3 locuri cu insula pe stanga" data-dim="255 x 170 cm" onclick="pickCfgShape(this)">
+            <span class="cfg-shape-imw"><img src="assets/shape-corner-left.png" alt="Coltar 3 locuri cu insula pe stanga"><span class="cfg-shape-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span></span>
+          </button>
+          <button class="cfg-shape-tile" data-name="Coltar 3 locuri cu insula pe dreapta" data-dim="255 x 170 cm" onclick="pickCfgShape(this)">
+            <span class="cfg-shape-imw"><img src="assets/shape-corner-right.png" alt="Coltar 3 locuri cu insula pe dreapta"><span class="cfg-shape-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span></span>
+          </button>
+          <button class="cfg-shape-tile" data-name="Coltar 4 locuri" data-dim="255 x 255 cm" onclick="pickCfgShape(this)">
+            <span class="cfg-shape-imw"><img src="assets/shape-corner-4seat.png" alt="Coltar 4 locuri"><span class="cfg-shape-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span></span>
+          </button>
+        </div>
+      </section>
+
+      <section class="cfg-sec" id="sec-size">
+        <h3 class="cfg-title">Alege mărimea</h3>
+        <div class="cfg-shape-row" id="size-grid"></div>
+        <div class="cfg-shape-label">
+          <strong id="cfg-shape-sel-name">Canapea 3 locuri</strong>
+          <span id="cfg-shape-sel-dim">245 x 100 cm</span>
+        </div>
+        <p class="cfg-size-note" id="cfg-size-note">Varianta de 4 locuri se face doar pe colțar.</p>
+      </section>
+
+      <!-- Nevoi de lifestyle section removed per request, kept in markup for easy restore -->
+      <section class="cfg-sec" id="sec-needs" style="display:none">
+        <h3>Nevoi de lifestyle</h3>
+        <p class="cfg-sec-sub">Îți recomandăm materiale potrivite nevoilor tale.</p>
+        <div class="cfg-needs-row" id="cfg-needs"></div>
+        <div class="cfg-needs-label" id="cfg-needs-label"></div>
+      </section>
+
+      <section class="cfg-sec" id="sec-color">
+        <div class="cfg-fabric-head">
+          <h3 class="cfg-title">Alege materialul</h3>
+        </div>
+
+        <div class="cfg-fabric-pillrow" id="cfg-fabric-pillrow"></div>
+
+        <button type="button" class="cfg-matdiff-btn" onclick="openMaterialDetail()">
+          <span class="cfg-matdiff-swatch">
+            <video src="material-videos.mp4" muted autoplay loop playsinline onloadedmetadata="this.currentTime=9.5;this.play()" ontimeupdate="if(this.currentTime>=15.7)this.currentTime=9.5"></video>
+          </span>
+          <span class="cfg-matdiff-text">
+            <span>Vezi diferențe</span>
+            <span>între materiale</span>
+          </span>
+          <svg class="cfg-matdiff-plus" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </section>
+
+      <!-- Colour is its own card now: the material card ends at "Vezi diferențe între
+           materiale", and everything from the count + Filtre row down to the swatch grid
+           moves under its own "Alege culoarea" title. -->
+      <section class="cfg-sec" id="sec-colors-grid">
+        <h3 class="cfg-title">Alege culoarea</h3>
+
+        <div class="cfg-fabric-pillrow" id="cfg-color-pillrow"></div>
+
+        <div class="cfg-fabric-toolrow">
+          <button type="button" class="cfg-filter-btn" id="cfg-filter-btn" onclick="openFilterSheet()" aria-label="Filtre">
+            <svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.3337 4.66666H7.33366M9.33366 11.3333H3.33366M9.33366 11.3333C9.33366 12.4379 10.2291 13.3333 11.3337 13.3333C12.4382 13.3333 13.3337 12.4379 13.3337 11.3333C13.3337 10.2288 12.4382 9.33332 11.3337 9.33332C10.2291 9.33332 9.33366 10.2288 9.33366 11.3333ZM6.66699 4.66666C6.66699 5.77123 5.77156 6.66666 4.66699 6.66666C3.56242 6.66666 2.66699 5.77123 2.66699 4.66666C2.66699 3.56209 3.56242 2.66666 4.66699 2.66666C5.77156 2.66666 6.66699 3.56209 6.66699 4.66666Z" stroke="#1D1D1F" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="cnt" id="cfg-filter-cnt">0</span>
+          </button>
+          <div class="cfg-toolrow-right">
+            <div class="cfg-color-count" id="cfg-color-sub"></div>
+            <div class="cfg-gridtoggle" id="cfg-gridtoggle">
+              <button type="button" class="cfg-gridbtn" onclick="setColorGridCols(3,this)" aria-label="Grilă 3 coloane"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="1" y="1" width="6" height="6"/><rect x="9" y="1" width="6" height="6"/><rect x="17" y="1" width="6" height="6"/><rect x="1" y="9" width="6" height="6"/><rect x="9" y="9" width="6" height="6"/><rect x="17" y="9" width="6" height="6"/><rect x="1" y="17" width="6" height="6"/><rect x="9" y="17" width="6" height="6"/><rect x="17" y="17" width="6" height="6"/></svg></button>
+              <button type="button" class="cfg-gridbtn on" onclick="setColorGridCols(4,this)" aria-label="Grilă 4 coloane"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="1" y="1" width="4.6" height="4.6"/><rect x="6.8" y="1" width="4.6" height="4.6"/><rect x="12.6" y="1" width="4.6" height="4.6"/><rect x="18.4" y="1" width="4.6" height="4.6"/><rect x="1" y="6.8" width="4.6" height="4.6"/><rect x="6.8" y="6.8" width="4.6" height="4.6"/><rect x="12.6" y="6.8" width="4.6" height="4.6"/><rect x="18.4" y="6.8" width="4.6" height="4.6"/><rect x="1" y="12.6" width="4.6" height="4.6"/><rect x="6.8" y="12.6" width="4.6" height="4.6"/><rect x="12.6" y="12.6" width="4.6" height="4.6"/><rect x="18.4" y="12.6" width="4.6" height="4.6"/><rect x="1" y="18.4" width="4.6" height="4.6"/><rect x="6.8" y="18.4" width="4.6" height="4.6"/><rect x="12.6" y="18.4" width="4.6" height="4.6"/><rect x="18.4" y="18.4" width="4.6" height="4.6"/></svg></button>
+            </div>
+          </div>
+        </div>
+
+        <div id="cfg-fabric-sections"></div>
+
+        <div class="cfg-samples-row" style="display:none">
+          <button type="button" class="cfg-samples-outline" onclick="openSamplesModal()">Comandă mostre</button>
+        </div>
+
+        <div class="cfg-fabric-divider" style="display:none"></div>
+      </section>
+
+      <section class="cfg-sec" id="sec-summary">
+        <h3 class="cfg-title">Gata! Canapeaua ta arată superb.</h3>
+        <div id="cfg-summary-body">
+          <div class="rz-row">
+            <div class="k">Formă<em id="cfg-sum-shape-dim"></em></div>
+            <div class="vv"><span id="cfg-sum-shape-sw"><img id="cfg-sum-shape-img" style="width:100%;height:100%;object-fit:cover;border-radius:50%" alt=""></span><div class="v" id="cfg-sum-shape-name"></div></div>
+          </div>
+          <div class="rz-row">
+            <div class="k">Material<em id="cfg-sum-mat-texture"></em></div>
+            <div class="vv"><div class="v" id="cfg-sum-mat-name"></div></div>
+          </div>
+          <div class="rz-row">
+            <div class="k">Culoare</div>
+            <div class="vv"><span id="cfg-sum-color-sw"><img id="cfg-sum-color-img" style="width:100%;height:100%;object-fit:cover;border-radius:50%" alt=""></span><div class="v" id="cfg-sum-color-name"></div></div>
+          </div>
+          <div class="rz-row" style="border-bottom:none">
+            <div class="k">Preț total</div>
+            <div class="vv"><div class="v" id="cfg-sum-price"></div></div>
+          </div>
+        </div>
+        <button type="button" class="cfg-delivery-pill">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="7" width="13" height="10"/><path d="M14 10h4l3 3v4h-7z"/><circle cx="6" cy="19" r="1.8"/><circle cx="17.5" cy="19" r="1.8"/></svg>
+          <span>Livrare estimată în 3-4 săptămâni</span>
+        </button>
+      </section>
+
+      <!-- Scroll room so the last card can still be brought to the top of the sheet. Lives
+           outside the section now: inside it, it was 64px of empty grey inside the card. -->
+      <div style="height:64px"></div>
+
+    </div>
+
+    <div class="cfg-cta" id="cfg-cta">
+      <div class="pr" id="cfg-price">—</div>
+      <button class="bb" onclick="addToCart(this)">Adaugă în coș</button>
+    </div>
+  </div>
+</div>
+<div id="toast"></div>
+
+<div class="swm-overlay" id="swatch-modal" onclick="if(event.target===this) closeSwatchModal()">
+  <div class="swm-sheet">
+    <div class="swm-hero">
+      <img id="swm-img" src="" alt="">
+      <button class="circ-btn swm-close" onclick="closeSwatchModal()" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="swm-body">
+      <div class="swm-title-row"><span class="swm-title" id="swm-name"></span><span class="swm-sub" id="swm-sub"></span></div>
+      <div class="matd-usps" id="swm-kpis"></div>
+      <p class="swm-desc" id="swm-desc"></p>
+
+      <button type="button" class="st-chip" onclick="openSamplesModal()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg><span>Comandă mostră</span></button>
+
+      <div style="display:none">
+        <div class="rz-head"><span class="t">Rezistență generală</span><span class="s" id="swm-score"></span></div>
+        <div class="rz-row"><div class="k">Martindale<em>test abraziune</em></div><div class="vv"><div class="v" id="swm-mart-v"></div><span class="bar"><i id="swm-mart-bar"></i></span></div></div>
+        <div class="rz-row"><div class="k">MACE<em>test agățare</em></div><div class="vv"><div class="v" id="swm-mace-v"></div><span class="bar"><i id="swm-mace-bar"></i></span></div></div>
+        <div class="rz-row"><div class="k">Rezistență culoare<em>la frecare</em></div><div class="vv"><div class="v" id="swm-rub-v"></div><span class="bar"><i id="swm-rub-bar"></i></span></div></div>
+        <div class="rz-row"><div class="k">Rezistență culoare<em>la lumină</em></div><div class="vv"><div class="v" id="swm-light-v"></div><span class="bar"><i id="swm-light-bar"></i></span></div></div>
+        <div class="rz-row" style="border-bottom:none"><div class="k">Pilling<em>scămoșare</em></div><div class="vv"><div class="v" id="swm-pill-v"></div><span class="bar"><i id="swm-pill-bar"></i></span></div></div>
+      </div>
+
+      <div class="swm-feat-h">Detalii</div>
+      <div class="ft-row"><span class="k">Certificări</span><span class="v" id="swm-cert"></span></div>
+      <div class="ft-row"><span class="k">Întreținere</span><span class="v" id="swm-maint"></span></div>
+      <div class="ft-row"><span class="k">Compoziție</span><span class="v" id="swm-comp"></span></div>
+      <div class="ft-row"><span class="k">Rezistență la foc</span><span class="v" id="swm-fire"></span></div>
+      <div class="ft-row" style="border-bottom:none"><span class="k">Greutate (g/m²)</span><span class="v" id="swm-weight"></span></div>
+
+      <div class="mt-h">Îngrijire</div>
+      <p class="mt-p" id="swm-care"></p>
+    </div>
+  </div>
+</div>
+
+<div class="colm-overlay" id="collection-modal" onclick="if(event.target===this) closeCollectionModal()">
+  <div class="colm-sheet">
+    <div class="st-hero" id="colm-hero">
+      <div class="mh-trk" id="colm-trk">
+        <img src="" alt="" id="colm-hero1">
+        <img src="" alt="" id="colm-hero2">
+        <img src="assets/collection-zoom.png" alt="" id="colm-hero3">
+      </div>
+      <button class="circ-btn colm-close" onclick="closeCollectionModal()" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      <div class="st-dots" id="colm-dots">
+        <button class="on" onclick="colmHeroTo(0)" aria-label="Slide 1"><i></i></button>
+        <button onclick="colmHeroTo(1)" aria-label="Slide 2"><i></i></button>
+        <button onclick="colmHeroTo(2)" aria-label="Slide 3"><i></i></button>
+      </div>
+    </div>
+    <div class="st-body">
+      <div class="st-title-row"><span class="st-title" id="colm-title"></span></div>
+      <div class="st-desc" id="colm-desc"></div>
+      <button class="st-chip" onclick="toast('Mostrele au fost adăugate în coș')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        <span>Comanda mostrar gratis</span>
+      </button>
+    </div>
+    <div class="yl-band">
+      <div class="c" id="colm-usp1"></div>
+      <div class="c" id="colm-usp2"></div>
+      <div class="c" id="colm-usp3"></div>
+    </div>
+    <div class="rz-head"><span class="t">Rezistență generală</span><span class="s" id="colm-score"></span></div>
+    <div>
+      <div class="rz-row"><div class="k">Martindale<em>test abraziune</em></div><div class="vv"><div class="v" id="colm-mart-v"></div><span class="bar"><i id="colm-mart-bar"></i></span></div></div>
+      <div class="rz-row"><div class="k">MACE<em>test agățare</em></div><div class="vv"><div class="v" id="colm-mace-v"></div><span class="bar"><i id="colm-mace-bar"></i></span></div></div>
+      <div class="rz-row"><div class="k">Rezistență culoare<em>la frecare</em></div><div class="vv"><div class="v" id="colm-rub-v"></div><span class="bar"><i id="colm-rub-bar"></i></span></div></div>
+      <div class="rz-row"><div class="k">Rezistență culoare<em>la lumină</em></div><div class="vv"><div class="v" id="colm-light-v"></div><span class="bar"><i id="colm-light-bar"></i></span></div></div>
+      <div class="rz-row" style="border-bottom:none"><div class="k">Pilling<em>scămoșare</em></div><div class="vv"><div class="v" id="colm-pill-v"></div><span class="bar"><i id="colm-pill-bar"></i></span></div></div>
+    </div>
+    <button class="see-more" onclick="pressFeedback(this)">Vezi mai multe
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="ft-h">Features</div>
+    <div>
+      <div class="ft-row"><span class="k">Certificări</span><span class="v" id="colm-cert"></span></div>
+      <div class="ft-row"><span class="k">Întreținere</span><span class="v" id="colm-maint"></span></div>
+      <div class="ft-row"><span class="k">Compoziție</span><span class="v" id="colm-comp"></span></div>
+      <div class="ft-row"><span class="k">Culoare</span><span class="v" id="colm-color"></span></div>
+      <div class="ft-row"><span class="k">Greutate (g/m²)</span><span class="v" id="colm-weight"></span></div>
+      <div class="ft-row"><span class="k">Rezistență la foc</span><span class="v" id="colm-fire"></span></div>
+      <div class="ft-row" style="border-bottom:none"><span class="k">Lățime rolă</span><span class="v" id="colm-width"></span></div>
+    </div>
+    <div class="mt-h">Întreținere</div>
+    <p class="mt-p" id="colm-care"></p>
+  </div>
+</div>
+
+<div class="sm-overlay" id="samples-modal" onclick="if(event.target===this) closeSamplesModal()">
+  <div class="sm-sheet">
+    <div class="sm-top">
+      <span class="st-title">Găsește mostra perfectă</span>
+      <button class="circ-btn" onclick="closeSamplesModal()" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="sm-body">
+      <div id="sm-collections"></div>
+    </div>
+    <div class="sm-sticky">
+      <div class="sm-tray" id="smtray"><div id="smtray-row" style="display:flex;gap:8px"></div></div>
+      <div class="sm-total"><span>Mostre alese</span><b><span id="sm-count">0</span>/5</b></div>
+      <button id="sm-add-btn" disabled onclick="addSamplesToCart()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="21" r="1.6"/><circle cx="19" cy="21" r="1.6"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        Adaugă în coș
+      </button>
+      <div class="sm-shipnote">Livrare în 1-2 zile</div>
+    </div>
+  </div>
+</div>
+
+<div class="matd-overlay" id="material-detail-modal" onclick="if(event.target===this) closeMaterialDetail()">
+  <div class="matd-sheet" id="matd-sheet">
+  <div class="matd-head">
+    <div class="matd-seg" id="matd-seg" role="tablist" aria-label="Mod afișare">
+      <div class="matd-seg-thumb" aria-hidden="true"></div>
+      <button type="button" class="matd-seg-btn on" data-mode="video" role="tab" aria-selected="true" onclick="setMatdMode('video')">Video</button>
+      <button type="button" class="matd-seg-btn" data-mode="text" role="tab" aria-selected="false" onclick="setMatdMode('text')">Text</button>
+    </div>
+    <button class="circ-btn" onclick="closeMaterialDetail()" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="matd-viewport" id="matd-viewport">
+    <div class="matd-track" id="matd-track"></div>
+  </div>
+  <div class="matd-dots" id="matd-dots"></div>
+  </div>
+</div>
+
+<div class="fsheet-overlay" id="filter-sheet" onclick="if(event.target===this) closeFilterSheet()">
+  <div class="fsheet-sheet">
+    <div class="fsheet-head">
+      <span class="fsheet-title">Filtre</span>
+      <button class="circ-btn" onclick="closeFilterSheet()" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="fsheet-body">
+      <div class="fsheet-empty" id="fsheet-empty">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#707173" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="14" x2="14" y2="8"/></svg>
+        <p>Niciun material nu se potrivește cu această combinație de filtre. Elimină unul sau mai multe filtre pentru a vedea culori.</p>
+      </div>
+      <div class="fsheet-group-h" id="fsheet-material-h" style="display:none">Material</div>
+      <div class="cfg-filter-pills" id="fsheet-material"></div>
+      <div class="fsheet-group-h">Proprietăți</div>
+      <div class="cfg-filter-pills" id="fsheet-prop"></div>
+      <div class="fsheet-group-h">Culoare</div>
+      <div class="cfg-filter-pills" id="fsheet-culoare"></div>
+      <div class="fsheet-group-h">Preț</div>
+      <div class="price-slider">
+        <div class="price-slider-vals"><span id="price-min-val">4.745 lei</span><span id="price-max-val">5.775 lei</span></div>
+        <div class="price-slider-track">
+          <div class="price-slider-range" id="price-slider-range"></div>
+          <input type="range" id="price-min" min="4745" max="5775" step="5" value="4745" oninput="updatePriceSlider()">
+          <input type="range" id="price-max" min="4745" max="5775" step="5" value="5775" oninput="updatePriceSlider()">
+        </div>
+      </div>
+      <div class="fsheet-result-count" id="fsheet-result-count"></div>
+    </div>
+    <div class="fsheet-foot">
+      <button type="button" class="fsheet-reset" onclick="resetSheetFilters()">Resetează</button>
+      <button type="button" class="fsheet-apply" id="fsheet-apply-btn" onclick="closeFilterSheet()">Aplică filtrele</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════ Data (copied verbatim from mobile-v2.html:1427-1530) ══════════ */
+var COLLECTIONS = {
+  luna: { name:'Luna', assetSlug:'lunareal', tier:'Practic', finish:'Matte', surface:'Textured', materialTypes:['Texturat'],
+    waterproof:false, easyClean:false, petFriendly:false,
+    composition:'100% Poliester', width:145, weight:493, martindale:'90.000',
+    mace:null, rubbing:null, light:null, pilling:null,
+    fireTest:'Test cu țigara aprinsă', certifications:'Piele sensibilă (OEKO-TEX®)',
+    desc:'Material cu textură plăcută și elastică, realizat dintr-o țesătură tricotată durabilă, concepută pentru mobilier utilizat frecvent. Materialul oferă un echilibru foarte bun între confort, rezistență și durabilitate, fiind potrivit pentru utilizare zilnică.',
+    care:'Aspirați regulat cu o perie moale și ștergeți imediat petele cu o cârpă curată și uscată, fără a freca. Folosiți doar produse de curățare delicate, pe bază de apă, și evitați expunerea directă la soare pentru a preveni decolorarea.',
+    heroCode:'08',
+    colors:[['01','#CFD0CB'],['08','#342C2B'],['14','#645147'],['15','#7F7674'],['16','#0F6C89'],['17','#8E8A36'],['21','#C6BCA9'],['24','#3E1E30'],['27','#2F2321'],['30','#22303E'],['31','#929390'],['32','#35393C'],['33','#A0978E'],['34','#6A6461'],['35','#3C3B3C'],['36','#151514'],['41','#292526'],['60','#7C1C27'],['78','#6D2B48'],['85','#293E48'],['96','#202020']]
+  },
+  manila: { name:'Manila', tier:'Practic', finish:'Glossy', surface:'Plush/Soft', materialTypes:['Efect catifea'],
+    waterproof:false, easyClean:false, petFriendly:false,
+    composition:'100% Poliester', width:143, weight:220, martindale:'58.000',
+    mace:null, rubbing:null, light:null, pilling:null,
+    fireTest:'Test cu țigara aprinsă', certifications:'Fără AZO/DMF',
+    desc:'Material plușat, cu aspect fin de catifea și o gamă generoasă de peste 40 de nuanțe. Combină un aspect elegant, ușor lucios, cu un preț accesibil, fiind alegerea potrivită pentru un mobilier confortabil și primitor.',
+    care:'Aspirați regulat cu o perie moale, în sensul firului, pentru a menține aspectul plușat. Ștergeți imediat petele cu o cârpă curată și uscată, fără a freca, și evitați expunerea directă la soare pentru a preveni decolorarea.',
+    heroCode:'08',
+    colors:[['00','#EEEFE9'],['01','#F3EFE3'],['02','#ABA291'],['03','#908776'],['04','#30211C'],['05','#5A4C41'],['06','#43262A'],['07','#422D32'],['08','#8E8381'],['09','#CDB4BA'],['10','#ABCAC5'],['11','#8AB0A3'],['12','#4D6160'],['13','#CFCEC9'],['14','#C4C0B7'],['15','#94948A'],['16','#767573'],['17','#5B5C54'],['18','#2E2F29'],['19','#494947'],['20','#56626E'],['21','#857264'],['22','#453832'],['23','#982F33'],['25','#103440'],['26','#0E2944'],['27','#274452'],['28','#AF292A'],['29','#896157'],['30','#B98669'],['31','#955A2E'],['32','#D19B45'],['33','#AF862C'],['34','#53512B'],['35','#163629'],['36','#4D6F61'],['37','#0E5653'],['38','#516F6D'],['39','#32578E'],['40','#79733F'],['41','#7EAF5E']]
+  },
+  enjoylux: { name:'Enjoy Lux', tier:'Confort', finish:'Matte', surface:'Smooth', materialTypes:['Neted'],
+    waterproof:true, easyClean:true, petFriendly:false,
+    composition:'92% PES / 8% PA', width:146, weight:467, martindale:'55.000',
+    mace:null, rubbing:'4-5/5', light:'5/5', pilling:'5/5',
+    fireTest:'BS 5852: Partea 1', certifications:'Piele sensibilă (OEKO-TEX®)',
+    desc:'Microfibră fină, cu finisaj mat și tehnologie hidrofobă care limitează absorbția lichidelor — apa, cafeaua sau vinul rămân la suprafață sub formă de picături, fiind ușor de îndepărtat. Certificată OEKO-TEX®, oferă un confort curat și durabil pentru uz zilnic.',
+    care:'Datorită tratamentului hidrofob, majoritatea petelor se îndepărtează ușor cu o cârpă umedă, fără a fi nevoie de produse speciale. Aspirați regulat pentru a menține textura și evitați expunerea prelungită la soare directă.',
+    heroCode:'04',
+    colors:[['01','#C7C1B9'],['02','#AE9C8C'],['03','#988C8C'],['04','#443930'],['05','#393132'],['06','#231F1F'],['07','#887E76'],['08','#423E3C'],['09','#473F3E'],['10','#827C23'],['11','#B49738'],['12','#BE8031'],['13','#9A3C2E'],['14','#5F303B'],['15','#2D282E'],['16','#6A154E'],['17','#264D56'],['18','#5F847F'],['19','#AE9295'],['20','#ACACAC'],['21','#87868B'],['22','#3E4749'],['23','#484848'],['24','#302F34'],['25','#242325']]
+  },
+  milton: { name:'Milton', tier:'Premium', finish:'Semi-Glossy', surface:'Smooth', materialTypes:['Neted'],
+    waterproof:true, easyClean:false, petFriendly:false,
+    composition:'97% PES / 3% PA', width:140, weight:300, martindale:'90.000',
+    mace:null, rubbing:null, light:'4/5', pilling:'5/5',
+    fireTest:'BS 5852: Partea 1', certifications:null,
+    desc:'Țesătură tricotată cu o textură fină, ușor sidefată, care lasă umbre discrete în funcție de lumină. Beneficiază de o tehnologie hidrofobă avansată și este potrivită pentru un stil de viață activ, oferind rezistență sporită la uzura de zi cu zi.',
+    care:'Ștergeți petele imediat cu o cârpă curată, ușor umezită, fără a freca. Datorită finisajului hidrofob, lichidele nu pătrund imediat în material. Aspirați regulat cu o perie moale pentru a menține aspectul țesăturii și evitați expunerea prelungită la soare.',
+    heroCode:'01',
+    colors:[['01','#D3C2B8'],['02','#D1BFB5'],['03','#BDAA9A'],['04','#71605F'],['05','#463939'],['06','#2A2724'],['07','#8F4F2F'],['08','#88343B'],['09','#541F2E'],['10','#5A2454'],['11','#88733D'],['12','#265255'],['13','#243143'],['14','#6F6F6B'],['15','#4A4547'],['16','#272727'],['17','#47464A'],['18','#141C16'],['19','#1B292D'],['20','#1A1A32'],['21','#A2C2B3'],['22','#8E9EA5'],['23','#D7BDC2'],['24','#4E665A'],['25','#8599A6'],['26','#4F6772'],['27','#57522E'],['28','#AC6B41'],['29','#A99991'],['30','#C0B5AF'],['31','#E8E4E2'],['32','#AA8C84'],['33','#562E36']]
+  },
+  piano: { name:'Piano', tier:'Lux', finish:'Glossy', surface:'Plush/Soft', materialTypes:['Catifea'],
+    waterproof:true, easyClean:true, petFriendly:false,
+    composition:'100% Poliester', width:142, weight:310, martindale:'>60.000',
+    mace:null, rubbing:null, light:null, pilling:null,
+    fireTest:'BS 5852: Partea 1', certifications:null,
+    desc:'Catifea tricotată, extrem de moale la atingere, care combină eleganta aspectului catifelat cu un preț accesibil. Rezistă bine la lichide și se curăță ușor cu apă, fiind o alegere practică pentru mobilierul de zi cu zi.',
+    care:'Datorită tratamentului hidrofob, majoritatea petelor se îndepărtează ușor cu o cârpă umedă, fără a fi nevoie de produse speciale. Aspirați regulat pentru a menține textura și evitați expunerea prelungită la soare directă.',
+    heroCode:'04',
+    colors:[['01','#F3F1E6'],['02','#ECE3D6'],['03','#E1C8B0'],['04','#B7A6A0'],['05','#665452'],['06','#5F2534'],['07','#BD8910'],['08','#074B30'],['09','#537368'],['10','#114B54'],['11','#90ABB8'],['12','#1B1C32'],['13','#CEC3BB'],['14','#909396'],['15','#595353'],['16','#130F0E'],['17','#101010'],['18','#5A4947'],['19','#484848'],['20','#81605B'],['21','#774118'],['22','#8D7668'],['23','#7C622F'],['24','#3C4043'],['25','#585836'],['26','#27352A'],['28','#2E3740']]
+  },
+  spello: { name:'Spello', tier:'Lux', finish:'Matte', surface:'Textured', materialTypes:['Texturat'],
+    waterproof:true, easyClean:false, petFriendly:false,
+    composition:'100% Poliester', width:142, weight:430, martindale:'>60.000',
+    mace:null, rubbing:null, light:null, pilling:null,
+    fireTest:'BS 5852: Partea 1', certifications:null,
+    desc:'Țesătură groasă, cu o textură proeminentă și un aspect natural, mat. Oferă o rezistență bună la lichide, fiind potrivită pentru mobilierul folosit intens, cu un aer rustic-elegant.',
+    care:'Ștergeți petele imediat cu o cârpă curată, ușor umezită, fără a freca. Datorită finisajului hidrofob, lichidele nu pătrund imediat în material. Aspirați regulat cu o perie moale pentru a menține aspectul țesăturii și evitați expunerea prelungită la soare.',
+    heroCode:'04',
+    colors:[['04','#B0915B'],['05','#9F867F'],['06','#683C47'],['08','#5D636D'],['09','#273940'],['10','#6F7D70'],['13','#62625E']]
+  },
+  maya: { name:'Maya', tier:'Special', finish:'Semi-Glossy', surface:'Plush/Soft', materialTypes:['Efect catifea'],
+    waterproof:true, easyClean:true, petFriendly:true,
+    composition:'100% Poliester', width:140, weight:350, martindale:'45.000–50.000',
+    mace:'5/5', rubbing:null, light:'4/5', pilling:'4/5',
+    fireTest:'BS 5852: Partea 1', certifications:null,
+    desc:'Tricot fin, cu un aspect discret țesut și o senzație la atingere asemănătoare cașmerului. Este ușor de curățat, rezistent la lichide și potrivit pentru animale de companie, fiind alegerea ideală pentru camere de zi, dormitoare și camere pentru copii.',
+    care:'Datorită tratamentului hidrofob, majoritatea petelor se îndepărtează ușor cu o cârpă umedă, fără a fi nevoie de produse speciale. Aspirați regulat pentru a menține textura și evitați expunerea prelungită la soare directă.',
+    heroCode:'03',
+    colors:[['01','#C9C2B8'],['02','#DCD6C2'],['03','#DACCB8'],['04','#B5925C'],['05','#CB9541'],['06','#835D48'],['07','#383E1A'],['08','#20302E'],['09','#222632'],['10','#1D2B3A'],['11','#525658'],['12','#5C6173'],['13','#89A3A2'],['14','#6C827E'],['15','#B4988C'],['16','#78605C'],['17','#5A4E4E'],['18','#6D625F'],['19','#807875'],['20','#ABA9A5'],['21','#666665'],['22','#2C282A']]
+  },
+  zoya: { name:'Zoya', tier:'Special', finish:'Matte', surface:'Plush/Soft', materialTypes:['Efect catifea'],
+    waterproof:true, easyClean:true, petFriendly:true,
+    composition:'100% Poliester', width:140, weight:390, martindale:'45.000–50.000',
+    mace:'5/5', rubbing:null, light:'4/5', pilling:'4/5',
+    fireTest:'BS 5852: Partea 1', certifications:null,
+    desc:'Tricot cu aspect mat de catifea, rezistent la lichide și ușor de întreținut. Potrivit pentru gospodăriile cu animale de companie, oferă un echilibru excelent între confort, eleganță și durabilitate.',
+    care:'Datorită tratamentului hidrofob, majoritatea petelor se îndepărtează ușor cu o cârpă umedă, fără a fi nevoie de produse speciale. Aspirați regulat pentru a menține textura și evitați expunerea prelungită la soare directă.',
+    heroCode:'01',
+    colors:[['01','#BCBDB8'],['02','#AAA7A4'],['03','#8B787B'],['04','#483437'],['05','#4C4443'],['06','#1B2E2B'],['07','#4A5858'],['08','#576460'],['09','#2F3336'],['10','#585C5F'],['11','#676768'],['12','#A0A4A2'],['13','#876934'],['14','#41442F'],['15','#283748']]
+  }
+};
+var COLLECTION_ORDER = ['luna','manila','enjoylux','milton','piano','spello','maya','zoya'];
+/* Real prices (lei) pulled from agache.ro/products/familia-boston.js -- one Shopify variant
+   per shape x fabric-tier combo, verified against the live product page's own option labels
+   (same 4 "Alege modelul dorit" shapes, same 5 "Alege tipul de textile" tiers). Each collection
+   above only carries a tier (Practic/Confort/Premium/Lux/Special); the actual lei price depends
+   on which shape is currently selected too, so it's looked up here instead of stored per-collection. */
+var SHAPE_TIER_PRICE = {
+  'Canapea 3 locuri':                     { Practic:4745, Confort:4985, Premium:5235, Lux:5500, Special:5775 },
+  'Coltar 3 locuri cu insula pe stanga':  { Practic:5780, Confort:6070, Premium:6375, Lux:6700, Special:6995 },
+  'Coltar 3 locuri cu insula pe dreapta': { Practic:5780, Confort:6070, Premium:6375, Lux:6700, Special:6995 },
+  'Coltar 4 locuri':                      { Practic:8280, Confort:8710, Premium:9115, Lux:9570, Special:10085 }
+};
+function currentShapeName(){
+  return sel.shapeEl ? sel.shapeEl.dataset.name : 'Canapea 3 locuri';
+}
+function collectionPrice(slug, shapeName){
+  return SHAPE_TIER_PRICE[shapeName || currentShapeName()][COLLECTIONS[slug].tier];
+}
+function shapePriceRange(shapeName){
+  var t = SHAPE_TIER_PRICE[shapeName || currentShapeName()];
+  return { min:t.Practic, max:t.Special };
+}
+var SWATCH_INDEX = {};
+/* order the main color groups sweep around the wheel, neutrals bookending it */
+var FAMILY_ORDER = ['Bej', 'Maro', 'Roz', 'Roșu', 'Albastru', 'Verde', 'Gri', 'Negru'];
+function hexLuminance(hex){
+  var rgb = hexToRGB(hex);
+  return 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
+}
+/* Pure luminance sort put saturated and neutral colors next to each other whenever they
+   happened to match in brightness (a neon orange beside a mid grey) because it ignores hue
+   and intensity entirely. Group by hue family first (like a car configurator's color grid),
+   then sort by lightness within each group, so brightness never overrides hue/intensity.
+   Starts from beige -- the dominant tone across these fabric collections -- and fans out
+   through the warm families before the cool ones, ending on the true neutrals.
+   Uses the same Lab-based family logic as colorFamilyRO() so a swatch's position in the grid
+   always matches the filter chip it shows up under. */
+var COLOR_SORT_FAMILY_ORDER = ['Bej', 'Maro', 'Roșu', 'Roz', 'Verde', 'Albastru', 'Gri', 'Negru'];
+function sortColorFamily(hex){
+  return colorFamilyRO(hex);
+}
+function colorSortFamilyIndex(hex){
+  var idx = COLOR_SORT_FAMILY_ORDER.indexOf(sortColorFamily(hex));
+  return idx === -1 ? COLOR_SORT_FAMILY_ORDER.length : idx;
+}
+COLLECTION_ORDER.forEach(function(slug){
+  var c = COLLECTIONS[slug];
+  c.slug = slug;
+  c.colors.sort(function(a, b){
+    var fa = colorSortFamilyIndex(a[1]), fb = colorSortFamilyIndex(b[1]);
+    if (fa !== fb) return fa - fb;
+    return hexLuminance(b[1]) - hexLuminance(a[1]); /* lightest first within the same family */
+  });
+  c.colors.forEach(function(pair){
+    var name = c.name + ' ' + pair[0];
+    SWATCH_INDEX[name] = { slug:slug, code:pair[0], hex:pair[1], collection:c, name:name };
+  });
+});
+/* Flat, cross-collection list -- collections no longer group the grid visually, colors are
+   presented as one continuous sweep from lightest to darkest regardless of which collection
+   they belong to. */
+var ALL_SWATCHES = Object.keys(SWATCH_INDEX).map(function(name){ return SWATCH_INDEX[name]; })
+  .sort(function(a, b){ return hexLuminance(b.hex) - hexLuminance(a.hex); });
+
+/* ══════════ Color helpers (copied verbatim from mobile-v2.html:1533-1597) ══════════ */
+function hexToRGB(hex){
+  hex = (hex || '').replace('#', '');
+  return { r: parseInt(hex.slice(0, 2), 16), g: parseInt(hex.slice(2, 4), 16), b: parseInt(hex.slice(4, 6), 16) };
+}
+/* HSL hue is what colorFamilyRO used to run on, and it's the reason "yellow" filter results
+   included olive/khaki fabrics: HSL computes hue straight from RGB ratios, which distorts hue
+   badly for muted, mid-brightness colors -- an olive khaki like #8E8A36 measures as HSL
+   H=57 (smack in the "yellow" band) even though it visibly reads as green/pistachio. CIE Lab
+   hue tracks how hue is actually perceived, so the same color measures H=102 in Lab (correctly
+   past the yellow/green boundary). Every family/sort decision below now runs on Lab L*C*h
+   instead of HSL, with hue bands re-tuned against the NAMED_COLORS reference swatches. */
+function rgbToLab(r, g, b){
+  function toLinear(c){ c /= 255; return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); }
+  var rl = toLinear(r), gl = toLinear(g), bl = toLinear(b);
+  var x = rl * 0.4124 + gl * 0.3576 + bl * 0.1805;
+  var y = rl * 0.2126 + gl * 0.7152 + bl * 0.0722;
+  var z = rl * 0.0193 + gl * 0.1192 + bl * 0.9505;
+  x /= 0.9505; z /= 1.089;
+  function f(t){ return t > 0.008856 ? Math.pow(t, 1 / 3) : 7.787 * t + 16 / 116; }
+  var fx = f(x), fy = f(y), fz = f(z);
+  return { l: 116 * fy - 16, a: 500 * (fx - fy), b: 200 * (fy - fz) };
+}
+function hexToLCH(hex){
+  var rgb = hexToRGB(hex);
+  var lab = rgbToLab(rgb.r, rgb.g, rgb.b);
+  var c = Math.sqrt(lab.a * lab.a + lab.b * lab.b);
+  var h = Math.atan2(lab.b, lab.a) * 180 / Math.PI;
+  if (h < 0) h += 360;
+  return { l: lab.l, c: c, h: h };
+}
+function colorFamilyRO(hex){
+  var lch = hexToLCH(hex);
+  var l = lch.l, c = lch.c, h = lch.h;
+  if (l < 12) return 'Negru';
+  /* "cool" hues (green through blue) need a higher chroma floor before they read as colored --
+     dusty sage/slate upholstery tones sit at c=8-12 and are perceived as grey, not green/blue,
+     while the same chroma in a warm hue already reads as a tint (confirmed against the
+     Gri-albăstrui/Gri-verzui reference swatches). */
+  var cool = h >= 100 && h < 310;
+  var neutralCutoff = cool ? 12 : 7;
+  if (c < neutralCutoff) return l > 60 ? 'Bej' : 'Gri';
+  if (h >= 17 && h < 50) return 'Roșu';
+  /* This band covers true gold/mustard, muted tan/brown, and rust/terracotta clay tones --
+     "Galben" was dropped as its own family, so everything here (gold/mustard included) now
+     routes into the Bej/Maro split purely on lightness, same as the rest of this band always
+     has been split. */
+  if (h >= 50 && h < 100) return l >= 48 ? 'Bej' : 'Maro';
+  if (h >= 100 && h < 220) return 'Verde';
+  if (h >= 220 && h < 310) return 'Albastru';
+  /* remaining hues (310-360, 0-17) are red/pink */
+  return 'Roz';
+}
+var NAMED_COLORS = [
+  ['Alb', '#FFFFFF'], ['Ivoriu', '#F5F0E6'], ['Crem', '#EDE6D6'], ['Bej deschis', '#E3D5C0'], ['Bej', '#D4C5A9'],
+  ['Nisipiu', '#C6B598'], ['Bej închis', '#B0A183'], ['Camel', '#B98669'], ['Maro deschis', '#A67C52'], ['Maro', '#6B4423'],
+  ['Maro închis', '#4A2E1E'], ['Ciocolatiu', '#3B2417'], ['Antracit', '#3C3C3C'], ['Gri deschis', '#C9C9C9'], ['Gri', '#8E8E8E'],
+  ['Gri închis', '#5A5A5A'], ['Negru', '#151515'], ['Roșu', '#B22222'], ['Bordo', '#5C1A24'], ['Vișiniu', '#7C1C27'],
+  ['Rubiniu', '#9A3C2E'], ['Terracota', '#B0664B'], ['Cărămiziu', '#B25A3D'], ['Roz pudrat', '#E7C9CB'], ['Roz', '#E0A7B0'],
+  ['Roz vechi', '#A97C8A'], ['Prună', '#5C2A4A'], ['Fucsia', '#8B2E63'], ['Galben pastel', '#EDE1A0'], ['Galben', '#E5C13A'],
+  ['Muștar', '#B49738'], ['Ocru', '#8E7B2E'], ['Auriu', '#C9A227'], ['Verde crud', '#8FBF7F'], ['Verde salvie', '#8FA688'],
+  ['Verde oliv', '#6B6E3A'], ['Verde pădure', '#2F5233'], ['Verde smarald', '#1F6B4E'], ['Mentă', '#A9D3C4'], ['Petrol', '#1F5C63'],
+  ['Turcoaz', '#2E8C8C'], ['Albastru bebe', '#A9CBE0'], ['Albastru deschis', '#7CA9C9'], ['Albastru', '#3B6E9E'], ['Bleumarin', '#1B2A4A'],
+  ['Indigo', '#2A2E52'], ['Gri-albăstrui', '#7C8894'], ['Gri-verzui', '#7C8B7A']
+];
+function nearestColorName(hex){
+  var rgb = hexToRGB(hex);
+  /* Lab distance, not raw RGB distance -- RGB euclidean weighs the three channels as if they
+     carried equal perceptual weight, so it regularly named a swatch after a same-brightness
+     color of a completely different hue (the same root cause as the old HSL filter bug). */
+  var lab = rgbToLab(rgb.r, rgb.g, rgb.b);
+  var best = null, bestDist = Infinity;
+  NAMED_COLORS.forEach(function(entry){
+    var refRgb = hexToRGB(entry[1]);
+    var refLab = rgbToLab(refRgb.r, refRgb.g, refRgb.b);
+    var dist = Math.pow(lab.l - refLab.l, 2) + Math.pow(lab.a - refLab.a, 2) + Math.pow(lab.b - refLab.b, 2);
+    if (dist < bestDist){ bestDist = dist; best = entry[0]; }
+  });
+  return best || hex;
+}
+
+/* ══════════ fabricAsset (copied verbatim from mobile-v2.html:2099-2109) ══════════ */
+function fabricAsset(name){
+  var s = SWATCH_INDEX[name];
+  /* The catalog swatches come from assets/swatches/dropin/ -- the 191 plates rebuilt from
+     photographs, 320px, with the fold and the sheen on them. assets/<slug>-<code>.png is the
+     first generation, flat and 160px, and it is still what every earlier version reads: those
+     files are shared all the way back to mobile.html and some of those versions are frozen,
+     so this points at the new folder rather than copying over the old one. Same names, so
+     only the directory moves. */
+  if (s) return 'assets/swatches/dropin/' + (s.collection.assetSlug || s.slug) + '-' + s.code + '.png';
+  /* legacy fallback: the untouched PDP swatch strip + hidden "Vazute recent" rows still use
+     old unpadded "Luna N" names that predate the real catalog — resolve them exactly like the
+     old lunaAsset() did, so that no-touch zone keeps rendering identically. */
+  var m = /^Luna (\d+)$/.exec(name || '');
+  if (m) return parseInt(m[1], 10) === 8 ? 'assets/modal-hero.png' : 'assets/luna-' + m[1] + '.png';
+  return 'assets/modal-hero.png';
+}
+
+/* ══════════ Property/label/badge helpers (copied verbatim from mobile-v2.html:2109-2193, incl. martRange dependency) ══════════ */
+function martRange(v){
+  v = v || '';
+  var nums = v.match(/[\d.]+/g);
+  if (!nums) return [0, 0];
+  var vals = nums.map(function(n){ return parseInt(n.replace(/\./g, ''), 10); });
+  return [Math.min.apply(null, vals), v.indexOf('>') > -1 ? Infinity : Math.max.apply(null, vals)];
+}
+function martPercent(v){
+  var nums = (v || '').match(/[\d.]+/g);
+  if (!nums) return 0;
+  var vals = nums.map(function(n){ return parseInt(n.replace(/\./g, ''), 10); });
+  return Math.min(100, Math.round((Math.max.apply(null, vals) / 90000) * 100));
+}
+function ratingPercent(v){
+  var m = /([\d.]+)/.exec(v || '');
+  return m ? Math.min(100, (parseFloat(m[1]) / 5) * 100) : 0;
+}
+function avgScore(c){
+  var vals = [c.mace, c.rubbing, c.light, c.pilling].map(function(v){
+    var m = v && /([\d.]+)/.exec(v);
+    return m ? parseFloat(m[1]) : null;
+  }).filter(function(v){ return v !== null; });
+  if (!vals.length) return '—';
+  var avg = vals.reduce(function(a, b){ return a + b; }, 0) / vals.length;
+  return String(Math.round(avg * 10) / 10);
+}
+var USP_ICONS = {
+  people: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+  droplet: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>',
+  hand: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>',
+  shield: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>',
+  grid: '<svg width="22" height="22" viewBox="0 0 24 24" fill="#4d35ff"><circle cx="7" cy="5" r="1.6"/><circle cx="13" cy="5" r="1.6"/><circle cx="7" cy="12" r="1.6"/><circle cx="13" cy="12" r="1.6"/><circle cx="7" cy="19" r="1.6"/><circle cx="13" cy="19" r="1.6"/></svg>'
+};
+function textureLabel(c){
+  if (c.surface === 'Plush/Soft') return c.finish === 'Glossy' ? 'Aspect catifelat, lucios' : 'Aspect catifelat, mat';
+  if (c.surface === 'Textured') return 'Textură proeminentă, mată';
+  if (c.surface === 'Smooth') return c.finish === 'Semi-Glossy' ? 'Textură fină, sidefată' : 'Aspect neted, mat';
+  return c.finish + ' · ' + c.surface;
+}
+function durabilityLabel(c){
+  var r = martRange(c.martindale);
+  if (r[1] >= 75000) return 'Pentru uz extrem';
+  if (r[1] >= 55000) return 'Pentru uz intensiv';
+  return 'Pentru uz zilnic';
+}
+/* 3 top USPs per collection: a shared, comparable pool of badge types (same "vocabulary"
+   across all 8 collections), each tied to real collection data — never fabricated. Priority
+   order below: the first 3 that actually apply to a given collection are shown, so premium
+   collections (real waterproof/easy-clean/pet-friendly claims) surface their strongest real
+   properties first, while every collection still always ends up with exactly 3 genuine badges
+   via the always-true fallbacks (texture, durability tier, composition) at the end. */
+var USP_BADGES = [
+  { icon: 'people', test: function(c){ return c.petFriendly; }, label: function(){ return 'Pet Friendly'; } },
+  { icon: 'droplet', test: function(c){ return c.waterproof; }, label: function(){ return 'Impermeabil'; } },
+  { icon: 'hand', test: function(c){ return c.easyClean; }, label: function(){ return 'Ușor de curățat'; } },
+  { icon: 'shield', test: function(c){ return !!c.certifications; }, label: function(c){ return c.certifications; } },
+  { icon: 'grid', test: function(){ return true; }, label: textureLabel },
+  { icon: 'people', test: function(){ return true; }, label: durabilityLabel },
+  { icon: 'shield', test: function(){ return true; }, label: function(c){ return c.composition; } }
+];
+function renderUSPBadges(prefix, c){
+  var picked = [];
+  for (var i = 0; i < USP_BADGES.length && picked.length < 3; i++){
+    if (USP_BADGES[i].test(c)) picked.push(USP_BADGES[i]);
+  }
+  picked.forEach(function(badge, i){
+    var el = document.getElementById(prefix + '-usp' + (i + 1));
+    if (el) el.innerHTML = USP_ICONS[badge.icon] + badge.label(c);
+  });
+}
+function martindaleValue(c){
+  var nums = (c.martindale || '').match(/[\d.]+/g) || [];
+  return nums[nums.length - 1] || c.martindale;
+}
+/* Collection-header KPI row: plain uppercase text, no icons, always leads with a single
+   Martindale rub count (no range, no >/< sign), then every other claim that applies —
+   the row scrolls horizontally rather than capping at 3, so a 4-USP collection stays
+   swipeable in one line instead of silently dropping one (e.g. Pet Friendly). */
+var COLLECTION_KPI_POOL = [
+  { test: function(){ return true; }, label: function(c){ return martindaleValue(c) + ' Martindale'; } },
+  { test: function(c){ return c.petFriendly; }, label: function(){ return 'Pet Friendly'; } },
+  { test: function(c){ return c.waterproof; }, label: function(){ return 'Impermeabil'; } },
+  { test: function(c){ return c.easyClean; }, label: function(){ return 'Easy Clean'; } },
+  { test: function(c){ return !!c.certifications; }, label: function(c){ return c.certifications; } }
+];
+function collectionKPIs(c){
+  var picked = [];
+  for (var i = 0; i < COLLECTION_KPI_POOL.length; i++){
+    if (COLLECTION_KPI_POOL[i].test(c)) picked.push(COLLECTION_KPI_POOL[i].label(c));
+  }
+  return picked;
+}
+function fillCollectionText(p, c){
+  renderUSPBadges(p, c);
+  var kpisEl = document.getElementById(p + '-kpis');
+  if (kpisEl) kpisEl.innerHTML = collectionKPIs(c).map(function(k){ return '<span>' + k + '</span>'; }).join('');
+  document.getElementById(p + '-desc').textContent = c.desc;
+  document.getElementById(p + '-care').textContent = c.care;
+  document.getElementById(p + '-comp').textContent = c.composition;
+  document.getElementById(p + '-weight').textContent = c.weight + ' g/m²';
+  var widthEl = document.getElementById(p + '-width');
+  if (widthEl) widthEl.textContent = c.width + ' cm';
+  document.getElementById(p + '-fire').innerHTML = c.fireTest === 'BS 5852: Partea 1' ? 'BS 5852: Partea 1: 1979<br>sursa 0 (țigară)' : c.fireTest;
+  document.getElementById(p + '-cert').textContent = c.certifications || '—';
+  document.getElementById(p + '-maint').textContent = c.easyClean ? 'Ușor de întreținut, curățare cu apă' : (c.waterproof ? 'Rezistent la lichide, curățare delicată' : 'Necesită curățare delicată, la uscat');
+  document.getElementById(p + '-mart-v').textContent = c.martindale;
+  document.getElementById(p + '-mart-bar').style.width = martPercent(c.martindale) + '%';
+  /* The individual color modal (p === 'swm') only carries data for a subset of these ratings
+     per collection -- hide whichever rows come back empty instead of showing a bare "—". The
+     collection modal (p === 'colm') keeps showing all rows as before. */
+  [['mace', c.mace], ['rub', c.rubbing], ['light', c.light], ['pill', c.pilling]].forEach(function(pair){
+    var vEl = document.getElementById(p + '-' + pair[0] + '-v');
+    var bEl = document.getElementById(p + '-' + pair[0] + '-bar');
+    var row = vEl.closest('.rz-row');
+    if (pair[1]){
+      vEl.innerHTML = pair[1].replace(/\/5$/, '<i>/5</i>');
+      bEl.style.width = ratingPercent(pair[1]) + '%';
+      if (row) row.style.display = '';
+    } else {
+      vEl.textContent = '—';
+      bEl.style.width = '0%';
+      if (row && p === 'swm') row.style.display = 'none';
+    }
+  });
+  if (p === 'swm'){
+    var martRow = document.getElementById(p + '-mart-v').closest('.rz-row');
+    var rzRows = Array.prototype.filter.call(martRow.parentElement.querySelectorAll('.rz-row'), function(r){ return r.style.display !== 'none'; });
+    rzRows.forEach(function(r, i){ r.style.borderBottom = (i === rzRows.length - 1) ? 'none' : ''; });
+  }
+  document.getElementById(p + '-score').innerHTML = avgScore(c) + '<i>/5</i>';
+}
+
+/* ══════════ Cart + feedback (copied verbatim from mobile-v2.html:2330-2359) ══════════ */
+function addToCart(btn){
+  var orig = btn.innerHTML;
+  btn.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg> Adăugat în coș';
+  toast('Produsul a fost adăugat în coș');
+  setTimeout(function(){ closeConfigurator(); }, 900);
+}
+/* No-op touch listener -- iOS Safari only renders :active styles on tap when some ancestor has
+   a touch handler bound, so without this the whole "while pressing" button treatment above
+   silently never shows up on an iPhone. */
+document.addEventListener('touchstart', function(){}, { passive:true });
+function pressFeedback(el){
+  el.style.transition = 'transform .1s'; el.style.transform = 'scale(.97)';
+  setTimeout(function(){ el.style.transform = ''; }, 120);
+}
+var toastT;
+function toast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('on');
+  clearTimeout(toastT);
+  toastT = setTimeout(function(){ t.classList.remove('on'); }, 2200);
+}
+
+/* ══════════ v3-specific: configurator state + rendering ══════════ */
+var sel = { shapeEl: null, collectionSlug: 'luna', colorName: null, needs: [] };
+/* Grouped by actual fabric structure (per agache.ro's own material descriptions), not by
+   price tier and not by the old Catifea/Velur/Bucle split -- that split had real velvet
+   (Piano) lumped in with velvet-*look* wovens (Manila/Zoya/Maya), and called plain thick
+   weaves (Luna/Spello) "Bucle" even though none of them are an actual looped/bouclé texture. */
+/* zoom is per-pill because Neted and Texturat are both plain matte weaves -- the only real
+   difference is thread gauge (fine vs thick), which only reads if Neted is shown at a wider
+   crop (finer grain, needs less magnification to look "dense") and Texturat tighter (coarser
+   grain, needs more magnification to read as chunky) -- same zoom on both erases the contrast. */
+var FABRIC_PILLS = [
+  { key:'neted', label:'Neted', stems:['Neted'], asset:'assets/chip-neted.jpg', zoom:520 },
+  { key:'texturat', label:'Texturat', stems:['Texturat'], asset:'assets/chip-texturat.jpg', zoom:950 },
+  { key:'catifea', label:'Catifea', stems:['Catifea'], asset:'assets/chip-catifea.jpg', zoom:850 },
+  { key:'efect-catifea', label:'Efect catifea', stems:['Efect catifea'], asset:'assets/chip-efectcatifea.jpg', zoom:850 }
+];
+var activeFabricPills = [];
+var LUNA_SOFA_CODES = ['5','6','8','10','13','14'];
+function materialTypeMatch(c){
+  return FABRIC_PILLS.filter(function(p){
+    return p.stems.some(function(stem){ return c.materialTypes.some(function(t){ return t.indexOf(stem) > -1; }); });
+  })[0];
+}
+function materialTypeLabel(c){
+  var match = materialTypeMatch(c);
+  return match ? match.label : '';
+}
+
+var NEED_ICON_BABY = '<svg width="34" height="34" viewBox="0 0 93 93" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.325 17.919C0.425 18.219 2.525 25.119 3.725 28.219C4.425 29.919 6.625 36.719 6.925 40.219C7.325 44.619 12.125 51.219 21.425 52.019C22.425 52.219 23.425 52.219 24.425 52.219C28.425 52.219 35.425 51.119 39.725 44.319C42.125 40.519 44.125 39.219 48.925 37.519C52.225 36.319 54.425 34.319 54.725 32.319C54.925 30.919 54.325 29.519 53.225 28.619C51.525 27.219 48.425 27.819 45.425 28.419C44.425 28.719 43.325 28.819 42.225 28.819L41.625 28.619C40.325 28.319 39.225 28.019 40.325 22.719C41.725 15.919 42.925 8.91903 43.025 8.31903C43.525 6.21903 42.325 4.01903 40.325 3.31903C38.925 2.91903 37.025 3.51903 36.125 6.31903L32.525 18.919C32.225 19.819 31.425 20.519 31.225 20.419C31.025 20.319 30.725 19.819 30.625 18.219L30.225 3.91903C30.125 1.81903 28.425 0.119028 26.325 0.0190276C24.425 -0.180972 22.725 1.21903 22.525 3.11903L21.025 17.919C20.925 18.719 20.525 19.019 20.425 19.019C20.325 19.019 19.925 18.719 19.625 17.519L16.625 5.31903C16.225 3.31903 14.325 1.81903 12.325 2.01903C10.925 2.21903 9.325 3.41903 9.425 6.21903V6.31903L11.225 20.419C11.325 21.619 11.025 22.819 10.525 23.919C10.325 23.619 10.125 23.419 10.025 23.119L7.225 15.819C6.625 13.519 4.325 12.219 2.025 12.819C0.525 13.419 -0.575 15.219 0.325 17.919Z" fill="currentColor"/><path d="M65.6251 43.719C66.3251 40.819 64.9251 39.419 63.5251 39.119C61.3251 38.719 59.2251 40.019 58.6251 42.119C58.4251 42.719 55.9251 49.419 53.7251 56.019C52.0251 61.119 50.9251 60.819 49.6251 60.419C49.4251 60.319 49.2251 60.319 49.0251 60.219C48.1251 59.619 47.2251 59.019 46.5251 58.219C44.2251 56.219 41.8251 54.119 39.6251 54.419C38.2251 54.519 37.0251 55.519 36.4251 56.819C35.6251 58.819 36.5251 61.519 38.8251 64.219C42.0251 68.119 43.1251 70.219 43.3251 74.719C43.7251 86.119 54.2251 90.319 55.2251 90.719C57.6251 91.919 60.3251 92.519 63.0251 92.519C68.0251 92.519 72.0251 90.219 73.7251 87.819C75.8251 84.919 81.1251 80.219 82.5251 79.119C85.1251 77.119 90.4251 72.219 90.6251 72.019C92.8251 70.119 92.7251 68.019 91.6251 66.719C89.9251 65.019 87.3251 65.019 85.6251 66.719L79.4251 71.619C79.1251 71.819 78.8251 71.919 78.5251 72.019C78.6251 70.819 79.0251 69.619 79.7251 68.619L88.4251 57.419L88.5251 57.319C90.0251 54.919 89.3251 53.119 88.2251 52.219C86.5251 51.019 84.2251 51.319 82.8251 52.819L74.0251 61.819C73.2251 62.619 72.6251 62.719 72.6251 62.719C72.4251 62.319 72.5251 61.819 72.7251 61.519L78.9251 47.919C79.7251 46.219 78.9251 44.219 77.2251 43.419C75.3251 42.419 73.0251 43.019 71.9251 44.819L64.3251 56.919C63.4251 58.319 62.8251 58.519 62.7251 58.519C62.2251 57.919 62.1251 57.219 62.3251 56.519L65.6251 43.719ZM61.6251 60.719C62.5251 61.119 64.3251 61.319 66.3251 58.219L73.9251 46.119C74.4251 45.419 75.3251 45.219 76.0251 45.619C76.5251 45.819 76.8251 46.419 76.6251 46.919L70.4251 60.519C69.7251 62.319 70.0251 64.019 71.2251 64.819C71.7251 65.119 73.5251 66.019 75.8251 63.519L84.6251 54.519C85.1251 53.919 85.9251 53.819 86.6251 54.119C87.1251 54.519 86.6251 55.519 86.4251 55.919L77.8251 67.119C76.9251 68.319 75.1251 72.219 76.7251 73.919C77.3251 74.619 78.5251 75.119 80.8251 73.719L80.9251 73.619L87.2251 68.619C87.8251 67.919 88.9251 67.719 89.7251 68.319C90.1251 68.819 89.6251 69.519 88.9251 70.119C88.8251 70.219 83.4251 75.119 80.9251 77.119C79.2251 78.419 73.8251 83.319 71.6251 86.319C69.9251 88.619 64.0251 92.119 56.1251 88.419H56.0251C55.7251 88.319 46.2251 84.819 45.8251 74.719C45.6251 69.419 44.2251 66.819 40.8251 62.719C38.8251 60.319 38.5251 58.519 38.8251 57.719C38.9251 57.519 39.0251 57.119 40.0251 56.919H40.2251C41.3251 56.919 43.5251 58.919 44.9251 60.119C46.6251 61.619 47.6251 62.419 48.6251 62.619L49.1251 62.719C52.0251 63.519 54.1251 62.719 56.2251 56.619C58.5251 49.819 61.1251 42.819 61.1251 42.719V42.619C61.3251 41.819 62.1251 41.219 63.0251 41.319C63.6251 41.419 63.3251 42.619 63.3251 42.919L60.0251 55.619C59.4251 57.619 60.0251 60.019 61.6251 60.719Z" fill="currentColor"/></svg>';
+
+var NEED_ICON_CAT = '<svg width="34" height="34" viewBox="0 0 71 91" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M25.1868 86.5518C24.6974 85.5672 23.9208 83.7774 23.2653 81.333C21.8168 81.529 18.2044 82.3087 18.0959 85.2148C18.0697 85.9248 18.2852 86.4867 18.7543 86.9327C19.9634 88.0834 22.5815 88.2376 23.9245 88.1904C24.1789 87.6936 24.568 87.2671 25.085 86.9409C25.2129 86.8601 25.2571 86.6933 25.1868 86.5518Z" fill="currentColor"/><path d="M46.5794 81.333C45.924 83.7774 45.1473 85.5672 44.658 86.5518C44.5884 86.6925 44.6318 86.8601 44.7605 86.9409C45.2775 87.2671 45.6666 87.6936 45.921 88.1904C47.2655 88.2361 49.8873 88.079 51.0927 86.9319C51.5611 86.4852 51.7758 85.9241 51.7496 85.2148C51.6411 82.3087 48.028 81.529 46.5794 81.333Z" fill="currentColor"/><path d="M39.1468 41.09C39.1034 40.7818 38.4382 40.1301 37.4902 39.8106C37.2269 39.7215 36.9253 39.6587 36.65 39.6587C36.3769 39.6587 36.1285 39.7208 35.9676 39.8809C35.8958 39.952 35.6781 40.1682 35.7574 40.7107C35.8689 41.4709 36.4435 42.2348 36.6994 42.4136C37.0944 42.4114 38.3881 41.9924 38.9642 41.3953C39.1004 41.2546 39.1535 41.1402 39.1468 41.09Z" fill="currentColor"/><path d="M22.7949 13.8764C24.8652 13.5375 28.5644 13.2285 33.7077 13.928C33.3538 10.6456 32.4155 7.57042 30.9505 4.94641C27.8529 7.03993 25.3553 10.2124 22.7949 13.8764Z" fill="currentColor"/><path d="M6.58105 62.2677C5.75652 57.6279 7.26568 53.836 8.59676 50.4907C9.54775 48.1024 10.4449 45.8465 10.4449 43.5262C10.4449 38.0313 7.81562 34.6479 7.78943 34.6142C7.00081 33.4245 4.58929 30.4085 2.4434 30.0882C1.78048 29.9909 1.19237 30.1585 0.651412 30.6067C0.249618 30.9397 0.0386197 31.3362 0.00494981 31.8181C-0.086333 33.123 1.10932 34.7429 1.57846 35.2562C1.68844 35.3729 4.50998 38.4204 4.08724 44.0216C3.94358 45.9348 3.21032 47.4858 2.43517 49.1289C0.949203 52.2782 -0.901145 56.1981 0.506257 64.9373C2.08425 74.7382 11.4243 79.895 15.8014 81.8014C14.5189 79.6473 12.8444 75.8546 12.584 70.4898C11.0936 70.1569 7.72209 68.6934 6.58105 62.2677Z" fill="currentColor"/><path d="M65.4441 32.2101C66.9645 27.2315 67.4433 22.2596 66.8545 17.3954C63.982 18.3112 61.1463 20.309 58.0449 23.5675C62.1788 26.8866 64.3868 30.2266 65.4441 32.2101Z" fill="currentColor"/><path d="M69.8519 13.4006C64.7812 13.786 59.5407 16.1788 53.8849 20.6845C54.9601 21.3273 55.9463 21.9864 56.8524 22.6524C60.491 18.802 63.8273 16.5783 67.3005 15.7134C67.5048 15.6617 67.7218 15.6999 67.8983 15.8181C68.0734 15.9356 68.1916 16.1219 68.2223 16.3306C69.0977 22.291 68.4408 28.4062 66.2702 34.5057C66.0113 35.1589 65.085 35.0369 64.8583 34.5012C64.8216 34.3972 61.0334 24.0411 45.7757 18.5184C30.4282 12.9637 21.4204 15.6977 21.3306 15.7261C20.438 15.9131 20.0138 15.1911 20.4859 14.591C23.713 9.86977 26.7193 5.7583 30.8158 3.25625C30.9856 3.153 31.1884 3.12157 31.3822 3.16721C31.5752 3.21435 31.7413 3.33556 31.8446 3.50541C33.7062 6.55665 34.8659 10.2312 35.234 14.1593C35.7481 14.2446 36.2703 14.3374 36.8098 14.4436C36.5614 8.68384 34.8584 3.93564 31.582 0C28.2105 2.71005 10.6161 17.6722 12.8989 32.9127C14.1103 41.0025 18.0347 45.491 21.8072 47.9789C24.1125 49.4207 26.7829 50.4555 29.8715 51.0256C30.2831 51.0638 30.5861 51.4274 30.5487 51.8382C30.5053 52.3103 30.1701 52.4787 29.7376 52.5161C29.6598 52.5093 25.8184 52.1135 21.6366 49.5576C20.346 50.5797 15.6808 54.9051 14.328 64.9283C13.0635 74.296 16.4388 80.1815 17.8282 82.1501C19.2753 80.5938 21.6314 80.0521 22.9071 79.868C22.7829 79.3046 22.6647 78.7217 22.5614 78.1029C21.8821 74.0154 22.0152 70.5579 22.1544 68.8609C22.1903 68.4277 22.004 68.0274 21.6793 67.8411C20.4343 67.1243 19.6187 65.9795 19.2558 64.4367C19.1615 64.0342 19.4107 63.6316 19.8132 63.5366C20.2098 63.4423 20.6176 63.6915 20.7126 64.094C20.9805 65.2336 21.5401 66.0356 22.4253 66.5437C23.2498 67.0181 23.7287 67.9758 23.6464 68.9836C23.5117 70.6118 23.3837 73.9286 24.0369 77.8568C24.6939 81.8044 25.8783 84.581 26.5255 85.8844C26.9385 86.7157 26.6617 87.7138 25.8813 88.2054C25.3306 88.5526 25.0665 89.0344 25.0762 89.6779C25.0934 90.8803 26.0841 90.9925 26.3871 90.9978H32.0855C33.237 90.9978 34.1746 90.061 34.1746 88.9087V66.097C34.1746 65.684 34.509 65.3488 34.9228 65.3488C35.3365 65.3488 35.671 65.684 35.671 66.097V88.911C35.671 90.0625 36.6078 91 37.7593 91H43.4645C43.7608 90.9948 44.7514 90.8825 44.7686 89.6794C44.7783 89.0367 44.5142 88.5556 43.9635 88.2076C43.1839 87.7168 42.907 86.7194 43.3186 85.8874C43.9665 84.5825 45.1509 81.8059 45.8079 77.859C46.4611 73.9309 46.3331 70.6133 46.1985 68.9859C46.1162 67.978 46.595 67.0203 47.4203 66.5452C48.3047 66.0371 48.8644 65.2358 49.1322 64.0955C49.2273 63.693 49.635 63.4438 50.0316 63.5381C50.4341 63.6324 50.6833 64.0357 50.589 64.4382C50.2261 65.981 49.4106 67.1265 48.1663 67.8426C47.8408 68.0296 47.6545 68.43 47.6904 68.8632C47.8303 70.5601 47.9628 74.0169 47.2834 78.1052C47.1801 78.724 47.0619 79.3068 46.9377 79.8702C48.5845 80.1074 52.0263 80.9469 52.9841 83.7872C54.3974 82.3738 57.1015 78.81 57.9687 71.6159C59.0334 62.7727 53.861 57.2635 52.7514 56.1951C50.9459 56.4929 49.1674 56.6118 47.5116 56.6118C42.4663 56.6118 38.5569 55.5688 38.4708 55.5449C38.0728 55.4356 37.8386 55.0233 37.9486 54.6253C38.0586 54.2272 38.4701 53.9953 38.8681 54.1023C39.0485 54.1524 57.0402 58.9373 64.9077 47.3937C72.1325 36.7922 70.3039 17.2876 69.8519 13.4006ZM50.2201 37.0511C51.5939 37.0511 52.7072 38.1645 52.7072 39.5382C52.7072 40.9119 51.5939 42.0253 50.2201 42.0253C48.8464 42.0253 47.7331 40.9119 47.7331 39.5382C47.7331 38.1645 48.8464 37.0511 50.2201 37.0511ZM20.01 33.7799C20.2135 33.4207 20.6707 33.2928 21.0291 33.4978L24.9438 35.7133C25.3037 35.9168 25.4301 36.3732 25.2266 36.7331C25.0889 36.9763 24.836 37.1125 24.5749 37.1125C24.4499 37.1125 24.3235 37.081 24.2075 37.0152L20.2928 34.7997C19.9322 34.5962 19.8065 34.1398 20.01 33.7799ZM19.9621 39.9347C19.5723 39.9347 19.2438 39.6332 19.2161 39.2381C19.1877 38.8259 19.499 38.4682 19.9112 38.4398L23.918 38.1615C24.3213 38.133 24.6871 38.4435 24.7163 38.8558C24.7447 39.2681 24.4335 39.6257 24.0212 39.6542L20.0152 39.9325C19.9973 39.934 19.9801 39.9347 19.9621 39.9347ZM25.7144 41.9557L21.9509 44.1712C21.8319 44.2415 21.701 44.2744 21.5723 44.2744C21.3157 44.2744 21.0657 44.1427 20.9273 43.9055C20.7178 43.5494 20.836 43.0907 21.1922 42.8812L24.9557 40.6658C25.3126 40.4555 25.7713 40.576 25.9793 40.9306C26.1896 41.2875 26.0713 41.7462 25.7144 41.9557ZM25.9741 33.0234C25.9741 31.6497 27.0874 30.5364 28.4612 30.5364C29.8349 30.5364 30.9482 31.6497 30.9482 33.0234C30.9482 34.3972 29.8349 35.5105 28.4612 35.5105C27.0874 35.5105 25.9741 34.3972 25.9741 33.0234ZM39.6725 47.7708C37.4278 47.0765 36.3788 45.5883 35.9665 44.3687C35.2318 44.772 34.1596 45.2097 32.9168 45.2097C32.1229 45.2097 31.2655 45.0309 30.3946 44.5498C27.6127 43.0129 28.2068 39.6736 28.9101 38.1226C29.0814 37.7469 29.5236 37.5771 29.9007 37.7499C30.2763 37.9205 30.4432 38.3627 30.2741 38.7383C30.215 38.8708 28.8525 41.9879 31.1181 43.2396C32.735 44.1323 34.3459 43.5516 35.2557 43.0541C34.8457 42.5445 34.506 41.8868 34.3556 41.3107C34.0967 40.3178 34.295 39.4327 34.9131 38.8184C35.6104 38.1263 36.723 37.9707 37.9703 38.3927C39.1397 38.7877 40.4708 39.7365 40.6295 40.8857C40.6886 41.313 40.6003 41.9617 39.8423 42.6231C39.2183 43.1685 38.2045 43.6294 37.362 43.815C37.5902 44.5707 38.2411 45.7619 40.1154 46.3417C42.9504 47.2187 45.1861 44.2078 45.2086 44.1771C45.4517 43.8427 45.9171 43.7686 46.2531 44.0103C46.5868 44.252 46.6631 44.7181 46.4222 45.0533C46.3227 45.1917 44.2553 48.0073 41.2011 48.0073C40.7155 48.0073 40.2045 47.9355 39.6725 47.7708ZM48.6062 53.286C48.4917 53.3488 48.3675 53.3795 48.2456 53.3795C47.9815 53.3795 47.7263 53.2396 47.5894 52.9927L45.1599 48.5887C44.9602 48.2273 45.0918 47.7716 45.454 47.5726C45.8169 47.3728 46.271 47.5045 46.4708 47.8666L48.9003 52.2706C49.0993 52.6313 48.9676 53.0862 48.6062 53.286ZM53.2953 50.8917C53.1479 51.0795 52.9287 51.1775 52.7065 51.1775C52.5449 51.1775 52.3817 51.1251 52.2448 51.0174L47.7817 47.5082C47.4562 47.2531 47.4001 46.7824 47.656 46.4577C47.9111 46.133 48.381 46.0761 48.7065 46.332L53.1696 49.8412C53.4951 50.0963 53.5512 50.5669 53.2953 50.8917ZM55.1494 46.1337L49.537 45.3885C49.127 45.3339 48.8397 44.9568 48.895 44.5475C48.9504 44.1382 49.3238 43.8524 49.736 43.9055L55.2482 44.644C55.6582 44.6987 55.9455 45.0758 55.8901 45.485C55.84 45.8606 55.5183 46.1337 55.1494 46.1337Z" fill="currentColor"/></svg>';
+
+var NEED_ICON_WINE = '<svg width="34" height="34" viewBox="0 0 91 91" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M74.9156 76.2559C75.0231 76.4529 75.135 76.6544 75.2425 76.8513C75.2649 76.8961 75.2872 76.9454 75.2962 76.9946C75.5111 77.9124 75.3857 78.7138 75.0365 79.3854C74.6649 80.0972 74.0471 80.6435 73.3218 81.0151C72.6189 81.3732 71.813 81.5658 71.0384 81.5792C70.0758 81.5971 69.1491 81.333 68.5089 80.7688C68.3522 80.639 68.2716 80.4286 68.3163 80.2137C68.3298 80.1465 68.2671 79.9271 68.1328 79.5779C64.3317 81.6912 61.1798 83.9073 59.0889 85.8683C57.0966 87.7398 56.1027 89.2889 56.5235 90.1575C57.0115 91.1559 59.2994 91.2364 62.608 90.5604C66.1359 89.844 70.7161 88.2277 75.5068 85.8818C80.2973 83.5402 84.385 80.9167 87.1207 78.5706C89.6817 76.3723 91.0247 74.5143 90.5368 73.5159C90.1115 72.6428 88.249 72.4772 85.5179 72.9159C82.6615 73.3726 78.9454 74.5187 74.916 76.2424L74.9156 76.2559ZM52.3961 26.537C45.0938 26.725 37.6256 27.6742 34.8004 28.5741C39.0716 32.8811 50.7571 33.3959 59.3532 32.3796C61.8066 32.0886 64.0005 31.6722 65.6883 31.1887C67.1971 30.7544 68.2806 30.2798 68.7552 29.8097C68.791 29.6396 68.8268 29.4695 68.8626 29.2949C67.5239 26.9488 60.0875 26.34 52.4005 26.537L52.3961 26.537ZM68.339 31.3992C67.1436 35.3973 65.026 38.5358 63.2798 41.1236C61.1218 44.3203 59.4966 46.729 60.6383 49.0884C62.6037 53.1493 64.2871 56.8116 65.8765 60.2724C68.6524 66.3165 71.1506 71.7522 74.2174 77.3213C74.3428 77.9213 74.2577 78.4406 74.0383 78.866C73.7831 79.3585 73.3354 79.748 72.8116 80.0166C72.2609 80.2987 71.6297 80.4509 71.0207 80.4599C70.3805 80.4733 69.7761 80.3255 69.3553 80.0122C69.2791 79.7167 69.1359 79.3092 68.9344 78.7988C68.9344 78.7093 68.912 78.6198 68.8672 78.5392C68.8449 78.4989 68.818 78.4586 68.7867 78.4272C67.9718 76.4215 66.4495 73.189 64.708 69.643C61.0053 62.108 56.3044 53.0502 55.4178 51.7161C53.5464 48.8911 50.0721 48.4925 45.9173 48.0135C41.767 47.5344 36.9003 46.9747 32.45 43.7467C27.5072 40.1605 24.4135 35.2356 22.4615 30.5476C20.7423 26.4196 19.905 22.4753 19.4708 19.7935C20.7557 20.0174 22.9137 19.6771 25.6403 18.8623C27.1849 18.4011 28.9354 17.7922 30.8337 17.0535C31.6038 18.8623 31.8366 21.1143 32.0515 23.1648C32.2888 25.4571 32.4992 27.5211 33.4081 28.6851C37.4599 33.8876 50.2427 34.5949 59.4968 33.498C61.995 33.2025 64.247 32.7727 66.0066 32.2668C66.9244 32.0027 67.7168 31.7117 68.3481 31.3983L68.339 31.3992ZM34.0622 27.6385C33.5339 26.6401 33.3548 24.9298 33.1623 23.0494C32.9429 20.9138 32.7012 18.5723 31.8908 16.6336C34.3442 15.6486 37.0081 14.4622 39.7572 13.1146C45.0939 10.5044 49.7502 7.78232 52.9643 5.49449C55.2969 3.83349 56.8907 2.33363 57.4996 1.17854C63.0333 6.82872 70.9313 15.1387 69.0952 27.8976C66.5074 25.7979 59.5185 25.2203 52.3683 25.4083C44.6675 25.6098 36.7256 26.6619 34.0608 27.6334L34.0622 27.6385ZM31.3939 15.6268C33.8429 14.6418 36.5112 13.4599 39.2647 12.1122C44.5389 9.53341 49.1369 6.84259 52.3114 4.58616C55.2439 2.49535 56.9273 0.905986 56.6632 0.301506C56.6587 0.292553 56.6542 0.283598 56.6497 0.274643C56.3363 -0.298432 54.0486 0.0507891 50.5967 1.08501C46.8628 2.20429 41.9155 4.18317 36.6458 6.76201C34.546 7.78727 32.5447 8.83493 30.6956 9.8691C29.1824 10.7153 27.772 11.5526 26.496 12.354C26.8721 12.4748 27.2661 12.6002 27.687 12.7211C29.4555 13.2315 30.6148 14.2836 31.3939 15.6268ZM0.241504 26.0586C0.134053 24.4021 0.71608 22.7007 2.40842 22.0516C3.05761 21.8008 3.65302 21.8501 4.17246 22.1098C4.53063 22.2888 4.83955 22.5575 5.09922 22.8888C5.34099 23.1977 5.54246 23.5738 5.69916 23.9812C6.16031 25.1766 6.20509 26.681 5.70364 27.6928C4.93357 29.2419 4.06499 29.9134 3.23678 29.9985C2.38165 30.088 1.63847 29.5776 1.10116 28.7584C0.626584 28.0331 0.308699 27.0481 0.246027 26.0541L0.241504 26.0586ZM25.0499 13.0349C25.0365 13.0304 25.0231 13.0259 25.0096 13.0215C21.3473 11.6515 19.9415 10.1964 18.661 8.86667C17.9267 8.10556 17.2328 7.3847 16.1449 6.77139C14.3629 5.76403 12.6169 5.05664 10.8484 4.94924C9.10233 4.84179 7.30242 5.32532 5.36382 6.69082C3.81915 7.77877 1.45074 11.3605 0.452332 14.378C0.14341 15.3138 -0.0312056 16.1823 0.00462304 16.8808C0.0359634 17.4673 0.215044 17.915 0.5956 18.1434C0.980638 18.3762 1.594 18.4344 2.48492 18.2553C3.24156 18.1031 3.94889 16.6883 4.74146 15.1034C5.23842 14.1139 5.76224 13.0663 6.38458 12.1619C7.95607 9.88749 10.0783 8.5175 13.6018 10.9531C15.997 12.6096 16.897 14.5259 17.6446 16.1197C18.0878 17.0688 18.4729 17.8927 19.0907 18.3807C19.1623 18.4389 19.2205 18.5105 19.2608 18.5956C19.5921 19.1597 21.871 18.8105 25.3094 17.7808C26.8003 17.3331 28.4837 16.751 30.3059 16.0481C29.6523 14.996 28.721 14.1812 27.3779 13.7962C26.5093 13.5454 25.7392 13.2902 25.0452 13.0351L25.0499 13.0349Z" fill="currentColor"/></svg>';
+
+var NEED_DEFS = [
+  { key:'baby', label:'Copil mic', svg: NEED_ICON_BABY, test:function(c){ return c.easyClean; } },
+  { key:'cat', label:'Animal de companie', svg: NEED_ICON_CAT, test:function(c){ return c.petFriendly; } },
+  { key:'wine', label:'Pahar de vin', svg: NEED_ICON_WINE, test:function(c){ return c.waterproof; } }
+];
+
+function formatPrice(n){
+  return n.toLocaleString('ro-RO', { minimumFractionDigits:2, maximumFractionDigits:2 });
+}
+
+function previewBaseSrc(){
+  if (sel.collectionSlug === 'luna' && sel.shapeEl && sel.shapeEl.dataset.name === 'Canapea 3 locuri'){
+    var swInfo = SWATCH_INDEX[sel.colorName];
+    if (swInfo){
+      var code = String(parseInt(swInfo.code, 10));
+      if (LUNA_SOFA_CODES.indexOf(code) > -1) return 'assets/v2/luna-' + code + '-sofa.png';
+    }
+  }
+  return sel.shapeEl ? sel.shapeEl.querySelector('img').src : 'assets/shape-3seat.png';
+}
+
+function updatePreview(){
+  var img = document.getElementById('cfg-shape-img');
+  img.src = previewBaseSrc();
+  img.alt = sel.shapeEl ? sel.shapeEl.dataset.name : 'Canapea Boston';
+  var swInfo = SWATCH_INDEX[sel.colorName];
+  if (swInfo){
+    document.getElementById('cfg-fabric-thumb-img').src = fabricAsset(sel.colorName);
+    document.getElementById('cfg-fabric-name').textContent = swInfo.name;
+  }
+}
+
+function updateSummary(){
+  var c = COLLECTIONS[sel.collectionSlug];
+  var swInfo = SWATCH_INDEX[sel.colorName];
+  if (sel.shapeEl){
+    document.getElementById('cfg-sum-shape-name').textContent = sel.shapeEl.dataset.name;
+    document.getElementById('cfg-sum-shape-dim').textContent = sel.shapeEl.dataset.dim;
+    document.getElementById('cfg-sum-shape-img').src = sel.shapeEl.querySelector('img').src;
+  }
+  document.getElementById('cfg-sum-mat-name').textContent = c.name;
+  document.getElementById('cfg-sum-mat-texture').textContent = textureLabel(c) + ' · ' + durabilityLabel(c);
+  if (swInfo){
+    document.getElementById('cfg-sum-color-name').textContent = nearestColorName(swInfo.hex) + ' (' + sel.colorName + ')';
+    document.getElementById('cfg-sum-color-img').src = fabricAsset(sel.colorName);
+  }
+  var price = collectionPrice(sel.collectionSlug);
+  document.getElementById('cfg-sum-price').textContent = formatPrice(price) + ' lei';
+  /* Floating CTA bar mirrors the PDP's own price style (see mobile-v12.html .p-price) --
+     no decimals there, so match it here instead of reusing the 2-decimal summary format. */
+  document.getElementById('cfg-price').textContent = Math.round(price).toLocaleString('ro-RO') + ' lei';
+}
+
+/* ══ v26: layout x size ══
+   Layout = how the sofa is arranged, Mărime = how many seats. Together they resolve to one
+   of the four real variants in #shape-grid, which is what everything downstream (price,
+   preview, summary) still reads. Straight + 4 seats isn't a variant Agache sells, so that
+   one tile switches off instead of silently redirecting the shopper somewhere else. */
+var LAYOUTS = [
+  { key:'drept',   label:'Canapea dreaptă',   img:'assets/shape-3seat.png' },
+  { key:'stanga',  label:'Colțar pe stânga',  img:'assets/shape-corner-left.png' },
+  { key:'dreapta', label:'Colțar pe dreapta', img:'assets/shape-corner-right.png' }
+];
+var SIZES = [
+  { key:'3', label:'3 locuri' },
+  { key:'4', label:'4 locuri' }
+];
+var VARIANT_BY_COMBO = {
+  'drept|3':   'Canapea 3 locuri',
+  'stanga|3':  'Coltar 3 locuri cu insula pe stanga',
+  'dreapta|3': 'Coltar 3 locuri cu insula pe dreapta',
+  'stanga|4':  'Coltar 4 locuri',
+  'dreapta|4': 'Coltar 4 locuri'
+};
+/* Which picture a size tile shows depends on the layout you're already on -- picking
+   "3 locuri" under "Colțar pe stânga" should show that corner, not a straight sofa. */
+function comboImage(layoutKey, sizeKey){
+  var name = VARIANT_BY_COMBO[layoutKey + '|' + sizeKey];
+  if (!name) name = VARIANT_BY_COMBO[layoutKey + '|3'];
+  var tile = document.querySelector('#shape-grid .cfg-shape-tile[data-name="' + name + '"]');
+  return tile ? tile.querySelector('img').getAttribute('src') : 'assets/shape-3seat.png';
+}
+function shapeTileFor(layoutKey, sizeKey){
+  return document.querySelector('#shape-grid .cfg-shape-tile[data-name="' + VARIANT_BY_COMBO[layoutKey + '|' + sizeKey] + '"]');
+}
+function shapeTileMarkup(src, alt, on){
+  return '<span class="cfg-shape-imw"><img src="' + src + '" alt="' + alt + '">' +
+         '<span class="cfg-shape-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span></span>';
+}
+function renderLayoutGrid(){
+  var row = document.getElementById('layout-grid');
+  row.innerHTML = '';
+  LAYOUTS.forEach(function(l){
+    var t = document.createElement('button');
+    t.type = 'button';
+    t.className = 'cfg-shape-tile' + (l.key === sel.layout ? ' on' : '');
+    t.dataset.layout = l.key;
+    t.innerHTML = shapeTileMarkup(l.img, l.label);
+    t.onclick = function(){ pickLayout(l.key, t); };
+    row.appendChild(t);
+  });
+  document.getElementById('cfg-layout-sel-name').textContent =
+    (LAYOUTS.filter(function(l){ return l.key === sel.layout; })[0] || LAYOUTS[0]).label;
+}
+function renderSizeGrid(){
+  var row = document.getElementById('size-grid');
+  row.innerHTML = '';
+  SIZES.forEach(function(z){
+    var available = !!VARIANT_BY_COMBO[sel.layout + '|' + z.key];
+    var t = document.createElement('button');
+    t.type = 'button';
+    t.className = 'cfg-shape-tile' + (z.key === sel.size ? ' on' : '') + (available ? '' : ' off');
+    t.dataset.size = z.key;
+    t.disabled = !available;
+    t.innerHTML = shapeTileMarkup(comboImage(sel.layout, z.key), z.label);
+    t.onclick = function(){ pickSize(z.key, t); };
+    row.appendChild(t);
+  });
+  var note = document.getElementById('cfg-size-note');
+  note.classList.toggle('on', !VARIANT_BY_COMBO[sel.layout + '|4']);
+}
+function applyCombo(){
+  var tile = shapeTileFor(sel.layout, sel.size);
+  if (tile) pickCfgShape(tile);
+}
+function pickLayout(key, el){
+  sel.layout = key;
+  /* Straight sofas only come as 3 seats -- fall back rather than leave a dead selection. */
+  if (!VARIANT_BY_COMBO[sel.layout + '|' + sel.size]) sel.size = '3';
+  renderLayoutGrid();
+  renderSizeGrid();
+  applyCombo();
+  if (el) pressFeedback(el);
+}
+function pickSize(key, el){
+  sel.size = key;
+  renderSizeGrid();
+  applyCombo();
+  if (el) pressFeedback(el);
+}
+
+function pickCfgShape(el){
+  document.querySelectorAll('#shape-grid .cfg-shape-tile').forEach(function(t){ t.classList.remove('on'); });
+  el.classList.add('on');
+  sel.shapeEl = el;
+  document.getElementById('cfg-shape-sel-name').textContent = el.dataset.name;
+  document.getElementById('cfg-shape-sel-dim').textContent = el.dataset.dim;
+  updatePreview();
+  updateSummary();
+  updatePriceSliderBounds();
+}
+
+function renderNeeds(){
+  var row = document.getElementById('cfg-needs');
+  row.innerHTML = '';
+  NEED_DEFS.forEach(function(n){
+    var tile = document.createElement('button');
+    tile.className = 'cfg-needs-tile' + (sel.needs.indexOf(n.key) > -1 ? ' on' : '');
+    tile.dataset.key = n.key;
+    tile.innerHTML =
+      '<span class="cfg-needs-imw">' + n.svg +
+        '<span class="cfg-needs-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>' +
+      '</span>' +
+      '<span class="cfg-needs-tile-name">' + n.label + '</span>';
+    tile.onclick = function(){ toggleNeed(n.key, tile); };
+    row.appendChild(tile);
+  });
+  updateNeedsLabel();
+}
+
+function toggleNeed(key, tile){
+  var idx = sel.needs.indexOf(key);
+  if (idx > -1) sel.needs.splice(idx, 1); else sel.needs.push(key);
+  tile.classList.toggle('on');
+  updateNeedsLabel();
+  pressFeedback(tile);
+}
+
+function updateNeedsLabel(){
+  var label = document.getElementById('cfg-needs-label');
+  if (!sel.needs.length){
+    label.textContent = 'Alege una sau mai multe opțiuni pentru recomandări personalizate.';
+    return;
+  }
+  var names = sel.needs.map(function(key){
+    return NEED_DEFS.filter(function(n){ return n.key === key; })[0].label;
+  });
+  label.textContent = 'Recomandăm materiale potrivite pentru: ' + names.join(', ') + '.';
+}
+
+/* ══════════ Fabric picker: top fabric-type pills (jump/filter) + a Filtre sheet for color & properties, every collection stacked below ══════════ */
+/* Colored-pill filter chips (bg + fg per family) instead of grey chip + colored text. */
+var FAMILY_CHIP_STYLE = {
+  'Bej':          { bg:'#EDE1CB', fg:'#7A6647' },
+  'Roșu':         { bg:'#F7D2CE', fg:'#B23A2E' },
+  'Roz':          { bg:'#F5DCE8', fg:'#A24A78' },
+  'Albastru':     { bg:'#D9E6FA', fg:'#2E5DA8' },
+  'Verde':        { bg:'#DCEEDC', fg:'#3C7A44' },
+  'Maro':         { bg:'#D9C4AE', fg:'#5C4630' },
+  'Gri':          { bg:'#DADCDF', fg:'#4A4D52' },
+  'Negru':        { bg:'#1D1D1F', fg:'#ffffff' }
+};
+/* 'Piele sensibilă (OEKO-TEX®)' dropped from the Proprietăți group per request. propMatch and
+   PROP_ICONS still know it, and the collections still carry it as a certification (it keeps
+   showing in a swatch's Detalii), so restoring the filter is just this one string. */
+var PROP_OPTIONS = ['Impermeabil', 'Easy Clean', 'Pet Friendly'];
+var FILTER_GROUPS = [
+  { key:'culoare', label:'Culoare', options: FAMILY_ORDER },
+  { key:'prop', label:'Proprietăți', options: PROP_OPTIONS }
+];
+var appliedFilters = [];
+var PRICE_MIN_DEFAULT = 4745, PRICE_MAX_DEFAULT = 5775;
+
+function propMatch(f, c){
+  if (f === 'Impermeabil') return c.waterproof;
+  if (f === 'Easy Clean') return c.easyClean;
+  if (f === 'Pet Friendly') return c.petFriendly;
+  if (f === 'Piele sensibilă (OEKO-TEX®)') return c.certifications === 'Piele sensibilă (OEKO-TEX®)';
+  return false;
+}
+function totalColorCount(){
+  return COLLECTION_ORDER.reduce(function(sum, slug){ return sum + COLLECTIONS[slug].colors.length; }, 0);
+}
+/* shared by the top material row and the Filtre sheet's Material group, so both use the
+   exact same chip -- photo dot + label + checkmark -- just at two sizes. */
+function buildFabricSeg(p, small, onPicked){
+  var seg = document.createElement('div');
+  seg.dataset.key = p.key;
+  seg.className = 'cfg-seg' + (small ? ' sm' : '') + (activeFabricPills.indexOf(p.key) > -1 ? ' on' : '')
+    + (MATERIAL_AVAILABLE && !MATERIAL_AVAILABLE[p.key] ? ' is-unavailable' : '');
+  seg.innerHTML =
+    '<span class="dot" style="background-image:url(\'' + p.asset + '\');background-size:' + (p.zoom || 650) + '%"></span>' +
+    '<span class="nm">' + p.label + '</span>';
+  seg.onclick = function(){
+    var i = activeFabricPills.indexOf(p.key);
+    if (i > -1) activeFabricPills.splice(i, 1); else activeFabricPills.push(p.key);
+    onPicked();
+  };
+  return seg;
+}
+function renderFabricPillRow(){
+  var wrap = document.getElementById('cfg-fabric-pillrow');
+  wrap.innerHTML = '';
+  FABRIC_PILLS.forEach(function(p){
+    wrap.appendChild(buildFabricSeg(p, false, function(){
+      renderFabricPillRow();
+      renderFsheetMaterialPill();
+      renderFabricSections();
+      applyFabricFilters();
+    }));
+  });
+}
+
+/* ══ Colour strip under "Alege culoarea" -- the Culoare families from the Filtre sheet,
+   rebuilt as the same .cfg-seg pill the material strip above uses, so both cards open the
+   same way: a scrollable row of photo + label chips. It writes to appliedFilters, the very
+   same state the sheet's Culoare group writes to, so the two can never disagree -- pick
+   "Verde" here and the sheet opens with Verde already on (and the Filtre count reflects it).
+   Dots are real fabric rather than a flat colour circle, for the reason the material pills
+   are real texture: a photo of an actual beige tells you more than a beige disc. */
+/* Which colour families are still reachable, given every active filter EXCEPT the colour one.
+   Catifea carries no pink, so with Catifea on there is no "Roz" to offer and its pill goes
+   inert. Deliberately ignores the colour filter itself: scoring against it too would leave
+   only the family you just tapped and grey out every other pill in the strip.
+   null until the first applyFabricFilters run, which reads as "everything is available" --
+   correct, since nothing is filtered before then. */
+var COLOR_FAMILY_AVAILABLE = null;
+/* And the mirror of it, because the two entry points are equally likely: someone who filters
+   by colour first has to be told which fabrics that colour actually comes in, the same way
+   filtering by fabric first greys out the colours it doesn't come in. Ignores the material
+   filter itself, for the same reason its twin ignores the colour filter. */
+var MATERIAL_AVAILABLE = null;
+/* The whole filter predicate in one place, so the two availability sets, the dead-end check and
+   the grid can't drift apart. Each facet is OR within itself and AND against the others; an
+   empty facet means "not filtering on this", not "matches nothing". */
+function swatchPasses(sw, pillDefs, colourFams, propFilters, priceMin, priceMax){
+  var c = sw.collection;
+  if (pillDefs.length && !pillDefs.some(function(pd){
+    return pd.stems.some(function(stem){ return c.materialTypes.some(function(t){ return t.indexOf(stem) > -1; }); });
+  })) return false;
+  if (propFilters.length && !propFilters.every(function(f){ return propMatch(f, c); })) return false;
+  var pr = collectionPrice(sw.slug);
+  if (pr < priceMin || pr > priceMax) return false;
+  if (colourFams.length && colourFams.indexOf(colorFamilyRO(sw.hex)) === -1) return false;
+  return true;
+}
+function countMatches(pillDefs, colourFams, propFilters, priceMin, priceMax){
+  var n = 0;
+  ALL_SWATCHES.forEach(function(sw){
+    if (swatchPasses(sw, pillDefs, colourFams, propFilters, priceMin, priceMax)) n++;
+  });
+  return n;
+}
+function availableMaterials(colourFams, propFilters, priceMin, priceMax){
+  var out = {};
+  FABRIC_PILLS.forEach(function(pd){
+    out[pd.key] = ALL_SWATCHES.some(function(sw){
+      return swatchPasses(sw, [pd], colourFams, propFilters, priceMin, priceMax);
+    });
+  });
+  return out;
+}
+function availableColorFamilies(pillDefs, propFilters, priceMin, priceMax){
+  var fams = {};
+  ALL_SWATCHES.forEach(function(sw){
+    if (swatchPasses(sw, pillDefs, [], propFilters, priceMin, priceMax)) fams[colorFamilyRO(sw.hex)] = true;
+  });
+  return fams;
+}
+function buildColorSeg(fam){
+  var seg = document.createElement('div');
+  seg.className = 'cfg-seg' + (appliedFilters.indexOf(fam) > -1 ? ' on' : '');
+  seg.dataset.fam = fam;
+  /* The dot is the family's own colour, straight off FAMILY_CHIP_STYLE -- the exact swatch
+     the Filtre sheet's Culoare chips are painted with, so "Roz" is pink in both places. It was
+     briefly a photo of a real fabric from the family (mirroring the material strip, which
+     shows real texture); that fails here, because the catalogue's pink and red fabrics are
+     dusty and dark, and a dark plum circle labelled "Roz" is worse than no picture. Texture
+     carries a material; a colour just needs to be the colour. .cfg-seg .dot already carries an
+     inset hairline, which is what keeps the palest of these (Bej, Verde, Gri) from dissolving
+     into the white pill. */
+  var style = FAMILY_CHIP_STYLE[fam];
+  seg.innerHTML =
+    '<span class="dot" style="background:' + (style ? style.bg : '#e6e6e6') + '"></span>' +
+    '<span class="nm">' + fam + '</span>';
+  seg.onclick = function(){
+    var i = appliedFilters.indexOf(fam);
+    if (i > -1) appliedFilters.splice(i, 1); else appliedFilters.push(fam);
+    renderFsheetPills();
+    applyFabricFilters();
+  };
+  return seg;
+}
+function renderColorPillRow(){
+  var wrap = document.getElementById('cfg-color-pillrow');
+  wrap.innerHTML = '';
+  FAMILY_ORDER.forEach(function(fam){ wrap.appendChild(buildColorSeg(fam)); });
+}
+/* Selection is toggled in place rather than rebuilt: the row is wider than the card, and a
+   rebuild would snap it back to "Bej" every time you tapped something you'd scrolled to.
+   Called from applyFabricFilters, so the strip also follows changes made in the Filtre sheet
+   or by Resetează. */
+function syncFabricPillRow(){
+  document.querySelectorAll('#cfg-fabric-pillrow .cfg-seg').forEach(function(seg){
+    var key = seg.dataset.key;
+    seg.classList.toggle('is-unavailable', !!MATERIAL_AVAILABLE && !MATERIAL_AVAILABLE[key]);
+    seg.classList.toggle('on', activeFabricPills.indexOf(key) > -1);
+  });
+}
+function syncColorPillRow(){
+  document.querySelectorAll('#cfg-color-pillrow .cfg-seg').forEach(function(seg){
+    var fam = seg.dataset.fam;
+    seg.classList.toggle('is-unavailable', !!COLOR_FAMILY_AVAILABLE && !COLOR_FAMILY_AVAILABLE[fam]);
+    seg.classList.toggle('on', appliedFilters.indexOf(fam) > -1);
+  });
+}
+function setColorGridCols(n, el){
+  document.getElementById('cfg-fabric-sections').classList.toggle('cfg-grid3', n === 3);
+  document.querySelectorAll('.cfg-gridbtn').forEach(function(b){ b.classList.remove('on'); });
+  el.classList.add('on');
+}
+
+/* Proprietăți pills reuse the same icon set as the collection USP badges (people/droplet/hand/
+   shield) so a claim like "Impermeabil" looks identical whether it shows up as a filter pill
+   here or a badge on a collection card. */
+var PROP_ICONS = {
+  'Impermeabil': 'droplet',
+  'Easy Clean': 'hand',
+  'Pet Friendly': 'people',
+  'Piele sensibilă (OEKO-TEX®)': 'shield'
+};
+function makeFsheetPill(opt){
+  var on = appliedFilters.indexOf(opt) > -1;
+  var pill = document.createElement('button');
+  pill.type = 'button';
+  var famStyle = FAMILY_CHIP_STYLE[opt];
+  var propIcon = PROP_ICONS[opt];
+  if (propIcon){
+    pill.className = 'fchip cfg-fpill cfg-fpill-amenity' + (on ? ' on' : '');
+    pill.innerHTML = '<span class="fp-icon">' + USP_ICONS[propIcon] + '</span><span>' + opt + '</span>';
+    pill.onclick = function(){
+      var i = appliedFilters.indexOf(opt);
+      if (i > -1) appliedFilters.splice(i, 1); else appliedFilters.push(opt);
+      renderFsheetPills();
+      applyFabricFilters();
+    };
+    return pill;
+  }
+  pill.className = 'fchip cfg-fpill' + (famStyle ? ' cfg-fpill-color' : '') + (on ? ' on' : '');
+  if (famStyle){
+    pill.style.background = famStyle.bg;
+    pill.style.color = famStyle.fg;
+    /* Colored chips (unlike the plain grey ones) never invert to solid black on selection --
+       that would erase the family color, and for Negru specifically the chip is already solid
+       black, so the usual on-state would be visually identical to off and look like reset
+       silently failed. A neutral white checkmark badge makes the selected state legible no
+       matter what the chip's own background is. */
+    pill.innerHTML = '<span>' + opt + '</span><span class="fp-chk"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>';
+  } else {
+    pill.textContent = opt;
+  }
+  pill.onclick = function(){
+    var i = appliedFilters.indexOf(opt);
+    if (i > -1) appliedFilters.splice(i, 1); else appliedFilters.push(opt);
+    renderFsheetPills();
+    applyFabricFilters();
+  };
+  return pill;
+}
+function renderFsheetMaterialPill(){
+  var wrap = document.getElementById('fsheet-material');
+  var head = document.getElementById('fsheet-material-h');
+  wrap.innerHTML = '';
+  head.style.display = '';
+  /* Always shown as the first group, mirroring the top fabric-type chips -- multi-select just
+     like Culoare/Proprietăți below, so several material types can be on at once. */
+  FABRIC_PILLS.forEach(function(p){
+    wrap.appendChild(buildFabricSeg(p, true, function(){
+      renderFabricPillRow();
+      renderFsheetMaterialPill();
+      renderFabricSections();
+      applyFabricFilters();
+    }));
+  });
+}
+function renderFsheetColorPills(){
+  var culWrap = document.getElementById('fsheet-culoare');
+  culWrap.innerHTML = '';
+  FILTER_GROUPS[0].options.forEach(function(opt){
+    var pill = makeFsheetPill(opt);
+    if (COLOR_FAMILY_AVAILABLE && !COLOR_FAMILY_AVAILABLE[opt]) pill.classList.add('is-unavailable');
+    culWrap.appendChild(pill);
+  });
+}
+function renderFsheetPills(){
+  renderFsheetMaterialPill();
+  renderFsheetColorPills();
+  var propWrap = document.getElementById('fsheet-prop');
+  propWrap.innerHTML = '';
+  FILTER_GROUPS[1].options.forEach(function(opt){ propWrap.appendChild(makeFsheetPill(opt)); });
+}
+function openFilterSheet(){
+  renderFsheetPills();
+  document.getElementById('filter-sheet').classList.add('open');
+}
+function closeFilterSheet(){
+  document.getElementById('filter-sheet').classList.remove('open');
+}
+function resetSheetFilters(){
+  appliedFilters = [];
+  activeFabricPills = [];
+  renderFsheetPills();
+  renderFabricPillRow();
+  renderFabricSections();
+  applyFabricFilters();
+  document.getElementById('price-min').value = PRICE_MIN_DEFAULT;
+  document.getElementById('price-max').value = PRICE_MAX_DEFAULT;
+  updatePriceSlider();
+}
+
+/* Slider's min/max/step are pegged to the currently selected shape's real Practic->Special
+   price spread (SHAPE_TIER_PRICE) instead of an arbitrary range, and get re-pegged whenever
+   the shape changes since a corner unit's price spread is nowhere near a 3-seat's. */
+function updatePriceSliderBounds(){
+  var range = shapePriceRange();
+  PRICE_MIN_DEFAULT = range.min;
+  PRICE_MAX_DEFAULT = range.max;
+  var minEl = document.getElementById('price-min');
+  var maxEl = document.getElementById('price-max');
+  minEl.min = maxEl.min = PRICE_MIN_DEFAULT;
+  minEl.max = maxEl.max = PRICE_MAX_DEFAULT;
+  minEl.value = PRICE_MIN_DEFAULT;
+  maxEl.value = PRICE_MAX_DEFAULT;
+  updatePriceSlider();
+}
+function updatePriceSlider(){
+  var minEl = document.getElementById('price-min');
+  var maxEl = document.getElementById('price-max');
+  var min = parseInt(minEl.value, 10);
+  var max = parseInt(maxEl.value, 10);
+  if (min > max - 10) { minEl.value = max - 10; min = max - 10; }
+  var lo = parseInt(minEl.min, 10), hi = parseInt(minEl.max, 10);
+  document.getElementById('price-min-val').textContent = min.toLocaleString('ro-RO') + ' lei';
+  document.getElementById('price-max-val').textContent = max.toLocaleString('ro-RO') + ' lei';
+  var range = document.getElementById('price-slider-range');
+  range.style.left = ((min - lo) / (hi - lo) * 100) + '%';
+  range.style.right = (100 - (max - lo) / (hi - lo) * 100) + '%';
+  applyFabricFilters();
+}
+document.addEventListener('DOMContentLoaded', updatePriceSliderBounds);
+
+function markFirstVisibleSection(){
+  var sections = document.querySelectorAll('.cfg-col-section');
+  var found = false;
+  sections.forEach(function(s){
+    var isFirst = !found && s.style.display !== 'none';
+    s.classList.toggle('first-visible', isFirst);
+    if (isFirst) found = true;
+  });
+}
+function applyFabricFilters(){
+  var priceMinEl = document.getElementById('price-min');
+  var priceMaxEl = document.getElementById('price-max');
+  var priceMin = priceMinEl ? parseInt(priceMinEl.value, 10) : PRICE_MIN_DEFAULT;
+  var priceMax = priceMaxEl ? parseInt(priceMaxEl.value, 10) : PRICE_MAX_DEFAULT;
+  var priceFiltered = priceMin > PRICE_MIN_DEFAULT || priceMax < PRICE_MAX_DEFAULT;
+
+  var byCat = { culoare: [], prop: [] };
+  appliedFilters.forEach(function(f){
+    if (FAMILY_ORDER.indexOf(f) > -1) byCat.culoare.push(f);
+    else byCat.prop.push(f);
+  });
+  var pillDefs = FABRIC_PILLS.filter(function(p){ return activeFabricPills.indexOf(p.key) > -1; });
+
+  /* Cross-filter, both ways: material decides which colour families are worth offering and the
+     colour selection decides which materials are, each computed ignoring its own facet (score
+     a facet against itself and only the option you just tapped survives). This drives the
+     greying alone -- an option that would add nothing goes inert, selected or not. */
+  COLOR_FAMILY_AVAILABLE = availableColorFamilies(pillDefs, byCat.prop, priceMin, priceMax);
+  MATERIAL_AVAILABLE = availableMaterials(byCat.culoare, byCat.prop, priceMin, priceMax);
+
+  /* Dropping something the user picked is reserved for an actual dead end -- a combination that
+     shows nothing at all. Anything short of that stays: with Neted and Catifea both on, adding
+     Albastru leaves Neted's blues on screen, so Catifea contributes nothing but breaks nothing,
+     and it keeps its place in the row, greyed, rather than being taken away. Unreachable
+     options are inert, so this can't be walked into from either strip; the price slider is what
+     gets here, by moving the range out from under a material/colour pair that was fine a moment
+     ago. Colours go first (the narrower, easier-to-restore choice), materials only if that
+     wasn't enough. */
+  if (countMatches(pillDefs, byCat.culoare, byCat.prop, priceMin, priceMax) === 0){
+    var reachable = byCat.culoare.filter(function(f){ return COLOR_FAMILY_AVAILABLE[f]; });
+    if (reachable.length !== byCat.culoare.length){
+      byCat.culoare = reachable;
+      appliedFilters = appliedFilters.filter(function(f){
+        return FAMILY_ORDER.indexOf(f) === -1 || COLOR_FAMILY_AVAILABLE[f];
+      });
+    }
+    if (countMatches(pillDefs, byCat.culoare, byCat.prop, priceMin, priceMax) === 0){
+      var liveMats = activeFabricPills.filter(function(k){ return MATERIAL_AVAILABLE[k]; });
+      if (liveMats.length !== activeFabricPills.length){
+        activeFabricPills = liveMats;
+        pillDefs = FABRIC_PILLS.filter(function(pp){ return activeFabricPills.indexOf(pp.key) > -1; });
+        /* The grid is grouped by material type whenever 2+ are on, so dropping one has to
+           redraw the sections -- otherwise a heading survives for a material that is no longer
+           selected. Safe from here: it rebuilds tiles but never re-enters applyFabricFilters,
+           and it runs before the visibility pass below, which then filters the fresh tiles. */
+        renderFabricSections();
+      }
+    }
+    /* Both sets were measured against the pre-prune selection; refresh them so the greying
+       reflects what is actually still applied. */
+    COLOR_FAMILY_AVAILABLE = availableColorFamilies(pillDefs, byCat.prop, priceMin, priceMax);
+    MATERIAL_AVAILABLE = availableMaterials(byCat.culoare, byCat.prop, priceMin, priceMax);
+  }
+
+  syncColorPillRow();
+  syncFabricPillRow();
+  renderFsheetColorPills();
+  renderFsheetMaterialPill();
+
+  var totalFilters = appliedFilters.length + activeFabricPills.length + (priceFiltered ? 1 : 0);
+  var btn = document.getElementById('cfg-filter-btn');
+  var cnt = document.getElementById('cfg-filter-cnt');
+  cnt.textContent = totalFilters;
+  btn.classList.toggle('has-count', totalFilters > 0);
+  var navChip = document.getElementById('cfg-nav-filter-chip');
+  document.getElementById('cfg-nav-filter-cnt').textContent = totalFilters;
+  navChip.classList.toggle('has-count', totalFilters > 0);
+
+  var visibleCount = 0;
+  document.querySelectorAll('#cfg-fabric-sections .mtile').forEach(function(tile){
+    var s = SWATCH_INDEX[tile.dataset.name];
+    var c = s.collection;
+    var matOK = !pillDefs.length || pillDefs.some(function(pillDef){
+      return pillDef.stems.some(function(stem){ return c.materialTypes.some(function(t){ return t.indexOf(stem) > -1; }); });
+    });
+    var propOK = !byCat.prop.length || byCat.prop.every(function(f){ return propMatch(f, c); });
+    var priceOK = collectionPrice(s.slug) >= priceMin && collectionPrice(s.slug) <= priceMax;
+    var visible = matOK && propOK && priceOK;
+    if (visible && byCat.culoare.length) visible = byCat.culoare.indexOf(colorFamilyRO(s.hex)) > -1;
+    tile.style.display = visible ? '' : 'none';
+    if (visible) visibleCount++;
+  });
+  /* A material-type group (title + its grid) can end up with every tile hidden once color/prop/
+     price filters are layered on top of the material pills -- hide the label along with the
+     empty grid rather than leaving a heading over blank space. */
+  var firstShownTitle = null;
+  document.querySelectorAll('#cfg-fabric-sections .cfg-color-grid').forEach(function(grid){
+    var anyVisible = Array.prototype.some.call(grid.children, function(t){ return t.style.display !== 'none'; });
+    var title = grid.previousElementSibling;
+    if (title && title.classList.contains('cfg-matgroup-title')){
+      title.style.display = anyVisible ? '' : 'none';
+      title.classList.remove('first-visible');
+      if (anyVisible && !firstShownTitle) firstShownTitle = title;
+    }
+    grid.style.display = anyVisible ? '' : 'none';
+  });
+  /* All four groups sit in the DOM now, so filtering down to Catifea leaves the first two
+     headings hidden and the third carrying the 28px gap meant to separate it from the group
+     above -- against the top of the card there is nothing to separate it from. Same problem
+     .cfg-col-section.first-visible solves, and for the same reason a CSS :first-of-type can't:
+     hidden groups are display:none, not removed. */
+  if (firstShownTitle) firstShownTitle.classList.add('first-visible');
+  var noFilters = !pillDefs.length && !appliedFilters.length && !priceFiltered;
+  var optionCount = noFilters ? totalColorCount() : visibleCount;
+  document.getElementById('cfg-color-sub').textContent = optionCount + (optionCount === 1 ? ' opțiune' : ' opțiuni');
+
+  /* Filter sheet: show the live result count on the Apply button, and when a filter
+     combination zeroes out every color, disable Apply and explain why instead of letting the
+     user apply a combination that would leave them looking at an empty grid. */
+  var applyBtn = document.getElementById('fsheet-apply-btn');
+  if (applyBtn){
+    applyBtn.textContent = totalFilters > 0 ? ('Arată ' + visibleCount + ' culori') : 'Aplică filtrele';
+    applyBtn.disabled = totalFilters > 0 && visibleCount === 0;
+  }
+  var emptyNotice = document.getElementById('fsheet-empty');
+  if (emptyNotice) emptyNotice.classList.toggle('show', totalFilters > 0 && visibleCount === 0);
+  var resultCountEl = document.getElementById('fsheet-result-count');
+  if (resultCountEl) resultCountEl.textContent = visibleCount + (visibleCount === 1 ? ' culoare afișată' : ' culori afișate');
+}
+
+function fabricTileHtml(s){
+  var name = s.name;
+  return '<div class="mtile' + (name === sel.colorName ? ' on' : '') + '" data-name="' + name + '" data-slug="' + s.slug + '">' +
+    '<div class="imw"><img src="' + fabricAsset(name) + '" alt="' + name + '">' +
+    '<button type="button" class="info-i" aria-label="Detalii ' + name + '"><svg width="32" height="32" fill="none"><path d="M32 16c0-8.837-7.163-16-16-16S0 7.163 0 16s7.163 16 16 16 16-7.163 16-16Z" fill="#fff"/><path d="M16 22.333v-6.666" stroke="#121219" stroke-width="2" stroke-linecap="round"/><path d="M16.001 9.667a1.333 1.333 0 1 1 0 2.666 1.333 1.333 0 0 1 0-2.666Z" fill="#1D1D1F"/></svg></button></div>' +
+    '<div class="lr"><span class="nm">' + name + '</span></div></div>';
+}
+function appendFabricGrid(wrap, swatches){
+  var grid = document.createElement('div');
+  grid.className = 'cfg-color-grid';
+  grid.innerHTML = swatches.map(fabricTileHtml).join('');
+  wrap.appendChild(grid);
+}
+/* Below one active material-type pill, colors from every matching collection can just live in
+   one grid -- there's nothing to tell apart yet. From 2 pills on, mixing e.g. Neted and
+   Texturat swatches into the same grid makes it impossible to tell which texture a given color
+   belongs to, so each active material gets its own labeled group instead (in FABRIC_PILLS'
+   fixed order, not click order, so re-picking the same two pills always looks the same). */
+function renderFabricSections(){
+  var wrap = document.getElementById('cfg-fabric-sections');
+  wrap.innerHTML = '';
+  /* Always grouped by material type, whether or not a material is picked. With nothing selected
+     this used to be one undifferentiated run of 191 swatches; the four headings are the same
+     structure you get the moment you do pick something, so choosing a material now narrows the
+     list instead of reorganising it. Grouping is lossless here: every swatch maps to exactly
+     one of the four pills (58 + 28 + 27 + 78 = 191, no orphans, no double matches), so nothing
+     drops out of the grid by being filed under a heading. What collapses this back down to the
+     selected material(s) is applyFabricFilters, which hides any heading whose grid empties. */
+  FABRIC_PILLS.forEach(function(pillDef){
+    var swatches = ALL_SWATCHES.filter(function(s){ return materialTypeMatch(s.collection) === pillDef; });
+    if (!swatches.length) return;
+    var h = document.createElement('div');
+    h.className = 'cfg-matgroup-title';
+    h.innerHTML = '<span>' + pillDef.label + '</span>' +
+      '<button type="button" class="cfg-matgroup-info" aria-label="Detalii ' + pillDef.label + '" onclick="openMaterialGroupDetail(\'' + pillDef.key + '\')">' +
+        '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 11v5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7.7" r="1.1" fill="currentColor"/></svg>' +
+      '</button>';
+    wrap.appendChild(h);
+    appendFabricGrid(wrap, swatches);
+  });
+  wrap.querySelectorAll('.mtile').forEach(function(tile){
+    tile.onclick = function(){ pickFabricSwatch(tile, tile.dataset.slug); };
+    tile.querySelector('.info-i').onclick = function(e){ e.stopPropagation(); showSwatchInfo(tile.dataset.name); };
+  });
+  var totalOptions = totalColorCount();
+  document.getElementById('cfg-color-sub').textContent = totalOptions + (totalOptions === 1 ? ' opțiune' : ' opțiuni');
+}
+
+function showSwatchInfo(name){
+  var s = SWATCH_INDEX[name];
+  if (!s) return;
+  var c = s.collection;
+  document.getElementById('swm-img').src = fabricAsset(name);
+  document.getElementById('swm-img').alt = name;
+  document.getElementById('swm-name').textContent = name;
+  document.getElementById('swm-sub').textContent = nearestColorName(s.hex);
+  fillCollectionText('swm', c);
+  document.querySelector('.swm-sheet').scrollTop = 0;
+  document.getElementById('swatch-modal').classList.add('open');
+}
+function closeSwatchModal(){
+  document.getElementById('swatch-modal').classList.remove('open');
+}
+
+/* ══════════ Collection detail modal (exact copy of mobile-v2.html's "Collection view", incl. the chero1/chero2/chero3 hero slider and bindSwipe helper) ══════════ */
+function bindSwipe(el, onSwipe){
+  var sx = 0, dx = 0, active = false;
+  el.addEventListener('pointerdown', function(e){ sx = e.clientX; dx = 0; active = true; }, { passive:true });
+  el.addEventListener('pointermove', function(e){ if (active) dx = e.clientX - sx; }, { passive:true });
+  function end(){ if (active && Math.abs(dx) > 40) onSwipe(dx < 0 ? 1 : -1); active = false; }
+  el.addEventListener('pointerup', end);
+  el.addEventListener('pointercancel', function(){ active = false; });
+  el.addEventListener('pointerleave', end);
+}
+var colmIdx = 0;
+function colmHeroTo(i){
+  colmIdx = i;
+  document.getElementById('colm-trk').style.transform = 'translateX(-' + (i * 100) + '%)';
+  document.querySelectorAll('#colm-dots button').forEach(function(b, k){ b.classList.toggle('on', k === i); });
+}
+bindSwipe(document.getElementById('colm-hero'), function(d){
+  colmHeroTo(Math.min(2, Math.max(0, colmIdx + d)));
+});
+
+function showCollectionDetail(slug){
+  var c = COLLECTIONS[slug];
+  var heroSrc = 'assets/' + (c.assetSlug || c.slug) + '-hero.png';
+  document.getElementById('colm-title').textContent = 'Colecția ' + c.name;
+  document.getElementById('colm-hero1').src = heroSrc;
+  document.getElementById('colm-hero2').src = heroSrc;
+  document.getElementById('colm-color').textContent = c.colors.length + ' nuanțe disponibile';
+  fillCollectionText('colm', c);
+  colmHeroTo(0);
+  document.querySelector('.colm-sheet').scrollTop = 0;
+  document.getElementById('collection-modal').classList.add('open');
+}
+function closeCollectionModal(){
+  document.getElementById('collection-modal').classList.remove('open');
+}
+
+/* ── Samples modal (order up to 5 free fabric swatches) -- adapted from mobile-v6.html's
+   #samplesmodal / sampleSel flow, same real 191-swatch COLLECTIONS data ── */
+var sampleSel = [];
+function isSampleLiked(name){ return sampleSel.indexOf(name) > -1; }
+function setSampleLiked(name, on){
+  if (on === isSampleLiked(name)) return;
+  if (on){
+    if (sampleSel.length >= 5){ toast('Poți alege maximum 5 mostre'); return; }
+    sampleSel.push(name);
+  } else {
+    sampleSel.splice(sampleSel.indexOf(name), 1);
+  }
+  document.querySelectorAll('#sm-collections .sm-tile[data-name="' + name + '"]').forEach(function(t){ t.classList.toggle('on', isSampleLiked(name)); });
+  renderSampleTray();
+}
+function buildSamplesGrid(){
+  var wrap = document.getElementById('sm-collections');
+  if (wrap.childElementCount) return;
+  COLLECTION_ORDER.forEach(function(slug){
+    var c = COLLECTIONS[slug];
+    var tilesHTML = c.colors.map(function(pair){
+      var name = c.name + ' ' + pair[0];
+      return '<div class="sm-tile' + (isSampleLiked(name) ? ' on' : '') + '" data-name="' + name + '" onclick="toggleSample(\'' + name + '\')">' +
+        '<div class="imw"><img src="' + fabricAsset(name) + '" alt="' + name + '">' +
+        '<div class="sm-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div></div>' +
+        '<div class="nm">' + name + '</div></div>';
+    }).join('');
+    wrap.insertAdjacentHTML('beforeend',
+      '<div class="col-head"><span class="t">Colecția ' + c.name + '</span></div>' +
+      '<div class="mgrid">' + tilesHTML + '</div>');
+  });
+}
+function toggleSample(name){
+  setSampleLiked(name, !isSampleLiked(name));
+}
+function removeSample(name){
+  setSampleLiked(name, false);
+}
+function renderSampleTray(){
+  var tray = document.getElementById('smtray');
+  var row = document.getElementById('smtray-row');
+  tray.classList.toggle('on', sampleSel.length > 0);
+  row.innerHTML = sampleSel.map(function(name){
+    return '<div class="sm-tray-item"><img src="' + fabricAsset(name) + '" alt="' + name + '">' +
+      '<button class="rm" onclick="event.stopPropagation();removeSample(\'' + name + '\')" aria-label="Elimină ' + name + '"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>';
+  }).join('');
+  document.getElementById('sm-count').textContent = sampleSel.length;
+  document.getElementById('sm-add-btn').disabled = sampleSel.length === 0;
+}
+function openSamplesModal(){
+  buildSamplesGrid();
+  document.getElementById('samples-modal').classList.add('open');
+}
+function closeSamplesModal(){
+  document.getElementById('samples-modal').classList.remove('open');
+}
+function addSamplesToCart(){
+  if (!sampleSel.length) return;
+  var btn = document.getElementById('sm-add-btn');
+  var orig = btn.innerHTML;
+  var count = sampleSel.length;
+  btn.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg> Adăugat în coș';
+  toast(count + (count === 1 ? ' mostră a fost adăugată în coș' : ' mostre au fost adăugate în coș'));
+  setTimeout(function(){
+    btn.innerHTML = orig;
+    closeSamplesModal();
+    sampleSel = [];
+    document.querySelectorAll('#sm-collections .sm-tile.on').forEach(function(t){ t.classList.remove('on'); });
+    renderSampleTray();
+  }, 1400);
+}
+
+/* ── Material detail modal ("Vezi diferențe materiale") -- one swipeable card per material
+   type, photo + real description together, using each material's representative collection
+   for the actual composition/durability/lightfastness/care data already in COLLECTIONS
+   (no separate copy exists for this yet -- reusing the real per-collection fields rather
+   than inventing new marketing copy). */
+var MATERIAL_DETAIL = [
+  { key:'neted', label:'Neted', asset:'assets/chip-neted.jpg', collectionSlug:'enjoylux' },
+  { key:'texturat', label:'Texturat', asset:'assets/chip-texturat.jpg', collectionSlug:'luna' },
+  { key:'catifea', label:'Catifea', asset:'assets/chip-catifea.jpg', collectionSlug:'piano' },
+  { key:'efect-catifea', label:'Efect catifea', asset:'assets/chip-efectcatifea.jpg', collectionSlug:'manila' }
+];
+var matdIdx = 0;
+var matdTextIdx = 0;
+var matdMode = 'video';
+function matdBodyHtml(m, c){
+  var specs = [
+    ['Compoziție', c.composition],
+    ['Greutate', c.weight + ' g/m²'],
+    ['Durabilitate', c.martindale + ' cicluri Martindale']
+  ];
+  if (c.rubbing) specs.push(['Rezistență la frecare', c.rubbing]);
+  if (c.light) specs.push(['Rezistență la lumină', c.light]);
+  if (c.pilling) specs.push(['Anti-pilling', c.pilling]);
+  if (c.certifications) specs.push(['Certificări', c.certifications]);
+  var usps = [];
+  if (c.waterproof) usps.push('Impermeabil');
+  if (c.easyClean) usps.push('Easy Clean');
+  if (c.petFriendly) usps.push('Pet Friendly');
+  return '<div class="matd-body">' +
+      '<h2>' + m.label + '</h2>' +
+      (usps.length ? '<div class="matd-usps">' + usps.map(function(u){ return '<span>' + u + '</span>'; }).join('') + '</div>' : '') +
+      '<p class="matd-desc">' + c.desc + '</p>' +
+      '<button type="button" class="st-chip" onclick="event.stopPropagation();openSamplesModal()">' +
+        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>' +
+        '<span>Comandă mostrar gratis</span>' +
+      '</button>' +
+      '<div class="matd-specs">' + specs.map(function(s){
+        return '<div class="row"><span class="k">' + s[0] + '</span><span class="v">' + s[1] + '</span></div>';
+      }).join('') + '</div>' +
+      '<div class="matd-care"><h3>Îngrijire</h3><p>' + c.care + '</p></div>' +
+    '</div>';
+}
+function matdSlideHtml(m){
+  var c = COLLECTIONS[m.collectionSlug];
+  return '<div class="matd-slide">' +
+    '<div class="matd-hero" style="background-image:url(\'' + m.asset + '\')"></div>' +
+    matdBodyHtml(m, c) +
+  '</div>';
+}
+/* Video mode is a single card (one supplied clip, not split per material) rather than a
+   4-up carousel like text mode -- a custom player (center play/pause, bottom timeline)
+   since the video has no native controls attribute. */
+function matdVideoSlideHtml(){
+  return '<div class="matd-slide video-only">' +
+    '<div class="matd-video-wrap">' +
+      '<div class="matd-video-frame playing" onclick="matdToggleControls()">' +
+        '<video id="matd-video" src="material-videos.mp4" autoplay muted loop playsinline></video>' +
+        '<button type="button" class="matd-video-playbtn" onclick="event.stopPropagation();toggleMatdVideo()" aria-label="Redă/Pauză">' +
+          '<svg class="ic-play" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20"/></svg>' +
+          '<svg class="ic-pause" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="4" width="5" height="16"/><rect x="14" y="4" width="5" height="16"/></svg>' +
+        '</button>' +
+        '<div class="matd-video-timeline" onclick="event.stopPropagation();seekMatdVideo(event)"><div class="matd-video-progress" id="matd-video-progress"></div></div>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+function toggleMatdVideo(){
+  var v = document.getElementById('matd-video');
+  if (!v) return;
+  if (v.paused) v.play(); else v.pause();
+}
+var matdControlsTimer = null;
+function matdToggleControls(){
+  var frame = document.querySelector('.matd-video-frame');
+  if (!frame) return;
+  clearTimeout(matdControlsTimer);
+  var showing = frame.classList.toggle('show-controls');
+  if (showing) matdControlsTimer = setTimeout(function(){ frame.classList.remove('show-controls'); }, 2500);
+}
+function seekMatdVideo(e){
+  var v = document.getElementById('matd-video');
+  if (!v || !v.duration) return;
+  var rect = e.currentTarget.getBoundingClientRect();
+  v.currentTime = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width)) * v.duration;
+}
+function bindMatdVideoControls(){
+  var v = document.getElementById('matd-video');
+  var frame = document.querySelector('.matd-video-frame');
+  var progress = document.getElementById('matd-video-progress');
+  if (!v) return;
+  v.addEventListener('play', function(){ frame.classList.add('playing'); });
+  v.addEventListener('pause', function(){ frame.classList.remove('playing'); });
+  v.addEventListener('timeupdate', function(){
+    if (v.duration) progress.style.width = (v.currentTime / v.duration * 100) + '%';
+  });
+}
+function renderMatdTrack(){
+  var track = document.getElementById('matd-track');
+  /* Video mode is a single non-swiping full-width card -- no trailing spacer needed, that's
+     only there to keep the last text card's peeking edge visible while scroll-snapping. */
+  track.innerHTML = matdMode === 'video'
+    ? matdVideoSlideHtml()
+    : MATERIAL_DETAIL.map(matdSlideHtml).join('') + '<div class="matd-spacer" aria-hidden="true"></div>';
+  if (matdMode === 'video') bindMatdVideoControls();
+}
+function renderMatdDots(){
+  var dots = document.getElementById('matd-dots');
+  if (matdMode === 'video'){
+    dots.innerHTML = '';
+    dots.style.display = 'none';
+  } else {
+    dots.style.display = 'flex';
+    dots.innerHTML = MATERIAL_DETAIL.map(function(_, k){
+      return '<button onclick="matdTo(' + k + ')" aria-label="Material ' + (k + 1) + '"></button>';
+    }).join('');
+  }
+}
+function updateMatdSegUI(){
+  var seg = document.getElementById('matd-seg');
+  seg.classList.toggle('mode-text', matdMode === 'text');
+  Array.prototype.forEach.call(seg.querySelectorAll('.matd-seg-btn'), function(b){
+    var on = b.dataset.mode === matdMode;
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+}
+function setMatdMode(mode){
+  if (mode === matdMode) return;
+  if (matdMode === 'text') matdTextIdx = matdIdx;
+  matdMode = mode;
+  updateMatdSegUI();
+  renderMatdTrack();
+  renderMatdDots();
+  matdTo(mode === 'video' ? 0 : matdTextIdx, true);
+}
+function buildMaterialDetail(){
+  renderMatdTrack();
+  renderMatdDots();
+}
+function matdUpdateDots(){
+  Array.prototype.forEach.call(document.getElementById('matd-dots').children, function(b, k){ b.classList.toggle('on', k === matdIdx); });
+  Array.prototype.forEach.call(document.querySelectorAll('#matd-track .matd-slide'), function(sl, k){ sl.classList.toggle('is-active', k === matdIdx); });
+}
+/* Native scroll-snap drives the swipe itself (real momentum/rubber-banding); this just figures
+   out which card ended up nearest-centered after the user drags, so the dots stay in sync
+   whether the user swiped, flicked, or tapped a dot. */
+function matdSyncFromScroll(){
+  var vp = document.getElementById('matd-viewport');
+  var track = document.getElementById('matd-track');
+  var center = vp.scrollLeft + vp.clientWidth / 2;
+  var best = 0, bestDist = Infinity;
+  Array.prototype.forEach.call(track.querySelectorAll('.matd-slide'), function(s, k){
+    var dist = Math.abs((s.offsetLeft + s.offsetWidth / 2) - center);
+    if (dist < bestDist){ bestDist = dist; best = k; }
+  });
+  matdIdx = best;
+  matdUpdateDots();
+}
+(function(){
+  var vp = document.getElementById('matd-viewport');
+  var t;
+  vp.addEventListener('scroll', function(){
+    clearTimeout(t);
+    t = setTimeout(matdSyncFromScroll, 80);
+  }, { passive: true });
+})();
+function matdTo(i, instant){
+  var slides = document.getElementById('matd-track').querySelectorAll('.matd-slide');
+  matdIdx = Math.min(slides.length - 1, Math.max(0, i));
+  var slide = slides[matdIdx];
+  if (slide) slide.scrollIntoView({ behavior: instant ? 'auto' : 'smooth', inline: 'center', block: 'nearest' });
+  matdUpdateDots();
+}
+function openMaterialDetail(key){
+  /* Video is the default landing mode -- matdTextIdx is still tracked so a specific
+     material (key) is right there waiting if/when the viewer switches to Text. */
+  matdMode = 'video';
+  updateMatdSegUI();
+  buildMaterialDetail();
+  var startIdx = key ? MATERIAL_DETAIL.findIndex(function(m){ return m.key === key; }) : 0;
+  matdTextIdx = Math.max(0, startIdx);
+  document.getElementById('material-detail-modal').classList.add('open');
+  matdTo(0, true);
+  Array.prototype.forEach.call(document.querySelectorAll('.matd-slide'), function(s){ s.scrollTop = 0; });
+}
+function closeMaterialDetail(){
+  document.getElementById('material-detail-modal').classList.remove('open');
+}
+/* Info button on a material-type group heading (e.g. "Neted") -- unlike the main "Vezi
+   diferențe" entry, which opens on the video intro, tapping this already means the viewer wants
+   that specific material's own info, so skip straight to its Text card instead of the intro. */
+function openMaterialGroupDetail(key){
+  openMaterialDetail(key);
+  setMatdMode('text');
+}
+
+function pickFabricSwatch(el, slug){
+  document.querySelectorAll('#cfg-fabric-sections .mtile').forEach(function(t){ t.classList.remove('on'); });
+  el.classList.add('on');
+  sel.collectionSlug = slug;
+  sel.colorName = el.dataset.name;
+  updatePreview();
+  updateSummary();
+  pressFeedback(el);
+}
+
+/* ══════════ Chip scroll-spy (adapted from mobile-v2.html:1804-1846) ══════════ */
+/* How far each section should sit below the sticky chip nav when scrolled to -- 0 for
+   "Layout" so it lands flush at the very top, a little breathing room for "Materiale" so
+   the "Material." title isn't jammed against the chips. */
+var SCROLL_SEC_PAD = { color: 16, 'colors-grid': 16 };
+function scrollCfgTo(sec, instant, targetId){
+  var scroll = document.getElementById('cfg-scroll');
+  var target = document.getElementById(targetId || ('sec-' + sec));
+  if (!target) return;
+  /* target.offsetTop is relative to target.offsetParent, which is #cfg-sheet (the nearest
+     positioned ancestor) -- not #cfg-scroll, the actual scroll container. Using it directly
+     overshoots every scroll-to-section by the height of whatever sits above #cfg-scroll
+     (drag handle + chip nav), landing mid-section instead of at its top. Measuring via
+     getBoundingClientRect() against the scroll container itself gives the true relative
+     offset regardless of which ancestor happens to be positioned. */
+  /* "Layout" is the very first section -- its natural resting position (scrollTop 0) is
+     already flush at the top with the container's own top padding as breathing room. Scrolling
+     to its computed offset instead would eat that padding and jam it against the chip nav, so
+     it gets an explicit 0 rather than going through the offset math below. */
+  var top = sec === 'layout' ? 0
+    : target.getBoundingClientRect().top - scroll.getBoundingClientRect().top + scroll.scrollTop - (SCROLL_SEC_PAD[sec] || 0);
+  scroll.scrollTo({ top: Math.max(0, top), behavior: instant ? 'auto' : 'smooth' });
+  setActiveCfgChip(sec, instant);
+}
+function setActiveCfgChip(sec, instant, followNav){
+  /* Tapping a chip never scrolls the row itself (the reference doesn't either -- you tapped what you
+     could already see). But scrolling the content one-handed, without ever touching the chip
+     row, is a different story: the reference's own scroll-spy leaves the active chip stranded off-
+     screen once you're a few sections down, which reads as broken rather than intentional. We
+     follow the active chip into view here (call site: the #cfg-scroll scroll-spy listener),
+     nudging the row just enough to keep it visible instead of re-centering on every change. */
+  var chips = document.querySelectorAll('.cfg-chip');
+  var active;
+  chips.forEach(function(c){
+    var on = c.dataset.sec === sec;
+    c.classList.toggle('on', on);
+    if (on) active = c;
+  });
+  if (followNav && active){
+    var nav = document.getElementById('cfg-chips');
+    var pad = 20;
+    var chipLeft = active.offsetLeft, chipRight = chipLeft + active.offsetWidth;
+    var viewLeft = nav.scrollLeft, viewRight = viewLeft + nav.clientWidth;
+    if (chipLeft - pad < viewLeft) nav.scrollLeft = Math.max(0, chipLeft - pad);
+    else if (chipRight + pad > viewRight) nav.scrollLeft = chipRight + pad - nav.clientWidth;
+  }
+}
+/* Materiale and Culoare used to share one sec-color section, so the spy needed a three-way
+   sub-split inside it (fabric-type chips = Materiale, the thin inline Filtre row = Filtre,
+   the grids below = Culoare). Now that Culoare is its own card, each chip maps to a whole
+   section again and the generic .cfg-sec spy below is enough -- resolveColorSec is gone.
+   Filtre keeps no scroll zone of its own: it was only ever the ~50px band around the toolbar,
+   and anchoring it there now would fight the Culoare chip, which lands on the same card's
+   title. It's an action chip -- it lights up when tapped (openFilterSheetFromNav) and hands
+   back to the spy on the next scroll. */
+(function(){
+  var scroll = document.getElementById('cfg-scroll');
+  var lastSec = '';
+  scroll.addEventListener('scroll', function(){
+    var sections = Array.prototype.slice.call(document.querySelectorAll('.cfg-sec'));
+    var scrollRect = scroll.getBoundingClientRect();
+    var winTop = scrollRect.top;
+    var winBottom = scrollRect.bottom;
+    var current = sections[0], bestArea = -1;
+    sections.forEach(function(s){
+      var r = s.getBoundingClientRect();
+      var area = Math.min(r.bottom, winBottom) - Math.max(r.top, winTop);
+      if (area > bestArea){ bestArea = area; current = s; }
+    });
+    var sec = current.id.replace('sec-', '');
+    if (sec !== lastSec){ lastSec = sec; setActiveCfgChip(sec, false, true); }
+  });
+})();
+/* Filtre in the top nav: scroll to the in-section Filtre row first so the sheet doesn't pop
+   up out of nowhere, then open it -- both finish in well under a second. */
+function openFilterSheetFromNav(){
+  var scroll = document.getElementById('cfg-scroll');
+  var target = document.getElementById('cfg-filter-btn');
+  if (target){
+    var top = target.getBoundingClientRect().top - scroll.getBoundingClientRect().top + scroll.scrollTop;
+    scroll.scrollTo({ top: Math.max(0, top - 90), behavior: 'smooth' });
+  }
+  setActiveCfgChip('filtre', false);
+  setTimeout(openFilterSheet, 350);
+}
+
+/* ══════════ Free-drag resize (adapted from mobile-v2.html:1773-1800) ══════════ */
+(function(){
+  var cfgEl = document.getElementById('cfg');
+  var sheet = document.getElementById('cfg-sheet');
+  var handle = document.getElementById('cfg-handle');
+  var startY = 0, startH = 0, dragging = false;
+
+  function minMax(){
+    var total = cfgEl.clientHeight;
+    return { min: total * 0.4, max: total - 120 };
+  }
+  function setSheetH(px){
+    var mm = minMax();
+    px = Math.max(mm.min, Math.min(mm.max, px));
+    cfgEl.style.setProperty('--sheet-h', px + 'px');
+  }
+
+  handle.addEventListener('pointerdown', function(e){
+    startY = e.clientY;
+    startH = sheet.getBoundingClientRect().height;
+    dragging = true;
+    sheet.classList.add('dragging');
+    handle.setPointerCapture(e.pointerId);
+  });
+  handle.addEventListener('pointermove', function(e){
+    if (!dragging) return;
+    var dy = e.clientY - startY;
+    setSheetH(startH - dy);
+  });
+  function endDrag(){
+    if (!dragging) return;
+    dragging = false;
+    sheet.classList.remove('dragging');
+  }
+  handle.addEventListener('pointerup', endDrag);
+  handle.addEventListener('pointercancel', endDrag);
+
+  window.addEventListener('resize', function(){ setSheetH(sheet.getBoundingClientRect().height); });
+
+  setSheetH(cfgEl.clientHeight * 0.6);
+})();
+
+/* ══════════ Init ══════════ */
+(function(){
+  sel.shapeEl = document.querySelector('#shape-grid .cfg-shape-tile[data-name="Canapea 3 locuri"]');
+  sel.layout = 'drept';
+  sel.size = '3';
+  renderLayoutGrid();
+  renderSizeGrid();
+  sel.collectionSlug = 'luna';
+  sel.colorName = 'Luna ' + COLLECTIONS.luna.colors[0][0];
+  renderNeeds();
+  renderFabricPillRow();
+  renderColorPillRow();
+  renderFabricSections();
+  updatePreview();
+  updateSummary();
+
+  var hashSec = location.hash.replace('#', '');
+  if (['layout','size','needs','color','colors-grid','summary'].indexOf(hashSec) > -1){
+    scrollCfgTo(hashSec, true);
+  }
+})();
+
+/* The entrance animation's fill-mode leaves body's transform:translateX(0) applied forever,
+   which makes position:fixed children (like #toast) fixed relative to body instead of the
+   viewport, so they can peek into view even when meant to be off-screen. Dropping the class
+   once the animation ends removes that lingering transform and restores normal fixed behavior. */
+document.documentElement.addEventListener('animationend', function(e){
+  if (e.animationName === 'pushInR') document.documentElement.classList.remove('enter-r');
+});
+
+/* Cross-page push transition, mirrors the PDP's pushTo() on the way in/out */
+function closeConfigurator(){
+  var origin = sessionStorage.getItem('pdpOrigin');
+  sessionStorage.removeItem('pdpOrigin');
+  document.body.classList.add('push-out-r');
+  setTimeout(function(){ location.href = origin || 'mobile-v17.html'; }, 260);
+}
+</script>
+</body>
+</html>
