@@ -142,7 +142,15 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 #cfg-sheet{position:relative;flex:0 0 auto;height:var(--sheet-h);background:#fff;border-radius:24px 24px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.14);display:flex;flex-direction:column;overflow:hidden;z-index:3}
 #cfg-sheet.dragging{transition:none}
 .cfg-handle{flex:0 0 auto;display:flex;justify-content:center;touch-action:none;padding-top:4px}
-.cfg-chips{flex:0 0 auto;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:0 16px 16px;border-bottom:1px solid var(--hair);scroll-behavior:smooth}
+/* The bar owns the hairline and the bottom padding now; the chips inside it are the only part
+   that scrolls, so the filter button and its divider stay put at the left edge. */
+.cfg-navbar{flex:0 0 auto;display:flex;align-items:center;padding:0 0 16px;border-bottom:1px solid var(--hair)}
+.cfg-navfilter{flex:0 0 auto;position:relative;display:flex;align-items:center;justify-content:center;width:40px;height:40px;margin-left:12px;padding:0;border:1.5px solid transparent;border-radius:50%;background:none;color:var(--ink)}
+.cfg-navfilter.has-count{border-color:#121212}
+.cfg-navfilter .nav-cnt{display:none;position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:999px;background:#1D1D1F;color:#fff;font-size:11px;font-weight:600;align-items:center;justify-content:center;border:2px solid #fff}
+.cfg-navfilter.has-count .nav-cnt{display:flex}
+.cfg-nav-divider{flex:0 0 auto;width:1px;height:24px;background:var(--hair);margin:0 12px}
+.cfg-chips{flex:1 1 auto;min-width:0;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:0 16px 0 0;scroll-behavior:smooth}
 .cfg-chips::-webkit-scrollbar{display:none}
 /* Nav chips: no outline on unselected (just ink text on transparent bg), and the
    selected pill's checkmark lives in a permanently-reserved slot (fixed width, animated via
@@ -606,14 +614,24 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 
   <div id="cfg-sheet">
     <div class="cfg-handle" id="cfg-handle"><div class="hbar"></div></div>
-    <div class="cfg-chips" id="cfg-chips">
+    <!-- v27: filters get a pinned seat at the head of the nav. It never scrolls away with the
+         chips, because unlike them it isn't a place in the flow -- it's an action you may want
+         at any point while reading the colour grid. The Filtre chip that used to ride along in
+         the scrolling row is gone; this is the same button, always reachable. -->
+    <div class="cfg-navbar">
+      <button type="button" class="cfg-navfilter" id="cfg-nav-filter-chip" onclick="openFilterSheetFromNav()" aria-label="Filtre">
+        <svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.3337 4.66666H7.33366M9.33366 11.3333H3.33366M9.33366 11.3333C9.33366 12.4379 10.2291 13.3333 11.3337 13.3333C12.4382 13.3333 13.3337 12.4379 13.3337 11.3333C13.3337 10.2288 12.4382 9.33332 11.3337 9.33332C10.2291 9.33332 9.33366 10.2288 9.33366 11.3333ZM6.66699 4.66666C6.66699 5.77123 5.77156 6.66666 4.66699 6.66666C3.56242 6.66666 2.66699 5.77123 2.66699 4.66666C2.66699 3.56209 3.56242 2.66666 4.66699 2.66666C5.77156 2.66666 6.66699 3.56209 6.66699 4.66666Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="nav-cnt" id="cfg-nav-filter-cnt">0</span>
+      </button>
+      <span class="cfg-nav-divider"></span>
+      <div class="cfg-chips" id="cfg-chips">
       <button class="cfg-chip on" data-sec="layout" onclick="scrollCfgTo('layout')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Layout</button>
       <!-- Nevoi de lifestyle chip removed per request, kept in markup below for easy restore -->
       <button class="cfg-chip" data-sec="needs" onclick="scrollCfgTo('needs')" style="display:none"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Nevoi</button>
       <button class="cfg-chip" data-sec="color" onclick="scrollCfgTo('color')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Material</button>
-      <button class="cfg-chip" type="button" id="cfg-nav-filter-chip" data-sec="filtre" onclick="openFilterSheetFromNav()"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Filtre<span class="nav-cnt" id="cfg-nav-filter-cnt">0</span></button>
       <button class="cfg-chip" data-sec="colors-grid" onclick="scrollCfgTo('colors-grid')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Culoare</button>
       <button class="cfg-chip" data-sec="summary" onclick="scrollCfgTo('summary')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Sumar</button>
+      </div>
     </div>
     <div class="cfg-scroll" id="cfg-scroll">
 
