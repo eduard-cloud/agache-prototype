@@ -600,17 +600,16 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-matnote button{background:none;border:none;padding:0;font-size:12.5px;font-weight:500;color:var(--ink);text-decoration:underline}
 
 /* ══ v27: zone switch and zone tabs ══ */
-/* Title and switch share one line: the switch is a modifier on "Alege culoarea", not a step
-   of its own, so it reads better beside the title than stacked under it. */
-.cfg-color-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
-.cfg-color-head .cfg-title{margin:0}
-.cfg-zone-switch{flex:0 0 auto;display:flex;align-items:center;gap:8px;background:none;border:none;padding:0;text-align:left}
+/* The switch sits under the title, on its own row: with the full label spelled out it no
+   longer fits beside "Alege culoarea", and it reads as a choice about the sofa rather than a
+   toggle attached to the heading. */
+.cfg-zone-switch{display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;padding:0 0 16px;text-align:left}
 .cfg-zone-switch-text{display:flex;flex-direction:column;gap:2px;min-width:0}
-.cfg-zone-switch-text strong{font-size:13px;font-weight:500;line-height:1.2;color:var(--ink);display:block;white-space:nowrap}
-.cfg-switch{flex:0 0 auto;width:38px;height:22px;border-radius:11px;background:#DDD;position:relative;transition:background-color .16s}
-.cfg-switch .knob{position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .16s}
+.cfg-zone-switch-text strong{font-size:14px;font-weight:500;line-height:1.2;color:var(--ink);display:block}
+.cfg-switch{flex:0 0 auto;width:44px;height:26px;border-radius:13px;background:#DDD;position:relative;transition:background-color .16s}
+.cfg-switch .knob{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .16s}
 .cfg-zone-switch.on .cfg-switch{background:var(--ink)}
-.cfg-zone-switch.on .cfg-switch .knob{transform:translateX(16px)}
+.cfg-zone-switch.on .cfg-switch .knob{transform:translateX(18px)}
 /* One tab per zone, each carrying the colour it currently holds -- the row doubles as the
    summary of what has been set, so nobody has to open all three to find out. */
 .cfg-zonetabs{display:none;gap:4px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--hair);margin-bottom:16px}
@@ -758,17 +757,15 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
            materiale", and everything from the count + Filtre row down to the swatch grid
            moves under its own "Alege culoarea" title. -->
       <section class="cfg-sec" id="sec-colors-grid">
-        <div class="cfg-color-head">
-          <h3 class="cfg-title">Alege culoarea</h3>
+        <h3 class="cfg-title">Alege culoarea</h3>
 
         <!-- Most people want one colour, so zones stay folded away until asked for. -->
         <button type="button" class="cfg-zone-switch" id="cfg-zone-switch" onclick="toggleZoneMode()" aria-pressed="false">
           <span class="cfg-switch"><span class="knob"></span></span>
           <span class="cfg-zone-switch-text">
-            <strong>Culori diferite</strong>
+            <strong>Canapea în culori diferite</strong>
           </span>
         </button>
-        </div>
 
         <div class="cfg-zonetabs" id="cfg-zonetabs"></div>
 
