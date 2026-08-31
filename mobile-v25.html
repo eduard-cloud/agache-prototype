@@ -297,7 +297,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
    renderFabricSections), so each material's colors get their own labeled block instead of
    being mixed into one grid. */
 .cfg-matgroup-title{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:600;letter-spacing:-.2px;color:var(--ink);margin-top:28px}
-.cfg-matgroup-title:first-of-type{margin-top:0}
+.cfg-matgroup-title:first-of-type,.cfg-matgroup-title.first-visible{margin-top:0}
 .cfg-matgroup-info{flex:0 0 auto;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#1d1d1f}
 .cfg-color-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 8px;margin-top:12px}
 #cfg-fabric-sections.cfg-grid3 .cfg-color-grid{grid-template-columns:repeat(3,1fr);gap:12px 10px}
@@ -1741,12 +1741,23 @@ function applyFabricFilters(){
   /* A material-type group (title + its grid) can end up with every tile hidden once color/prop/
      price filters are layered on top of the material pills -- hide the label along with the
      empty grid rather than leaving a heading over blank space. */
+  var firstShownTitle = null;
   document.querySelectorAll('#cfg-fabric-sections .cfg-color-grid').forEach(function(grid){
     var anyVisible = Array.prototype.some.call(grid.children, function(t){ return t.style.display !== 'none'; });
     var title = grid.previousElementSibling;
-    if (title && title.classList.contains('cfg-matgroup-title')) title.style.display = anyVisible ? '' : 'none';
+    if (title && title.classList.contains('cfg-matgroup-title')){
+      title.style.display = anyVisible ? '' : 'none';
+      title.classList.remove('first-visible');
+      if (anyVisible && !firstShownTitle) firstShownTitle = title;
+    }
     grid.style.display = anyVisible ? '' : 'none';
   });
+  /* All four groups sit in the DOM now, so filtering down to Catifea leaves the first two
+     headings hidden and the third carrying the 28px gap meant to separate it from the group
+     above -- against the top of the card there is nothing to separate it from. Same problem
+     .cfg-col-section.first-visible solves, and for the same reason a CSS :first-of-type can't:
+     hidden groups are display:none, not removed. */
+  if (firstShownTitle) firstShownTitle.classList.add('first-visible');
   var noFilters = !pillDefs.length && !appliedFilters.length && !priceFiltered;
   var optionCount = noFilters ? totalColorCount() : visibleCount;
   document.getElementById('cfg-color-sub').textContent = optionCount + (optionCount === 1 ? ' opțiune' : ' opțiuni');
@@ -1786,23 +1797,25 @@ function appendFabricGrid(wrap, swatches){
 function renderFabricSections(){
   var wrap = document.getElementById('cfg-fabric-sections');
   wrap.innerHTML = '';
-  var activePillDefs = FABRIC_PILLS.filter(function(p){ return activeFabricPills.indexOf(p.key) > -1; });
-  if (activePillDefs.length < 2){
-    appendFabricGrid(wrap, ALL_SWATCHES);
-  } else {
-    activePillDefs.forEach(function(pillDef){
-      var swatches = ALL_SWATCHES.filter(function(s){ return materialTypeMatch(s.collection) === pillDef; });
-      if (!swatches.length) return;
-      var h = document.createElement('div');
-      h.className = 'cfg-matgroup-title';
-      h.innerHTML = '<span>' + pillDef.label + '</span>' +
-        '<button type="button" class="cfg-matgroup-info" aria-label="Detalii ' + pillDef.label + '" onclick="openMaterialGroupDetail(\'' + pillDef.key + '\')">' +
-          '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 11v5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7.7" r="1.1" fill="currentColor"/></svg>' +
-        '</button>';
-      wrap.appendChild(h);
-      appendFabricGrid(wrap, swatches);
-    });
-  }
+  /* Always grouped by material type, whether or not a material is picked. With nothing selected
+     this used to be one undifferentiated run of 191 swatches; the four headings are the same
+     structure you get the moment you do pick something, so choosing a material now narrows the
+     list instead of reorganising it. Grouping is lossless here: every swatch maps to exactly
+     one of the four pills (58 + 28 + 27 + 78 = 191, no orphans, no double matches), so nothing
+     drops out of the grid by being filed under a heading. What collapses this back down to the
+     selected material(s) is applyFabricFilters, which hides any heading whose grid empties. */
+  FABRIC_PILLS.forEach(function(pillDef){
+    var swatches = ALL_SWATCHES.filter(function(s){ return materialTypeMatch(s.collection) === pillDef; });
+    if (!swatches.length) return;
+    var h = document.createElement('div');
+    h.className = 'cfg-matgroup-title';
+    h.innerHTML = '<span>' + pillDef.label + '</span>' +
+      '<button type="button" class="cfg-matgroup-info" aria-label="Detalii ' + pillDef.label + '" onclick="openMaterialGroupDetail(\'' + pillDef.key + '\')">' +
+        '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 11v5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7.7" r="1.1" fill="currentColor"/></svg>' +
+      '</button>';
+    wrap.appendChild(h);
+    appendFabricGrid(wrap, swatches);
+  });
   wrap.querySelectorAll('.mtile').forEach(function(tile){
     tile.onclick = function(){ pickFabricSwatch(tile, tile.dataset.slug); };
     tile.querySelector('.info-i').onclick = function(e){ e.stopPropagation(); showSwatchInfo(tile.dataset.name); };
