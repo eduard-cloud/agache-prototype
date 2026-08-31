@@ -96,6 +96,13 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-dim-input:focus{outline:none}
 .cfg-dim-edit{flex:0 0 auto;width:52px;height:52px;border:1px solid var(--hair);border-radius:10px;background:#fff;color:var(--ink);display:flex;align-items:center;justify-content:center}
 .cfg-dim-edit:active{background:var(--chipbg)}
+/* the fixed main run: same label, but the value reads as a spec, not a control */
+.cfg-dim-fixed{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-bottom:18px;border-bottom:1px solid var(--hair)}
+.cfg-dim-fixed + .cfg-dim{margin-top:18px}
+.cfg-dim-fixed .cfg-dim-lab{margin-bottom:0}
+.cfg-dim-fixed-val{font-size:15px;color:var(--gray)}
+.cfg-size-note{margin-top:14px;font-size:12.5px;line-height:1.4;color:var(--gray);display:none}
+.cfg-size-note.on{display:block}
 #dim-isl-row{display:none}
 #dim-isl-row.on{display:block}
 .cfg-shape-label strong{font-size:14px;font-weight:600;display:block}
@@ -604,19 +611,13 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 
       <section class="cfg-sec" id="sec-size">
         <h3 class="cfg-title">Alege mărimea</h3>
-        <!-- One slider per length the shopper can actually move. A straight sofa has a single
-             run, so it gets one; a colțar adds the island, and which side it is named after
-             follows the layout. Depth is fixed on Boston, so it never becomes a slider. -->
-        <div class="cfg-dim" id="dim-len-row">
-          <div class="cfg-dim-lab">Lungime</div>
-          <div class="cfg-dim-line">
-            <div class="cfg-dim-track">
-              <div class="cfg-dim-fill" id="dim-len-fill"></div>
-              <span class="cfg-dim-val" id="dim-len-val">245 cm</span>
-              <input type="range" id="dim-len" min="185" max="305" step="30" value="245" aria-label="Lungime" oninput="onDimInput()">
-            </div>
-            <button type="button" class="cfg-dim-edit" onclick="editDim('len')" aria-label="Scrie lungimea"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
-          </div>
+        <!-- Boston's main run is built to one length -- it can't grow or shrink, so it's a
+             read-out, not a slider. The only length the shopper can actually move is the
+             island, and only on a colțar: 140, 170 or 200 cm, a module at a time. A straight
+             sofa therefore has nothing to slide at all. -->
+        <div class="cfg-dim-fixed">
+          <span class="cfg-dim-lab">Lungime</span>
+          <span class="cfg-dim-fixed-val" id="dim-len-val">245 cm</span>
         </div>
         <div class="cfg-dim" id="dim-isl-row">
           <div class="cfg-dim-lab" id="dim-isl-lab">Lungime pe stânga</div>
@@ -624,11 +625,12 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
             <div class="cfg-dim-track">
               <div class="cfg-dim-fill" id="dim-isl-fill"></div>
               <span class="cfg-dim-val" id="dim-isl-val">170 cm</span>
-              <input type="range" id="dim-isl" min="140" max="260" step="30" value="170" aria-label="Lungimea insulei" oninput="onDimInput()">
+              <input type="range" id="dim-isl" min="140" max="200" step="30" value="170" aria-label="Lungimea insulei" oninput="onDimInput()">
             </div>
             <button type="button" class="cfg-dim-edit" onclick="editDim('isl')" aria-label="Scrie lungimea insulei"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
           </div>
         </div>
+        <p class="cfg-size-note" id="cfg-size-note">Canapeaua dreaptă se face într-o singură mărime. Alege un colțar dacă vrei să reglezi lungimea.</p>
       </section>
 
       <!-- Nevoi de lifestyle section removed per request, kept in markup for easy restore -->
@@ -1007,10 +1009,8 @@ function baseVariantName(){
                                  : 'Coltar 3 locuri cu insula pe dreapta';
 }
 function sizeSteps(){
-  var d = layoutDef();
-  var n = (sel.len - d.len) / STEP_CM;
-  if (isCorner()) n += (sel.isl - d.isl) / STEP_CM;
-  return Math.round(n);
+  if (!isCorner()) return 0;
+  return Math.round((sel.isl - layoutDef().isl) / STEP_CM);
 }
 function currentShapeName(){
   return sel.shapeEl ? sel.shapeEl.dataset.name : 'Canapea 3 locuri';
@@ -1414,19 +1414,19 @@ function updateSummary(){
    island, and past ~212 cm of island it stops being the 3-seat corner and becomes the 4-seat
    one -- the same switch the shopper would make by hand on the old tile grid. */
 var LAYOUTS = [
-  { key:'drept',   label:'Canapea dreaptă',   img:'assets/shape-3seat.png',        len:245, lenMin:185, lenMax:305 },
-  { key:'stanga',  label:'Colțar pe stânga',  img:'assets/shape-corner-left.png',  len:255, isl:170, lenMin:195, lenMax:315 },
-  { key:'dreapta', label:'Colțar pe dreapta', img:'assets/shape-corner-right.png', len:255, isl:170, lenMin:195, lenMax:315 }
+  { key:'drept',   label:'Canapea dreaptă',   img:'assets/shape-3seat.png',        len:245 },
+  { key:'stanga',  label:'Colțar pe stânga',  img:'assets/shape-corner-left.png',  len:255, isl:170 },
+  { key:'dreapta', label:'Colțar pe dreapta', img:'assets/shape-corner-right.png', len:255, isl:170 }
 ];
-/* Halfway between the 3-seat island (170) and the 4-seat one (255). */
-var ISLAND_4SEAT_FROM = 212;
 function layoutDef(key){
   return LAYOUTS.filter(function(l){ return l.key === (key || sel.layout); })[0] || LAYOUTS[0];
 }
 function isCorner(key){ return (key || sel.layout) !== 'drept'; }
+/* The island travels 140 -> 200 cm: one module shorter than standard, or one longer. That
+   never reaches the 255 cm island of the 4-seat corner, so every colțar the sliders can build
+   is the 3-seat one. */
 function variantName(){
   if (!isCorner()) return 'Canapea 3 locuri';
-  if (sel.isl >= ISLAND_4SEAT_FROM) return 'Coltar 4 locuri';
   return sel.layout === 'stanga' ? 'Coltar 3 locuri cu insula pe stanga'
                                  : 'Coltar 3 locuri cu insula pe dreapta';
 }
@@ -1454,6 +1454,7 @@ function renderLayoutGrid(){
 /* Both sliders are painted the same way: fill to the handle, value inside the track. */
 function paintDim(which){
   var input = document.getElementById('dim-' + which);
+  if (!input) return;
   var pct = (input.value - input.min) / (input.max - input.min) * 100;
   /* The handle's centre travels 10px -> (100% - 10px); the grey starts 10px past it, which
      leaves the handle centred in the white at the minimum and 10px off the far wall at the
@@ -1463,24 +1464,15 @@ function paintDim(which){
 }
 function renderSizeSliders(){
   var corner = isCorner();
-  /* 30 cm a step -- one module, the distance between two stitch lines on the seat. Each
-     layout's range is anchored on its own real length (245 straight, 255 colțar) so the
-     variant Agache actually stocks is always one of the stops, never a value between two. */
-  var def = layoutDef();
-  var lenInput = document.getElementById('dim-len');
-  lenInput.min = def.lenMin;
-  lenInput.max = def.lenMax;
+  document.getElementById('dim-len-val').textContent = sel.len + ' cm';
   document.getElementById('dim-isl-row').classList.toggle('on', corner);
+  document.getElementById('cfg-size-note').classList.toggle('on', !corner);
   document.getElementById('dim-isl-lab').textContent = sel.layout === 'dreapta' ? 'Lungime pe dreapta' : 'Lungime pe stânga';
-  document.getElementById('dim-len').value = sel.len;
   document.getElementById('dim-isl').value = sel.isl;
-  paintDim('len');
   paintDim('isl');
 }
 function onDimInput(){
-  sel.len = +document.getElementById('dim-len').value;
   sel.isl = +document.getElementById('dim-isl').value;
-  paintDim('len');
   paintDim('isl');
   applyCombo();
 }
