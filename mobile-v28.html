@@ -1847,8 +1847,18 @@ var MATERIAL_AVAILABLE = null;
 /* The whole filter predicate in one place, so the two availability sets, the dead-end check and
    the grid can't drift apart. Each facet is OR within itself and AND against the others; an
    empty facet means "not filtering on this", not "matches nothing". */
+/* True while the grid is pinned to one collection -- because the shopper chose it, or because
+   zones need every swatch to come from the same fabric. */
+function collectionNarrowed(){
+  return !!sel.collectionSlug && (sel.collectionLocked || sel.zoneMode);
+}
 function swatchPasses(sw, pillDefs, colourFams, propFilters, priceMin, priceMax){
   var c = sw.collection;
+  /* v28: the collection is part of what a swatch has to pass, so every count and every
+     availability check built on this sees the same catalogue the grid does -- otherwise a
+     colour family with nothing in the current collection still looks tappable, and tapping it
+     lands on an empty grid. */
+  if (collectionNarrowed() && sw.slug !== sel.collectionSlug) return false;
   if (pillDefs.length && !pillDefs.some(function(pd){
     return pd.stems.some(function(stem){ return c.materialTypes.some(function(t){ return t.indexOf(stem) > -1; }); });
   })) return false;
@@ -2156,7 +2166,7 @@ function applyFabricFilters(){
        collection in its own step, or they asked for different colours per zone (where every
        zone has to come from the same fabric). Otherwise every swatch is a valid sofa and the
        whole catalogue stays open. */
-    if (visible && sel.collectionSlug && (sel.collectionLocked || sel.zoneMode)) visible = s.slug === sel.collectionSlug;
+    if (visible && collectionNarrowed()) visible = s.slug === sel.collectionSlug;
     tile.style.display = visible ? '' : 'none';
     if (visible) visibleCount++;
   });
@@ -2181,7 +2191,7 @@ function applyFabricFilters(){
      hidden groups are display:none, not removed. */
   if (firstShownTitle) firstShownTitle.classList.add('first-visible');
   /* Narrowing to a collection counts as a filter for the total above the grid. */
-  var narrowed = sel.collectionSlug && (sel.collectionLocked || sel.zoneMode);
+  var narrowed = collectionNarrowed();
   var noFilters = !pillDefs.length && !appliedFilters.length && !priceFiltered && !narrowed;
   var optionCount = noFilters ? totalColorCount() : visibleCount;
   document.getElementById('cfg-color-sub').textContent = optionCount + (optionCount === 1 ? ' opțiune' : ' opțiuni');
@@ -2697,7 +2707,7 @@ function renderMatNote(){
   /* The only dead end is asking for different colours per zone before any fabric is settled:
      zones have to share one collection, and there isn't one yet. Everything else just works. */
   var blocked = sel.zoneMode && !c;
-  var narrowed = !!c && (sel.collectionLocked || sel.zoneMode);
+  var narrowed = collectionNarrowed();
   document.getElementById('cfg-nocol').style.display = blocked ? '' : 'none';
   document.getElementById('cfg-fabric-sections').style.display = blocked ? 'none' : '';
   document.querySelector('#sec-colors-grid .cfg-fabric-toolrow').style.display = blocked ? 'none' : '';
