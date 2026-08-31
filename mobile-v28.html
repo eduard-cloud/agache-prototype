@@ -357,7 +357,10 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 /* Material-type group title -- only rendered when 2+ fabric-type pills are active (see
    renderFabricSections), so each material's colors get their own labeled block instead of
    being mixed into one grid. */
-.cfg-matgroup-title{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:600;letter-spacing:-.2px;color:var(--ink);margin-top:28px}
+.cfg-matgroup-title{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:17px;font-weight:600;letter-spacing:-.2px;color:var(--ink);margin-top:28px}
+.cfg-matgroup-name{flex:1 1 auto;min-width:0}
+/* the material rides on the right of the collection's name, in the quieter weight of a spec */
+.cfg-matgroup-right{flex:0 0 auto;display:flex;align-items:center;gap:2px;font-size:13px;font-weight:400;letter-spacing:0;color:var(--gray)}
 .cfg-matgroup-title:first-of-type,.cfg-matgroup-title.first-visible{margin-top:0}
 .cfg-matgroup-info{flex:0 0 auto;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#1d1d1f}
 .cfg-color-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 8px;margin-top:12px}
@@ -2217,22 +2220,24 @@ function appendFabricGrid(wrap, swatches){
 function renderFabricSections(){
   var wrap = document.getElementById('cfg-fabric-sections');
   wrap.innerHTML = '';
-  /* Always grouped by material type, whether or not a material is picked. With nothing selected
-     this used to be one undifferentiated run of 191 swatches; the four headings are the same
-     structure you get the moment you do pick something, so choosing a material now narrows the
-     list instead of reorganising it. Grouping is lossless here: every swatch maps to exactly
-     one of the four pills (58 + 28 + 27 + 78 = 191, no orphans, no double matches), so nothing
-     drops out of the grid by being filed under a heading. What collapses this back down to the
-     selected material(s) is applyFabricFilters, which hides any heading whose grid empties. */
-  FABRIC_PILLS.forEach(function(pillDef){
-    var swatches = ALL_SWATCHES.filter(function(s){ return materialTypeMatch(s.collection) === pillDef; });
+  /* v28: grouped by collection, not by material type. The collection is what a sofa is actually
+     made of -- one price, one durability, one set of colours -- so it's the heading; the material
+     it belongs to rides along on the right, where it reads as a property rather than a category.
+     Empty groups are hidden by applyFabricFilters, so filtering down to one collection leaves
+     exactly one heading standing. */
+  COLLECTION_ORDER.forEach(function(slug){
+    var swatches = ALL_SWATCHES.filter(function(s){ return s.slug === slug; });
     if (!swatches.length) return;
+    var c = COLLECTIONS[slug];
+    var pillDef = materialTypeMatch(c);
     var h = document.createElement('div');
     h.className = 'cfg-matgroup-title';
-    h.innerHTML = '<span>' + pillDef.label + '</span>' +
-      '<button type="button" class="cfg-matgroup-info" aria-label="Detalii ' + pillDef.label + '" onclick="openMaterialGroupDetail(\'' + pillDef.key + '\')">' +
-        '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 11v5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7.7" r="1.1" fill="currentColor"/></svg>' +
-      '</button>';
+    h.innerHTML = '<span class="cfg-matgroup-name">' + c.name + '</span>' +
+      '<span class="cfg-matgroup-right">' + (pillDef ? pillDef.label : '') +
+        (pillDef ? '<button type="button" class="cfg-matgroup-info" aria-label="Detalii ' + pillDef.label + '" onclick="openMaterialGroupDetail(\'' + pillDef.key + '\')">' +
+          '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 11v5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7.7" r="1.1" fill="currentColor"/></svg>' +
+        '</button>' : '') +
+      '</span>';
     wrap.appendChild(h);
     appendFabricGrid(wrap, swatches);
   });
@@ -2244,6 +2249,7 @@ function renderFabricSections(){
   document.getElementById('cfg-color-sub').textContent = totalOptions + (totalOptions === 1 ? ' opțiune' : ' opțiuni');
   syncSwatchSelection();
 }
+
 
 function showSwatchInfo(name){
   var s = SWATCH_INDEX[name];
