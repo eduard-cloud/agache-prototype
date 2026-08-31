@@ -987,37 +987,41 @@ var SHAPE_TIER_PRICE = {
   'Coltar 3 locuri cu insula pe dreapta': { Practic:5780, Confort:6070, Premium:6375, Lux:6700, Special:6995 },
   'Coltar 4 locuri':                      { Practic:8280, Confort:8710, Premium:9115, Lux:9570, Special:10085 }
 };
-function currentShapeName(){
-  return sel.shapeEl ? sel.shapeEl.dataset.name : 'Canapea 3 locuri';
-}
-/* Reference dimensions of each real variant, and what a centimetre of length costs.
-   Agache sells four fixed SKUs; the sliders let a shopper land between them, so the price has
-   to interpolate. The rate isn't invented: the only pair of variants that differ by length
-   alone is Coltar 3 locuri -> Coltar 4 locuri (the island grows 170 -> 255 cm), so each tier's
-   own real price gap over those 85 cm is the per-cm rate for that tier. Every one of the four
-   real combinations therefore still prices at exactly its live Shopify price; only the
-   in-between lengths are interpolated, and the curve is continuous across the 3->4 seat
-   switchover because both sides measure from their own variant's reference dims. */
+/* Reference dimensions of each real variant -- the standard size each layout starts at, and
+   the fixed depth of a straight sofa. */
 var VARIANT_DIMS = {
   'Canapea 3 locuri':                     { len:245, isl:0,   depth:100 },
   'Coltar 3 locuri cu insula pe stanga':  { len:255, isl:170, depth:170 },
   'Coltar 3 locuri cu insula pe dreapta': { len:255, isl:170, depth:170 },
   'Coltar 4 locuri':                      { len:255, isl:255, depth:255 }
 };
-function cmRate(tier){
-  return (SHAPE_TIER_PRICE['Coltar 4 locuri'][tier] - SHAPE_TIER_PRICE['Coltar 3 locuri cu insula pe stanga'][tier]) / 85;
+/* One module -- 30 cm, stitch line to stitch line -- costs 500 lei, added or taken off the
+   standard size in either direction, on either slider. Price therefore hangs off the layout's
+   own standard variant, not off whichever SKU the current length resolves to: crossing into
+   the 4-seat corner changes the picture, not the arithmetic, so the shopper never sees the
+   price jump for a step that looks like every other step. */
+var STEP_CM = 30, STEP_LEI = 500;
+function baseVariantName(){
+  if (!isCorner()) return 'Canapea 3 locuri';
+  return sel.layout === 'stanga' ? 'Coltar 3 locuri cu insula pe stanga'
+                                 : 'Coltar 3 locuri cu insula pe dreapta';
+}
+function sizeSteps(){
+  var d = layoutDef();
+  var n = (sel.len - d.len) / STEP_CM;
+  if (isCorner()) n += (sel.isl - d.isl) / STEP_CM;
+  return Math.round(n);
+}
+function currentShapeName(){
+  return sel.shapeEl ? sel.shapeEl.dataset.name : 'Canapea 3 locuri';
 }
 function collectionPrice(slug, shapeName){
-  var name = shapeName || currentShapeName();
-  var tier = COLLECTIONS[slug].tier;
-  var base = SHAPE_TIER_PRICE[name][tier];
-  var ref = VARIANT_DIMS[name];
-  var extra = (sel.len - ref.len) + (ref.isl ? (sel.isl - ref.isl) : 0);
-  return Math.round((base + cmRate(tier) * extra) / 5) * 5;
+  return SHAPE_TIER_PRICE[shapeName || baseVariantName()][COLLECTIONS[slug].tier] + STEP_LEI * sizeSteps();
 }
 function shapePriceRange(shapeName){
-  var t = SHAPE_TIER_PRICE[shapeName || currentShapeName()];
-  return { min:t.Practic, max:t.Special };
+  var t = SHAPE_TIER_PRICE[shapeName || baseVariantName()];
+  var d = STEP_LEI * sizeSteps();
+  return { min:t.Practic + d, max:t.Special + d };
 }
 var SWATCH_INDEX = {};
 /* order the main color groups sweep around the wheel, neutrals bookending it */
