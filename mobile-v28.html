@@ -1445,7 +1445,7 @@ function toast(msg){
 }
 
 /* ══════════ v3-specific: configurator state + rendering ══════════ */
-var sel = { shapeEl: null, collectionSlug: null, colorName: null, needs: [], zoneMode: false, zone: 'sezut', zones: {} };
+var sel = { shapeEl: null, collectionSlug: null, colorName: null, needs: [], zoneMode: false, zone: 'sezut', zones: {}, collectionLocked: false };
 /* Grouped by actual fabric structure (per agache.ro's own material descriptions), not by
    price tier and not by the old Catifea/Velur/Bucle split -- that split had real velvet
    (Piano) lumped in with velvet-*look* wovens (Manila/Zoya/Maya), and called plain thick
@@ -2152,11 +2152,11 @@ function applyFabricFilters(){
     var priceOK = collectionPrice(s.slug) >= priceMin && collectionPrice(s.slug) <= priceMax;
     var visible = matOK && propOK && priceOK;
     if (visible && byCat.culoare.length) visible = byCat.culoare.indexOf(colorFamilyRO(s.hex)) > -1;
-    /* v28: one colour for the whole sofa needs no collection at all -- every swatch is a valid
-       sofa, and picking one settles the collection by itself. The grid only narrows once the
-       shopper asks for different colours per zone, because that's the only case where two
-       swatches have to come from the same fabric. */
-    if (visible && sel.zoneMode && sel.collectionSlug) visible = s.slug === sel.collectionSlug;
+    /* v28: the grid narrows to one collection in two cases -- the shopper picked that
+       collection in its own step, or they asked for different colours per zone (where every
+       zone has to come from the same fabric). Otherwise every swatch is a valid sofa and the
+       whole catalogue stays open. */
+    if (visible && sel.collectionSlug && (sel.collectionLocked || sel.zoneMode)) visible = s.slug === sel.collectionSlug;
     tile.style.display = visible ? '' : 'none';
     if (visible) visibleCount++;
   });
@@ -2180,8 +2180,9 @@ function applyFabricFilters(){
      .cfg-col-section.first-visible solves, and for the same reason a CSS :first-of-type can't:
      hidden groups are display:none, not removed. */
   if (firstShownTitle) firstShownTitle.classList.add('first-visible');
-  /* Zone mode narrows the grid to one collection, so it counts as a filter for the total. */
-  var noFilters = !pillDefs.length && !appliedFilters.length && !priceFiltered && !sel.zoneMode;
+  /* Narrowing to a collection counts as a filter for the total above the grid. */
+  var narrowed = sel.collectionSlug && (sel.collectionLocked || sel.zoneMode);
+  var noFilters = !pillDefs.length && !appliedFilters.length && !priceFiltered && !narrowed;
   var optionCount = noFilters ? totalColorCount() : visibleCount;
   document.getElementById('cfg-color-sub').textContent = optionCount + (optionCount === 1 ? ' opțiune' : ' opțiuni');
 
@@ -2664,6 +2665,10 @@ function pickCollection(slug, el){
      having no fabric chosen, the price back to "de la". Nothing here is a one-way door. */
   var deselect = slug === sel.collectionSlug;
   sel.collectionSlug = deselect ? null : slug;
+  /* Picking a card is a decision about the sofa's fabric, so the colour grid narrows to it
+     whether or not zones are in play. A collection merely inferred from a swatch doesn't lock
+     anything -- that shopper is still browsing the whole catalogue. */
+  sel.collectionLocked = !deselect;
   if (deselect){
     sel.colorName = null;
     sel.zones = {};
@@ -2690,12 +2695,13 @@ function renderMatNote(){
   /* The only dead end is asking for different colours per zone before any fabric is settled:
      zones have to share one collection, and there isn't one yet. Everything else just works. */
   var blocked = sel.zoneMode && !c;
+  var narrowed = !!c && (sel.collectionLocked || sel.zoneMode);
   document.getElementById('cfg-nocol').style.display = blocked ? '' : 'none';
   document.getElementById('cfg-fabric-sections').style.display = blocked ? 'none' : '';
   document.querySelector('#sec-colors-grid .cfg-fabric-toolrow').style.display = blocked ? 'none' : '';
   document.getElementById('cfg-color-pillrow').style.display = blocked ? 'none' : '';
-  el.style.display = (sel.zoneMode && c) ? '' : 'none';
-  if (!(sel.zoneMode && c)) return;
+  el.style.display = narrowed ? '' : 'none';
+  if (!narrowed) return;
   el.innerHTML = 'Doar culorile din <strong>' + c.name + '</strong>. ' +
     '<button type="button" onclick="scrollCfgTo(\'collection\')">Schimbă colecția</button>';
 }
