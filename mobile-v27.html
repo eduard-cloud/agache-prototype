@@ -145,8 +145,8 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 /* The bar owns the hairline and the bottom padding now; the chips inside it are the only part
    that scrolls, so the filter button and its divider stay put at the left edge. */
 .cfg-navbar{flex:0 0 auto;display:flex;align-items:center;padding:0 0 16px;border-bottom:1px solid var(--hair)}
-.cfg-navfilter{flex:0 0 auto;position:relative;display:flex;align-items:center;justify-content:center;width:40px;height:40px;margin-left:12px;padding:0;border:1.5px solid transparent;border-radius:50%;background:none;color:var(--ink)}
-.cfg-navfilter.has-count{border-color:#121212}
+/* No ring, ever -- the count badge alone says filters are on. */
+.cfg-navfilter{flex:0 0 auto;position:relative;display:flex;align-items:center;justify-content:center;width:40px;height:40px;margin-left:12px;padding:0;border:none;background:none;color:var(--ink)}
 .cfg-navfilter .nav-cnt{display:none;position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:999px;background:#1D1D1F;color:#fff;font-size:11px;font-weight:600;align-items:center;justify-content:center;border:2px solid #fff}
 .cfg-navfilter.has-count .nav-cnt{display:flex}
 .cfg-nav-divider{flex:0 0 auto;width:1px;height:24px;background:var(--hair);margin:0 6px}
