@@ -157,6 +157,8 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-matdiff-text{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;font-size:16px;font-weight:500;line-height:1.15;letter-spacing:-.03em;color:#1d1d1f}
 .cfg-matdiff-text span{text-decoration:underline;text-decoration-skip-ink:auto}
 .cfg-matdiff-plus{flex:0 0 auto;color:#1d1d1f}
+/* Last thing in the material card -- its own 24px would stack on the card's 24px padding. */
+.cfg-sec .cfg-matdiff-btn:last-child{margin-bottom:0}
 
 /* ── section 2a: household needs ── */
 .cfg-needs-row{display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:0 0 4px;margin-bottom:12px;scroll-snap-type:x proximity}
@@ -508,7 +510,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
       <button class="cfg-chip" data-sec="needs" onclick="scrollCfgTo('needs')" style="display:none"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Nevoi</button>
       <button class="cfg-chip" data-sec="color" onclick="scrollCfgTo('color')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Material</button>
       <button class="cfg-chip" type="button" id="cfg-nav-filter-chip" data-sec="filtre" onclick="openFilterSheetFromNav()"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Filtre<span class="nav-cnt" id="cfg-nav-filter-cnt">0</span></button>
-      <button class="cfg-chip" data-sec="colors-grid" onclick="scrollCfgTo('colors-grid', false, 'cfg-fabric-sections')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Culoare</button>
+      <button class="cfg-chip" data-sec="colors-grid" onclick="scrollCfgTo('colors-grid')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Culoare</button>
       <button class="cfg-chip" data-sec="summary" onclick="scrollCfgTo('summary')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Sumar</button>
     </div>
     <div class="cfg-scroll" id="cfg-scroll">
@@ -545,7 +547,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 
       <section class="cfg-sec" id="sec-color">
         <div class="cfg-fabric-head">
-          <h3 class="cfg-title">Alege materialul și culoarea</h3>
+          <h3 class="cfg-title">Alege materialul</h3>
         </div>
 
         <div class="cfg-fabric-pillrow" id="cfg-fabric-pillrow"></div>
@@ -560,6 +562,13 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
           </span>
           <svg class="cfg-matdiff-plus" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
+      </section>
+
+      <!-- Colour is its own card now: the material card ends at "Vezi diferențe între
+           materiale", and everything from the count + Filtre row down to the swatch grid
+           moves under its own "Alege culoarea" title. -->
+      <section class="cfg-sec" id="sec-colors-grid">
+        <h3 class="cfg-title">Alege culoarea</h3>
 
         <div class="cfg-fabric-toolrow">
           <button type="button" class="cfg-filter-btn" id="cfg-filter-btn" onclick="openFilterSheet()" aria-label="Filtre">
@@ -1961,7 +1970,7 @@ function pickFabricSwatch(el, slug){
 /* How far each section should sit below the sticky chip nav when scrolled to -- 0 for
    "Dimensiune" so it lands flush at the very top, a little breathing room for "Materiale" so
    the "Material." title isn't jammed against the chips. */
-var SCROLL_SEC_PAD = { color: 16 };
+var SCROLL_SEC_PAD = { color: 16, 'colors-grid': 16 };
 function scrollCfgTo(sec, instant, targetId){
   var scroll = document.getElementById('cfg-scroll');
   var target = document.getElementById(targetId || ('sec-' + sec));
@@ -2004,26 +2013,14 @@ function setActiveCfgChip(sec, instant, followNav){
     else if (chipRight + pad > viewRight) nav.scrollLeft = chipRight + pad - nav.clientWidth;
   }
 }
-/* Materiale, Filtre and Culoare all live inside the single sec-color section (fabric-type
-   chips up top, the inline Filtre row in the middle, the color grids further down), so the
-   scroll-spy below needs a three-way sub-split within that one section instead of just
-   picking whichever .cfg-sec is on screen. */
-function resolveColorSec(){
-  var scroll = document.getElementById('cfg-scroll');
-  var filterBtn = document.getElementById('cfg-filter-btn');
-  var grid = document.getElementById('cfg-fabric-sections');
-  /* A 35%-of-viewport lookahead (used for the Materiale/Culoare split before Filtre existed
-     as its own zone) overshoots straight past this one -- the inline Filtre row is a single
-     thin toolbar, never tall enough to dominate a third of the screen, so that heuristic
-     always skipped it and reported "colors-grid" the instant you scrolled there. Use a small
-     fixed lookahead instead (matching the -90 offset openFilterSheetFromNav scrolls to), so
-     each zone activates right as its own top edge reaches the viewport, symmetrically whether
-     scrolling down into it or back up out of it. */
-  var probe = scroll.scrollTop + 90;
-  if (probe >= grid.offsetTop) return 'colors-grid';
-  if (probe >= filterBtn.offsetTop) return 'filtre';
-  return 'color';
-}
+/* Materiale and Culoare used to share one sec-color section, so the spy needed a three-way
+   sub-split inside it (fabric-type chips = Materiale, the thin inline Filtre row = Filtre,
+   the grids below = Culoare). Now that Culoare is its own card, each chip maps to a whole
+   section again and the generic .cfg-sec spy below is enough -- resolveColorSec is gone.
+   Filtre keeps no scroll zone of its own: it was only ever the ~50px band around the toolbar,
+   and anchoring it there now would fight the Culoare chip, which lands on the same card's
+   title. It's an action chip -- it lights up when tapped (openFilterSheetFromNav) and hands
+   back to the spy on the next scroll. */
 (function(){
   var scroll = document.getElementById('cfg-scroll');
   var lastSec = '';
@@ -2039,7 +2036,6 @@ function resolveColorSec(){
       if (area > bestArea){ bestArea = area; current = s; }
     });
     var sec = current.id.replace('sec-', '');
-    if (sec === 'color') sec = resolveColorSec();
     if (sec !== lastSec){ lastSec = sec; setActiveCfgChip(sec, false, true); }
   });
 })();
@@ -2110,7 +2106,7 @@ function openFilterSheetFromNav(){
   updateSummary();
 
   var hashSec = location.hash.replace('#', '');
-  if (['config','needs','color','summary'].indexOf(hashSec) > -1){
+  if (['config','needs','color','colors-grid','summary'].indexOf(hashSec) > -1){
     scrollCfgTo(hashSec, true);
   }
 })();
