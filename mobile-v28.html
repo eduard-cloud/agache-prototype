@@ -205,6 +205,9 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-sum-line.with-thumb{align-items:center;padding:7px 0}
 .cfg-sum-line.with-thumb .lb{display:flex;align-items:center;gap:10px;min-width:0}
 .cfg-sum-thumb{flex:0 0 auto;width:28px;height:28px;border-radius:6px;background:#fff;border:1px solid var(--hair-on-card);object-fit:cover}
+/* Fabric reads as a round chip everywhere else in the configurator (the pill over the preview,
+   the swatch strips), so the colour lines keep that shape while product shots stay square. */
+.cfg-sum-thumb.round{border-radius:50%}
 .cfg-sum-line.total{margin-top:10px;padding-top:16px;border-top:1px solid var(--hair-on-card);font-weight:600}
 
 /* ══ v28: Accesorii ══
@@ -1591,10 +1594,10 @@ function updateSummary(){
     ZONES.forEach(function(z){
       var name = sel.zones[z.key];
       var info = SWATCH_INDEX[name];
-      mat.push([z.label, info ? nearestColorName(info.hex) + ' (' + name + ')' : name]);
+      mat.push([z.label, info ? nearestColorName(info.hex) + ' (' + name + ')' : name, info ? fabricAsset(name) : null, 'round']);
     });
   } else {
-    mat.push(['Culoare', colorLabel]);
+    mat.push(['Culoare', colorLabel, swInfo ? fabricAsset(sel.colorName) : null, 'round']);
   }
   groups.push({ title:'Culoare și material', lines:mat });
 
@@ -1617,7 +1620,8 @@ function updateSummary(){
   wrap.innerHTML = groups.map(function(g){
     return '<div class="cfg-sum-grp"><h4>' + g.title + '</h4>' + g.lines.map(function(l){
       return '<div class="cfg-sum-line' + (l[2] ? ' with-thumb' : '') + '"><span class="lb">' +
-        (l[2] ? '<img class="cfg-sum-thumb" src="' + l[2] + '" alt="">' : '') + '<span>' + l[0] + '</span></span>' +
+        (l[2] ? '<img class="cfg-sum-thumb' + (l[3] ? ' ' + l[3] : '') + '" src="' + l[2] + '" alt="">' : '') +
+        '<span>' + l[0] + '</span></span>' +
         '<span class="vl">' + l[1] + '</span></div>';
     }).join('') + '</div>';
   }).join('') +
