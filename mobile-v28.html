@@ -200,6 +200,11 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-sum-grp h4{font-size:15px;font-weight:600;letter-spacing:-.2px;line-height:1.15;padding-bottom:12px;border-bottom:1px solid var(--hair-on-card)}
 .cfg-sum-line{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:9px 0;font-size:15px;line-height:1.15}
 .cfg-sum-line .vl{text-align:right}
+/* Accessory lines carry the product shot the card above them shows, so the line is
+   recognisable as that product rather than as another spec row. */
+.cfg-sum-line.with-thumb{align-items:center;padding:7px 0}
+.cfg-sum-line.with-thumb .lb{display:flex;align-items:center;gap:10px;min-width:0}
+.cfg-sum-thumb{flex:0 0 auto;width:28px;height:28px;border-radius:6px;background:#fff;border:1px solid var(--hair-on-card);object-fit:cover}
 .cfg-sum-line.total{margin-top:10px;padding-top:16px;border-top:1px solid var(--hair-on-card);font-weight:600}
 
 /* ══ v28: Accesorii ══
@@ -1601,7 +1606,7 @@ function updateSummary(){
     var st = accState[acc.id];
     if (!st.added) return;
     accTotal += acc.price * st.qty;
-    accLines.push([acc.name + (st.qty > 1 ? ' x ' + st.qty : ''), formatPrice(acc.price * st.qty) + ' lei']);
+    accLines.push([acc.name + (st.qty > 1 ? ' x ' + st.qty : ''), formatPrice(acc.price * st.qty) + ' lei', acc.img]);
   });
   if (accLines.length) groups.push({ title:'Accesorii', lines:accLines });
 
@@ -1611,7 +1616,9 @@ function updateSummary(){
   var wrap = document.getElementById('cfg-sum-details');
   wrap.innerHTML = groups.map(function(g){
     return '<div class="cfg-sum-grp"><h4>' + g.title + '</h4>' + g.lines.map(function(l){
-      return '<div class="cfg-sum-line"><span class="lb">' + l[0] + '</span><span class="vl">' + l[1] + '</span></div>';
+      return '<div class="cfg-sum-line' + (l[2] ? ' with-thumb' : '') + '"><span class="lb">' +
+        (l[2] ? '<img class="cfg-sum-thumb" src="' + l[2] + '" alt="">' : '') + '<span>' + l[0] + '</span></span>' +
+        '<span class="vl">' + l[1] + '</span></div>';
     }).join('') + '</div>';
   }).join('') +
     '<div class="cfg-sum-line total"><span class="lb">Preț total</span><span class="vl">' +
