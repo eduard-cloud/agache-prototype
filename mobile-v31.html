@@ -291,8 +291,11 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
 .ph-arcuri{width:293px;height:165px}
 .ph-tesatura{width:350px;height:197px}
 .ph-captuseala{width:384px;height:256px;border-radius:0 0 16px 16px;overflow:hidden}
-.ph-straturi{width:252px;height:314px;margin-bottom:16px}
-.ph-straturi img{object-fit:contain!important}
+.ccard.ccard-photo{position:relative;display:block}
+.ccard-photo .ph-straturi{position:absolute;inset:0;width:100%;height:100%}
+.ccard-photo .ph-straturi img{width:100%;height:100%;object-fit:cover}
+.ccard-photo .ctxt{position:relative;z-index:1;background:linear-gradient(180deg,rgba(18,18,18,.65) 0%,rgba(18,18,18,0) 70%)}
+.ccard-photo .ctxt .tag,.ccard-photo .ctxt .ttl{color:#fff}
 .ph-strips{display:flex;gap:3px;height:195px}
 .ph-strips video{width:100.66px;height:201px;object-fit:cover;border-radius:12px 12px 0 0}
 .rail-nav{display:flex;justify-content:flex-end;gap:16px;padding:0 16px;margin-top:32px;align-items:center}
@@ -863,13 +866,13 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
       <p class="lead">6 motive pentru care clientii nostrii cumpara canapeaua Boston:</p>
     </div>
     <div class="rail" id="crail">
-      <div class="ccard">
+      <div class="ccard ccard-photo">
+        <div class="ph ph-straturi"><img src="assets/image-1788862558356.webp" alt="Structura in straturi a canapelei"></div>
         <div class="ctxt">
           <div class="tag">Constructie in straturi</div>
           <div class="ttl">6 straturi, fiecare cu un rol</div>
           <div class="dsc">De la spuma T-30 la arcurile Bonell si wave springs, fiecare strat e ales sa tina forma canapelei ani la rand.</div>
         </div>
-        <div class="ph ph-straturi"><img src="assets/image-1788862558356.webp" alt="Structura in straturi a canapelei"></div>
       </div>
       <div class="ccard">
         <div class="ctxt">
