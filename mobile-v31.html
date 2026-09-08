@@ -281,6 +281,7 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
 .rail::-webkit-scrollbar{display:none}
 #crail{gap:12px;padding:0 16px;margin-top:32px;scroll-padding:0 16px}
 .ccard{flex:0 0 300px;width:300px;height:450px;background:#fff;border-radius:16px;overflow:hidden;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:space-between;align-items:center}
+.ccard-beige{background:linear-gradient(180deg,#fff 0%,var(--beige) 100%)}
 .ccard .ctxt{display:flex;flex-direction:column;gap:16px;padding:32px 24px;width:100%}
 .ccard .tag{font-size:16px;font-weight:500;letter-spacing:var(--ls-16);line-height:1.2;color:var(--black)}
 .ccard .ttl{font-size:24px;font-weight:600;letter-spacing:0;line-height:1.1;color:var(--black)}
@@ -288,7 +289,6 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
 .ccard .ph{flex:0 0 auto}
 .ccard .ph img{object-fit:cover;width:100%;height:100%}
 .ph-garantie{width:274px;height:183px;margin-bottom:16px}
-.ph-arcuri{width:293px;height:165px}
 .ph-tesatura{width:350px;height:197px}
 .ph-captuseala{width:384px;height:256px;border-radius:0 0 16px 16px;overflow:hidden}
 .ccard.ccard-photo{position:relative;display:block}
@@ -864,7 +864,7 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
   <!-- Construite cu intentie (v4 redesign per Figma 791:10512) -->
   <div id="construit">
     <div class="chead">
-      <p class="lead">6 motive pentru care clientii nostrii cumpara canapeaua Boston:</p>
+      <p class="lead">5 motive pentru care clientii nostrii cumpara canapeaua Boston:</p>
     </div>
     <div class="rail" id="crail">
       <div class="ccard ccard-photo">
@@ -875,21 +875,13 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
           <div class="dsc">De la spuma T-30 la arcurile Bonell si wave springs, fiecare strat e ales sa tina forma canapelei ani la rand.</div>
         </div>
       </div>
-      <div class="ccard">
+      <div class="ccard ccard-beige">
         <div class="ctxt">
           <div class="tag">Garanție extinsă</div>
           <div class="ttl">10 ani de garanție structurală</div>
           <div class="dsc">Garanția noastră extinsă acoperă orice problemă legată de structura de lemn solid a canapelei.</div>
         </div>
         <div class="ph ph-garantie"><img src="assets/construit-garantie.png" alt="Structura canapelei"></div>
-      </div>
-      <div class="ccard">
-        <div class="ctxt">
-          <div class="tag">Canapea modulară</div>
-          <div class="ttl">Sistem de arcuri si spuma</div>
-          <div class="dsc">Am gândit canapelele noastre pentru diverse cerințe - rezista pana la 130kg pe persoana.</div>
-        </div>
-        <div class="ph ph-arcuri"><img src="assets/construit-arcuri.png" alt="Sistem de arcuri"></div>
       </div>
       <div class="ccard">
         <div class="ctxt">
