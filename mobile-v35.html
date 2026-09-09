@@ -866,15 +866,16 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
           </button>
         </div>
 
-        <div class="cfg-zonetabs" id="cfg-zonetabs"></div>
-
         <!-- Collection only matters once zones are on -- every zone has to come from the same
              fabric, so this is where that constraint actually surfaces, as a small picker
-             instead of its own mandatory step up front. -->
+             instead of its own mandatory step up front. Sits above the zone tabs: it settles
+             which fabric every zone shares before you pick which zone you're colouring. -->
         <div class="cfg-zone-collection" id="cfg-zone-collection">
           <p class="cfg-zone-collection-label">Toate zonele se fac din aceeași colecție.</p>
           <div class="cfg-fabgrid" id="cfg-fabgrid"></div>
         </div>
+
+        <div class="cfg-zonetabs" id="cfg-zonetabs"></div>
 
         <div class="cfg-fabric-pillrow" id="cfg-color-pillrow"></div>
 
