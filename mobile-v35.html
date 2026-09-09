@@ -423,16 +423,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-col-kpis .kpi-sep{color:var(--gray2);flex:0 0 auto}
 .cfg-col-empty{padding:16px 0;font-size:13px;color:var(--gray)}
 
-/* ── color swatch tiles (shared by every collection's grid) ── */
-/* Material-type group title -- only rendered when 2+ fabric-type pills are active (see
-   renderFabricSections), so each material's colors get their own labeled block instead of
-   being mixed into one grid. */
-.cfg-matgroup-title{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:17px;font-weight:600;letter-spacing:-.2px;color:var(--ink);margin-top:28px}
-.cfg-matgroup-name{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:6px}
-/* the material rides on the right of the collection's name, in the quieter weight of a spec */
-.cfg-matgroup-right{flex:0 0 auto;display:flex;align-items:center;gap:2px;font-size:13px;font-weight:400;letter-spacing:0;color:var(--gray)}
-.cfg-matgroup-title:first-of-type,.cfg-matgroup-title.first-visible{margin-top:0}
-.cfg-matgroup-info{flex:0 0 auto;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#1d1d1f}
+/* ── color swatch tiles (one flat grid, no collection/material grouping -- see renderFabricSections) ── */
 .cfg-color-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 8px;margin-top:12px}
 #cfg-fabric-sections.cfg-grid3 .cfg-color-grid{grid-template-columns:repeat(3,1fr);gap:12px 10px}
 .mtile{position:relative;transition:transform .12s ease,filter .12s ease}
@@ -653,10 +644,6 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-sum-zone-sw{width:32px;height:32px;border-radius:50%;flex:0 0 auto;overflow:hidden;display:block}
 .cfg-sum-zone-sw img{width:100%;height:100%;object-fit:cover}
 
-.cfg-nocol{text-align:center;padding:6px 0 4px}
-.cfg-nocol p{font-size:13px;line-height:1.45;color:var(--gray);margin-bottom:12px}
-.cfg-nocol button{height:44px;padding:0 20px;border:1px solid var(--ink);border-radius:22px;background:#fff;font-size:14px;font-weight:500;color:var(--ink)}
-
 /* v34: dead-end recovery, Airbnb-style -- a filter combination that leaves zero swatches
    never gets silently changed for the shopper. It's named instead, with one explicit button
    per filter that's in the way, so leaving Neted + Easy Clean on while switching to per-zone
@@ -669,22 +656,20 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-deadend-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
 .cfg-deadend-row button{height:40px;padding:0 16px;border:1px solid var(--ink);border-radius:9999px;background:#fff;font-size:14px;font-weight:500;color:var(--ink);white-space:nowrap}
 
-/* ══ v28: the fabric cards ══ */
-.cfg-fabgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.cfg-fabcard{position:relative;display:flex;flex-direction:column;text-align:left;background:#fff;border:1.5px solid var(--hair);border-radius:14px;padding:8px 8px 10px;transition:border-color .15s}
-.cfg-fabcard.on{border-color:var(--ink)}
-.cfg-fabcard-img{width:100%;aspect-ratio:4/3;border-radius:9px;overflow:hidden;background:var(--chipbg)}
-.cfg-fabcard-img img{width:100%;height:100%;object-fit:cover;display:block}
-.cfg-fabcard-name{margin-top:8px;font-size:14px;font-weight:600;letter-spacing:-.2px;color:var(--ink)}
-.cfg-fabcard-tex{margin-top:1px;font-size:12px;color:var(--gray)}
-.cfg-fabcard-price{margin-top:6px;font-size:12.5px;font-weight:500;color:var(--ink)}
-.cfg-fabcard-colors{margin-top:2px;font-size:11.5px;line-height:1.3;color:var(--gray)}
-.cfg-fabcard-check{position:absolute;top:14px;right:14px;width:22px;height:22px;border-radius:50%;background:var(--ink);display:none;align-items:center;justify-content:center}
-.cfg-fabcard.on .cfg-fabcard-check{display:flex}
-/* The line that accounts for the colour grid being one fabric long. */
-.cfg-matnote{font-size:12.5px;line-height:1.45;color:var(--gray);margin:0 0 14px}
-.cfg-matnote strong{color:var(--ink);font-weight:600}
-.cfg-matnote button{background:none;border:none;padding:0;font-size:12.5px;font-weight:500;color:var(--ink);text-decoration:underline}
+/* v35: collection stops being its own mandatory step -- it only matters once "Canapea în
+   culori diferite" is on, so it surfaces here as a small chip row instead of a full-card grid. */
+.cfg-zone-collection{display:none;margin-bottom:16px}
+.cfg-zone-collection.on{display:block}
+.cfg-zone-collection-label{font-size:13px;line-height:1.4;color:var(--gray);margin:0 0 10px}
+.cfg-fabgrid{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.cfg-fabgrid::-webkit-scrollbar{display:none}
+.cfg-collchip{flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:6px 12px 6px 6px;border:1.5px solid var(--hair);border-radius:9999px;background:#fff;white-space:nowrap;transition:border-color .15s,background-color .15s}
+.cfg-collchip.on{border-color:var(--ink);background:var(--ink)}
+.cfg-collchip.on .cfg-collchip-name,.cfg-collchip.on .cfg-collchip-price{color:#fff}
+.cfg-collchip-img{width:26px;height:26px;border-radius:50%;overflow:hidden;background:var(--chipbg);flex:0 0 auto}
+.cfg-collchip-img img{width:100%;height:100%;object-fit:cover;display:block}
+.cfg-collchip-name{font-size:13px;font-weight:600;letter-spacing:-.2px;color:var(--ink)}
+.cfg-collchip-price{font-size:12px;color:var(--gray)}
 
 /* ══ v27: zone switch and zone tabs ══ */
 /* The switch sits under the title, on its own row: with the full label spelled out it no
@@ -750,7 +735,8 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
       <!-- Nevoi de lifestyle chip removed per request, kept in markup below for easy restore -->
       <button class="cfg-chip" data-sec="needs" onclick="scrollCfgTo('needs')" style="display:none"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Nevoi</button>
       <button class="cfg-chip" data-sec="color" onclick="scrollCfgTo('color')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Material</button>
-      <button class="cfg-chip" data-sec="collection" onclick="scrollCfgTo('collection')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Colecție</button>
+      <!-- Colecție chip removed: collection is no longer its own step, it only surfaces inside
+           Culoare once "Canapea în culori diferite" is on (see #cfg-zone-collection). -->
       <button class="cfg-chip" data-sec="colors-grid" onclick="scrollCfgTo('colors-grid')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Culoare</button>
       <button class="cfg-chip" data-sec="accessories" onclick="scrollCfgTo('accessories')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Accesorii</button>
       <button class="cfg-chip" data-sec="summary" onclick="scrollCfgTo('summary')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Sumar</button>
@@ -836,16 +822,6 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
         </button>
       </section>
 
-      <!-- v28: the collection step. A texture ("Texturat") is not a thing you can buy -- two
-           collections hide inside it at two different prices. This is where that gets settled:
-           all eight on screen, each with what tells them apart, and one gets picked. Everything
-           after this point is certain -- the price, the colours, the durability. -->
-      <section class="cfg-sec" id="sec-collection">
-        <h3 class="cfg-title">Alege colecția</h3>
-        <p class="cfg-sec-sub" id="cfg-fabgrid-sub"></p>
-        <div class="cfg-fabgrid" id="cfg-fabgrid"></div>
-      </section>
-
       <!-- Colour is its own card now: the material card ends at "Vezi diferențe între
            materiale", and everything from the count + Filtre row down to the swatch grid
            moves under its own "Alege culoarea" title. -->
@@ -862,13 +838,14 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 
         <div class="cfg-zonetabs" id="cfg-zonetabs"></div>
 
-        <p class="cfg-matnote" id="cfg-matnote"></p>
-        <!-- Nothing to colour until a collection is picked -- so the step says so, and hands
-             the shopper back to the step that unlocks it. -->
-        <div class="cfg-nocol" id="cfg-nocol">
-          <p>Pentru culori diferite pe zone, alege întâi o colecție — toate zonele se fac din aceeași.</p>
-          <button type="button" onclick="scrollCfgTo('collection')">Alege colecția</button>
+        <!-- Collection only matters once zones are on -- every zone has to come from the same
+             fabric, so this is where that constraint actually surfaces, as a small picker
+             instead of its own mandatory step up front. -->
+        <div class="cfg-zone-collection" id="cfg-zone-collection">
+          <p class="cfg-zone-collection-label">Toate zonele se fac din aceeași colecție.</p>
+          <div class="cfg-fabgrid" id="cfg-fabgrid"></div>
         </div>
+
         <div class="cfg-fabric-pillrow" id="cfg-color-pillrow"></div>
 
         <div class="cfg-fabric-toolrow">
@@ -1574,15 +1551,6 @@ var FABRIC_PILLS = [
 ];
 var activeFabricPills = [];
 var LUNA_SOFA_CODES = ['5','6','8','10','13','14'];
-function materialTypeMatch(c){
-  return FABRIC_PILLS.filter(function(p){
-    return p.stems.some(function(stem){ return c.materialTypes.some(function(t){ return t.indexOf(stem) > -1; }); });
-  })[0];
-}
-function materialTypeLabel(c){
-  var match = materialTypeMatch(c);
-  return match ? match.label : '';
-}
 
 var NEED_ICON_BABY = '<svg width="34" height="34" viewBox="0 0 93 93" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.325 17.919C0.425 18.219 2.525 25.119 3.725 28.219C4.425 29.919 6.625 36.719 6.925 40.219C7.325 44.619 12.125 51.219 21.425 52.019C22.425 52.219 23.425 52.219 24.425 52.219C28.425 52.219 35.425 51.119 39.725 44.319C42.125 40.519 44.125 39.219 48.925 37.519C52.225 36.319 54.425 34.319 54.725 32.319C54.925 30.919 54.325 29.519 53.225 28.619C51.525 27.219 48.425 27.819 45.425 28.419C44.425 28.719 43.325 28.819 42.225 28.819L41.625 28.619C40.325 28.319 39.225 28.019 40.325 22.719C41.725 15.919 42.925 8.91903 43.025 8.31903C43.525 6.21903 42.325 4.01903 40.325 3.31903C38.925 2.91903 37.025 3.51903 36.125 6.31903L32.525 18.919C32.225 19.819 31.425 20.519 31.225 20.419C31.025 20.319 30.725 19.819 30.625 18.219L30.225 3.91903C30.125 1.81903 28.425 0.119028 26.325 0.0190276C24.425 -0.180972 22.725 1.21903 22.525 3.11903L21.025 17.919C20.925 18.719 20.525 19.019 20.425 19.019C20.325 19.019 19.925 18.719 19.625 17.519L16.625 5.31903C16.225 3.31903 14.325 1.81903 12.325 2.01903C10.925 2.21903 9.325 3.41903 9.425 6.21903V6.31903L11.225 20.419C11.325 21.619 11.025 22.819 10.525 23.919C10.325 23.619 10.125 23.419 10.025 23.119L7.225 15.819C6.625 13.519 4.325 12.219 2.025 12.819C0.525 13.419 -0.575 15.219 0.325 17.919Z" fill="currentColor"/><path d="M65.6251 43.719C66.3251 40.819 64.9251 39.419 63.5251 39.119C61.3251 38.719 59.2251 40.019 58.6251 42.119C58.4251 42.719 55.9251 49.419 53.7251 56.019C52.0251 61.119 50.9251 60.819 49.6251 60.419C49.4251 60.319 49.2251 60.319 49.0251 60.219C48.1251 59.619 47.2251 59.019 46.5251 58.219C44.2251 56.219 41.8251 54.119 39.6251 54.419C38.2251 54.519 37.0251 55.519 36.4251 56.819C35.6251 58.819 36.5251 61.519 38.8251 64.219C42.0251 68.119 43.1251 70.219 43.3251 74.719C43.7251 86.119 54.2251 90.319 55.2251 90.719C57.6251 91.919 60.3251 92.519 63.0251 92.519C68.0251 92.519 72.0251 90.219 73.7251 87.819C75.8251 84.919 81.1251 80.219 82.5251 79.119C85.1251 77.119 90.4251 72.219 90.6251 72.019C92.8251 70.119 92.7251 68.019 91.6251 66.719C89.9251 65.019 87.3251 65.019 85.6251 66.719L79.4251 71.619C79.1251 71.819 78.8251 71.919 78.5251 72.019C78.6251 70.819 79.0251 69.619 79.7251 68.619L88.4251 57.419L88.5251 57.319C90.0251 54.919 89.3251 53.119 88.2251 52.219C86.5251 51.019 84.2251 51.319 82.8251 52.819L74.0251 61.819C73.2251 62.619 72.6251 62.719 72.6251 62.719C72.4251 62.319 72.5251 61.819 72.7251 61.519L78.9251 47.919C79.7251 46.219 78.9251 44.219 77.2251 43.419C75.3251 42.419 73.0251 43.019 71.9251 44.819L64.3251 56.919C63.4251 58.319 62.8251 58.519 62.7251 58.519C62.2251 57.919 62.1251 57.219 62.3251 56.519L65.6251 43.719ZM61.6251 60.719C62.5251 61.119 64.3251 61.319 66.3251 58.219L73.9251 46.119C74.4251 45.419 75.3251 45.219 76.0251 45.619C76.5251 45.819 76.8251 46.419 76.6251 46.919L70.4251 60.519C69.7251 62.319 70.0251 64.019 71.2251 64.819C71.7251 65.119 73.5251 66.019 75.8251 63.519L84.6251 54.519C85.1251 53.919 85.9251 53.819 86.6251 54.119C87.1251 54.519 86.6251 55.519 86.4251 55.919L77.8251 67.119C76.9251 68.319 75.1251 72.219 76.7251 73.919C77.3251 74.619 78.5251 75.119 80.8251 73.719L80.9251 73.619L87.2251 68.619C87.8251 67.919 88.9251 67.719 89.7251 68.319C90.1251 68.819 89.6251 69.519 88.9251 70.119C88.8251 70.219 83.4251 75.119 80.9251 77.119C79.2251 78.419 73.8251 83.319 71.6251 86.319C69.9251 88.619 64.0251 92.119 56.1251 88.419H56.0251C55.7251 88.319 46.2251 84.819 45.8251 74.719C45.6251 69.419 44.2251 66.819 40.8251 62.719C38.8251 60.319 38.5251 58.519 38.8251 57.719C38.9251 57.519 39.0251 57.119 40.0251 56.919H40.2251C41.3251 56.919 43.5251 58.919 44.9251 60.119C46.6251 61.619 47.6251 62.419 48.6251 62.619L49.1251 62.719C52.0251 63.519 54.1251 62.719 56.2251 56.619C58.5251 49.819 61.1251 42.819 61.1251 42.719V42.619C61.3251 41.819 62.1251 41.219 63.0251 41.319C63.6251 41.419 63.3251 42.619 63.3251 42.919L60.0251 55.619C59.4251 57.619 60.0251 60.019 61.6251 60.719Z" fill="currentColor"/></svg>';
 
@@ -2302,7 +2270,7 @@ function applyFabricFilters(){
      narrowing itself, when that's the cause), and let the shopper choose which one to drop.
      renderDeadEnd() only reads the current selection; it mutates nothing on its own. Skipped
      while zone mode is blocked on picking a collection at all -- renderMatNote() already owns
-     that empty state (#cfg-nocol) and hides this same section for it. */
+     that empty state (#cfg-zone-collection) and hides this same section for it. */
   var blockedOnCollection = sel.zoneMode && !sel.collectionSlug;
   if (!blockedOnCollection){
     document.getElementById('cfg-fabric-sections').style.display = visibleCount === 0 ? 'none' : '';
@@ -2310,26 +2278,6 @@ function applyFabricFilters(){
   } else {
     renderDeadEnd(false);
   }
-  /* A material-type group (title + its grid) can end up with every tile hidden once color/prop/
-     price filters are layered on top of the material pills -- hide the label along with the
-     empty grid rather than leaving a heading over blank space. */
-  var firstShownTitle = null;
-  document.querySelectorAll('#cfg-fabric-sections .cfg-color-grid').forEach(function(grid){
-    var anyVisible = Array.prototype.some.call(grid.children, function(t){ return t.style.display !== 'none'; });
-    var title = grid.previousElementSibling;
-    if (title && title.classList.contains('cfg-matgroup-title')){
-      title.style.display = anyVisible ? '' : 'none';
-      title.classList.remove('first-visible');
-      if (anyVisible && !firstShownTitle) firstShownTitle = title;
-    }
-    grid.style.display = anyVisible ? '' : 'none';
-  });
-  /* All four groups sit in the DOM now, so filtering down to Catifea leaves the first two
-     headings hidden and the third carrying the 28px gap meant to separate it from the group
-     above -- against the top of the card there is nothing to separate it from. Same problem
-     .cfg-col-section.first-visible solves, and for the same reason a CSS :first-of-type can't:
-     hidden groups are display:none, not removed. */
-  if (firstShownTitle) firstShownTitle.classList.add('first-visible');
   /* Narrowing to a collection counts as a filter for the total above the grid. */
   var narrowed = collectionNarrowed();
   var noFilters = !pillDefs.length && !appliedFilters.length && !priceFiltered && !narrowed;
@@ -2425,29 +2373,12 @@ function appendFabricGrid(wrap, swatches){
 function renderFabricSections(){
   var wrap = document.getElementById('cfg-fabric-sections');
   wrap.innerHTML = '';
-  /* v28: grouped by collection, not by material type. The collection is what a sofa is actually
-     made of -- one price, one durability, one set of colours -- so it's the heading; the material
-     it belongs to rides along on the right, where it reads as a property rather than a category.
-     Empty groups are hidden by applyFabricFilters, so filtering down to one collection leaves
-     exactly one heading standing. */
-  COLLECTION_ORDER.forEach(function(slug){
-    var swatches = ALL_SWATCHES.filter(function(s){ return s.slug === slug; });
-    if (!swatches.length) return;
-    var c = COLLECTIONS[slug];
-    var pillDef = materialTypeMatch(c);
-    var h = document.createElement('div');
-    h.className = 'cfg-matgroup-title';
-    /* The info button belongs to the collection, so it sits right after its name; the material
-       stays on the far right as a plain label. */
-    h.innerHTML = '<span class="cfg-matgroup-name">' + c.name +
-        (pillDef ? '<button type="button" class="cfg-matgroup-info" aria-label="Detalii ' + c.name + '" onclick="openMaterialGroupDetail(\'' + pillDef.key + '\')">' +
-          '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 11v5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7.7" r="1.1" fill="currentColor"/></svg>' +
-        '</button>' : '') +
-      '</span>' +
-      '<span class="cfg-matgroup-right">' + (pillDef ? pillDef.label : '') + '</span>';
-    wrap.appendChild(h);
-    appendFabricGrid(wrap, swatches);
-  });
+  /* v35: one flat, collection-agnostic grid -- collection stopped being a thing to browse by, so
+     it stopped being a heading too. Filtering (material pills, colour, price, per-zone narrowing)
+     still applies; applyFabricFilters hides whichever tiles don't pass. Info on any swatch's
+     collection/material lives one tap away on the tile itself (showSwatchInfo), not as a group
+     header over swatches that already share it. */
+  appendFabricGrid(wrap, ALL_SWATCHES);
   wrap.querySelectorAll('.mtile').forEach(function(tile){
     tile.onclick = function(){ pickFabricSwatch(tile, tile.dataset.slug); };
     tile.querySelector('.info-i').onclick = function(e){ e.stopPropagation(); showSwatchInfo(tile.dataset.name); };
@@ -2770,14 +2701,6 @@ function openMaterialDetail(key){
 function closeMaterialDetail(){
   document.getElementById('material-detail-modal').classList.remove('open');
 }
-/* Info button on a material-type group heading (e.g. "Neted") -- unlike the main "Vezi
-   diferențe" entry, which opens on the video intro, tapping this already means the viewer wants
-   that specific material's own info, so skip straight to its Text card instead of the intro. */
-function openMaterialGroupDetail(key){
-  openMaterialDetail(key);
-  setMatdMode('text');
-}
-
 /* ══ v27: colour per zone ══
    Material is a sofa-level decision; colour is a per-zone one. Boston's zones are the body
    (lada, brațe, spătar), the seat cushions and the headrests. The constraint the factory
@@ -2802,6 +2725,9 @@ function toggleZoneMode(){
   } else {
     /* Leaving it collapses back to the body's colour -- the one the shopper sees most of. */
     sel.colorName = sel.zones.corp;
+    /* Locking only ever served the per-zone constraint -- once zones are off, the grid goes
+       back to browsing every collection, whatever was picked while zones were on. */
+    sel.collectionLocked = false;
   }
   renderZoneUI();
   applyFabricFilters();
@@ -2817,28 +2743,18 @@ function pickZone(key){
 function activeZoneColor(){
   return sel.zoneMode ? sel.zones[sel.zone] : sel.colorName;
 }
-/* ══ v28: the collection step ══
-   Eight cards, one per collection, each carrying what actually tells them apart: what it feels
-   like, what it costs on the sofa you've configured, how many colours it holds and what it
-   survives. The texture pills above filter this list rather than standing in for it. */
-function collectionProps(c){
-  var out = [];
-  if (c.petFriendly) out.push('Pet friendly');
-  if (c.easyClean) out.push('Easy clean');
-  if (c.waterproof) out.push('Impermeabil');
-  return out;
-}
-function collectionCardHtml(slug){
+/* ══ v35: the collection picker ══
+   No longer its own step -- collection only has to be decided when different zones need
+   different colours, since every zone still has to come from the same fabric. So it lives here,
+   as a small chip row inside the zone toggle it actually serves, not a full step everyone walks
+   through even for a plain one-colour sofa. */
+function collectionChipHtml(slug){
   var c = COLLECTIONS[slug];
   var first = c.name + ' ' + c.colors[0][0];
-  var props = collectionProps(c);
-  return '<button type="button" class="cfg-fabcard' + (slug === sel.collectionSlug ? ' on' : '') + '" data-slug="' + slug + '">' +
-    '<span class="cfg-fabcard-img"><img src="' + fabricAsset(first) + '" alt="' + c.name + '"></span>' +
-    '<span class="cfg-fabcard-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>' +
-    '<span class="cfg-fabcard-name">' + c.name + '</span>' +
-    '<span class="cfg-fabcard-tex">' + materialTypeLabel(c) + ' · ' + c.colors.length + ' culori</span>' +
-    '<span class="cfg-fabcard-price">' + Math.round(collectionPrice(slug)).toLocaleString('ro-RO') + ' lei</span>' +
-    (props.length ? '<span class="cfg-fabcard-colors">' + props.join(' · ') + '</span>' : '') +
+  return '<button type="button" class="cfg-collchip' + (slug === sel.collectionSlug ? ' on' : '') + '" data-slug="' + slug + '">' +
+    '<span class="cfg-collchip-img"><img src="' + fabricAsset(first) + '" alt="' + c.name + '"></span>' +
+    '<span class="cfg-collchip-name">' + c.name + '</span>' +
+    '<span class="cfg-collchip-price">' + Math.round(collectionPrice(slug)).toLocaleString('ro-RO') + ' lei</span>' +
     '</button>';
 }
 /* Which collections the texture pills currently allow. No pill = all eight. */
@@ -2866,16 +2782,10 @@ function renderFabGrid(){
   var wrap = document.getElementById('cfg-fabgrid');
   if (!wrap) return;
   var slugs = visibleCollections();
-  wrap.innerHTML = slugs.map(collectionCardHtml).join('');
-  wrap.querySelectorAll('.cfg-fabcard').forEach(function(card){
-    card.onclick = function(){ pickCollection(card.dataset.slug, card); };
+  wrap.innerHTML = slugs.map(collectionChipHtml).join('');
+  wrap.querySelectorAll('.cfg-collchip').forEach(function(chip){
+    chip.onclick = function(){ pickCollection(chip.dataset.slug, chip); };
   });
-  /* No standing blurb -- the line only appears when filters have actually cut the list down,
-     and then it says by how much. */
-  var sub = document.getElementById('cfg-fabgrid-sub');
-  var filtered = slugs.length !== COLLECTION_ORDER.length;
-  sub.style.display = filtered ? '' : 'none';
-  sub.textContent = filtered ? slugs.length + ' colecții potrivite filtrelor tale.' : '';
 }
 /* Picking a collection re-dresses the whole sofa in it: every zone moves to that collection's
    first colour, because a zone can't keep a colour that no longer exists. */
@@ -2906,23 +2816,19 @@ function pickCollection(slug, el){
   updatePriceSliderBounds();
   if (el) pressFeedback(el);
 }
-/* The colour grid is one collection long now, so it says which one, and offers the way back. */
+/* The zone-collection chip row is the only place collection still needs explaining, and it
+   already shows which one is selected -- so this just owns the show/hide around it. */
 function renderMatNote(){
-  var el = document.getElementById('cfg-matnote');
-  if (!el) return;
+  var zoneWrap = document.getElementById('cfg-zone-collection');
+  if (zoneWrap) zoneWrap.classList.toggle('on', !!sel.zoneMode);
+  renderFabGrid();
   var c = COLLECTIONS[sel.collectionSlug];
   /* The only dead end is asking for different colours per zone before any fabric is settled:
      zones have to share one collection, and there isn't one yet. Everything else just works. */
   var blocked = sel.zoneMode && !c;
-  var narrowed = collectionNarrowed();
-  document.getElementById('cfg-nocol').style.display = blocked ? '' : 'none';
   document.getElementById('cfg-fabric-sections').style.display = blocked ? 'none' : '';
   document.querySelector('#sec-colors-grid .cfg-fabric-toolrow').style.display = blocked ? 'none' : '';
   document.getElementById('cfg-color-pillrow').style.display = blocked ? 'none' : '';
-  el.style.display = narrowed ? '' : 'none';
-  if (!narrowed) return;
-  el.innerHTML = 'Doar culorile din <strong>' + c.name + '</strong>. ' +
-    '<button type="button" onclick="scrollCfgTo(\'collection\')">Schimbă colecția</button>';
 }
 function renderZoneUI(){
   var sw = document.getElementById('cfg-zone-switch');
@@ -3104,7 +3010,7 @@ function syncAccessories(){
 /* How far each section should sit below the sticky chip nav when scrolled to -- 0 for
    "Layout" so it lands flush at the very top, a little breathing room for "Materiale" so
    the "Material." title isn't jammed against the chips. */
-var SCROLL_SEC_PAD = { color: 16, collection: 16, 'colors-grid': 16, accessories: 16 };
+var SCROLL_SEC_PAD = { color: 16, 'colors-grid': 16, accessories: 16 };
 function scrollCfgTo(sec, instant, targetId){
   var scroll = document.getElementById('cfg-scroll');
   var target = document.getElementById(targetId || ('sec-' + sec));
@@ -3253,8 +3159,8 @@ function setActiveCfgChip(sec, instant, followNav){
   renderLayoutGrid();
   renderSizeSliders();
   renderArmGrid();
-  /* v28: the sofa starts without a collection. The price bar reads "de la", the colour step
-     waits, and picking a collection is what starts the fabric half of the flow. */
+  /* v35: the sofa starts without a collection. The price bar reads "de la" until a colour is
+     picked from the open catalogue -- collection gets inferred from that, never chosen first. */
   sel.collectionSlug = null;
   sel.colorName = null;
   renderNeeds();
@@ -3273,7 +3179,7 @@ function setActiveCfgChip(sec, instant, followNav){
   updateSummary();
 
   var hashSec = location.hash.replace('#', '');
-  if (['layout','needs','color','collection','colors-grid','accessories','summary'].indexOf(hashSec) > -1){
+  if (['layout','needs','color','colors-grid','accessories','summary'].indexOf(hashSec) > -1){
     scrollCfgTo(hashSec, true);
   }
 })();
