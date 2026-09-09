@@ -2020,6 +2020,18 @@ function availableColorFamilies(pillDefs, propFilters, priceMin, priceMax){
   });
   return fams;
 }
+/* Mirrors availableMaterials/availableColorFamilies for the third filter facet -- each property
+   scored on its own, ignoring the other active properties, so the dead-end recovery below can
+   tell which ones are actually reachable once the grid narrows to a single collection. */
+function availableProps(pillDefs, colourFams, priceMin, priceMax){
+  var out = {};
+  PROP_OPTIONS.forEach(function(opt){
+    out[opt] = ALL_SWATCHES.some(function(sw){
+      return swatchPasses(sw, pillDefs, colourFams, [opt], priceMin, priceMax);
+    });
+  });
+  return out;
+}
 function buildColorSeg(fam){
   var seg = document.createElement('div');
   seg.className = 'cfg-seg' + (appliedFilters.indexOf(fam) > -1 ? ' on' : '');
@@ -2278,6 +2290,21 @@ function applyFabricFilters(){
         renderFabricSections();
       }
     }
+    /* Colour and material alone don't cover every dead end -- narrowing to a single collection
+       (locked, or zone mode) can leave a property filter like "Easy Clean" as the only thing
+       still blocking every swatch in it, and neither step above ever touches byCat.prop. Without
+       this, the filter count stays stuck and the grid stays empty with no way back short of
+       reopening Filtre by hand. */
+    if (countMatches(pillDefs, byCat.culoare, byCat.prop, priceMin, priceMax) === 0){
+      var propAvail = availableProps(pillDefs, byCat.culoare, priceMin, priceMax);
+      var liveProps = byCat.prop.filter(function(f){ return propAvail[f]; });
+      if (liveProps.length !== byCat.prop.length){
+        byCat.prop = liveProps;
+        appliedFilters = appliedFilters.filter(function(f){
+          return FAMILY_ORDER.indexOf(f) > -1 || liveProps.indexOf(f) > -1;
+        });
+      }
+    }
     /* Both sets were measured against the pre-prune selection; refresh them so the greying
        reflects what is actually still applied. */
     COLOR_FAMILY_AVAILABLE = availableColorFamilies(pillDefs, byCat.prop, priceMin, priceMax);
@@ -2287,8 +2314,9 @@ function applyFabricFilters(){
   renderFabGrid();
   syncColorPillRow();
   syncFabricPillRow();
-  renderFsheetColorPills();
-  renderFsheetMaterialPill();
+  /* Rebuilds all three Filtre groups (material/colour/property) so a property dropped by the
+     dead-end recovery above stops showing as checked if the sheet happens to be open. */
+  renderFsheetPills();
 
   var totalFilters = appliedFilters.length + activeFabricPills.length + (priceFiltered ? 1 : 0);
   var btn = document.getElementById('cfg-filter-btn');
