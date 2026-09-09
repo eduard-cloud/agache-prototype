@@ -657,6 +657,18 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-nocol p{font-size:13px;line-height:1.45;color:var(--gray);margin-bottom:12px}
 .cfg-nocol button{height:44px;padding:0 20px;border:1px solid var(--ink);border-radius:22px;background:#fff;font-size:14px;font-weight:500;color:var(--ink)}
 
+/* v34: dead-end recovery, Airbnb-style -- a filter combination that leaves zero swatches
+   never gets silently changed for the shopper. It's named instead, with one explicit button
+   per filter that's in the way, so leaving Neted + Easy Clean on while switching to per-zone
+   colours (which narrows the grid to Luna) shows exactly why nothing matches instead of
+   quietly clearing filters they chose on purpose. */
+.cfg-deadend{display:none;text-align:center;padding:28px 0 4px}
+.cfg-deadend.show{display:block}
+.cfg-deadend h4{font-size:16px;font-weight:600;letter-spacing:-.3px;margin-bottom:6px}
+.cfg-deadend p{font-size:14px;line-height:1.45;color:var(--gray);margin-bottom:16px}
+.cfg-deadend-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.cfg-deadend-row button{height:40px;padding:0 16px;border:1px solid var(--ink);border-radius:9999px;background:#fff;font-size:14px;font-weight:500;color:var(--ink);white-space:nowrap}
+
 /* ══ v28: the fabric cards ══ */
 .cfg-fabgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 .cfg-fabcard{position:relative;display:flex;flex-direction:column;text-align:left;background:#fff;border:1.5px solid var(--hair);border-radius:14px;padding:8px 8px 10px;transition:border-color .15s}
@@ -874,6 +886,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
         </div>
 
         <div id="cfg-fabric-sections"></div>
+        <div class="cfg-deadend" id="cfg-deadend"></div>
 
         <div class="cfg-samples-row" style="display:none">
           <button type="button" class="cfg-samples-outline" onclick="openSamplesModal()">Comandă mostre</button>
@@ -2020,18 +2033,6 @@ function availableColorFamilies(pillDefs, propFilters, priceMin, priceMax){
   });
   return fams;
 }
-/* Mirrors availableMaterials/availableColorFamilies for the third filter facet -- each property
-   scored on its own, ignoring the other active properties, so the dead-end recovery below can
-   tell which ones are actually reachable once the grid narrows to a single collection. */
-function availableProps(pillDefs, colourFams, priceMin, priceMax){
-  var out = {};
-  PROP_OPTIONS.forEach(function(opt){
-    out[opt] = ALL_SWATCHES.some(function(sw){
-      return swatchPasses(sw, pillDefs, colourFams, [opt], priceMin, priceMax);
-    });
-  });
-  return out;
-}
 function buildColorSeg(fam){
   var seg = document.createElement('div');
   seg.className = 'cfg-seg' + (appliedFilters.indexOf(fam) > -1 ? ' on' : '');
@@ -2262,60 +2263,9 @@ function applyFabricFilters(){
   COLOR_FAMILY_AVAILABLE = availableColorFamilies(pillDefs, byCat.prop, priceMin, priceMax);
   MATERIAL_AVAILABLE = availableMaterials(byCat.culoare, byCat.prop, priceMin, priceMax);
 
-  /* Dropping something the user picked is reserved for an actual dead end -- a combination that
-     shows nothing at all. Anything short of that stays: with Neted and Catifea both on, adding
-     Albastru leaves Neted's blues on screen, so Catifea contributes nothing but breaks nothing,
-     and it keeps its place in the row, greyed, rather than being taken away. Unreachable
-     options are inert, so this can't be walked into from either strip; the price slider is what
-     gets here, by moving the range out from under a material/colour pair that was fine a moment
-     ago. Colours go first (the narrower, easier-to-restore choice), materials only if that
-     wasn't enough. */
-  if (countMatches(pillDefs, byCat.culoare, byCat.prop, priceMin, priceMax) === 0){
-    var reachable = byCat.culoare.filter(function(f){ return COLOR_FAMILY_AVAILABLE[f]; });
-    if (reachable.length !== byCat.culoare.length){
-      byCat.culoare = reachable;
-      appliedFilters = appliedFilters.filter(function(f){
-        return FAMILY_ORDER.indexOf(f) === -1 || COLOR_FAMILY_AVAILABLE[f];
-      });
-    }
-    if (countMatches(pillDefs, byCat.culoare, byCat.prop, priceMin, priceMax) === 0){
-      var liveMats = activeFabricPills.filter(function(k){ return MATERIAL_AVAILABLE[k]; });
-      if (liveMats.length !== activeFabricPills.length){
-        activeFabricPills = liveMats;
-        pillDefs = FABRIC_PILLS.filter(function(pp){ return activeFabricPills.indexOf(pp.key) > -1; });
-        /* The grid is grouped by material type whenever 2+ are on, so dropping one has to
-           redraw the sections -- otherwise a heading survives for a material that is no longer
-           selected. Safe from here: it rebuilds tiles but never re-enters applyFabricFilters,
-           and it runs before the visibility pass below, which then filters the fresh tiles. */
-        renderFabricSections();
-      }
-    }
-    /* Colour and material alone don't cover every dead end -- narrowing to a single collection
-       (locked, or zone mode) can leave a property filter like "Easy Clean" as the only thing
-       still blocking every swatch in it, and neither step above ever touches byCat.prop. Without
-       this, the filter count stays stuck and the grid stays empty with no way back short of
-       reopening Filtre by hand. */
-    if (countMatches(pillDefs, byCat.culoare, byCat.prop, priceMin, priceMax) === 0){
-      var propAvail = availableProps(pillDefs, byCat.culoare, priceMin, priceMax);
-      var liveProps = byCat.prop.filter(function(f){ return propAvail[f]; });
-      if (liveProps.length !== byCat.prop.length){
-        byCat.prop = liveProps;
-        appliedFilters = appliedFilters.filter(function(f){
-          return FAMILY_ORDER.indexOf(f) > -1 || liveProps.indexOf(f) > -1;
-        });
-      }
-    }
-    /* Both sets were measured against the pre-prune selection; refresh them so the greying
-       reflects what is actually still applied. */
-    COLOR_FAMILY_AVAILABLE = availableColorFamilies(pillDefs, byCat.prop, priceMin, priceMax);
-    MATERIAL_AVAILABLE = availableMaterials(byCat.culoare, byCat.prop, priceMin, priceMax);
-  }
-
   renderFabGrid();
   syncColorPillRow();
   syncFabricPillRow();
-  /* Rebuilds all three Filtre groups (material/colour/property) so a property dropped by the
-     dead-end recovery above stops showing as checked if the sheet happens to be open. */
   renderFsheetPills();
 
   var totalFilters = appliedFilters.length + activeFabricPills.length + (priceFiltered ? 1 : 0);
@@ -2346,6 +2296,20 @@ function applyFabricFilters(){
     tile.style.display = visible ? '' : 'none';
     if (visible) visibleCount++;
   });
+  /* v34: a filter combination that shows nothing at all is never fixed by changing what the
+     shopper picked out from under them -- Airbnb's own "no exact matches" pattern instead: name
+     the dead end and offer one explicit "Elimină ..." button per filter that's in the way (plus
+     narrowing itself, when that's the cause), and let the shopper choose which one to drop.
+     renderDeadEnd() only reads the current selection; it mutates nothing on its own. Skipped
+     while zone mode is blocked on picking a collection at all -- renderMatNote() already owns
+     that empty state (#cfg-nocol) and hides this same section for it. */
+  var blockedOnCollection = sel.zoneMode && !sel.collectionSlug;
+  if (!blockedOnCollection){
+    document.getElementById('cfg-fabric-sections').style.display = visibleCount === 0 ? 'none' : '';
+    renderDeadEnd(visibleCount === 0, pillDefs, byCat);
+  } else {
+    renderDeadEnd(false);
+  }
   /* A material-type group (title + its grid) can end up with every tile hidden once color/prop/
      price filters are layered on top of the material pills -- hide the label along with the
      empty grid rather than leaving a heading over blank space. */
@@ -2384,6 +2348,60 @@ function applyFabricFilters(){
   if (emptyNotice) emptyNotice.classList.toggle('show', totalFilters > 0 && visibleCount === 0);
   var resultCountEl = document.getElementById('fsheet-result-count');
   if (resultCountEl) resultCountEl.textContent = visibleCount + (visibleCount === 1 ? ' culoare afișată' : ' culori afișate');
+}
+
+/* v34: the dead-end panel itself. One "Elimină ..." button per active filter that's actually in
+   the way -- material pills, colour families and properties alike -- plus, when narrowing to a
+   single collection (locked, or per-zone colours) is what's blocking every swatch in it, a way
+   back to that too. Pressing a button removes exactly that one thing and re-runs the filter
+   pass; nothing here is dropped automatically. */
+function removeMaterialPillFilter(key){
+  var i = activeFabricPills.indexOf(key);
+  if (i > -1) activeFabricPills.splice(i, 1);
+  renderFabricPillRow();
+  renderFsheetMaterialPill();
+  renderFabGrid();
+  renderFabricSections();
+  applyFabricFilters();
+}
+function removeAppliedFilterValue(val){
+  var i = appliedFilters.indexOf(val);
+  if (i > -1) appliedFilters.splice(i, 1);
+  renderFsheetPills();
+  applyFabricFilters();
+}
+function renderDeadEnd(show, pillDefs, byCat){
+  var el = document.getElementById('cfg-deadend');
+  if (!el) return;
+  el.classList.toggle('show', !!show);
+  if (!show){ el.innerHTML = ''; return; }
+  var actions = [];
+  pillDefs.forEach(function(p){
+    actions.push({ label: 'Elimină ' + p.label, run: function(){ removeMaterialPillFilter(p.key); } });
+  });
+  byCat.prop.forEach(function(f){
+    actions.push({ label: 'Elimină "' + f + '"', run: function(){ removeAppliedFilterValue(f); } });
+  });
+  byCat.culoare.forEach(function(f){
+    actions.push({ label: 'Elimină "' + f + '"', run: function(){ removeAppliedFilterValue(f); } });
+  });
+  /* Locked-collection narrowing already offers "Schimbă colecția" via the note above the grid
+     (renderMatNote) -- only zone mode needs a lever of its own here, since turning it off is a
+     more precise fix than abandoning the collection. */
+  if (sel.zoneMode && collectionNarrowed()){
+    actions.push({ label: 'Dezactivează culori diferite pe zonă', run: function(){ toggleZoneMode(); } });
+  }
+  el.innerHTML = '<h4>Nicio potrivire exactă</h4>' +
+    '<p>Încearcă să elimini unul dintre filtrele active.</p>' +
+    '<div class="cfg-deadend-row"></div>';
+  var row = el.querySelector('.cfg-deadend-row');
+  actions.forEach(function(a){
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = a.label;
+    b.onclick = a.run;
+    row.appendChild(b);
+  });
 }
 
 function fabricTileHtml(s){
