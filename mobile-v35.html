@@ -3202,13 +3202,17 @@ function setActiveCfgChip(sec, instant, followNav){
   scroll.addEventListener('scroll', function(){
     var sections = Array.prototype.slice.call(document.querySelectorAll('.cfg-sec'));
     var scrollRect = scroll.getBoundingClientRect();
-    var winTop = scrollRect.top;
-    var winBottom = scrollRect.bottom;
-    var current = sections[0], bestArea = -1;
+    /* Largest-visible-area picked whichever section covered more of the viewport, which
+       silently skips any section shorter than its neighbour (like the compact "Alege
+       materialul" card sitting above the much taller colour grid) -- that section can never
+       out-area the neighbour, so the nav jumped straight past it. A fixed scan line near the
+       top of the viewport instead picks whichever section that line is currently inside,
+       so every section gets its turn regardless of height. */
+    var lineY = scrollRect.top + 96;
+    var current = sections[0];
     sections.forEach(function(s){
       var r = s.getBoundingClientRect();
-      var area = Math.min(r.bottom, winBottom) - Math.max(r.top, winTop);
-      if (area > bestArea){ bestArea = area; current = s; }
+      if (r.top <= lineY && r.bottom > lineY) current = s;
     });
     var sec = current.id.replace('sec-', '');
     if (sec !== lastSec){ lastSec = sec; setActiveCfgChip(sec, false, true); }
