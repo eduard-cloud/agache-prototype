@@ -438,7 +438,13 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-col-kpis .kpi-sep{color:var(--gray2);flex:0 0 auto}
 .cfg-col-empty{padding:16px 0;font-size:13px;color:var(--gray)}
 
-/* ── color swatch tiles (one flat grid, no collection/material grouping -- see renderFabricSections) ── */
+/* ── color swatch tiles, grouped by collection (name + info + price on one line, its own
+   colors below) -- see renderFabricSections ── */
+.cfg-matgroup-title{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:17px;font-weight:600;letter-spacing:-.2px;color:var(--ink);margin-top:28px}
+.cfg-matgroup-name{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:6px}
+.cfg-matgroup-right{flex:0 0 auto;font-size:13px;font-weight:500;letter-spacing:0;color:var(--ink)}
+.cfg-matgroup-title:first-of-type,.cfg-matgroup-title.first-visible{margin-top:0}
+.cfg-matgroup-info{flex:0 0 auto;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#1d1d1f}
 .cfg-color-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 8px;margin-top:12px}
 #cfg-fabric-sections.cfg-grid3 .cfg-color-grid{grid-template-columns:repeat(3,1fr);gap:12px 10px}
 .mtile{position:relative;transition:transform .12s ease,filter .12s ease}
@@ -1289,26 +1295,13 @@ COLLECTION_ORDER.forEach(function(slug){
     SWATCH_INDEX[name] = { slug:slug, code:pair[0], hex:pair[1], collection:c, name:name };
   });
 });
-/* Flat, cross-collection list -- collections no longer group the grid visually. Sorting every
-   family end-to-end (all ~50 Bej swatches, then all Maro, ...) is exactly what a collection
-   grouping looked like on screen: a long run of near-identical pale beiges, just for a
-   different reason. Interleaving round-robin across families instead -- one swatch per family
-   per pass, lightest first within each -- means row one already shows Bej next to Maro next to
-   Roz next to Roșu, so the grid visibly reads as one mixed catalogue rather than a wall of
-   beige, while still following the same family/lightness rule as the colour chips above it. */
+/* One pool of every swatch, order irrelevant here -- it only feeds the pass/fail filter checks
+   (swatchPasses, availableColorFamilies, ...) and the zone-mode collection picker. The visible
+   grid under "Alege culoarea" is grouped by collection (see renderFabricSections) and reads
+   straight off each collection's own already-sorted .colors array instead of this. */
 var ALL_SWATCHES = (function(){
-  var buckets = [];
-  Object.keys(SWATCH_INDEX).forEach(function(name){
-    var s = SWATCH_INDEX[name];
-    var idx = colorSortFamilyIndex(s.hex);
-    (buckets[idx] || (buckets[idx] = [])).push(s);
-  });
-  buckets.forEach(function(list){ list.sort(function(a, b){ return hexLuminance(b.hex) - hexLuminance(a.hex); }); });
-  var maxLen = buckets.reduce(function(m, list){ return Math.max(m, list.length); }, 0);
   var out = [];
-  for (var i = 0; i < maxLen; i++){
-    buckets.forEach(function(list){ if (list[i]) out.push(list[i]); });
-  }
+  Object.keys(SWATCH_INDEX).forEach(function(name){ out.push(SWATCH_INDEX[name]); });
   return out;
 })();
 
@@ -2319,6 +2312,26 @@ function applyFabricFilters(){
   } else {
     renderDeadEnd(false);
   }
+  /* A collection group (heading + its grid) can end up with every tile hidden once material/
+     colour/price/zone filters are layered on -- hide the heading along with the empty grid
+     rather than leaving it standing over blank space. */
+  var firstShownTitle = null;
+  document.querySelectorAll('#cfg-fabric-sections .cfg-color-grid').forEach(function(grid){
+    var anyVisible = Array.prototype.some.call(grid.children, function(t){ return t.style.display !== 'none'; });
+    var title = grid.previousElementSibling;
+    if (title && title.classList.contains('cfg-matgroup-title')){
+      title.style.display = anyVisible ? '' : 'none';
+      title.classList.remove('first-visible');
+      if (anyVisible && !firstShownTitle) firstShownTitle = title;
+    }
+    grid.style.display = anyVisible ? '' : 'none';
+  });
+  /* All eight groups sit in the DOM, so filtering down to one leaves the earlier headings
+     hidden and the surviving one carrying the 28px gap meant to separate it from the group
+     above -- against the top of the card there is nothing to separate it from. .first-visible
+     zeroes that margin; hidden groups are display:none, not removed, so a CSS :first-of-type
+     can't do this on its own. */
+  if (firstShownTitle) firstShownTitle.classList.add('first-visible');
   /* Narrowing to a collection counts as a filter for the total above the grid. */
   var narrowed = collectionNarrowed();
   var noFilters = !pillDefs.length && !appliedFilters.length && !priceFiltered && !narrowed;
@@ -2414,12 +2427,26 @@ function appendFabricGrid(wrap, swatches){
 function renderFabricSections(){
   var wrap = document.getElementById('cfg-fabric-sections');
   wrap.innerHTML = '';
-  /* v35: one flat, collection-agnostic grid -- collection stopped being a thing to browse by, so
-     it stopped being a heading too. Filtering (material pills, colour, price, per-zone narrowing)
-     still applies; applyFabricFilters hides whichever tiles don't pass. Info on any swatch's
-     collection/material lives one tap away on the tile itself (showSwatchInfo), not as a group
-     header over swatches that already share it. */
-  appendFabricGrid(wrap, ALL_SWATCHES);
+  /* v35: collection is no longer its own step you have to pass through first, but it's still
+     the heading that organizes "Alege culoarea" itself -- Luna's own colours under Luna's own
+     name, info and price, then the next collection, in COLLECTION_ORDER (Luna first). Empty
+     groups are hidden by applyFabricFilters, so filtering down to one collection (a material
+     pill, or per-zone narrowing) leaves exactly one heading standing. */
+  COLLECTION_ORDER.forEach(function(slug){
+    var c = COLLECTIONS[slug];
+    var swatches = c.colors.map(function(pair){ return SWATCH_INDEX[c.name + ' ' + pair[0]]; });
+    if (!swatches.length) return;
+    var h = document.createElement('div');
+    h.className = 'cfg-matgroup-title';
+    h.innerHTML = '<span class="cfg-matgroup-name">' + c.name +
+        '<button type="button" class="cfg-matgroup-info" aria-label="Detalii ' + c.name + '" onclick="showCollectionDetail(\'' + slug + '\')">' +
+          '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 11v5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7.7" r="1.1" fill="currentColor"/></svg>' +
+        '</button>' +
+      '</span>' +
+      '<span class="cfg-matgroup-right">' + Math.round(collectionPrice(slug)).toLocaleString('ro-RO') + ' lei</span>';
+    wrap.appendChild(h);
+    appendFabricGrid(wrap, swatches);
+  });
   wrap.querySelectorAll('.mtile').forEach(function(tile){
     tile.onclick = function(){ pickFabricSwatch(tile, tile.dataset.slug); };
     tile.querySelector('.info-i').onclick = function(e){ e.stopPropagation(); showSwatchInfo(tile.dataset.name); };
