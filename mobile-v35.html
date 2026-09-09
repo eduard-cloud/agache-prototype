@@ -350,7 +350,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-seg.is-unavailable.on, .cfg-fpill.is-unavailable.on{opacity:.6;pointer-events:auto}
 
 .cfg-fabric-divider{margin-top:60px}
-.cfg-fabric-toolrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cfg-fabric-toolrow{display:none;align-items:center;justify-content:space-between;margin-bottom:12px}
 .cfg-toolrow-right{display:flex;align-items:center;gap:8px;order:1}
 .cfg-color-count{font-size:13px;color:var(--gray);white-space:nowrap}
 /* grid density toggle hidden for now -- re-enable by dropping this rule */
@@ -679,7 +679,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 
 /* v35: collection stops being its own mandatory step -- it only matters once "Canapea în
    culori diferite" is on, so it surfaces here as a small chip row instead of a full-card grid. */
-.cfg-zone-collection{display:none;margin-bottom:16px}
+.cfg-zone-collection{display:none;margin-bottom:24px}
 .cfg-zone-collection.on{display:block}
 .cfg-zone-collection-label{font-size:13px;line-height:1.4;color:var(--gray);margin:0 0 10px}
 .cfg-fabgrid{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
@@ -693,7 +693,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-collchip-price{font-size:12px;color:var(--gray)}
 
 /* ══ v27: zone switch and zone tabs ══ */
-.cfg-color-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.cfg-color-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px}
 .cfg-color-head .cfg-title{margin-bottom:0;flex:1 1 auto;min-width:0}
 .cfg-zone-switch{display:flex;align-items:center;gap:8px;flex:0 0 auto;background:none;border:none;padding:0;text-align:right}
 .cfg-zone-switch-text{display:flex;flex-direction:column;gap:2px;min-width:0}
@@ -704,7 +704,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-zone-switch.on .cfg-switch .knob{transform:translateX(18px)}
 /* One tab per zone, each carrying the colour it currently holds -- the row doubles as the
    summary of what has been set, so nobody has to open all three to find out. */
-.cfg-zonetabs{display:none;gap:4px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--hair);margin-bottom:16px}
+.cfg-zonetabs{display:none;gap:4px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--hair);margin-bottom:24px}
 .cfg-zonetabs::-webkit-scrollbar{display:none}
 .cfg-zonetabs.on{display:flex}
 .cfg-zonetab{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;text-align:center;gap:3px;padding:0 12px 10px;background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px}
@@ -2881,7 +2881,6 @@ function renderMatNote(){
      zones have to share one collection, and there isn't one yet. Everything else just works. */
   var blocked = sel.zoneMode && !c;
   document.getElementById('cfg-fabric-sections').style.display = blocked ? 'none' : '';
-  document.querySelector('#sec-colors-grid .cfg-fabric-toolrow').style.display = blocked ? 'none' : '';
   document.getElementById('cfg-color-pillrow').style.display = blocked ? 'none' : '';
 }
 function renderZoneUI(){
