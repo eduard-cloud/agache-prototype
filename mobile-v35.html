@@ -150,7 +150,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-navfilter .nav-cnt{display:none;position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:999px;background:#1D1D1F;color:#fff;font-size:11px;font-weight:600;align-items:center;justify-content:center;border:2px solid #fff}
 .cfg-navfilter.has-count .nav-cnt{display:flex}
 .cfg-nav-divider{flex:0 0 auto;width:1px;height:24px;background:var(--hair);margin:0 12px}
-.cfg-chips{flex:1 1 auto;min-width:0;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:0 16px 0 0;scroll-behavior:smooth}
+.cfg-chips{flex:1 1 auto;min-width:0;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:0 16px 0 0}
 .cfg-chips::-webkit-scrollbar{display:none}
 /* Nav chips: no outline on unselected (just ink text on transparent bg), and the
    selected pill's checkmark lives in a permanently-reserved slot (fixed width, animated via
@@ -3184,7 +3184,15 @@ function setActiveCfgChip(sec, instant, followNav){
   if (followNav && active){
     var nav = document.getElementById('cfg-chips');
     var pad = 20;
-    var chipLeft = active.offsetLeft, chipRight = chipLeft + active.offsetWidth;
+    /* offsetLeft is relative to the chip's offsetParent, not to nav -- since nav itself isn't
+       positioned, that's some ancestor further up that also contains the filter button and
+       divider sitting before nav in the navbar, so offsetLeft carried their width as a constant
+       error. That silently pushed scrollLeft off zero even for the first ("Layout") chip,
+       which is what clipped its label. Measuring off nav's own rect (nav.scrollLeft added back
+       in, since getBoundingClientRect ignores scroll offset) is relative to nav regardless of
+       what's positioned above it. */
+    var navRect = nav.getBoundingClientRect(), chipRect = active.getBoundingClientRect();
+    var chipLeft = chipRect.left - navRect.left + nav.scrollLeft, chipRight = chipLeft + active.offsetWidth;
     var viewLeft = nav.scrollLeft, viewRight = viewLeft + nav.clientWidth;
     if (chipLeft - pad < viewLeft) nav.scrollLeft = Math.max(0, chipLeft - pad);
     else if (chipRight + pad > viewRight) nav.scrollLeft = chipRight + pad - nav.clientWidth;
