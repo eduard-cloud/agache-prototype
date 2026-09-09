@@ -677,7 +677,11 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
    culori diferite" is on, so it surfaces here as a small chip row instead of a full-card grid. */
 .cfg-zone-collection{display:none;margin-bottom:24px}
 .cfg-zone-collection.on{display:block}
-.cfg-zone-collection-label{font-size:13px;line-height:1.4;color:var(--gray);margin:0 0 10px}
+/* Was a passive sentence explaining the constraint; now the same line, made actionable --
+   tapping it calls the shopper's attention down to the picker sitting right underneath. */
+.cfg-zone-collection-cta{display:block;padding:0;margin:0 0 10px;border:none;background:none;color:var(--ink);font-size:13px;font-weight:500;text-decoration:underline;text-align:left}
+.cfg-fabgrid.flash{border-radius:9999px;animation:cfgFabgridFlash .9s ease}
+@keyframes cfgFabgridFlash{0%{box-shadow:0 0 0 0 rgba(29,29,31,0)}25%{box-shadow:0 0 0 5px rgba(29,29,31,.14)}100%{box-shadow:0 0 0 0 rgba(29,29,31,0)}}
 .cfg-fabgrid{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
 .cfg-fabgrid::-webkit-scrollbar{display:none}
 .cfg-collchip{flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:6px 6px 6px 6px;border:1.5px solid var(--hair);border-radius:9999px;background:#fff;white-space:nowrap;transition:border-color .15s,background-color .15s}
@@ -861,7 +865,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
              instead of its own mandatory step up front. Sits above the zone tabs: it settles
              which fabric every zone shares before you pick which zone you're colouring. -->
         <div class="cfg-zone-collection" id="cfg-zone-collection">
-          <p class="cfg-zone-collection-label">Toate zonele se fac din aceeași colecție.</p>
+          <button type="button" class="cfg-zone-collection-cta" onclick="highlightCollectionPicker()">Alege colecția pentru toate zonele.</button>
           <div class="cfg-fabgrid" id="cfg-fabgrid"></div>
         </div>
 
@@ -2915,6 +2919,16 @@ function visibleCollections(){
   });
   SUSPEND_COLLECTION_NARROW = false;
   return out;
+}
+/* The line above the picker used to just explain the constraint; tapping it now draws the eye
+   down to the row it's talking about instead of leaving the shopper to notice it on their own. */
+function highlightCollectionPicker(){
+  var grid = document.getElementById('cfg-fabgrid');
+  if (!grid) return;
+  grid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  grid.classList.remove('flash');
+  void grid.offsetWidth;
+  grid.classList.add('flash');
 }
 function renderFabGrid(){
   var wrap = document.getElementById('cfg-fabgrid');
