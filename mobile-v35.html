@@ -1265,11 +1265,19 @@ COLLECTION_ORDER.forEach(function(slug){
     SWATCH_INDEX[name] = { slug:slug, code:pair[0], hex:pair[1], collection:c, name:name };
   });
 });
-/* Flat, cross-collection list -- collections no longer group the grid visually, colors are
-   presented as one continuous sweep from lightest to darkest regardless of which collection
-   they belong to. */
+/* Flat, cross-collection list -- collections no longer group the grid visually. Same rule as
+   each collection's own internal sort above (family first, then lightness within it) applied
+   across all eight at once, so the grid reads as one continuous sweep through Bej, then Maro,
+   then Roșu... rather than by collection. A plain lightest-to-darkest sort looked "grouped by
+   collection" anyway, because unrelated collections' near-identical pale beiges tied on raw
+   luminance and landed next to each other by coincidence -- sorting on family first (matching
+   the colour chips above the grid) breaks that up on purpose instead of by accident. */
 var ALL_SWATCHES = Object.keys(SWATCH_INDEX).map(function(name){ return SWATCH_INDEX[name]; })
-  .sort(function(a, b){ return hexLuminance(b.hex) - hexLuminance(a.hex); });
+  .sort(function(a, b){
+    var fa = colorSortFamilyIndex(a.hex), fb = colorSortFamilyIndex(b.hex);
+    if (fa !== fb) return fa - fb;
+    return hexLuminance(b.hex) - hexLuminance(a.hex);
+  });
 
 /* ══════════ Color helpers (copied verbatim from mobile-v2.html:1533-1597) ══════════ */
 function hexToRGB(hex){
