@@ -291,9 +291,9 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
 .ccard .ctxt{display:flex;flex-direction:column;gap:16px;padding:32px 24px;width:100%}
 .ccard .tag{font-size:16px;font-weight:500;letter-spacing:var(--ls-16);line-height:1.2;color:var(--black)}
 .ccard .ttl{font-size:24px;font-weight:600;letter-spacing:0;line-height:1.1;color:var(--black)}
-.ccard .dsc{max-height:0;opacity:0;overflow:hidden;font-size:16px;font-weight:500;letter-spacing:var(--ls-16);line-height:1.2;color:var(--gray);transition:max-height .45s cubic-bezier(.4,0,.2,1),opacity .3s ease .05s,margin-top .45s cubic-bezier(.4,0,.2,1),font-size .3s ease}
+.ccard .dsc{max-height:0;opacity:0;overflow:hidden;font-size:16px;font-weight:500;letter-spacing:var(--ls-16);line-height:1.2;color:var(--black);transition:max-height .45s cubic-bezier(.4,0,.2,1),opacity .3s ease .05s,margin-top .45s cubic-bezier(.4,0,.2,1),font-size .3s ease}
 .ccard.open .dsc{max-height:320px;opacity:1;margin-top:4px;font-size:18px;line-height:1.35}
-.ccard-photo .dsc{color:rgba(255,255,255,.82)}
+.ccard-photo .dsc{color:#fff}
 /* Apple-style expand: the reason replaces the card's teaser, it doesn't sit under it --
    heading and photo fade out, only the plus (now an x) and the answer remain. */
 .ccard.open .tag,.ccard.open .ttl{display:none}
@@ -1873,9 +1873,9 @@ function pickSwatch(el){
   var code = n.replace(/^Luna\s*/i, '');
   var heroImg = document.getElementById('hero-slide1-img');
   if (heroImg){
-    heroImg.src = LUNA_SOFA_CODES.indexOf(code) > -1
-      ? 'assets/v2/luna-' + code + '-sofa.png'
-      : 'assets/v2/hero/slide-1.png';
+    heroImg.src = (code === '8' || LUNA_SOFA_CODES.indexOf(code) === -1)
+      ? 'assets/v2/hero/slide-1.png'
+      : 'assets/v2/hero/slide-1-luna-' + code + '.png';
     heroTo(0);
   }
 }
