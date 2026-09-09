@@ -294,17 +294,11 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 /* Editorial comfort story: a full-bleed, portrait product card between choosing the sofa's
    shape and choosing its upholstery. Copy stays live and selectable while the generated
    artwork carries the softness story through the compressed seat and relaxed pose. */
-.cfg-comfort-card{position:relative;isolation:isolate;aspect-ratio:4/5;min-height:440px;overflow:hidden;border-radius:28px;margin:0 0 12px;background:#f2f3f5;box-shadow:inset 0 0 0 1px rgba(0,0,0,.035)}
-.cfg-comfort-card::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(245,245,247,.82) 0%,rgba(245,245,247,.3) 27%,rgba(245,245,247,0) 48%)}
-.cfg-comfort-copy{position:absolute;z-index:2;top:28px;left:24px;right:24px;text-align:center}
+.cfg-comfort-card{position:relative;isolation:isolate;overflow:hidden;border-radius:28px;margin:0 0 12px;padding:36px 24px;background:#f2f3f5;box-shadow:inset 0 0 0 1px rgba(0,0,0,.035)}
+.cfg-comfort-copy{text-align:center}
 .cfg-comfort-kicker{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--red);margin-bottom:8px}
 .cfg-comfort-copy h3{max-width:290px;margin:0 auto;font-size:30px;font-weight:600;letter-spacing:-.05em;line-height:1.02;color:#1d1d1f}
 .cfg-comfort-copy p:last-child{max-width:255px;margin:11px auto 0;font-size:15px;font-weight:400;letter-spacing:-.02em;line-height:1.3;color:#6e6e73}
-.cfg-comfort-art{position:absolute;z-index:0;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;transform:scale(1.01);transform-origin:50% 72%}
-@media (prefers-reduced-motion:no-preference){
-  .cfg-comfort-art{animation:cfgComfortBreathe 8s ease-in-out infinite alternate}
-}
-@keyframes cfgComfortBreathe{from{transform:scale(1.01)}to{transform:scale(1.025)}}
 
 /* ── section 2b/3: fabric picker — top fabric-type pills, a Filtre sheet button, all collections stacked ── */
 .cfg-badge{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--slate)}
@@ -835,7 +829,6 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
           <h3 id="cfg-comfort-title">Moale. Din prima clipă.</h3>
           <p>Te așezi. Te afunzi. Te relaxezi.</p>
         </div>
-        <img class="cfg-comfort-art" src="assets/boston-soft-comfort-woman-v1.webp" alt="Femeie relaxată într-o canapea Boston cu perne moi" loading="lazy">
       </aside>
 
       <!-- Nevoi de lifestyle section removed per request, kept in markup for easy restore -->
