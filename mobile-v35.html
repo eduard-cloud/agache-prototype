@@ -1266,30 +1266,15 @@ function hexLuminance(hex){
   var rgb = hexToRGB(hex);
   return 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
 }
-/* Pure luminance sort put saturated and neutral colors next to each other whenever they
-   happened to match in brightness (a neon orange beside a mid grey) because it ignores hue
-   and intensity entirely. Group by hue family first (like a car configurator's color grid),
-   then sort by lightness within each group, so brightness never overrides hue/intensity.
-   Starts from beige -- the dominant tone across these fabric collections -- and fans out
-   through the warm families before the cool ones, ending on the true neutrals.
-   Uses the same Lab-based family logic as colorFamilyRO() so a swatch's position in the grid
-   always matches the filter chip it shows up under. */
-var COLOR_SORT_FAMILY_ORDER = ['Bej', 'Maro', 'Roșu', 'Roz', 'Verde', 'Albastru', 'Gri', 'Negru'];
-function sortColorFamily(hex){
-  return colorFamilyRO(hex);
-}
-function colorSortFamilyIndex(hex){
-  var idx = COLOR_SORT_FAMILY_ORDER.indexOf(sortColorFamily(hex));
-  return idx === -1 ? COLOR_SORT_FAMILY_ORDER.length : idx;
-}
+/* Sorting each collection by hue family first read fine for a large, evenly-spread catalog, but
+   most collections here have only 1-2 swatches in most families and a heavy skew toward one
+   (Luna: 9 of its 21 are Gri) -- so the family grouping mostly produced one abrupt jump per
+   family rather than a real group. Plain lightest-to-darkest reads as a smooth gradient
+   regardless of how a given collection's colours happen to be distributed across hues. */
 COLLECTION_ORDER.forEach(function(slug){
   var c = COLLECTIONS[slug];
   c.slug = slug;
-  c.colors.sort(function(a, b){
-    var fa = colorSortFamilyIndex(a[1]), fb = colorSortFamilyIndex(b[1]);
-    if (fa !== fb) return fa - fb;
-    return hexLuminance(b[1]) - hexLuminance(a[1]); /* lightest first within the same family */
-  });
+  c.colors.sort(function(a, b){ return hexLuminance(b[1]) - hexLuminance(a[1]); });
   c.colors.forEach(function(pair){
     var name = c.name + ' ' + pair[0];
     SWATCH_INDEX[name] = { slug:slug, code:pair[0], hex:pair[1], collection:c, name:name };
