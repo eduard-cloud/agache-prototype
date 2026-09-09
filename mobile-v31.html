@@ -2672,9 +2672,12 @@ document.addEventListener('keydown', function(e){
   if (e.key === 'Escape' && document.getElementById('vntx').classList.contains('on')) closeTranscript();
 });
 
+var ICON_PLUS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.33" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+var ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12.5l3.5 3.5L18 8"/></svg>';
 function addExtra(btn, label){
   var on = btn.classList.toggle('on');
   btn.style.background = on ? '#1D1D1F' : '';
+  btn.innerHTML = on ? ICON_CHECK : ICON_PLUS;
   toast(on ? label + ' adăugat' : label + ' eliminat');
 }
 function shareProduct(){
