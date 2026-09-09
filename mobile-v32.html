@@ -291,9 +291,15 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
 .ccard .ctxt{display:flex;flex-direction:column;gap:16px;padding:32px 24px;width:100%}
 .ccard .tag{font-size:16px;font-weight:500;letter-spacing:var(--ls-16);line-height:1.2;color:var(--black)}
 .ccard .ttl{font-size:24px;font-weight:600;letter-spacing:0;line-height:1.1;color:var(--black)}
-.ccard .dsc{max-height:0;opacity:0;overflow:hidden;font-size:16px;font-weight:500;letter-spacing:var(--ls-16);line-height:1.2;color:var(--gray);transition:max-height .45s cubic-bezier(.4,0,.2,1),opacity .3s ease .05s,margin-top .45s cubic-bezier(.4,0,.2,1)}
-.ccard.open .dsc{max-height:240px;opacity:1;margin-top:8px}
+.ccard .dsc{max-height:0;opacity:0;overflow:hidden;font-size:16px;font-weight:500;letter-spacing:var(--ls-16);line-height:1.2;color:var(--gray);transition:max-height .45s cubic-bezier(.4,0,.2,1),opacity .3s ease .05s,margin-top .45s cubic-bezier(.4,0,.2,1),font-size .3s ease}
+.ccard.open .dsc{max-height:320px;opacity:1;margin-top:4px;font-size:18px;line-height:1.35}
 .ccard-photo .dsc{color:rgba(255,255,255,.82)}
+/* Apple-style expand: the reason replaces the card's teaser, it doesn't sit under it --
+   heading and photo fade out, only the plus (now an x) and the answer remain. */
+.ccard.open .tag,.ccard.open .ttl{display:none}
+.ccard.open .ph,.ccard.open .ph-strips{display:none}
+.ccard-photo.open .ctxt{background:none}
+.ccard-photo.open .dsc{color:var(--gray)}
 .ccard-plus{position:absolute;right:20px;bottom:20px;z-index:2;width:40px;height:40px;border-radius:50%;background:#121212;border:1.5px solid #fff;display:flex;align-items:center;justify-content:center;padding:0;transition:transform .35s cubic-bezier(.4,0,.2,1)}
 .ccard-plus svg{width:16px;height:16px;display:block}
 .ccard-plus svg line{stroke:#fff;stroke-width:2;stroke-linecap:round}
