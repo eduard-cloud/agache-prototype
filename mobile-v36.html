@@ -837,6 +837,7 @@ input.price-mm-pill:focus{border-color:var(--ink)}
            Culoare once "Canapea în culori diferite" is on (see #cfg-zone-collection). -->
       <button class="cfg-chip" data-sec="colors-grid" onclick="scrollCfgTo('colors-grid')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Culoare</button>
       <button class="cfg-chip" data-sec="accessories" onclick="scrollCfgTo('accessories')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Accesorii</button>
+      <button class="cfg-chip" data-sec="experience" onclick="scrollCfgTo('experience')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Servicii</button>
       <button class="cfg-chip" data-sec="summary" onclick="scrollCfgTo('summary')"><span class="chip-check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5L9.5 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Sumar</button>
       </div>
     </div>
@@ -3480,7 +3481,7 @@ function syncAccessories(){
 /* How far each section should sit below the sticky chip nav when scrolled to -- 0 for
    "Layout" so it lands flush at the very top, a little breathing room for "Materiale" so
    the "Material." title isn't jammed against the chips. */
-var SCROLL_SEC_PAD = { color: 16, 'colors-grid': 16, accessories: 16 };
+var SCROLL_SEC_PAD = { color: 16, 'colors-grid': 16, accessories: 16, experience: 16 };
 function scrollCfgTo(sec, instant, targetId){
   var scroll = document.getElementById('cfg-scroll');
   var target = document.getElementById(targetId || ('sec-' + sec));
