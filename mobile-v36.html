@@ -428,7 +428,7 @@ h3.cfg-title{font-size:20px;font-weight:400;letter-spacing:-.03em;line-height:1.
    catalogue fall in that price slice, for the currently selected sofa shape/size -- rebuilt by
    buildPriceHistogram() whenever the shape changes, not a fixed image. Bars inside the current
    [min,max] selection go red, the rest stay a light grey -- same convention the reference uses. */
-.price-hist{display:flex;align-items:flex-end;gap:2px;height:52px;margin-bottom:10px}
+.price-hist{display:flex;align-items:flex-end;gap:2px;height:64px;margin-bottom:10px}
 .price-hist .bar{flex:1 1 0;min-width:0;background:var(--hair);border-radius:2px 2px 0 0;min-height:3px;transition:background-color .12s}
 .price-hist .bar.in-range{background:var(--red)}
 .price-slider-track{position:relative;height:20px}
@@ -2300,11 +2300,19 @@ function buildPriceHistogram(){
     });
   });
   priceHistPoints = Object.keys(counts).map(Number).sort(function(a, b){ return a - b; });
-  var maxCount = Math.max.apply(null, priceHistPoints.map(function(p){ return counts[p]; }).concat([1]));
+  var allCounts = priceHistPoints.map(function(p){ return counts[p]; });
+  var minCount = Math.min.apply(null, allCounts);
+  var maxCount = Math.max.apply(null, allCounts.concat([1]));
+  var spread = maxCount - minCount || 1;
+  /* Scaling straight against 0 (count/maxCount) squashed every tier but the biggest into a
+     narrow 21-31px band, since the tier sizes themselves (25/33/34/37 colors) are much closer
+     to each other than any of them is to Practic's 62. Stretching min..max count across the
+     full 8-64px pixel range instead makes the real differences between tiers actually visible. */
   priceHistPoints.forEach(function(p){
     var bar = document.createElement('div');
     bar.className = 'bar';
-    bar.style.height = Math.max(6, Math.round(counts[p] / maxCount * 52)) + 'px';
+    var t = (counts[p] - minCount) / spread;
+    bar.style.height = Math.round(8 + t * 56) + 'px';
     bar.dataset.price = p;
     wrap.appendChild(bar);
   });
