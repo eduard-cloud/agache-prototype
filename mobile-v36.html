@@ -424,7 +424,13 @@ h3.cfg-title{font-size:20px;font-weight:400;letter-spacing:-.03em;line-height:1.
 .fsheet-apply:disabled{opacity:.4}
 .price-slider{margin-top:12px;padding-bottom:32px}
 .fsheet-result-count{margin-top:-16px;font-size:13px;color:var(--gray)}
-.price-slider-vals{display:flex;justify-content:space-between;font-size:16px;font-weight:500;color:var(--ink);margin-bottom:14px}
+/* Real distribution, not decoration: each bar's height is how many colors in the whole
+   catalogue fall in that price slice, for the currently selected sofa shape/size -- rebuilt by
+   buildPriceHistogram() whenever the shape changes, not a fixed image. Bars inside the current
+   [min,max] selection go red, the rest stay a light grey -- same convention the reference uses. */
+.price-hist{display:flex;align-items:flex-end;gap:2px;height:52px;margin-bottom:10px}
+.price-hist .bar{flex:1 1 0;min-width:0;background:var(--hair);border-radius:2px 2px 0 0;min-height:3px;transition:background-color .12s}
+.price-hist .bar.in-range{background:var(--red)}
 .price-slider-track{position:relative;height:20px}
 .price-slider-track::before{content:'';position:absolute;top:50%;left:0;right:0;height:4px;background:var(--hair);border-radius:2px;transform:translateY(-50%)}
 .price-slider-range{position:absolute;top:50%;height:4px;background:var(--ink);border-radius:2px;transform:translateY(-50%)}
@@ -432,6 +438,10 @@ h3.cfg-title{font-size:20px;font-weight:400;letter-spacing:-.03em;line-height:1.
 .price-slider-track input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;pointer-events:auto;width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.25);cursor:pointer}
 .price-slider-track input[type=range]::-moz-range-thumb{pointer-events:auto;width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.25);cursor:pointer;box-sizing:border-box}
 .price-slider-track input[type=range]::-webkit-slider-runnable-track{-webkit-appearance:none;background:none}
+.price-mm-row{display:flex;justify-content:space-between;gap:12px;margin-top:20px}
+.price-mm-col{display:flex;flex-direction:column;gap:8px;flex:1 1 0}
+.price-mm-lab{font-size:13px;color:var(--gray)}
+.price-mm-pill{border:1px solid var(--hair);border-radius:9999px;padding:10px 16px;font-size:16px;font-weight:500;color:var(--ink);text-align:center}
 .fsheet-empty{display:none;align-items:flex-start;gap:10px;background:var(--chipbg);border-radius:12px;padding:14px;margin-bottom:20px;color:var(--ink)}
 .fsheet-empty.show{display:flex}
 .fsheet-empty svg{flex:0 0 auto;margin-top:1px}
@@ -1148,11 +1158,21 @@ h3.cfg-title{font-size:20px;font-weight:400;letter-spacing:-.03em;line-height:1.
       <div class="cfg-filter-pills" id="fsheet-prop"></div>
       <div class="fsheet-group-h">Preț</div>
       <div class="price-slider">
-        <div class="price-slider-vals"><span id="price-min-val">4.745 lei</span><span id="price-max-val">5.775 lei</span></div>
+        <div class="price-hist" id="price-hist"></div>
         <div class="price-slider-track">
           <div class="price-slider-range" id="price-slider-range"></div>
           <input type="range" id="price-min" min="4745" max="5775" step="5" value="4745" oninput="updatePriceSlider()">
           <input type="range" id="price-max" min="4745" max="5775" step="5" value="5775" oninput="updatePriceSlider()">
+        </div>
+        <div class="price-mm-row">
+          <div class="price-mm-col">
+            <span class="price-mm-lab">Minim</span>
+            <div class="price-mm-pill" id="price-min-val">4.745 lei</div>
+          </div>
+          <div class="price-mm-col">
+            <span class="price-mm-lab">Maxim</span>
+            <div class="price-mm-pill" id="price-max-val">5.775 lei</div>
+          </div>
         </div>
       </div>
       <div class="fsheet-result-count" id="fsheet-result-count"></div>
@@ -2247,6 +2267,39 @@ function resetSheetFilters(){
 /* Slider's min/max/step are pegged to the currently selected shape's real Practic->Special
    price spread (SHAPE_TIER_PRICE) instead of an arbitrary range, and get re-pegged whenever
    the shape changes since a corner unit's price spread is nowhere near a 3-seat's. */
+/* Same bar count as the reference histogram -- 30 buckets across whatever the current shape's
+   real min..max price span is. */
+var PRICE_HIST_BUCKETS = 30;
+var priceHistBucketEdges = [];
+function buildPriceHistogram(){
+  var wrap = document.getElementById('price-hist');
+  wrap.innerHTML = '';
+  var lo = PRICE_MIN_DEFAULT, hi = PRICE_MAX_DEFAULT;
+  var span = hi - lo || 1;
+  var counts = new Array(PRICE_HIST_BUCKETS).fill(0);
+  ALL_SWATCHES.forEach(function(sw){
+    var p = collectionPrice(sw.slug);
+    var idx = Math.min(PRICE_HIST_BUCKETS - 1, Math.max(0, Math.floor((p - lo) / span * PRICE_HIST_BUCKETS)));
+    counts[idx]++;
+  });
+  priceHistBucketEdges = counts.map(function(_, i){ return lo + span * i / PRICE_HIST_BUCKETS; });
+  var maxCount = Math.max.apply(null, counts.concat([1]));
+  counts.forEach(function(c){
+    var bar = document.createElement('div');
+    bar.className = 'bar';
+    bar.style.height = Math.max(6, Math.round(c / maxCount * 52)) + 'px';
+    wrap.appendChild(bar);
+  });
+}
+function refreshPriceHistogramHighlight(min, max){
+  var bars = document.querySelectorAll('#price-hist .bar');
+  var span = (PRICE_MAX_DEFAULT - PRICE_MIN_DEFAULT) || 1;
+  bars.forEach(function(bar, i){
+    var bucketLo = priceHistBucketEdges[i];
+    var bucketHi = i + 1 < priceHistBucketEdges.length ? priceHistBucketEdges[i + 1] : PRICE_MAX_DEFAULT;
+    bar.classList.toggle('in-range', bucketHi >= min && bucketLo <= max);
+  });
+}
 function updatePriceSliderBounds(){
   var range = shapePriceRange();
   PRICE_MIN_DEFAULT = range.min;
@@ -2257,6 +2310,7 @@ function updatePriceSliderBounds(){
   minEl.max = maxEl.max = PRICE_MAX_DEFAULT;
   minEl.value = PRICE_MIN_DEFAULT;
   maxEl.value = PRICE_MAX_DEFAULT;
+  buildPriceHistogram();
   updatePriceSlider();
 }
 function updatePriceSlider(){
@@ -2271,6 +2325,7 @@ function updatePriceSlider(){
   var range = document.getElementById('price-slider-range');
   range.style.left = ((min - lo) / (hi - lo) * 100) + '%';
   range.style.right = (100 - (max - lo) / (hi - lo) * 100) + '%';
+  refreshPriceHistogramHighlight(min, max);
   applyFabricFilters();
 }
 document.addEventListener('DOMContentLoaded', updatePriceSliderBounds);
