@@ -2264,22 +2264,40 @@ function resetSheetFilters(){
   updatePriceSlider();
 }
 
-/* Slider's min/max/step are pegged to the currently selected shape's real Practic->Special
-   price spread (SHAPE_TIER_PRICE) instead of an arbitrary range, and get re-pegged whenever
-   the shape changes since a corner unit's price spread is nowhere near a 3-seat's. */
-/* The reference's 30-bucket grid assumes near-continuous pricing (thousands of distinct
-   listings). Our catalogue only has as many distinct prices as there are tiers -- 5, one per
-   Practic/Confort/Premium/Lux/Special -- so forcing that into 30 evenly-spaced buckets left ~25
-   empty and a handful of random spikes. One bar per *actual* distinct price is both more honest
-   (every bar means something real) and reads as a clean chart instead of broken. */
+/* Slider's min/max span every price the CURRENT shape can actually reach -- not just whatever
+   island length happens to be set right now. A sizable corner (stânga/dreapta) has 3 island
+   lengths x 5 material tiers = 15 real prices; a straight or fixed-size corner has just the 5
+   tiers. Reading #dim-isl's own min/max/step rather than hardcoding the 3 positions, so this
+   stays correct if that slider's range ever changes. */
+function possibleSizeSteps(){
+  if (!isSizable()) return [0];
+  var input = document.getElementById('dim-isl');
+  var lo = +input.min, hi = +input.max, step = +input.step;
+  var base = layoutDef().isl;
+  var steps = [];
+  for (var v = lo; v <= hi; v += step) steps.push(Math.round((v - base) / STEP_CM));
+  return steps;
+}
+/* One bar per real, reachable price for the current shape -- every bar means something
+   (an actual size x material combination with real colors in it), instead of a fixed bucket
+   count that leaves gaps where no price exists. */
 var priceHistPoints = [];
 function buildPriceHistogram(){
   var wrap = document.getElementById('price-hist');
   wrap.innerHTML = '';
-  var counts = {};
+  var tierCounts = {};
   ALL_SWATCHES.forEach(function(sw){
-    var p = collectionPrice(sw.slug);
-    counts[p] = (counts[p] || 0) + 1;
+    var tier = sw.collection.tier;
+    tierCounts[tier] = (tierCounts[tier] || 0) + 1;
+  });
+  var tierPrices = SHAPE_TIER_PRICE[baseVariantName()];
+  var steps = possibleSizeSteps();
+  var counts = {};
+  Object.keys(tierPrices).forEach(function(tier){
+    steps.forEach(function(step){
+      var p = tierPrices[tier] + STEP_LEI * step;
+      counts[p] = (counts[p] || 0) + (tierCounts[tier] || 0);
+    });
   });
   priceHistPoints = Object.keys(counts).map(Number).sort(function(a, b){ return a - b; });
   var maxCount = Math.max.apply(null, priceHistPoints.map(function(p){ return counts[p]; }).concat([1]));
@@ -2299,16 +2317,15 @@ function refreshPriceHistogramHighlight(min, max){
   });
 }
 function updatePriceSliderBounds(){
-  var range = shapePriceRange();
-  PRICE_MIN_DEFAULT = range.min;
-  PRICE_MAX_DEFAULT = range.max;
+  buildPriceHistogram();
+  PRICE_MIN_DEFAULT = priceHistPoints[0];
+  PRICE_MAX_DEFAULT = priceHistPoints[priceHistPoints.length - 1];
   var minEl = document.getElementById('price-min');
   var maxEl = document.getElementById('price-max');
   minEl.min = maxEl.min = PRICE_MIN_DEFAULT;
   minEl.max = maxEl.max = PRICE_MAX_DEFAULT;
   minEl.value = PRICE_MIN_DEFAULT;
   maxEl.value = PRICE_MAX_DEFAULT;
-  buildPriceHistogram();
   updatePriceSlider();
 }
 function updatePriceSlider(){
