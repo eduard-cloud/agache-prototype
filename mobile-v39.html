@@ -498,12 +498,25 @@ input.price-mm-pill:focus{border-color:var(--ink)}
 .cfg-matgroup-title{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:18px;font-weight:400;letter-spacing:-.2px;color:var(--ink);margin-top:24px}
 .cfg-matgroup-name{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:6px}
 .cfg-matgroup-right{flex:0 0 auto;font-size:14px;font-weight:400;letter-spacing:-.02em;color:var(--ink)}
-.cfg-matgroup-title:first-of-type,.cfg-matgroup-title.first-visible{margin-top:0}
+/* v39: title used to be a direct child of #cfg-fabric-sections, so :first-of-type alone picked
+   out the very first group. Now each title lives inside its own .cfg-matgroup-body wrapper (see
+   renderFabricSections) -- it's trivially :first-of-type within that wrapper regardless of
+   position, so the selector has to reach up to the wrapper instead. */
+.cfg-matgroup-body:first-of-type .cfg-matgroup-title,.cfg-matgroup-title.first-visible{margin-top:0}
 .cfg-matgroup-info{flex:0 0 auto;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#1d1d1f}
-.cfg-color-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 8px;margin-top:8px}
+.cfg-color-grid{display:grid;grid-template-columns:repeat(5,60px);justify-content:space-between;gap:8px;margin-top:8px}
+/* v39: one message per collection group instead of one per swatch -- a single card centred over
+   the (still visibly dimmed) grid, matching how a lock/attention overlay reads elsewhere. */
+.cfg-matgroup-body{position:relative}
+.cfg-matgroup-lock{display:none;position:absolute;left:0;right:0;top:0;bottom:0;z-index:2;align-items:center;justify-content:center;padding:16px}
+.cfg-matgroup-body.locked .cfg-matgroup-lock{display:flex}
+.cfg-matgroup-lock-card{max-width:240px;background:#fff;border-radius:16px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.18);text-align:center}
+.cfg-matgroup-lock-card svg{display:block;margin:0 auto 8px;color:var(--gray)}
+.cfg-matgroup-lock-card p{font-size:13px;font-weight:400;letter-spacing:-.02em;line-height:1.4;color:var(--gray);margin-bottom:14px}
+.cfg-matgroup-lock-card button{height:34px;padding:0 16px;border-radius:9999px;background:var(--ink);color:#fff;border:none;font-size:13px;font-weight:500;letter-spacing:-.02em}
 #cfg-fabric-sections.cfg-grid3 .cfg-color-grid{grid-template-columns:repeat(3,1fr);gap:12px 10px}
 .mtile{position:relative;transition:transform .12s ease,filter .12s ease}
-.mtile .imw{position:relative;aspect-ratio:1;overflow:hidden}
+.mtile .imw{position:relative;aspect-ratio:2/3;overflow:hidden;border-radius:4px}
 /* Source swatch photos are only 160x160 and mostly flat-looking at that size -- scaling the
    image up within its cropped square magnifies whatever weave/nap texture is actually there,
    which reads far more distinctly than the un-zoomed, nearly-flat crop did. */
@@ -512,6 +525,10 @@ input.price-mm-pill:focus{border-color:var(--ink)}
    border and its 4px white inlay ate the edge of the fabric you were judging. An outline is
    drawn outside the border box, so it survives the .imw overflow clip that crops the zoom. */
 .mtile.on .imw{outline:2px solid var(--ink);outline-offset:3px}
+/* v39: multicolor's "one collection only" rule shown, not just told -- a swatch from any other
+   collection stays on screen once one is picked, greyed and inert, instead of disappearing. */
+.mtile.is-locked-out{pointer-events:none}
+.mtile.is-locked-out .imw{opacity:.35;filter:grayscale(.5)}
 .mtile .lr{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
 /* Main color grid: swatch only, no name underneath -- grid gap (set on .cfg-color-grid above)
    is untouched, so tiles keep the exact same horizontal/vertical spacing, just shorter. */
@@ -747,6 +764,14 @@ input.price-mm-pill:focus{border-color:var(--ink)}
    culori diferite" is on, so it surfaces here as a small chip row instead of a full-card grid. */
 .cfg-zone-collection{display:none;margin-bottom:24px}
 .cfg-zone-collection.on{display:block}
+/* v39: grey attention widget that states the same-collection rule up front, so the shopper
+   doesn't have to discover it by hitting a greyed-out swatch. */
+.cfg-zone-note{display:flex;align-items:flex-start;gap:8px;background:var(--graysec);border-radius:12px;padding:12px 14px;margin-bottom:14px}
+.cfg-zone-note svg{flex:0 0 auto;margin-top:1px;color:var(--gray)}
+.cfg-zone-note span{flex:1 1 auto;font-size:13px;font-weight:400;letter-spacing:-.02em;line-height:1.45;color:var(--ink)}
+/* Only appears once a collection is actually locked in -- nothing to clear before that. */
+#cfg-zone-note-clear{display:none;flex:0 0 auto;border:none;background:none;padding:0;margin-top:1px;font-size:13px;font-weight:500;letter-spacing:-.02em;color:var(--ink);text-decoration:underline}
+.cfg-zone-note.locked #cfg-zone-note-clear{display:inline}
 .cfg-fabgrid{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
 .cfg-fabgrid::-webkit-scrollbar{display:none}
 /* Same construction as the material card (.cfg-seg.vert): plain photo tile, hairline border
@@ -958,12 +983,16 @@ input.price-mm-pill:focus{border-color:var(--ink)}
           </div>
         </div>
 
-        <!-- Collection only matters once zones are on -- every zone has to come from the same
-             fabric, so this is where that constraint actually surfaces, as a small picker
-             instead of its own mandatory step up front. Sits above the zone tabs: it settles
-             which fabric every zone shares before you pick which zone you're colouring. -->
+        <!-- v39: collection is no longer its own mandatory step, and there's no separate chip
+             row for it at all here -- the shopper taps straight into the open swatch grid below,
+             and the first colour they pick settles the collection for every zone. This note is
+             what tells them the rule before they hit it. -->
         <div class="cfg-zone-collection" id="cfg-zone-collection">
-          <div class="cfg-fabgrid" id="cfg-fabgrid"></div>
+          <div class="cfg-zone-note" id="cfg-zone-note">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.6"/><path d="M12 11v5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="8" r="1.1" fill="currentColor"/></svg>
+            <span id="cfg-zone-note-text"></span>
+            <button type="button" id="cfg-zone-note-clear" onclick="clearZoneCollectionPick()">Șterge selecția</button>
+          </div>
         </div>
 
         <div class="cfg-zonetabs" id="cfg-zonetabs"></div>
@@ -1010,12 +1039,12 @@ input.price-mm-pill:focus{border-color:var(--ink)}
           <div class="cfg-xp-row">
             <span class="cfg-xp-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M9 22V18H15V22M8 6H8.01M16 6H16.01M12 6H12.01M12 10H12.01M12 14H12.01M16 10H16.01M16 14H16.01M8 10H8.01M8 14H8.01M6 2H18C19.1046 2 20 2.89543 20 4V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V4C4 2.89543 4.89543 2 6 2Z"/></svg><span class="cfg-xp-t">Transport din strada pana in apartament</span></span>
             <span class="cfg-xp-p">149 lei</span>
-            <button class="cfg-xp-add" aria-label="Adaugă transport la domiciliu" onclick="addExtra(this,'Transport la domiciliu')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.33" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+            <button class="cfg-xp-add" aria-label="Adaugă transport la domiciliu" onclick="addExtra(this,'transport','Transport la domiciliu')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.33" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
           </div>
           <div class="cfg-xp-row">
             <span class="cfg-xp-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M11 14H13C13.5304 14 14.0391 13.7893 14.4142 13.4142C14.7893 13.0391 15 12.5304 15 12C15 11.4696 14.7893 10.9609 14.4142 10.5858C14.0391 10.2107 13.5304 10 13 10H10C9.4 10 8.9 10.2 8.6 10.6L3 16M7 20L8.6 18.6C8.9 18.2 9.4 18 10 18H14C15.1 18 16.1 17.6 16.8 16.8L21.4 12.4C21.7859 12.0354 22.0111 11.5323 22.0261 11.0016C22.0411 10.4709 21.8447 9.95592 21.48 9.57003C21.1153 9.18414 20.6123 8.95892 20.0816 8.94392C19.5508 8.92891 19.0359 9.12535 18.65 9.49003L14.45 13.39M2 15L8 21M19.4999 8.5C20.1999 7.8 20.9999 6.9 20.9999 5.8C21.0698 5.18893 20.9313 4.57216 20.6068 4.04964C20.2824 3.52712 19.791 3.12947 19.2123 2.92114C18.6336 2.71281 18.0015 2.706 17.4184 2.90182C16.8354 3.09763 16.3355 3.4846 15.9999 4C15.6429 3.52458 15.1429 3.17613 14.5734 3.00578C14.0038 2.83544 13.3946 2.85219 12.8352 3.05356C12.2758 3.25494 11.7957 3.63034 11.4654 4.12465C11.1351 4.61896 10.9719 5.20614 10.9999 5.8C10.9999 7 11.7999 7.8 12.4999 8.6L15.9999 12L19.4999 8.5Z"/></svg><span class="cfg-xp-t">Serviciu de montaj<br>in <u>orasele eligibile</u></span></span>
             <span class="cfg-xp-p">399 lei</span>
-            <button class="cfg-xp-add" aria-label="Adaugă serviciu de montaj" onclick="addExtra(this,'Serviciu de montaj')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.33" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+            <button class="cfg-xp-add" aria-label="Adaugă serviciu de montaj" onclick="addExtra(this,'montaj','Serviciu de montaj')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.33" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
           </div>
         </div>
       </section>
@@ -1692,12 +1721,14 @@ function toast(msg){
 }
 var ICON_PLUS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.33" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
 var ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12.5l3.5 3.5L18 8"/></svg>';
-function addExtra(btn, label){
+function addExtra(btn, id, label){
   var on = btn.classList.toggle('on');
   btn.innerHTML = on ? ICON_CHECK : ICON_PLUS;
   var row = btn.closest('.cfg-xp-row');
   if (row) row.classList.toggle('on', on);
+  extraState[id] = on;
   toast(on ? label + ' adăugat' : label + ' eliminat');
+  updateSummary();
 }
 
 /* ══════════ v3-specific: configurator state + rendering ══════════ */
@@ -1803,8 +1834,16 @@ function updateSummary(){
   });
   if (accLines.length) groups.push({ title:'Accesorii', lines:accLines });
 
+  var extraLines = [], extraTotal = 0;
+  EXTRAS.forEach(function(e){
+    if (!extraState[e.id]) return;
+    extraTotal += e.price;
+    extraLines.push([e.name, formatPrice(e.price) + ' lei']);
+  });
+  if (extraLines.length) groups.push({ title:'Servicii', lines:extraLines });
+
   /* No collection yet -- quote the cheapest one this sofa can be made in, marked "de la". */
-  var price = (c ? collectionPrice(sel.collectionSlug) : cheapestPrice()) + accTotal;
+  var price = (c ? collectionPrice(sel.collectionSlug) : cheapestPrice()) + accTotal + extraTotal;
 
   var wrap = document.getElementById('cfg-sum-details');
   wrap.innerHTML = groups.map(function(g){
@@ -1825,7 +1864,7 @@ function updateSummary(){
   document.getElementById('cfg-price').textContent = (c ? '' : 'de la ') + Math.round(price).toLocaleString('ro-RO') + ' lei';
 
   var priceBtn = document.getElementById('cfg-price-btn');
-  var hasBreakdown = !!c || accLines.length > 0 || sizeSteps() !== 0;
+  var hasBreakdown = !!c || accLines.length > 0 || extraLines.length > 0 || sizeSteps() !== 0;
   priceBtn.classList.toggle('no-breakdown', !hasBreakdown);
   priceBtn.onclick = hasBreakdown ? openPriceBreakdown : null;
 }
@@ -2562,15 +2601,22 @@ function applyFabricFilters(){
     });
     var propOK = !byCat.prop.length || byCat.prop.every(function(f){ return propMatch(f, c); });
     var priceOK = collectionPrice(s.slug) >= priceMin && collectionPrice(s.slug) <= priceMax;
-    var visible = matOK && propOK && priceOK;
-    if (visible && byCat.culoare.length) visible = byCat.culoare.indexOf(colorFamilyRO(s.hex)) > -1;
+    var passesFilters = matOK && propOK && priceOK && (!byCat.culoare.length || byCat.culoare.indexOf(colorFamilyRO(s.hex)) > -1);
     /* v28: the grid narrows to one collection in two cases -- the shopper picked that
        collection in its own step, or they asked for different colours per zone (where every
        zone has to come from the same fabric). Otherwise every swatch is a valid sofa and the
        whole catalogue stays open. */
-    if (visible && collectionNarrowed()) visible = s.slug === sel.collectionSlug;
+    var inCollection = !collectionNarrowed() || s.slug === sel.collectionSlug;
+    /* v39: in zone mode the out-of-collection swatches stay on screen, greyed and inert,
+       instead of disappearing -- the shopper can see the rest of the catalogue exists and why
+       it's off limits, rather than have it silently vanish the moment a collection is settled.
+       Unicolor's own locked-collection narrowing (and the dead-end panel it can trigger) is
+       untouched: this only changes what zone mode does with the swatches it excludes. */
+    var lockedOut = sel.zoneMode && passesFilters && !inCollection;
+    var visible = passesFilters && (inCollection || sel.zoneMode);
+    tile.classList.toggle('is-locked-out', lockedOut);
     tile.style.display = visible ? '' : 'none';
-    if (visible) visibleCount++;
+    if (visible && !lockedOut) visibleCount++;
   });
   /* v34: a filter combination that shows nothing at all is never fixed by changing what the
      shopper picked out from under them -- Airbnb's own "no exact matches" pattern instead: name
@@ -2606,6 +2652,12 @@ function applyFabricFilters(){
      zeroes that margin; hidden groups are display:none, not removed, so a CSS :first-of-type
      can't do this on its own. */
   if (firstShownTitle) firstShownTitle.classList.add('first-visible');
+  /* v39: one lock card per group, not one per swatch -- toggled here since this is the one place
+     that already re-runs on every change that can affect it (zone mode, the first colour pick
+     that settles a collection, and Șterge colecția clearing it again). */
+  document.querySelectorAll('#cfg-fabric-sections .cfg-matgroup-body').forEach(function(body){
+    body.classList.toggle('locked', sel.zoneMode && !!sel.collectionSlug && body.dataset.slug !== sel.collectionSlug);
+  });
   /* Narrowing to a collection counts as a filter for the total above the grid. */
   var narrowed = collectionNarrowed();
   var noFilters = !pillDefs.length && !appliedFilters.length && !priceFiltered && !narrowed;
@@ -2717,8 +2769,23 @@ function renderFabricSections(){
         '</button>' +
       '</span>' +
       '<span class="cfg-matgroup-right">' + collectionPriceDiffLabel(slug) + '</span>';
-    wrap.appendChild(h);
-    appendFabricGrid(wrap, swatches);
+    /* v39: body wraps title + grid together (heading stays grid.previousElementSibling for the
+       show/hide-empty-groups logic below) so the single lock message can be positioned absolute
+       against the group as a whole -- one card over the group, not one badge per swatch. */
+    var body = document.createElement('div');
+    body.className = 'cfg-matgroup-body';
+    body.dataset.slug = slug;
+    body.appendChild(h);
+    appendFabricGrid(body, swatches);
+    var lock = document.createElement('div');
+    lock.className = 'cfg-matgroup-lock';
+    lock.innerHTML = '<div class="cfg-matgroup-lock-card">' +
+        '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" stroke-linecap="round"/></svg>' +
+        '<p>Ai ales deja o culoare pentru multicolor, iar toate zonele trebuie să rămână din aceeași colecție.</p>' +
+        '<button type="button" onclick="clearZoneCollectionPick()">Șterge selecția</button>' +
+      '</div>';
+    body.appendChild(lock);
+    wrap.appendChild(body);
   });
   wrap.querySelectorAll('.mtile').forEach(function(tile){
     tile.onclick = function(){ pickFabricSwatch(tile, tile.dataset.slug); };
@@ -2777,15 +2844,30 @@ function openPriceBreakdown(){
     accTotal += lp;
     accLines.push([acc.name + (st.qty > 1 ? ' x ' + st.qty : ''), formatPrice(lp) + ' lei']);
   });
-  var total = practic + matDiff + extra + accTotal;
+  var extraTotal = 0, extraLines = [];
+  EXTRAS.forEach(function(e){
+    if (!extraState[e.id]) return;
+    extraTotal += e.price;
+    extraLines.push([e.name, formatPrice(e.price) + ' lei']);
+  });
+  var total = practic + matDiff + extra + accTotal + extraTotal;
 
-  var lines = [['Canapea Boston', formatPrice(practic) + ' lei']];
-  if (c) lines.push(['Material ales – ' + c.name, matDiff > 0 ? '+ ' + formatPrice(matDiff) + ' lei' : formatPrice(0) + ' lei']);
-  if (steps) lines.push([(extra < 0 ? 'Reducere dimensiune' : 'Extindere dimensiune'), (extra < 0 ? '–' : '+') + ' ' + formatPrice(Math.abs(extra)) + ' lei']);
-  lines = lines.concat(accLines);
+  /* v39: grouped into Canapea / Servicii / Accesorii -- same cfg-sum-grp component the full
+     Sumar detail sheet already uses (group title + hairline, plain label/value rows below),
+     so the sofa's base+material+size lines read as one unit instead of running together with
+     unrelated services and accessories in a single flat list. */
+  var sofaLines = [['Preț de bază', formatPrice(practic) + ' lei']];
+  if (c) sofaLines.push(['Material ales – ' + c.name, matDiff > 0 ? '+ ' + formatPrice(matDiff) + ' lei' : formatPrice(0) + ' lei']);
+  if (steps) sofaLines.push([(extra < 0 ? 'Reducere dimensiune' : 'Extindere dimensiune'), (extra < 0 ? '–' : '+') + ' ' + formatPrice(Math.abs(extra)) + ' lei']);
 
-  document.getElementById('price-modal-body').innerHTML = lines.map(function(l){
-    return '<div class="cfg-sum-line"><span class="lb">' + l[0] + '</span><span class="vl">' + l[1] + '</span></div>';
+  var groups = [{ title:'Canapea Boston', lines:sofaLines }];
+  if (extraLines.length) groups.push({ title:'Servicii', lines:extraLines });
+  if (accLines.length) groups.push({ title:'Accesorii', lines:accLines });
+
+  document.getElementById('price-modal-body').innerHTML = groups.map(function(g){
+    return '<div class="cfg-sum-grp"><h4>' + g.title + '</h4>' + g.lines.map(function(l){
+      return '<div class="cfg-sum-line"><span class="lb">' + l[0] + '</span><span class="vl">' + l[1] + '</span></div>';
+    }).join('') + '</div>';
   }).join('') + '<div class="cfg-sum-line total"><span class="lb">Preț total</span><span class="vl">' +
     (c ? '' : 'de la ') + formatPrice(total) + ' lei</span></div>';
 
@@ -3320,18 +3402,41 @@ function pickCollection(slug, el){
   updatePriceSliderBounds();
   if (el) pressFeedback(el);
 }
-/* The zone-collection chip row is the only place collection still needs explaining, and it
-   already shows which one is selected -- so this just owns the show/hide around it. */
+/* v39: the swatch grid is never blocked on picking a collection first -- the shopper can tap
+   straight into it, and the first colour they pick settles the collection for every zone (see
+   pickFabricSwatch). This just keeps the chip row and its explainer note in sync with whatever
+   that ends up being. */
 function renderMatNote(){
   var zoneWrap = document.getElementById('cfg-zone-collection');
   if (zoneWrap) zoneWrap.classList.toggle('on', !!sel.zoneMode);
   renderFabGrid();
-  var c = COLLECTIONS[sel.collectionSlug];
-  /* The only dead end is asking for different colours per zone before any fabric is settled:
-     zones have to share one collection, and there isn't one yet. Everything else just works. */
-  var blocked = sel.zoneMode && !c;
-  document.getElementById('cfg-fabric-sections').style.display = blocked ? 'none' : '';
+  renderZoneNote();
+  document.getElementById('cfg-fabric-sections').style.display = '';
   updateColorPillRowVisibility();
+}
+function renderZoneNote(){
+  var el = document.getElementById('cfg-zone-note-text');
+  if (!el) return;
+  var c = COLLECTIONS[sel.collectionSlug];
+  el.textContent = c
+    ? ('Ai ales o culoare din colecția ' + c.name + ', așa că toate zonele trebuie să rămână în această colecție.')
+    : 'Poți alege culori diferite pentru fiecare zonă, dar toate trebuie să fie din aceeași colecție. Alege orice culoare mai jos ca să începi.';
+  document.getElementById('cfg-zone-note').classList.toggle('locked', !!c);
+}
+/* v39: with no collection chip row to tap again, this is the only way back to the open
+   catalogue once a colour has settled the collection for every zone. */
+function clearZoneCollectionPick(){
+  sel.collectionSlug = null;
+  sel.collectionLocked = false;
+  sel.colorName = null;
+  sel.zones = {};
+  renderZoneNote();
+  applyFabricFilters();
+  renderZoneUI();
+  syncSwatchSelection();
+  updatePreview();
+  updateSummary();
+  updatePriceSliderBounds();
 }
 function renderZoneUI(){
   var single = document.getElementById('cfg-colormode-single');
@@ -3372,9 +3477,31 @@ function syncSwatchSelection(){
 }
 function pickFabricSwatch(el, slug){
   if (sel.zoneMode){
-    sel.zones[sel.zone] = el.dataset.name;
+    /* v39: the first colour picked while zones are on settles the collection for all of them --
+       same rule pickCollection enforces from its own card, just reached by tapping a swatch in
+       the open grid instead. Only the very first pick does this; once a collection is locked,
+       collectionNarrowed() keeps every other one's swatches greyed and inert (applyFabricFilters),
+       so this branch never runs again until the chip row below clears the pick. */
+    var newCollection = !sel.collectionSlug;
+    if (newCollection) sel.collectionSlug = slug;
+    /* First pick colours every zone, the same as picking a collection card does -- otherwise
+       the two zones you haven't touched yet are left with no colour at all (null) instead of
+       starting from something real. */
+    if (newCollection) ZONES.forEach(function(z){ sel.zones[z.key] = el.dataset.name; });
+    else sel.zones[sel.zone] = el.dataset.name;
     /* The body is what the preview and the fabric pill show, so it stays the sofa's colour. */
-    if (sel.zone === 'corp') sel.colorName = el.dataset.name;
+    if (sel.zone === 'corp' || newCollection) sel.colorName = el.dataset.name;
+    if (newCollection){
+      /* Not clearMaterialFilterIfNarrowed() here -- that resyncs the material pill row to the
+         locked collection's own type (e.g. Luna -> Texturat), which then filters every other
+         collection's swatches out by material on top of by collection, hiding them outright
+         instead of leaving them visible-but-grey. Zone mode's narrowing is meant to be seen,
+         not just enforced, so the pill row stays exactly as the shopper left it. */
+      renderFabGrid();
+      renderZoneNote();
+      applyFabricFilters();
+      updatePriceSliderBounds();
+    }
     renderZoneUI();
   } else {
     sel.collectionSlug = slug;
@@ -3402,6 +3529,16 @@ var ACCESSORIES = [
 ];
 var accState = {};
 ACCESSORIES.forEach(function(a){ accState[a.id] = { color:null, qty:1, added:false, touched:false }; });
+
+/* v39: "Doresti o experienta completa?" services -- unlike Accesorii these are pure services
+   (no fabric, no cart line of their own), so they roll straight into the sofa's own price bar
+   and price breakdown instead of getting their own summary group. */
+var EXTRAS = [
+  { id:'transport', name:'Transport din strada pana in apartament', price:149 },
+  { id:'montaj', name:'Serviciu de montaj', price:399 }
+];
+var extraState = {};
+EXTRAS.forEach(function(e){ extraState[e.id] = false; });
 
 /* Offered in whatever the sofa's collection offers; before a collection is picked the whole
    catalogue is open, so the strip shows an even sweep across it rather than 191 circles. */
