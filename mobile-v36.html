@@ -319,12 +319,12 @@ h3.cfg-title{font-size:20px;font-weight:400;letter-spacing:-.03em;line-height:1.
 /* Vertical variant of the same chip -- photo on top as a tall rounded-rect card, name below
    in two lines if needed. Same component (buildFabricSeg), same data/click handler, just
    stacked instead of pilled -- only the top fabric-type row uses it. */
-.cfg-fabric-pillrow.vert{gap:12px}
+.cfg-fabric-pillrow.vert{gap:8px}
 .cfg-seg.vert{flex-direction:column;align-items:flex-start;gap:8px;width:84px;background:none;border:none;padding:0;border-radius:0}
 .cfg-seg.vert.on{background:none;border:none;padding:0}
 .cfg-seg.vert .dot{width:84px;height:110px;border-radius:10px;background-size:auto;box-shadow:none;border:1px solid var(--hair)}
 .cfg-seg.vert.on .dot{border:2px solid var(--ink)}
-.cfg-seg.vert .nm{font-size:14px;font-weight:400;letter-spacing:-.2px;white-space:normal;line-height:1.3;color:var(--ink)}
+.cfg-seg.vert .nm{font-size:14px;font-weight:400;letter-spacing:-.2px;white-space:normal;line-height:1.3;color:var(--ink);padding-left:4px}
 /* same chip, smaller -- used in the Filtre sheet's Material group, wraps to a 2nd row if all 4 don't fit on one */
 .cfg-seg.sm{gap:6px;padding:4px 12px 4px 4px}
 .cfg-seg.sm.on{padding:3px 11px 3px 3px}
