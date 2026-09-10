@@ -316,6 +316,15 @@ h3.cfg-title{font-size:20px;font-weight:400;letter-spacing:-.03em;line-height:1.
 .cfg-seg.on{background:#fff;border:2px solid var(--ink);color:var(--ink);padding:5px 17px 5px 5px}
 .cfg-seg .dot{width:36px;height:36px;border-radius:50%;flex:0 0 auto;background-size:650%;background-position:center;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
 .cfg-seg .nm{font-size:15px;font-weight:500;letter-spacing:-.2px;white-space:nowrap}
+/* Vertical variant of the same chip -- photo on top as a tall rounded-rect card, name below
+   in two lines if needed. Same component (buildFabricSeg), same data/click handler, just
+   stacked instead of pilled -- only the top fabric-type row uses it. */
+.cfg-fabric-pillrow.vert{gap:12px}
+.cfg-seg.vert{flex-direction:column;align-items:flex-start;gap:8px;width:104px;background:none;border:none;padding:0;border-radius:0}
+.cfg-seg.vert.on{background:none;border:none;padding:0}
+.cfg-seg.vert .dot{width:104px;height:136px;border-radius:12px;background-size:auto;box-shadow:none;border:1px solid var(--hair)}
+.cfg-seg.vert.on .dot{border:2px solid var(--ink)}
+.cfg-seg.vert .nm{font-size:14px;font-weight:400;letter-spacing:-.2px;white-space:normal;line-height:1.3;color:var(--ink)}
 /* same chip, smaller -- used in the Filtre sheet's Material group, wraps to a 2nd row if all 4 don't fit on one */
 .cfg-seg.sm{gap:6px;padding:4px 12px 4px 4px}
 .cfg-seg.sm.on{padding:3px 11px 3px 3px}
@@ -1945,10 +1954,10 @@ function totalColorCount(){
 }
 /* shared by the top material row and the Filtre sheet's Material group, so both use the
    exact same chip -- photo dot + label + checkmark -- just at two sizes. */
-function buildFabricSeg(p, small, onPicked){
+function buildFabricSeg(p, small, onPicked, vert){
   var seg = document.createElement('div');
   seg.dataset.key = p.key;
-  seg.className = 'cfg-seg' + (small ? ' sm' : '') + (activeFabricPills.indexOf(p.key) > -1 ? ' on' : '')
+  seg.className = 'cfg-seg' + (small ? ' sm' : '') + (vert ? ' vert' : '') + (activeFabricPills.indexOf(p.key) > -1 ? ' on' : '')
     + (MATERIAL_AVAILABLE && !MATERIAL_AVAILABLE[p.key] ? ' is-unavailable' : '');
   seg.innerHTML =
     '<span class="dot" style="background-image:url(\'' + p.asset + '\');background-size:' + (p.zoom || 650) + '%"></span>' +
@@ -1963,6 +1972,7 @@ function buildFabricSeg(p, small, onPicked){
 function renderFabricPillRow(){
   var wrap = document.getElementById('cfg-fabric-pillrow');
   wrap.innerHTML = '';
+  wrap.classList.add('vert');
   FABRIC_PILLS.forEach(function(p){
     wrap.appendChild(buildFabricSeg(p, false, function(){
       renderFabricPillRow();
@@ -1970,7 +1980,7 @@ function renderFabricPillRow(){
       renderFabGrid();
       renderFabricSections();
       applyFabricFilters();
-    }));
+    }, true));
   });
 }
 
