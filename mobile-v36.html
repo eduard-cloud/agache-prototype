@@ -439,9 +439,14 @@ h3.cfg-title{font-size:20px;font-weight:400;letter-spacing:-.03em;line-height:1.
 .price-slider-track input[type=range]::-moz-range-thumb{pointer-events:auto;width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.25);cursor:pointer;box-sizing:border-box}
 .price-slider-track input[type=range]::-webkit-slider-runnable-track{-webkit-appearance:none;background:none}
 .price-mm-row{display:flex;justify-content:space-between;gap:12px;margin-top:20px}
-.price-mm-col{display:flex;flex-direction:column;gap:8px;flex:1 1 0}
+.price-mm-col{display:flex;flex-direction:column;gap:8px}
+.price-mm-col:first-child{align-items:flex-start}
+.price-mm-col:last-child{align-items:flex-end}
 .price-mm-lab{font-size:13px;color:var(--gray)}
-.price-mm-pill{border:1px solid var(--hair);border-radius:9999px;padding:10px 16px;font-size:16px;font-weight:500;color:var(--ink);text-align:center}
+.price-mm-pill{border:1px solid var(--hair);border-radius:9999px;padding:8px 14px;font-size:16px;font-weight:500;color:var(--ink);text-align:center;width:auto;background:#fff;font-family:inherit;-webkit-appearance:none;appearance:none;cursor:pointer}
+.price-mm-pill:active{border-color:var(--ink)}
+input.price-mm-pill{cursor:text;width:100px;outline:none}
+input.price-mm-pill:focus{border-color:var(--ink)}
 .fsheet-empty{display:none;align-items:flex-start;gap:10px;background:var(--chipbg);border-radius:12px;padding:14px;margin-bottom:20px;color:var(--ink)}
 .fsheet-empty.show{display:flex}
 .fsheet-empty svg{flex:0 0 auto;margin-top:1px}
@@ -1167,11 +1172,11 @@ h3.cfg-title{font-size:20px;font-weight:400;letter-spacing:-.03em;line-height:1.
         <div class="price-mm-row">
           <div class="price-mm-col">
             <span class="price-mm-lab">Minim</span>
-            <div class="price-mm-pill" id="price-min-val">4.745 lei</div>
+            <button type="button" class="price-mm-pill" id="price-min-val" onclick="editPricePill('min')">4.745 lei</button>
           </div>
           <div class="price-mm-col">
             <span class="price-mm-lab">Maxim</span>
-            <div class="price-mm-pill" id="price-max-val">5.775 lei</div>
+            <button type="button" class="price-mm-pill" id="price-max-val" onclick="editPricePill('max')">5.775 lei</button>
           </div>
         </div>
       </div>
@@ -2351,6 +2356,40 @@ function updatePriceSlider(){
   range.style.right = (100 - (max - lo) / (hi - lo) * 100) + '%';
   refreshPriceHistogramHighlight(min, max);
   applyFabricFilters();
+}
+/* Same pencil-less edit-in-place pattern as editDim(): the pill itself swaps for a real number
+   input on tap, clamped to the slider's own min/max/step on commit, then swaps back -- rather
+   than a separate edit icon, since the pill already reads as the value to tap on. */
+function editPricePill(which){
+  var displayId = 'price-' + which + '-val';
+  var btn = document.getElementById(displayId);
+  if (btn.tagName === 'INPUT') return;
+  var rangeInput = document.getElementById('price-' + which);
+  var box = document.createElement('input');
+  box.type = 'number';
+  box.className = 'price-mm-pill';
+  box.id = displayId;
+  box.value = rangeInput.value;
+  box.min = rangeInput.min; box.max = rangeInput.max; box.step = rangeInput.step;
+  btn.replaceWith(box);
+  box.focus();
+  box.select();
+  function commit(){
+    var n = +box.value;
+    if (!isNaN(n) && box.value !== ''){
+      n = Math.min(+rangeInput.max, Math.max(+rangeInput.min, Math.round(n / +rangeInput.step) * +rangeInput.step));
+      rangeInput.value = n;
+    }
+    var freshBtn = document.createElement('button');
+    freshBtn.type = 'button';
+    freshBtn.className = 'price-mm-pill';
+    freshBtn.id = displayId;
+    freshBtn.onclick = function(){ editPricePill(which); };
+    box.replaceWith(freshBtn);
+    updatePriceSlider();
+  }
+  box.addEventListener('blur', commit);
+  box.addEventListener('keydown', function(e){ if (e.key === 'Enter') box.blur(); });
 }
 document.addEventListener('DOMContentLoaded', updatePriceSliderBounds);
 
