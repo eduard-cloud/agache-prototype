@@ -1677,7 +1677,7 @@ function updateSummary(){
   syncAccessories();
   var c = COLLECTIONS[sel.collectionSlug];
   var swInfo = SWATCH_INDEX[sel.colorName];
-  var colorLabel = swInfo ? nearestColorName(swInfo.hex) + ' (' + sel.colorName + ')' : 'Nealeasă';
+  var colorLabel = swInfo ? sel.colorName : 'Nealeasă';
 
   document.getElementById('cfg-sum-dims').textContent = 'Dimensiuni: ' + currentDims();
 
@@ -1693,14 +1693,13 @@ function updateSummary(){
   groups.push({ title:'Dimensiuni', lines:dims });
 
   /* One "Culoare" line for a single-colour sofa; one line per zone once they differ. */
-  var mat = [['Material', c ? c.name : 'Nealeasă']];
-  if (c) mat.push(['Textură', textureLabel(c)]);
+  var mat = [];
   var perZone = sel.zoneMode && ZONES.some(function(z){ return sel.zones[z.key] !== sel.zones.corp; });
   if (perZone){
     ZONES.forEach(function(z){
       var name = sel.zones[z.key];
       var info = SWATCH_INDEX[name];
-      mat.push([z.label, info ? nearestColorName(info.hex) + ' (' + name + ')' : name, info ? fabricAsset(name) : null, 'round']);
+      mat.push([z.label, name, info ? fabricAsset(name) : null, 'round']);
     });
   } else {
     mat.push(['Culoare', colorLabel, swInfo ? fabricAsset(sel.colorName) : null, 'round']);
