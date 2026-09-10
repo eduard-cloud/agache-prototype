@@ -2732,7 +2732,7 @@ function openPriceBreakdown(){
   var total = practic + matDiff + extra + accTotal;
 
   var lines = [['Canapea Boston', formatPrice(practic) + ' lei']];
-  if (c && matDiff > 0) lines.push(['Material ales – ' + c.name, '+ ' + formatPrice(matDiff) + ' lei']);
+  if (c) lines.push(['Material ales – ' + c.name, matDiff > 0 ? '+ ' + formatPrice(matDiff) + ' lei' : formatPrice(0) + ' lei']);
   if (steps) lines.push([(extra < 0 ? 'Reducere dimensiune' : 'Extindere dimensiune'), (extra < 0 ? '–' : '+') + ' ' + formatPrice(Math.abs(extra)) + ' lei']);
   lines = lines.concat(accLines);
 
