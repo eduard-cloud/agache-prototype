@@ -3284,24 +3284,19 @@ function setActiveCfgChip(sec, instant, followNav){
     setSheetH(baseH);
   });
 
-  /* v28: the preview gives way as you read. Scrolling the sheet grows it centimetre for
-     centimetre with the scroll, so the sofa shrinks to a thumbnail while you're deep in the
-     colour grid and comes back the moment you scroll to the top -- the reference does the same
-     thing. Growing the sheet only reveals more content at its bottom, so scrollTop doesn't move
-     and there's no feedback loop between the two. */
+  /* The sheet height used to grow with scroll (shrinking the sofa preview above it down to a
+     thumbnail as you read), then spring back at the top. That read as the preview jittering in
+     size while scrolling rather than a considered layout, so the sheet now holds its resting
+     height -- only the drag handle changes it. The CTA bar still condenses on scroll; that's
+     unrelated to sheet height. */
   var scrollEl = document.getElementById('cfg-scroll');
   var ticking = false;
   scrollEl.addEventListener('scroll', function(){
-    if (dragging || ticking) return;
+    if (ticking) return;
     ticking = true;
     requestAnimationFrame(function(){
       ticking = false;
-      /* The CTA bar condenses past the first bit of scroll, and stays condensed until you
-         come back to the top. */
       document.getElementById('cfg-cta').classList.toggle('condensed', scrollEl.scrollTop > 24);
-      var room = minMax().max - baseH;
-      if (room <= 0) return;
-      setSheetH(baseH + Math.min(scrollEl.scrollTop, room));
     });
   }, { passive: true });
 
