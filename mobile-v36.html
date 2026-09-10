@@ -44,6 +44,12 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 
 /* ══ shared components reused verbatim from mobile-v2.html ══ */
 .circ-btn{width:32px;height:32px;border-radius:50%;background:#fff;border:1px solid #e3e3e3;display:flex;align-items:center;justify-content:center}
+/* Fullscreen swatch view -- tapping the rectangle swatch in the summary should show the fabric
+   itself full-bleed, not the whole spec sheet swatch-modal already covers for the (i) icon. */
+.img-lightbox{display:none;position:fixed;inset:0;background:#fff;z-index:70}
+.img-lightbox.open{display:block}
+.img-lightbox img{width:100%;height:100%;object-fit:cover;display:block}
+.img-lightbox-close{position:absolute;top:16px;right:16px;z-index:1}
 .hbar{width:134px;height:5px;background:#d9d9d9;border-radius:3px;margin:8px auto 8px}
 /* Sizing/spacing checked against the reference configurator's own orientation section: tile row gap
    8px (matches already), smaller 84px tiles instead of 92px, and a single compact 14px caption
@@ -215,6 +221,10 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 /* Fabric reads as a round chip everywhere else in the configurator (the pill over the preview,
    the swatch strips), so the colour lines keep that shape while product shots stay square. */
 .cfg-sum-thumb.round{border-radius:50%}
+/* Same vertical-rectangle crop the material-type tiles use (.cfg-shape-imw), so the summary's
+   colour line reads as the same swatch the shopper picked, not a different shape for it. */
+.cfg-sum-thumb.rect{width:44px;height:58px;border-radius:8px;border-color:var(--hair)}
+.cfg-sum-line.clickable{width:100%;text-align:left;background:none;border:none;font:inherit;color:inherit;cursor:pointer}
 .cfg-sum-line.total{margin-top:10px;padding-top:16px;border-top:1px solid var(--hair-on-card);font-weight:600}
 
 /* ══ v28: Accesorii ══
@@ -997,6 +1007,11 @@ input.price-mm-pill:focus{border-color:var(--ink)}
 </div>
 <div id="toast"></div>
 
+<div class="img-lightbox" id="img-lightbox" onclick="if(event.target===this) closeImgLightbox()">
+  <button type="button" class="circ-btn img-lightbox-close" onclick="closeImgLightbox()" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  <img id="img-lightbox-img" src="" alt="">
+</div>
+
 <div class="swm-overlay" id="swatch-modal" onclick="if(event.target===this) closeSwatchModal()">
   <div class="swm-sheet">
     <div class="swm-hero">
@@ -1699,10 +1714,10 @@ function updateSummary(){
     ZONES.forEach(function(z){
       var name = sel.zones[z.key];
       var info = SWATCH_INDEX[name];
-      mat.push([z.label, name, info ? fabricAsset(name) : null, 'round']);
+      mat.push([z.label, name, info ? fabricAsset(name) : null, 'rect', true]);
     });
   } else {
-    mat.push(['Culoare', colorLabel, swInfo ? fabricAsset(sel.colorName) : null, 'round']);
+    mat.push(['Culoare', colorLabel, swInfo ? fabricAsset(sel.colorName) : null, 'rect', true]);
   }
   groups.push({ title:'Culoare și material', lines:mat });
 
@@ -1724,10 +1739,12 @@ function updateSummary(){
   var wrap = document.getElementById('cfg-sum-details');
   wrap.innerHTML = groups.map(function(g){
     return '<div class="cfg-sum-grp"><h4>' + g.title + '</h4>' + g.lines.map(function(l){
-      return '<div class="cfg-sum-line' + (l[2] ? ' with-thumb' : '') + '"><span class="lb">' +
+      var tag = l[4] ? 'button type="button" onclick="openImgLightbox(\'' + l[2] + '\')"' : 'div';
+      var tagName = l[4] ? 'button' : 'div';
+      return '<' + tag + ' class="cfg-sum-line' + (l[2] ? ' with-thumb' : '') + (l[4] ? ' clickable' : '') + '"><span class="lb">' +
         (l[2] ? '<img class="cfg-sum-thumb' + (l[3] ? ' ' + l[3] : '') + '" src="' + l[2] + '" alt="">' : '') +
         '<span>' + l[0] + '</span></span>' +
-        '<span class="vl">' + l[1] + '</span></div>';
+        '<span class="vl">' + l[1] + '</span></' + tagName + '>';
     }).join('') + '</div>';
   }).join('') +
     '<div class="cfg-sum-line total"><span class="lb">Preț total</span><span class="vl">' +
@@ -2636,6 +2653,14 @@ function showSwatchInfo(name){
 }
 function closeSwatchModal(){
   document.getElementById('swatch-modal').classList.remove('open');
+}
+
+function openImgLightbox(src){
+  document.getElementById('img-lightbox-img').src = src;
+  document.getElementById('img-lightbox').classList.add('open');
+}
+function closeImgLightbox(){
+  document.getElementById('img-lightbox').classList.remove('open');
 }
 
 /* ══════════ Collection detail modal (exact copy of mobile-v2.html's "Collection view", incl. the chero1/chero2/chero3 hero slider and bindSwipe helper) ══════════ */
