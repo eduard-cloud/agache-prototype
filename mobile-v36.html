@@ -1968,6 +1968,10 @@ function buildFabricSeg(p, small, onPicked, vert){
     '<span class="dot" style="background-image:url(\'' + p.asset + '\');background-size:' + (p.zoom || 650) + '%">' + chk + '</span>' +
     '<span class="nm">' + p.label + '</span>';
   seg.onclick = function(){
+    /* The row is inert while the grid is pinned to one collection -- is-unavailable/pointer-events
+       normally blocks the tap, but that's a snapshot from the last render and can lag a beat
+       behind a just-toggled zoneMode. Re-checking live here closes that race outright. */
+    if (collectionNarrowed()) return;
     var i = activeFabricPills.indexOf(p.key);
     if (i > -1) activeFabricPills.splice(i, 1); else activeFabricPills.push(p.key);
     onPicked();
@@ -2893,6 +2897,10 @@ function toggleZoneMode(){
        back to browsing every collection, whatever was picked while zones were on. */
     sel.collectionLocked = false;
   }
+  /* Turning zones on can narrow the grid all by itself -- if a collection was already inferred
+     from earlier browsing (sel.collectionSlug set, but never locked), collectionNarrowed()
+     flips true the moment zoneMode does, with no pickCollection() call in between. */
+  clearMaterialFilterIfNarrowed();
   renderZoneUI();
   applyFabricFilters();
   syncSwatchSelection();
@@ -2968,6 +2976,18 @@ function renderFabGrid(){
 }
 /* Picking a collection re-dresses the whole sofa in it: every zone moves to that collection's
    first colour, because a zone can't keep a colour that no longer exists. */
+/* Once the grid is narrowed to one collection (locked, or zones need every swatch from the
+   same fabric), the material-type filter can't do anything -- the grid ignores it either way.
+   Leaving a pill checked-but-greyed reads as a contradiction (selected AND disabled), and it
+   was also still narrowing things it shouldn't (the collection picker itself), so it's cleared
+   outright whenever narrowing kicks in, from whichever entry point triggers it. */
+function clearMaterialFilterIfNarrowed(){
+  if (collectionNarrowed() && activeFabricPills.length){
+    activeFabricPills = [];
+    renderFabricPillRow();
+    renderFsheetMaterialPill();
+  }
+}
 function pickCollection(slug, el){
   /* Tapping the collection you're already on takes it off again -- the sofa goes back to
      having no fabric chosen, the price back to "de la". Nothing here is a one-way door. */
@@ -2977,14 +2997,7 @@ function pickCollection(slug, el){
      whether or not zones are in play. A collection merely inferred from a swatch doesn't lock
      anything -- that shopper is still browsing the whole catalogue. */
   sel.collectionLocked = !deselect;
-  /* Locking a collection makes the material-type filter inert -- the grid is pinned to this one
-     collection regardless of what's checked up there. Leaving a pill checked-but-greyed reads as
-     a contradiction (selected AND disabled), so it's cleared instead of lingering in a dead state. */
-  if (!deselect && activeFabricPills.length){
-    activeFabricPills = [];
-    renderFabricPillRow();
-    renderFsheetMaterialPill();
-  }
+  clearMaterialFilterIfNarrowed();
   if (deselect){
     sel.colorName = null;
     sel.zones = {};
