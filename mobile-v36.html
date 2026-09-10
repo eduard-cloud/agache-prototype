@@ -52,7 +52,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-shape-row{display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:0 0 4px;margin-bottom:12px;scroll-snap-type:x proximity}
 .cfg-shape-row::-webkit-scrollbar{display:none}
 .cfg-shape-tile{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start}
-.cfg-shape-imw{position:relative;width:56px;height:74px;overflow:hidden;display:flex;align-items:center;justify-content:center;transition:background-color .15s,border-color .15s;scroll-snap-align:start;background:var(--chipbg);border-radius:4px;border:1px solid var(--hair)}
+.cfg-shape-imw{position:relative;width:56px;height:74px;overflow:hidden;display:flex;align-items:center;justify-content:center;transition:background-color .15s,border-color .15s;scroll-snap-align:start;background:var(--chipbg);border-radius:8px;border:1px solid var(--hair)}
 .cfg-shape-imw img{width:100%;height:100%;object-fit:contain}
 .cfg-shape-tile.on .cfg-shape-imw{border:1px solid var(--ink);background:var(--chipbg)}
 /* Formă and material-type chips both get the reference's grey fill on actual selection (matches the
@@ -88,7 +88,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-dim + .cfg-dim{margin-top:18px}
 .cfg-dim-lab{font-size:14px;font-weight:500;color:var(--ink);margin-bottom:8px}
 .cfg-dim-line{display:flex;align-items:center;gap:10px}
-.cfg-dim-track{position:relative;flex:1 1 auto;height:52px;background:#fff;border:1px solid var(--hair);border-radius:4px;overflow:hidden}
+.cfg-dim-track{position:relative;flex:1 1 auto;height:52px;background:#fff;border:1px solid var(--hair);border-radius:8px;overflow:hidden}
 .cfg-dim-fill{position:absolute;top:0;bottom:0;left:0;right:0;background:#ECECEC}
 /* The handle is a rounded grey bar sitting ON the fill's near edge, with white showing
    either side of it: the handle sits in the middle of that 20px of white, never against the
@@ -101,7 +101,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 /* typed entry: the pencil swaps the read-only value for a real input in the same spot */
 .cfg-dim-input{position:absolute;right:16px;top:50%;transform:translateY(-50%);width:96px;text-align:right;font-size:15px;font-family:inherit;color:var(--ink);border:none;background:none;padding:0;z-index:2}
 .cfg-dim-input:focus{outline:none}
-.cfg-dim-edit{flex:0 0 auto;width:52px;height:52px;border:1px solid var(--hair);border-radius:4px;background:#fff;color:var(--ink);display:flex;align-items:center;justify-content:center}
+.cfg-dim-edit{flex:0 0 auto;width:52px;height:52px;border:1px solid var(--hair);border-radius:8px;background:#fff;color:var(--ink);display:flex;align-items:center;justify-content:center}
 .cfg-dim-edit:active{background:var(--chipbg)}
 /* the fixed main run: same label, but the value reads as a spec, not a control */
 .cfg-subtitle{font-size:20px;font-weight:400;letter-spacing:-.2px;color:var(--ink);margin:34px 0 24px}
@@ -325,7 +325,7 @@ h3.cfg-title{font-size:20px;font-weight:400;letter-spacing:-.03em;line-height:1.
 .cfg-fabric-pillrow.vert{gap:8px}
 .cfg-seg.vert{flex-direction:column;align-items:flex-start;gap:8px;width:84px;background:none;border:none;padding:0;border-radius:0}
 .cfg-seg.vert.on{background:none;border:none;padding:0}
-.cfg-seg.vert .dot{position:relative;width:84px;height:110px;border-radius:4px;background-size:auto;box-shadow:none;border:1px solid var(--gray2);overflow:hidden}
+.cfg-seg.vert .dot{position:relative;width:84px;height:110px;border-radius:8px;background-size:auto;box-shadow:none;border:1px solid var(--gray2);overflow:hidden}
 .cfg-seg.vert.on .dot{border:1px solid var(--ink)}
 /* Tylko-style corner badge: a small black rounded square with a white check, bottom-right
    of the swatch, shown only on the selected card. */
