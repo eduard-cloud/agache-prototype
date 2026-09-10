@@ -779,6 +779,22 @@ input.price-mm-pill:focus{border-color:var(--ink)}
 .cfg-cta.condensed{padding:8px 20px}
 .cfg-cta.condensed .pr{font-size:19px}
 .cfg-cta.condensed .bb{height:40px;padding:0 16px}
+
+/* v37: chevron next to the CTA price opens a Tesla-style price breakdown sheet -- the receipt
+   the "Mai multe detalii" toggle already builds, just reachable straight from the price itself. */
+.cfg-price-btn{display:flex;align-items:center;gap:2px;background:none;border:none;padding:0;cursor:pointer}
+.cfg-price-btn svg{width:18px;height:18px;color:var(--gray2);flex:0 0 auto;transition:width .18s ease,height .18s ease}
+.cfg-cta.condensed .cfg-price-btn svg{width:15px;height:15px}
+.pbd-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:60;align-items:flex-end}
+.pbd-overlay.open{display:flex}
+.pbd-sheet{background:#fff;border-radius:24px 24px 0 0;width:100%;max-height:80vh;display:flex;flex-direction:column;box-shadow:0 -8px 30px rgba(0,0,0,.14)}
+.pbd-head{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;padding:20px 20px 4px}
+.pbd-title{font-size:20px;font-weight:600;letter-spacing:-.4px}
+.pbd-body{flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 20px 12px}
+/* keeps the same CTA the shopper already saw underneath -- just full width, same 14px/24px
+   footer padding as .cfg-cta -- so opening the breakdown never hides the way to check out. */
+.pbd-foot{flex:0 0 auto;border-top:1px solid var(--hair);padding:14px 24px}
+.pbd-foot .bb{width:100%;height:46px;background:var(--red);color:#fff;border-radius:23px;font-size:14px;font-weight:500;display:flex;align-items:center;justify-content:center;border:none}
 </style>
 </head>
 <body>
@@ -1000,7 +1016,10 @@ input.price-mm-pill:focus{border-color:var(--ink)}
     </div>
 
     <div class="cfg-cta" id="cfg-cta">
-      <div class="pr" id="cfg-price">—</div>
+      <button type="button" class="cfg-price-btn" onclick="openPriceBreakdown()" aria-label="Vezi detalierea prețului">
+        <span class="pr" id="cfg-price">—</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"/></svg>
+      </button>
       <button class="bb" onclick="addToCart(this)">Adaugă în coș</button>
     </div>
   </div>
@@ -1010,6 +1029,19 @@ input.price-mm-pill:focus{border-color:var(--ink)}
 <div class="img-lightbox" id="img-lightbox" onclick="if(event.target===this) closeImgLightbox()">
   <button type="button" class="circ-btn img-lightbox-close" onclick="closeImgLightbox()" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
   <img id="img-lightbox-img" src="" alt="">
+</div>
+
+<div class="pbd-overlay" id="price-modal" onclick="if(event.target===this) closePriceBreakdown()">
+  <div class="pbd-sheet">
+    <div class="pbd-head">
+      <span class="pbd-title">Detalierea prețului</span>
+      <button class="circ-btn" onclick="closePriceBreakdown()" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="pbd-body" id="price-modal-body"></div>
+    <div class="pbd-foot">
+      <button class="bb" onclick="addToCart(this)">Adaugă în coș</button>
+    </div>
+  </div>
 </div>
 
 <div class="swm-overlay" id="swatch-modal" onclick="if(event.target===this) closeSwatchModal()">
@@ -2661,6 +2693,40 @@ function openImgLightbox(src){
 }
 function closeImgLightbox(){
   document.getElementById('img-lightbox').classList.remove('open');
+}
+
+/* v37: same three components the CTA price already rolls up -- base tier price, any size
+   extension in 500-lei steps, added accessories -- just itemised instead of collapsed to one
+   number, the way the reference's own price breakdown sheet does it. */
+function openPriceBreakdown(){
+  var c = COLLECTIONS[sel.collectionSlug];
+  var base = SHAPE_TIER_PRICE[baseVariantName()][c ? c.tier : 'Practic'];
+  var steps = sizeSteps();
+  var extra = STEP_LEI * steps;
+  var accTotal = 0, accLines = [];
+  ACCESSORIES.forEach(function(acc){
+    var st = accState[acc.id];
+    if (!st.added) return;
+    var lp = acc.price * st.qty;
+    accTotal += lp;
+    accLines.push([acc.name + (st.qty > 1 ? ' x ' + st.qty : ''), formatPrice(lp) + ' lei']);
+  });
+  var total = base + extra + accTotal;
+
+  var lines = [['Canapea Boston' + (c ? ' – ' + c.name : ''), formatPrice(base) + ' lei']];
+  if (steps) lines.push(['Extindere dimensiune (' + Math.abs(steps) + ' x 500 lei)', (extra < 0 ? '–' : '+') + ' ' + formatPrice(Math.abs(extra)) + ' lei']);
+  lines = lines.concat(accLines);
+
+  document.getElementById('price-modal-body').innerHTML = lines.map(function(l){
+    return '<div class="cfg-sum-line"><span class="lb">' + l[0] + '</span><span class="vl">' + l[1] + '</span></div>';
+  }).join('') + '<div class="cfg-sum-line total"><span class="lb">Preț total</span><span class="vl">' +
+    (c ? '' : 'de la ') + formatPrice(total) + ' lei</span></div>';
+
+  document.getElementById('price-modal-body').scrollTop = 0;
+  document.getElementById('price-modal').classList.add('open');
+}
+function closePriceBreakdown(){
+  document.getElementById('price-modal').classList.remove('open');
 }
 
 /* ══════════ Collection detail modal (exact copy of mobile-v2.html's "Collection view", incl. the chero1/chero2/chero3 hero slider and bindSwipe helper) ══════════ */
