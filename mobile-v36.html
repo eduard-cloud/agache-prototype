@@ -742,13 +742,13 @@ input.price-mm-pill:focus{border-color:var(--ink)}
 /* ══ v27: zone switch and zone tabs ══ */
 .cfg-color-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px}
 .cfg-color-head .cfg-title{margin-bottom:0;flex:1 1 auto;min-width:0}
-.cfg-zone-switch{display:flex;align-items:center;gap:8px;flex:0 0 auto;background:none;border:none;padding:0;text-align:right}
-.cfg-zone-switch-text{display:flex;flex-direction:column;gap:2px;min-width:0}
-.cfg-zone-switch-text strong{font-size:14px;font-weight:500;line-height:1.2;color:var(--ink);display:block;white-space:nowrap}
-.cfg-switch{flex:0 0 auto;width:44px;height:26px;border-radius:13px;background:#DDD;position:relative;transition:background-color .16s}
-.cfg-switch .knob{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .16s}
-.cfg-zone-switch.on .cfg-switch{background:var(--ink)}
-.cfg-zone-switch.on .cfg-switch .knob{transform:translateX(18px)}
+/* Segmented control for one colour vs. per-zone colours -- two named, always-visible states
+   read faster than a bare on/off switch, which says nothing about what "on" means until you
+   already know the feature. The dot icons repeat the same cue non-verbally. */
+.cfg-colormode{position:relative;display:flex;align-items:center;gap:2px;flex:0 0 auto;background:var(--chipbg);border-radius:9999px;padding:3px}
+.cfg-colormode-thumb{position:absolute;top:3px;left:0;height:28px;background:#fff;border-radius:9999px;box-shadow:0 1px 3px rgba(0,0,0,.14);transition:transform .25s cubic-bezier(.4,0,.2,1),width .25s cubic-bezier(.4,0,.2,1)}
+.cfg-colormode-btn{position:relative;z-index:1;flex:0 0 auto;border:none;background:none;height:28px;padding:0 10px;border-radius:9999px;font-size:13px;font-weight:500;color:var(--gray);white-space:nowrap;transition:color .15s}
+.cfg-colormode-btn.on{color:var(--ink)}
 /* One tab per zone, each carrying the colour it currently holds -- the row doubles as the
    summary of what has been set, so nobody has to open all three to find out. */
 .cfg-zonetabs{display:none;gap:4px;margin-bottom:24px;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch}
@@ -895,13 +895,12 @@ input.price-mm-pill:focus{border-color:var(--ink)}
       <section class="cfg-sec" id="sec-colors-grid">
         <div class="cfg-color-head">
           <h3 class="cfg-title">Alege culoarea</h3>
-          <!-- Most people want one colour, so zones stay folded away until asked for. -->
-          <button type="button" class="cfg-zone-switch" id="cfg-zone-switch" onclick="toggleZoneMode()" aria-pressed="false">
-            <span class="cfg-switch"><span class="knob"></span></span>
-            <span class="cfg-zone-switch-text">
-              <strong>Canapea în culori diferite</strong>
-            </span>
-          </button>
+          <!-- Most people want one colour, so single stays selected until asked for. -->
+          <div class="cfg-colormode" id="cfg-colormode" role="group" aria-label="Numărul de culori al canapelei">
+            <div class="cfg-colormode-thumb" id="cfg-colormode-thumb" aria-hidden="true"></div>
+            <button type="button" class="cfg-colormode-btn on" id="cfg-colormode-single" aria-pressed="true" onclick="setZoneMode(false)">Unicolor</button>
+            <button type="button" class="cfg-colormode-btn" id="cfg-colormode-multi" aria-pressed="false" onclick="setZoneMode(true)">Multicolor</button>
+          </div>
         </div>
 
         <!-- Collection only matters once zones are on -- every zone has to come from the same
@@ -3018,8 +3017,10 @@ var ZONES = [
 function zoneDef(key){
   return ZONES.filter(function(z){ return z.key === key; })[0] || ZONES[0];
 }
-function toggleZoneMode(){
-  sel.zoneMode = !sel.zoneMode;
+function toggleZoneMode(){ setZoneMode(!sel.zoneMode); }
+function setZoneMode(on){
+  if (sel.zoneMode === on) return;
+  sel.zoneMode = on;
   if (sel.zoneMode){
     /* Entering zone mode starts from what's on screen: all three zones hold the current colour,
        so the first tap changes one zone rather than redressing the whole sofa. */
@@ -3180,9 +3181,16 @@ function renderMatNote(){
   document.getElementById('cfg-color-pillrow').style.display = blocked ? 'none' : '';
 }
 function renderZoneUI(){
-  var sw = document.getElementById('cfg-zone-switch');
-  sw.classList.toggle('on', !!sel.zoneMode);
-  sw.setAttribute('aria-pressed', sel.zoneMode ? 'true' : 'false');
+  var single = document.getElementById('cfg-colormode-single');
+  var multi = document.getElementById('cfg-colormode-multi');
+  single.classList.toggle('on', !sel.zoneMode);
+  single.setAttribute('aria-pressed', sel.zoneMode ? 'false' : 'true');
+  multi.classList.toggle('on', !!sel.zoneMode);
+  multi.setAttribute('aria-pressed', sel.zoneMode ? 'true' : 'false');
+  var thumb = document.getElementById('cfg-colormode-thumb');
+  var active = sel.zoneMode ? multi : single;
+  thumb.style.width = active.offsetWidth + 'px';
+  thumb.style.transform = 'translateX(' + active.offsetLeft + 'px)';
   renderMatNote();
   var tabs = document.getElementById('cfg-zonetabs');
   tabs.classList.toggle('on', !!sel.zoneMode && !!sel.collectionSlug);
