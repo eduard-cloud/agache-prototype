@@ -423,7 +423,6 @@ h3.cfg-title{font-size:20px;font-weight:400;letter-spacing:-.03em;line-height:1.
 .fsheet-apply{flex:1 1 auto;background:var(--ink);color:#fff;border-radius:9999px;padding:12px;font-size:14px;font-weight:500;transition:opacity .15s,transform .12s ease}
 .fsheet-apply:disabled{opacity:.4}
 .price-slider{margin-top:12px;padding-bottom:32px}
-.fsheet-result-count{margin-top:-16px;font-size:13px;color:var(--gray)}
 /* Real distribution, not decoration: each bar's height is how many colors in the whole
    catalogue fall in that price slice, for the currently selected sofa shape/size -- rebuilt by
    buildPriceHistogram() whenever the shape changes, not a fixed image. Bars inside the current
@@ -1180,7 +1179,6 @@ input.price-mm-pill:focus{border-color:var(--ink)}
           </div>
         </div>
       </div>
-      <div class="fsheet-result-count" id="fsheet-result-count"></div>
     </div>
     <div class="fsheet-foot">
       <button type="button" class="fsheet-reset" onclick="resetSheetFilters()">Resetează</button>
@@ -2347,8 +2345,16 @@ function updatePriceSlider(){
   var maxEl = document.getElementById('price-max');
   var min = parseInt(minEl.value, 10);
   var max = parseInt(maxEl.value, 10);
-  if (min > max - 10) { minEl.value = max - 10; min = max - 10; }
   var lo = parseInt(minEl.min, 10), hi = parseInt(minEl.max, 10);
+  /* A fixed 10-lei gap kept the two 32px handles from ever fully coinciding, but 10 lei out of a
+     ~1000-lei span is nowhere near 32px on screen -- the circles still visually merged into one
+     whenever min/max landed close together. Converting the handle's own diameter into lei (via
+     the track's actual rendered width) keeps them apart on screen, not just in value. */
+  var track = document.querySelector('.price-slider-track');
+  var trackWidth = track ? track.clientWidth : 0;
+  var minGapLei = trackWidth > 0 ? Math.ceil((36 / trackWidth) * (hi - lo)) : 10;
+  minGapLei = Math.max(minGapLei, 10);
+  if (min > max - minGapLei) { minEl.value = max - minGapLei; min = max - minGapLei; }
   document.getElementById('price-min-val').textContent = min.toLocaleString('ro-RO') + ' lei';
   document.getElementById('price-max-val').textContent = max.toLocaleString('ro-RO') + ' lei';
   var range = document.getElementById('price-slider-range');
@@ -2506,8 +2512,6 @@ function applyFabricFilters(){
   }
   var emptyNotice = document.getElementById('fsheet-empty');
   if (emptyNotice) emptyNotice.classList.toggle('show', totalFilters > 0 && visibleCount === 0);
-  var resultCountEl = document.getElementById('fsheet-result-count');
-  if (resultCountEl) resultCountEl.textContent = visibleCount + (visibleCount === 1 ? ' culoare afișată' : ' culori afișate');
 }
 
 /* v34: the dead-end panel itself. One "Elimină ..." button per active filter that's actually in
