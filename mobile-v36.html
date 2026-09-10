@@ -186,7 +186,6 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 12px 0}
 .cfg-sec{scroll-margin-top:12px;background:var(--seccard);border-radius:16px;padding:20px 12px 24px;margin:0 0 16px;border-bottom:none}
 .cfg-sec:last-of-type{margin-bottom:0}
-#sec-experience{border:1px solid var(--graysec)}
 /* Hairlines drawn *inside* a card can't stay #ececec -- against #f7f7f7 that's a 1.5% step and
    the row separators in Sumar simply disappear. They keep the same weight, just enough
    contrast to survive the new background. The 17px side padding those rows carry from when
@@ -255,9 +254,8 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
    section card's own tokens (--ink/--slate/--hair-on-card) instead of the PDP's page-level
    ones. Sits right under Sumar since it's the last thing you'd add once the sofa itself is
    settled. */
-.cfg-xp-list{display:flex;flex-direction:column;gap:8px}
-.cfg-xp-rule{height:1px;background:var(--hair-on-card);width:100%}
-.cfg-xp-row{display:flex;align-items:center;gap:16px;padding:8px 0}
+.cfg-xp-list{display:flex;flex-direction:column;gap:12px}
+.cfg-xp-row{display:flex;align-items:center;gap:16px;padding:12px 16px;border:1px solid var(--graysec);border-radius:16px}
 .cfg-xp-i{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
 .cfg-xp-i svg{width:32px;height:32px;flex:0 0 32px;display:block;color:var(--slate);stroke-width:1}
 .cfg-xp-t{font-size:16px;font-weight:500;letter-spacing:-.64px;line-height:1.2;color:var(--slate)}
@@ -954,13 +952,11 @@ input.price-mm-pill:focus{border-color:var(--ink)}
       <section class="cfg-sec" id="sec-experience">
         <h3 class="cfg-title">Doresti o experienta completa?</h3>
         <div class="cfg-xp-list">
-          <div class="cfg-xp-rule"></div>
           <div class="cfg-xp-row">
-            <span class="cfg-xp-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M9 22V18H15V22M8 6H8.01M16 6H16.01M12 6H12.01M12 10H12.01M12 14H12.01M16 10H16.01M16 14H16.01M8 10H8.01M8 14H8.01M6 2H18C19.1046 2 20 2.89543 20 4V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V4C4 2.89543 4.89543 2 6 2Z"/></svg><span class="cfg-xp-t">Transport de la strada<br>pana in apartament</span></span>
+            <span class="cfg-xp-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M9 22V18H15V22M8 6H8.01M16 6H16.01M12 6H12.01M12 10H12.01M12 14H12.01M16 10H16.01M16 14H16.01M8 10H8.01M8 14H8.01M6 2H18C19.1046 2 20 2.89543 20 4V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V4C4 2.89543 4.89543 2 6 2Z"/></svg><span class="cfg-xp-t">Transport de la strada pana in apartament</span></span>
             <span class="cfg-xp-p">149 lei</span>
             <button class="cfg-xp-add" aria-label="Adaugă transport la domiciliu" onclick="addExtra(this,'Transport la domiciliu')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.33" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
           </div>
-          <div class="cfg-xp-rule"></div>
           <div class="cfg-xp-row">
             <span class="cfg-xp-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M11 14H13C13.5304 14 14.0391 13.7893 14.4142 13.4142C14.7893 13.0391 15 12.5304 15 12C15 11.4696 14.7893 10.9609 14.4142 10.5858C14.0391 10.2107 13.5304 10 13 10H10C9.4 10 8.9 10.2 8.6 10.6L3 16M7 20L8.6 18.6C8.9 18.2 9.4 18 10 18H14C15.1 18 16.1 17.6 16.8 16.8L21.4 12.4C21.7859 12.0354 22.0111 11.5323 22.0261 11.0016C22.0411 10.4709 21.8447 9.95592 21.48 9.57003C21.1153 9.18414 20.6123 8.95892 20.0816 8.94392C19.5508 8.92891 19.0359 9.12535 18.65 9.49003L14.45 13.39M2 15L8 21M19.4999 8.5C20.1999 7.8 20.9999 6.9 20.9999 5.8C21.0698 5.18893 20.9313 4.57216 20.6068 4.04964C20.2824 3.52712 19.791 3.12947 19.2123 2.92114C18.6336 2.71281 18.0015 2.706 17.4184 2.90182C16.8354 3.09763 16.3355 3.4846 15.9999 4C15.6429 3.52458 15.1429 3.17613 14.5734 3.00578C14.0038 2.83544 13.3946 2.85219 12.8352 3.05356C12.2758 3.25494 11.7957 3.63034 11.4654 4.12465C11.1351 4.61896 10.9719 5.20614 10.9999 5.8C10.9999 7 11.7999 7.8 12.4999 8.6L15.9999 12L19.4999 8.5Z"/></svg><span class="cfg-xp-t">Serviciu de montaj<br>in <u>orasele eligibile</u></span></span>
             <span class="cfg-xp-p">399 lei</span>
