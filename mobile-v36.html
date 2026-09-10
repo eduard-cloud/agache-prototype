@@ -52,17 +52,17 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-shape-row{display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:0 0 4px;margin-bottom:12px;scroll-snap-type:x proximity}
 .cfg-shape-row::-webkit-scrollbar{display:none}
 .cfg-shape-tile{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start}
-.cfg-shape-imw{position:relative;width:56px;height:74px;overflow:hidden;display:flex;align-items:center;justify-content:center;transition:background-color .15s,border-color .15s;scroll-snap-align:start;background:#fff;border-radius:10px;border:1px solid var(--hair)}
+.cfg-shape-imw{position:relative;width:56px;height:74px;overflow:hidden;display:flex;align-items:center;justify-content:center;transition:background-color .15s,border-color .15s;scroll-snap-align:start;background:var(--chipbg);border-radius:10px;border:1px solid var(--hair)}
 .cfg-shape-imw img{width:100%;height:100%;object-fit:contain}
-.cfg-shape-tile.on .cfg-shape-imw{border:1px solid var(--ink);background:#fff}
+.cfg-shape-tile.on .cfg-shape-imw{border:1px solid var(--ink);background:var(--chipbg)}
 /* Formă and material-type chips both get the reference's grey fill on actual selection (matches the
    "Free parking" reference card exactly); Proprietăți pills alone stay border-only white per
    earlier feedback, so don't copy this fill onto those. Press-only feedback (:active, plus
    :hover as its desktop stand-in) still stays white/no-fill, so only committing the tap turns
    the card grey -- press alone never looks already selected. */
-.cfg-shape-tile:not(.on):active .cfg-shape-imw{border:1px solid var(--ink);background:#fff}
+.cfg-shape-tile:not(.on):active .cfg-shape-imw{border:1px solid var(--ink);background:var(--chipbg)}
 @media (hover:hover) and (pointer:fine){
-  .cfg-shape-tile:not(.on):hover .cfg-shape-imw{border:1px solid var(--ink);background:#fff}
+  .cfg-shape-tile:not(.on):hover .cfg-shape-imw{border:1px solid var(--ink);background:var(--chipbg)}
 }
 /* Same Tylko-style corner badge as the material cards (.cfg-seg.vert .chk): flush bottom-left,
    clipped to the tile's own rounding by .cfg-shape-imw's overflow:hidden, shown only on .on. */
