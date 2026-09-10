@@ -203,12 +203,12 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
    Radius is 16px rather than the reference's 8px so the cards sit in the same radius family
    as the rest of the configurator (.cfg-matdiff-btn 16px, the sheet itself 24px). */
 .cfg-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 12px 0;background:linear-gradient(180deg,#fff 0%,#F5F4EF 100%);background-attachment:local}
-.cfg-sec{scroll-margin-top:12px;background:var(--seccard);border-radius:16px;padding:20px 12px 24px;margin:0 0 16px;border-bottom:none}
+.cfg-sec{scroll-margin-top:12px;background:var(--seccard);border-radius:16px;padding:24px 12px 24px;margin:0 0 16px;border-bottom:none}
 .cfg-sec:last-of-type{margin-bottom:0}
-/* v40: Sumar closes out the flow, so it gets more air above it than the 16px margin + 20px
+/* v40: Sumar closes out the flow, so it gets more air above it than the 16px margin + 24px
    padding every other card-to-card gap carries -- bumped so the total gap above "Gata!" reads
-   as 80px instead of 36px, on this section alone. */
-#sec-summary{padding-top:64px}
+   as 64px, on this section alone. */
+#sec-summary{padding-top:48px}
 /* Hairlines drawn *inside* a card can't stay #ececec -- against #f7f7f7 that's a 1.5% step and
    the row separators in Sumar simply disappear. They keep the same weight, just enough
    contrast to survive the new background. The 17px side padding those rows carry from when
