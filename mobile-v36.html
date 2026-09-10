@@ -71,9 +71,9 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-shape-label{margin-top:0}
 /* v26: the Layout card now carries three sub-blocks -- shape, island length, arms -- so they
    get real air between them, otherwise a label and the next block's control read as one lump. */
-#sec-layout .cfg-shape-label + .cfg-dim{margin-top:30px}
+#sec-layout .cfg-shape-label + .cfg-dim{margin-top:60px}
 #sec-layout .cfg-shape-row{margin-bottom:12px}
-#sec-layout .cfg-shape-label + .cfg-subtitle{margin-top:34px}
+#sec-layout .cfg-shape-label + .cfg-subtitle{margin-top:60px}
 /* v26: a size that has no real variant for the current layout (4 seats on a straight sofa)
    stays visible but out of reach, with one line under the grid saying why. */
 .cfg-shape-tile.off{opacity:.32;pointer-events:none}
@@ -103,7 +103,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-dim-edit:active{background:var(--chipbg)}
 /* the fixed main run: same label, but the value reads as a spec, not a control */
 .cfg-subtitle{font-size:20px;font-weight:400;letter-spacing:-.2px;color:var(--ink);margin:34px 0 24px}
-.cfg-dim + .cfg-subtitle{margin-top:34px}
+.cfg-dim + .cfg-subtitle{margin-top:60px}
 .cfg-dim-fixed{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-bottom:18px;border-bottom:1px solid var(--hair)}
 .cfg-dim-fixed + .cfg-dim{margin-top:18px}
 .cfg-dim-fixed .cfg-dim-lab{margin-bottom:0}
@@ -181,7 +181,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
    Radius is 16px rather than the reference's 8px so the cards sit in the same radius family
    as the rest of the configurator (.cfg-matdiff-btn 16px, the sheet itself 24px). */
 .cfg-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 12px 0}
-.cfg-sec{scroll-margin-top:12px;background:var(--seccard);border-radius:16px;padding:20px 12px 24px;margin:0 0 12px;border-bottom:none}
+.cfg-sec{scroll-margin-top:12px;background:var(--seccard);border-radius:16px;padding:20px 12px 24px;margin:0 0 16px;border-bottom:none}
 .cfg-sec:last-of-type{margin-bottom:0}
 /* Hairlines drawn *inside* a card can't stay #ececec -- against #f7f7f7 that's a 1.5% step and
    the row separators in Sumar simply disappear. They keep the same weight, just enough
