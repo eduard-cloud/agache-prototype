@@ -256,6 +256,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
    settled. */
 .cfg-xp-list{display:flex;flex-direction:column;gap:12px}
 .cfg-xp-row{display:flex;align-items:center;gap:16px;padding:12px 16px;border:1px solid var(--gray2);border-radius:16px}
+.cfg-xp-row.on{border-color:var(--ink)}
 .cfg-xp-i{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
 .cfg-xp-i svg{width:32px;height:32px;flex:0 0 32px;display:block;color:var(--slate);stroke-width:1}
 .cfg-xp-t{font-size:16px;font-weight:500;letter-spacing:-.64px;line-height:1.2;color:var(--slate)}
@@ -1609,6 +1610,8 @@ var ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" str
 function addExtra(btn, label){
   var on = btn.classList.toggle('on');
   btn.innerHTML = on ? ICON_CHECK : ICON_PLUS;
+  var row = btn.closest('.cfg-xp-row');
+  if (row) row.classList.toggle('on', on);
   toast(on ? label + ' adăugat' : label + ' eliminat');
 }
 
