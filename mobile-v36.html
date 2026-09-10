@@ -322,8 +322,12 @@ h3.cfg-title{font-size:20px;font-weight:400;letter-spacing:-.03em;line-height:1.
 .cfg-fabric-pillrow.vert{gap:8px}
 .cfg-seg.vert{flex-direction:column;align-items:flex-start;gap:8px;width:84px;background:none;border:none;padding:0;border-radius:0}
 .cfg-seg.vert.on{background:none;border:none;padding:0}
-.cfg-seg.vert .dot{width:84px;height:110px;border-radius:10px;background-size:auto;box-shadow:none;border:1px solid var(--hair)}
+.cfg-seg.vert .dot{position:relative;width:84px;height:110px;border-radius:10px;background-size:auto;box-shadow:none;border:1px solid var(--hair)}
 .cfg-seg.vert.on .dot{border:2px solid var(--ink)}
+/* Tylko-style corner badge: a small black rounded square with a white check, bottom-right
+   of the swatch, shown only on the selected card. */
+.cfg-seg.vert .chk{display:none;position:absolute;right:6px;bottom:6px;width:20px;height:20px;border-radius:6px;background:var(--ink);align-items:center;justify-content:center}
+.cfg-seg.vert.on .chk{display:flex}
 .cfg-seg.vert .nm{font-size:14px;font-weight:400;letter-spacing:-.2px;white-space:normal;line-height:1.3;color:var(--ink);padding-left:4px}
 /* same chip, smaller -- used in the Filtre sheet's Material group, wraps to a 2nd row if all 4 don't fit on one */
 .cfg-seg.sm{gap:6px;padding:4px 12px 4px 4px}
@@ -1959,8 +1963,9 @@ function buildFabricSeg(p, small, onPicked, vert){
   seg.dataset.key = p.key;
   seg.className = 'cfg-seg' + (small ? ' sm' : '') + (vert ? ' vert' : '') + (activeFabricPills.indexOf(p.key) > -1 ? ' on' : '')
     + (MATERIAL_AVAILABLE && !MATERIAL_AVAILABLE[p.key] ? ' is-unavailable' : '');
+  var chk = vert ? '<span class="chk"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>' : '';
   seg.innerHTML =
-    '<span class="dot" style="background-image:url(\'' + p.asset + '\');background-size:' + (p.zoom || 650) + '%"></span>' +
+    '<span class="dot" style="background-image:url(\'' + p.asset + '\');background-size:' + (p.zoom || 650) + '%">' + chk + '</span>' +
     '<span class="nm">' + p.label + '</span>';
   seg.onclick = function(){
     var i = activeFabricPills.indexOf(p.key);
