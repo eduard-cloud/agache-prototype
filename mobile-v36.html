@@ -2537,6 +2537,11 @@ function renderDeadEnd(show, pillDefs, byCat){
   var el = document.getElementById('cfg-deadend');
   if (!el) return;
   el.classList.toggle('show', !!show);
+  /* Nothing to pick a colour from once every swatch has been filtered out -- the strip just
+     repeats colours the dead end already says are unreachable, so it steps aside while the
+     dead end owns the screen. */
+  var strip = document.getElementById('cfg-color-pillrow');
+  if (strip) strip.style.display = (show || (sel.zoneMode && !sel.collectionSlug)) ? 'none' : '';
   if (!show){ el.innerHTML = ''; return; }
   var actions = [];
   pillDefs.forEach(function(p){
