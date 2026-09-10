@@ -710,12 +710,12 @@ input.price-mm-pill:focus{border-color:var(--ink)}
    per filter that's in the way, so leaving Neted + Easy Clean on while switching to per-zone
    colours (which narrows the grid to Luna) shows exactly why nothing matches instead of
    quietly clearing filters they chose on purpose. */
-.cfg-deadend{display:none;text-align:center;padding:8px 0 4px}
+.cfg-deadend{display:none;text-align:center;margin-top:8px;background:var(--chipbg);border-radius:16px;padding:24px 8px 20px}
 .cfg-deadend.show{display:block}
 .cfg-deadend h4{font-size:16px;font-weight:600;letter-spacing:-.3px;margin-bottom:6px}
 .cfg-deadend p{font-size:14px;line-height:1.45;color:var(--gray);margin-bottom:16px}
 .cfg-deadend-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
-.cfg-deadend-row button{height:40px;padding:0 16px;border:1px solid var(--ink);border-radius:9999px;background:#fff;font-size:14px;font-weight:500;color:var(--ink);white-space:nowrap}
+.cfg-deadend-row button{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 14px;border:1px solid var(--ink);border-radius:9999px;background:#fff;font-size:14px;font-weight:500;color:var(--ink);white-space:nowrap}
 
 /* v35: collection stops being its own mandatory step -- it only matters once "Canapea în
    culori diferite" is on, so it surfaces here as a small chip row instead of a full-card grid. */
@@ -2545,13 +2545,13 @@ function renderDeadEnd(show, pillDefs, byCat){
   if (!show){ el.innerHTML = ''; return; }
   var actions = [];
   pillDefs.forEach(function(p){
-    actions.push({ label: 'Elimină ' + p.label, run: function(){ removeMaterialPillFilter(p.key); } });
+    actions.push({ label: p.label, run: function(){ removeMaterialPillFilter(p.key); } });
   });
   byCat.prop.forEach(function(f){
-    actions.push({ label: 'Elimină "' + f + '"', run: function(){ removeAppliedFilterValue(f); } });
+    actions.push({ label: f, run: function(){ removeAppliedFilterValue(f); } });
   });
   byCat.culoare.forEach(function(f){
-    actions.push({ label: 'Elimină "' + f + '"', run: function(){ removeAppliedFilterValue(f); } });
+    actions.push({ label: f, run: function(){ removeAppliedFilterValue(f); } });
   });
   /* Locked-collection narrowing already offers "Schimbă colecția" via the note above the grid
      (renderMatNote) -- only zone mode needs a lever of its own here, since turning it off is a
@@ -2566,7 +2566,7 @@ function renderDeadEnd(show, pillDefs, byCat){
   actions.forEach(function(a){
     var b = document.createElement('button');
     b.type = 'button';
-    b.textContent = a.label;
+    b.innerHTML = '<span>' + a.label + '</span><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
     b.onclick = a.run;
     row.appendChild(b);
   });
