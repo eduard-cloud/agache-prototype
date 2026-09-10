@@ -3236,6 +3236,11 @@ function setActiveCfgChip(sec, instant, followNav){
       var r = s.getBoundingClientRect();
       if (r.top <= lineY && r.bottom > lineY) current = s;
     });
+    /* Near the bottom, there isn't 96px of scroll room left to push the last section up to the
+       line -- it settles short of it, the line lands in whatever (chip-less) section sits above
+       it instead, and setActiveCfgChip finds no matching chip and leaves the nav with nothing
+       highlighted. Scrolled to the end always means the last section, line or no line. */
+    if (scroll.scrollTop + scroll.clientHeight >= scroll.scrollHeight - 2) current = sections[sections.length - 1];
     var sec = current.id.replace('sec-', '');
     if (sec !== lastSec){ lastSec = sec; setActiveCfgChip(sec, false, true); }
   });
