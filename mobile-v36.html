@@ -44,6 +44,12 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 
 /* ══ shared components reused verbatim from mobile-v2.html ══ */
 .circ-btn{width:32px;height:32px;border-radius:50%;background:#fff;border:1px solid #e3e3e3;display:flex;align-items:center;justify-content:center}
+/* Fullscreen swatch view -- tapping the rectangle swatch in the summary should show the fabric
+   itself full-bleed, not the whole spec sheet swatch-modal already covers for the (i) icon. */
+.img-lightbox{display:none;position:fixed;inset:0;background:#fff;z-index:70}
+.img-lightbox.open{display:block}
+.img-lightbox img{width:100%;height:100%;object-fit:cover;display:block}
+.img-lightbox-close{position:absolute;top:16px;right:16px;z-index:1}
 .hbar{width:134px;height:5px;background:#d9d9d9;border-radius:3px;margin:8px auto 8px}
 /* Sizing/spacing checked against the reference configurator's own orientation section: tile row gap
    8px (matches already), smaller 84px tiles instead of 92px, and a single compact 14px caption
@@ -52,7 +58,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-shape-row{display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:0 0 4px;margin-bottom:12px;scroll-snap-type:x proximity}
 .cfg-shape-row::-webkit-scrollbar{display:none}
 .cfg-shape-tile{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start}
-.cfg-shape-imw{position:relative;width:56px;height:74px;overflow:hidden;display:flex;align-items:center;justify-content:center;transition:background-color .15s,border-color .15s;scroll-snap-align:start;background:var(--chipbg);border-radius:10px;border:1px solid var(--hair)}
+.cfg-shape-imw{position:relative;width:56px;height:74px;overflow:hidden;display:flex;align-items:center;justify-content:center;transition:background-color .15s,border-color .15s;scroll-snap-align:start;background:var(--chipbg);border-radius:8px;border:1px solid var(--hair)}
 .cfg-shape-imw img{width:100%;height:100%;object-fit:contain}
 .cfg-shape-tile.on .cfg-shape-imw{border:1px solid var(--ink);background:var(--chipbg)}
 /* Formă and material-type chips both get the reference's grey fill on actual selection (matches the
@@ -88,7 +94,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-dim + .cfg-dim{margin-top:18px}
 .cfg-dim-lab{font-size:14px;font-weight:500;color:var(--ink);margin-bottom:8px}
 .cfg-dim-line{display:flex;align-items:center;gap:10px}
-.cfg-dim-track{position:relative;flex:1 1 auto;height:52px;background:#fff;border:1px solid var(--hair);border-radius:10px;overflow:hidden}
+.cfg-dim-track{position:relative;flex:1 1 auto;height:52px;background:#fff;border:1px solid var(--hair);border-radius:8px;overflow:hidden}
 .cfg-dim-fill{position:absolute;top:0;bottom:0;left:0;right:0;background:#ECECEC}
 /* The handle is a rounded grey bar sitting ON the fill's near edge, with white showing
    either side of it: the handle sits in the middle of that 20px of white, never against the
@@ -101,7 +107,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 /* typed entry: the pencil swaps the read-only value for a real input in the same spot */
 .cfg-dim-input{position:absolute;right:16px;top:50%;transform:translateY(-50%);width:96px;text-align:right;font-size:15px;font-family:inherit;color:var(--ink);border:none;background:none;padding:0;z-index:2}
 .cfg-dim-input:focus{outline:none}
-.cfg-dim-edit{flex:0 0 auto;width:52px;height:52px;border:1px solid var(--hair);border-radius:10px;background:#fff;color:var(--ink);display:flex;align-items:center;justify-content:center}
+.cfg-dim-edit{flex:0 0 auto;width:52px;height:52px;border:1px solid var(--hair);border-radius:8px;background:#fff;color:var(--ink);display:flex;align-items:center;justify-content:center}
 .cfg-dim-edit:active{background:var(--chipbg)}
 /* the fixed main run: same label, but the value reads as a spec, not a control */
 .cfg-subtitle{font-size:20px;font-weight:400;letter-spacing:-.2px;color:var(--ink);margin:34px 0 24px}
@@ -183,7 +189,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
    moves 24px -> 28px and the 4-across colour grid keeps essentially the same tile size.
    Radius is 16px rather than the reference's 8px so the cards sit in the same radius family
    as the rest of the configurator (.cfg-matdiff-btn 16px, the sheet itself 24px). */
-.cfg-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 12px 0}
+.cfg-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 12px 0;background:linear-gradient(180deg,#fff 0%,#F5F4EF 100%);background-attachment:local}
 .cfg-sec{scroll-margin-top:12px;background:var(--seccard);border-radius:16px;padding:20px 12px 24px;margin:0 0 16px;border-bottom:none}
 .cfg-sec:last-of-type{margin-bottom:0}
 /* Hairlines drawn *inside* a card can't stay #ececec -- against #f7f7f7 that's a 1.5% step and
@@ -215,6 +221,10 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 /* Fabric reads as a round chip everywhere else in the configurator (the pill over the preview,
    the swatch strips), so the colour lines keep that shape while product shots stay square. */
 .cfg-sum-thumb.round{border-radius:50%}
+/* Same vertical-rectangle crop the material-type tiles use (.cfg-shape-imw), so the summary's
+   colour line reads as the same swatch the shopper picked, not a different shape for it. */
+.cfg-sum-thumb.rect{width:44px;height:58px;border-radius:8px;border-color:var(--hair)}
+.cfg-sum-line.clickable{width:100%;text-align:left;background:none;border:none;font:inherit;color:inherit;cursor:pointer}
 .cfg-sum-line.total{margin-top:10px;padding-top:16px;border-top:1px solid var(--hair-on-card);font-weight:600}
 
 /* ══ v28: Accesorii ══
@@ -224,8 +234,8 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
    the hairline. Same move .cfg-matdiff-btn already makes. Everything else is the design's own
    spec: 80px thumb at radius 4, 16px/500 name, 14px price, 32px round swatches at 6px gap,
    40px stepper pill and a red pill CTA that takes the rest of the row. */
-.cfg-acc{display:flex;flex-direction:column;gap:12px}
-.cfg-acc-card{background:#fff;border:1px solid var(--graysec);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:20px}
+.cfg-acc{display:flex;flex-direction:column;gap:8px}
+.cfg-acc-card{background:#fff;border:1px solid var(--hair);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:20px}
 .cfg-acc-top{display:flex;gap:16px;align-items:center}
 .cfg-acc-thumb{flex:0 0 auto;width:80px;height:80px;border-radius:4px;overflow:hidden;background:#fff}
 .cfg-acc-thumb img{width:100%;height:100%;object-fit:cover}
@@ -255,8 +265,8 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
    ones. Sits right under Sumar since it's the last thing you'd add once the sofa itself is
    settled. */
 .cfg-xp-list{display:flex;flex-direction:column;gap:8px}
-.cfg-xp-rule{height:1px;background:var(--hair-on-card);width:100%}
-.cfg-xp-row{display:flex;align-items:center;gap:16px;padding:8px 0}
+.cfg-xp-row{display:flex;align-items:center;gap:16px;padding:24px 12px;border:1px solid var(--hair);border-radius:16px;background:#fff}
+.cfg-xp-row.on{border-color:var(--ink)}
 .cfg-xp-i{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
 .cfg-xp-i svg{width:32px;height:32px;flex:0 0 32px;display:block;color:var(--slate);stroke-width:1}
 .cfg-xp-t{font-size:16px;font-weight:500;letter-spacing:-.64px;line-height:1.2;color:var(--slate)}
@@ -273,7 +283,7 @@ h3.cfg-title{font-size:20px;font-weight:400;letter-spacing:-.03em;line-height:1.
 .cfg-fabric-head h3.cfg-title{margin-bottom:0}
 /* Card format matches Figma node 899:7869 exactly: 16px outer radius, 8px padding, 16px gap,
    60x60 8px-radius thumbnail, two-line underlined label + trailing chevron. */
-.cfg-matdiff-btn{width:100%;display:flex;align-items:center;gap:16px;background:#fff;border:1px solid var(--graysec);border-radius:16px;padding:8px;text-align:left;margin-bottom:24px}
+.cfg-matdiff-btn{width:96%;margin:0 auto 24px;display:flex;align-items:center;gap:16px;background:var(--graysec);border:1px solid var(--graysec);border-radius:16px;padding:8px 16px 8px 8px;text-align:left}
 .cfg-matdiff-swatch{position:relative;width:60px;height:60px;border-radius:8px;overflow:hidden;flex:0 0 auto;background:#fff}
 /* Loops just the 10s-12.7s window (see the swatch's inline JS below) -- a clean, static-camera
    talking-head stretch with her hands down, before the clip cuts to a title card. The source
@@ -281,7 +291,7 @@ h3.cfg-title{font-size:20px;font-weight:400;letter-spacing:-.03em;line-height:1.
    the face, keeping the caption (and the title-card text elsewhere in the clip) out of frame. */
 .cfg-matdiff-swatch video{width:100%;height:100%;object-fit:cover;object-position:50% 0%;display:block;transform:scale(1.44);transform-origin:45% 45%}
 .cfg-matdiff-text{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;font-size:16px;font-weight:500;line-height:1.15;letter-spacing:-.03em;color:#1d1d1f}
-.cfg-matdiff-text span{text-decoration:underline;text-decoration-skip-ink:auto}
+.cfg-matdiff-text span{text-decoration:none}
 .cfg-matdiff-plus{flex:0 0 auto;color:#1d1d1f}
 /* Last thing in the material card -- its own 24px would stack on the card's 24px padding. */
 .cfg-sec .cfg-matdiff-btn:last-child{margin-bottom:0}
@@ -325,7 +335,7 @@ h3.cfg-title{font-size:20px;font-weight:400;letter-spacing:-.03em;line-height:1.
 .cfg-fabric-pillrow.vert{gap:8px}
 .cfg-seg.vert{flex-direction:column;align-items:flex-start;gap:8px;width:84px;background:none;border:none;padding:0;border-radius:0}
 .cfg-seg.vert.on{background:none;border:none;padding:0}
-.cfg-seg.vert .dot{position:relative;width:84px;height:110px;border-radius:10px;background-size:auto;box-shadow:none;border:1px solid var(--hair);overflow:hidden}
+.cfg-seg.vert .dot{position:relative;width:84px;height:110px;border-radius:8px;background-size:auto;box-shadow:none;border:1px solid var(--hair);overflow:hidden}
 .cfg-seg.vert.on .dot{border:1px solid var(--ink)}
 /* Tylko-style corner badge: a small black rounded square with a white check, bottom-right
    of the swatch, shown only on the selected card. */
@@ -710,12 +720,12 @@ input.price-mm-pill:focus{border-color:var(--ink)}
    per filter that's in the way, so leaving Neted + Easy Clean on while switching to per-zone
    colours (which narrows the grid to Luna) shows exactly why nothing matches instead of
    quietly clearing filters they chose on purpose. */
-.cfg-deadend{display:none;text-align:center;padding:28px 0 4px}
+.cfg-deadend{display:none;text-align:center;margin-top:8px;background:var(--chipbg);border-radius:16px;padding:24px 8px 20px}
 .cfg-deadend.show{display:block}
-.cfg-deadend h4{font-size:16px;font-weight:600;letter-spacing:-.3px;margin-bottom:6px}
+.cfg-deadend h4{font-size:18px;font-weight:500;margin-bottom:6px}
 .cfg-deadend p{font-size:14px;line-height:1.45;color:var(--gray);margin-bottom:16px}
 .cfg-deadend-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
-.cfg-deadend-row button{height:40px;padding:0 16px;border:1px solid var(--ink);border-radius:9999px;background:#fff;font-size:14px;font-weight:500;color:var(--ink);white-space:nowrap}
+.cfg-deadend-row button{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 14px;border:1px solid var(--gray2);border-radius:9999px;background:#fff;font-size:14px;font-weight:500;color:var(--ink);white-space:nowrap}
 
 /* v35: collection stops being its own mandatory step -- it only matters once "Canapea în
    culori diferite" is on, so it surfaces here as a small chip row instead of a full-card grid. */
@@ -745,9 +755,9 @@ input.price-mm-pill:focus{border-color:var(--ink)}
 /* Segmented control for one colour vs. per-zone colours -- two named, always-visible states
    read faster than a bare on/off switch, which says nothing about what "on" means until you
    already know the feature. The dot icons repeat the same cue non-verbally. */
-.cfg-colormode{position:relative;display:flex;align-items:center;gap:2px;flex:0 0 auto;background:var(--chipbg);border-radius:9999px;padding:3px}
+.cfg-colormode{position:relative;display:flex;align-items:center;gap:2px;flex:0 0 auto;background:var(--graysec);border-radius:9999px;padding:3px}
 .cfg-colormode-thumb{position:absolute;top:3px;left:0;height:28px;background:#fff;border-radius:9999px;box-shadow:0 1px 3px rgba(0,0,0,.14);transition:transform .25s cubic-bezier(.4,0,.2,1),width .25s cubic-bezier(.4,0,.2,1)}
-.cfg-colormode-btn{position:relative;z-index:1;flex:0 0 auto;border:none;background:none;height:28px;padding:0 10px;border-radius:9999px;font-size:13px;font-weight:500;color:var(--gray);white-space:nowrap;transition:color .15s}
+.cfg-colormode-btn{position:relative;z-index:1;flex:0 0 auto;border:none;background:none;height:28px;padding:0 10px;border-radius:9999px;font-size:14px;font-weight:400;color:var(--gray);white-space:nowrap;transition:color .15s}
 .cfg-colormode-btn.on{color:var(--ink)}
 /* One tab per zone, each carrying the colour it currently holds -- the row doubles as the
    summary of what has been set, so nobody has to open all three to find out. */
@@ -953,13 +963,11 @@ input.price-mm-pill:focus{border-color:var(--ink)}
       <section class="cfg-sec" id="sec-experience">
         <h3 class="cfg-title">Doresti o experienta completa?</h3>
         <div class="cfg-xp-list">
-          <div class="cfg-xp-rule"></div>
           <div class="cfg-xp-row">
-            <span class="cfg-xp-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M9 22V18H15V22M8 6H8.01M16 6H16.01M12 6H12.01M12 10H12.01M12 14H12.01M16 10H16.01M16 14H16.01M8 10H8.01M8 14H8.01M6 2H18C19.1046 2 20 2.89543 20 4V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V4C4 2.89543 4.89543 2 6 2Z"/></svg><span class="cfg-xp-t">Transport de la strada<br>pana in apartament</span></span>
+            <span class="cfg-xp-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M9 22V18H15V22M8 6H8.01M16 6H16.01M12 6H12.01M12 10H12.01M12 14H12.01M16 10H16.01M16 14H16.01M8 10H8.01M8 14H8.01M6 2H18C19.1046 2 20 2.89543 20 4V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V4C4 2.89543 4.89543 2 6 2Z"/></svg><span class="cfg-xp-t">Transport din strada pana in apartament</span></span>
             <span class="cfg-xp-p">149 lei</span>
             <button class="cfg-xp-add" aria-label="Adaugă transport la domiciliu" onclick="addExtra(this,'Transport la domiciliu')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.33" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
           </div>
-          <div class="cfg-xp-rule"></div>
           <div class="cfg-xp-row">
             <span class="cfg-xp-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M11 14H13C13.5304 14 14.0391 13.7893 14.4142 13.4142C14.7893 13.0391 15 12.5304 15 12C15 11.4696 14.7893 10.9609 14.4142 10.5858C14.0391 10.2107 13.5304 10 13 10H10C9.4 10 8.9 10.2 8.6 10.6L3 16M7 20L8.6 18.6C8.9 18.2 9.4 18 10 18H14C15.1 18 16.1 17.6 16.8 16.8L21.4 12.4C21.7859 12.0354 22.0111 11.5323 22.0261 11.0016C22.0411 10.4709 21.8447 9.95592 21.48 9.57003C21.1153 9.18414 20.6123 8.95892 20.0816 8.94392C19.5508 8.92891 19.0359 9.12535 18.65 9.49003L14.45 13.39M2 15L8 21M19.4999 8.5C20.1999 7.8 20.9999 6.9 20.9999 5.8C21.0698 5.18893 20.9313 4.57216 20.6068 4.04964C20.2824 3.52712 19.791 3.12947 19.2123 2.92114C18.6336 2.71281 18.0015 2.706 17.4184 2.90182C16.8354 3.09763 16.3355 3.4846 15.9999 4C15.6429 3.52458 15.1429 3.17613 14.5734 3.00578C14.0038 2.83544 13.3946 2.85219 12.8352 3.05356C12.2758 3.25494 11.7957 3.63034 11.4654 4.12465C11.1351 4.61896 10.9719 5.20614 10.9999 5.8C10.9999 7 11.7999 7.8 12.4999 8.6L15.9999 12L19.4999 8.5Z"/></svg><span class="cfg-xp-t">Serviciu de montaj<br>in <u>orasele eligibile</u></span></span>
             <span class="cfg-xp-p">399 lei</span>
@@ -998,6 +1006,11 @@ input.price-mm-pill:focus{border-color:var(--ink)}
   </div>
 </div>
 <div id="toast"></div>
+
+<div class="img-lightbox" id="img-lightbox" onclick="if(event.target===this) closeImgLightbox()">
+  <button type="button" class="circ-btn img-lightbox-close" onclick="closeImgLightbox()" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  <img id="img-lightbox-img" src="" alt="">
+</div>
 
 <div class="swm-overlay" id="swatch-modal" onclick="if(event.target===this) closeSwatchModal()">
   <div class="swm-sheet">
@@ -1612,6 +1625,8 @@ var ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" str
 function addExtra(btn, label){
   var on = btn.classList.toggle('on');
   btn.innerHTML = on ? ICON_CHECK : ICON_PLUS;
+  var row = btn.closest('.cfg-xp-row');
+  if (row) row.classList.toggle('on', on);
   toast(on ? label + ' adăugat' : label + ' eliminat');
 }
 
@@ -1677,7 +1692,7 @@ function updateSummary(){
   syncAccessories();
   var c = COLLECTIONS[sel.collectionSlug];
   var swInfo = SWATCH_INDEX[sel.colorName];
-  var colorLabel = swInfo ? nearestColorName(swInfo.hex) + ' (' + sel.colorName + ')' : 'Nealeasă';
+  var colorLabel = swInfo ? sel.colorName : 'Nealeasă';
 
   document.getElementById('cfg-sum-dims').textContent = 'Dimensiuni: ' + currentDims();
 
@@ -1693,17 +1708,16 @@ function updateSummary(){
   groups.push({ title:'Dimensiuni', lines:dims });
 
   /* One "Culoare" line for a single-colour sofa; one line per zone once they differ. */
-  var mat = [['Material', c ? c.name : 'Nealeasă']];
-  if (c) mat.push(['Textură', textureLabel(c)]);
+  var mat = [];
   var perZone = sel.zoneMode && ZONES.some(function(z){ return sel.zones[z.key] !== sel.zones.corp; });
   if (perZone){
     ZONES.forEach(function(z){
       var name = sel.zones[z.key];
       var info = SWATCH_INDEX[name];
-      mat.push([z.label, info ? nearestColorName(info.hex) + ' (' + name + ')' : name, info ? fabricAsset(name) : null, 'round']);
+      mat.push([z.label, name, info ? fabricAsset(name) : null, 'rect', true]);
     });
   } else {
-    mat.push(['Culoare', colorLabel, swInfo ? fabricAsset(sel.colorName) : null, 'round']);
+    mat.push(['Culoare', colorLabel, swInfo ? fabricAsset(sel.colorName) : null, 'rect', true]);
   }
   groups.push({ title:'Culoare și material', lines:mat });
 
@@ -1725,10 +1739,12 @@ function updateSummary(){
   var wrap = document.getElementById('cfg-sum-details');
   wrap.innerHTML = groups.map(function(g){
     return '<div class="cfg-sum-grp"><h4>' + g.title + '</h4>' + g.lines.map(function(l){
-      return '<div class="cfg-sum-line' + (l[2] ? ' with-thumb' : '') + '"><span class="lb">' +
+      var tag = l[4] ? 'button type="button" onclick="openImgLightbox(\'' + l[2] + '\')"' : 'div';
+      var tagName = l[4] ? 'button' : 'div';
+      return '<' + tag + ' class="cfg-sum-line' + (l[2] ? ' with-thumb' : '') + (l[4] ? ' clickable' : '') + '"><span class="lb">' +
         (l[2] ? '<img class="cfg-sum-thumb' + (l[3] ? ' ' + l[3] : '') + '" src="' + l[2] + '" alt="">' : '') +
         '<span>' + l[0] + '</span></span>' +
-        '<span class="vl">' + l[1] + '</span></div>';
+        '<span class="vl">' + l[1] + '</span></' + tagName + '>';
     }).join('') + '</div>';
   }).join('') +
     '<div class="cfg-sum-line total"><span class="lb">Preț total</span><span class="vl">' +
@@ -2537,16 +2553,21 @@ function renderDeadEnd(show, pillDefs, byCat){
   var el = document.getElementById('cfg-deadend');
   if (!el) return;
   el.classList.toggle('show', !!show);
+  /* Nothing to pick a colour from once every swatch has been filtered out -- the strip just
+     repeats colours the dead end already says are unreachable, so it steps aside while the
+     dead end owns the screen. */
+  var strip = document.getElementById('cfg-color-pillrow');
+  if (strip) strip.style.display = (show || (sel.zoneMode && !sel.collectionSlug)) ? 'none' : '';
   if (!show){ el.innerHTML = ''; return; }
   var actions = [];
   pillDefs.forEach(function(p){
-    actions.push({ label: 'Elimină ' + p.label, run: function(){ removeMaterialPillFilter(p.key); } });
+    actions.push({ label: p.label, run: function(){ removeMaterialPillFilter(p.key); } });
   });
   byCat.prop.forEach(function(f){
-    actions.push({ label: 'Elimină "' + f + '"', run: function(){ removeAppliedFilterValue(f); } });
+    actions.push({ label: f, run: function(){ removeAppliedFilterValue(f); } });
   });
   byCat.culoare.forEach(function(f){
-    actions.push({ label: 'Elimină "' + f + '"', run: function(){ removeAppliedFilterValue(f); } });
+    actions.push({ label: f, run: function(){ removeAppliedFilterValue(f); } });
   });
   /* Locked-collection narrowing already offers "Schimbă colecția" via the note above the grid
      (renderMatNote) -- only zone mode needs a lever of its own here, since turning it off is a
@@ -2561,7 +2582,7 @@ function renderDeadEnd(show, pillDefs, byCat){
   actions.forEach(function(a){
     var b = document.createElement('button');
     b.type = 'button';
-    b.textContent = a.label;
+    b.innerHTML = '<span>' + a.label + '</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
     b.onclick = a.run;
     row.appendChild(b);
   });
@@ -2632,6 +2653,14 @@ function showSwatchInfo(name){
 }
 function closeSwatchModal(){
   document.getElementById('swatch-modal').classList.remove('open');
+}
+
+function openImgLightbox(src){
+  document.getElementById('img-lightbox-img').src = src;
+  document.getElementById('img-lightbox').classList.add('open');
+}
+function closeImgLightbox(){
+  document.getElementById('img-lightbox').classList.remove('open');
 }
 
 /* ══════════ Collection detail modal (exact copy of mobile-v2.html's "Collection view", incl. the chero1/chero2/chero3 hero slider and bindSwipe helper) ══════════ */
@@ -3560,6 +3589,30 @@ function setActiveCfgChip(sec, instant, followNav){
 document.documentElement.addEventListener('animationend', function(e){
   if (e.animationName === 'pushInR') document.documentElement.classList.remove('enter-r');
 });
+
+/* The scroller fades from white to a hair of grey once the colour grid ends, so the
+   "extras" below (accessories, upsell, summary) read as a distinct zone without a hard
+   line. Tied to #sec-accessories' actual position rather than a fixed % -- the colour
+   grid's height swings a lot with filters/zone mode, so a fixed split would drift white
+   past the swatches or grey underneath them depending on what's filtered. Recomputed
+   whenever any card's height changes (filters, "Mai multe detalii", samples, etc). */
+function updateScrollGradient(){
+  var scroll = document.getElementById('cfg-scroll');
+  var boundary = document.getElementById('sec-accessories');
+  if (!scroll || !boundary || !scroll.scrollHeight) return;
+  var scrollRect = scroll.getBoundingClientRect();
+  var boundaryRect = boundary.getBoundingClientRect();
+  var offset = (boundaryRect.top - scrollRect.top) + scroll.scrollTop;
+  var startPct = Math.max(0, Math.min(100, offset / scroll.scrollHeight * 100));
+  var endPct = Math.min(100, startPct + 6);
+  scroll.style.backgroundImage = 'linear-gradient(180deg,#fff ' + startPct + '%,#F5F4EF ' + endPct + '%)';
+}
+document.addEventListener('DOMContentLoaded', updateScrollGradient);
+window.addEventListener('resize', updateScrollGradient);
+(function(){
+  var ro = new ResizeObserver(function(){ updateScrollGradient(); });
+  document.querySelectorAll('#cfg-scroll .cfg-sec').forEach(function(el){ ro.observe(el); });
+})();
 
 /* Cross-page push transition, mirrors the PDP's pushTo() on the way in/out */
 function closeConfigurator(){

@@ -3,9 +3,10 @@
   "configurations": [
     {
       "name": "prototypes",
-      "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "4173"],
-      "port": 4173
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "python3 -m http.server \"$PORT\""],
+      "port": 4173,
+      "autoPort": true
     }
   ]
 }
