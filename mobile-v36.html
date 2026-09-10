@@ -2733,7 +2733,7 @@ function openPriceBreakdown(){
 
   var lines = [['Canapea Boston – preț standard', formatPrice(practic) + ' lei']];
   if (c && matDiff > 0) lines.push(['Material ales – ' + c.name, '+ ' + formatPrice(matDiff) + ' lei']);
-  if (steps) lines.push(['Extindere dimensiune', (extra < 0 ? '–' : '+') + ' ' + formatPrice(Math.abs(extra)) + ' lei']);
+  if (steps) lines.push([(extra < 0 ? 'Reducere dimensiune' : 'Extindere dimensiune'), (extra < 0 ? '–' : '+') + ' ' + formatPrice(Math.abs(extra)) + ' lei']);
   lines = lines.concat(accLines);
 
   document.getElementById('price-modal-body').innerHTML = lines.map(function(l){
