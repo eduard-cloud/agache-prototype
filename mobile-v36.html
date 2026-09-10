@@ -183,7 +183,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
    moves 24px -> 28px and the 4-across colour grid keeps essentially the same tile size.
    Radius is 16px rather than the reference's 8px so the cards sit in the same radius family
    as the rest of the configurator (.cfg-matdiff-btn 16px, the sheet itself 24px). */
-.cfg-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 12px 0}
+.cfg-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 12px 0;background:linear-gradient(180deg,#fff 0%,#F5F4EF 100%);background-attachment:local}
 .cfg-sec{scroll-margin-top:12px;background:var(--seccard);border-radius:16px;padding:20px 12px 24px;margin:0 0 16px;border-bottom:none}
 .cfg-sec:last-of-type{margin-bottom:0}
 /* Hairlines drawn *inside* a card can't stay #ececec -- against #f7f7f7 that's a 1.5% step and
@@ -255,7 +255,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
    ones. Sits right under Sumar since it's the last thing you'd add once the sofa itself is
    settled. */
 .cfg-xp-list{display:flex;flex-direction:column;gap:12px}
-.cfg-xp-row{display:flex;align-items:center;gap:16px;padding:24px 12px;border:1px solid var(--hair);border-radius:16px}
+.cfg-xp-row{display:flex;align-items:center;gap:16px;padding:24px 12px;border:1px solid var(--hair);border-radius:16px;background:#fff}
 .cfg-xp-row.on{border-color:var(--ink)}
 .cfg-xp-i{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
 .cfg-xp-i svg{width:32px;height:32px;flex:0 0 32px;display:block;color:var(--slate);stroke-width:1}
@@ -3565,6 +3565,30 @@ function setActiveCfgChip(sec, instant, followNav){
 document.documentElement.addEventListener('animationend', function(e){
   if (e.animationName === 'pushInR') document.documentElement.classList.remove('enter-r');
 });
+
+/* The scroller fades from white to a hair of grey once the colour grid ends, so the
+   "extras" below (accessories, upsell, summary) read as a distinct zone without a hard
+   line. Tied to #sec-accessories' actual position rather than a fixed % -- the colour
+   grid's height swings a lot with filters/zone mode, so a fixed split would drift white
+   past the swatches or grey underneath them depending on what's filtered. Recomputed
+   whenever any card's height changes (filters, "Mai multe detalii", samples, etc). */
+function updateScrollGradient(){
+  var scroll = document.getElementById('cfg-scroll');
+  var boundary = document.getElementById('sec-accessories');
+  if (!scroll || !boundary || !scroll.scrollHeight) return;
+  var scrollRect = scroll.getBoundingClientRect();
+  var boundaryRect = boundary.getBoundingClientRect();
+  var offset = (boundaryRect.top - scrollRect.top) + scroll.scrollTop;
+  var startPct = Math.max(0, Math.min(100, offset / scroll.scrollHeight * 100));
+  var endPct = Math.min(100, startPct + 6);
+  scroll.style.backgroundImage = 'linear-gradient(180deg,#fff ' + startPct + '%,#F5F4EF ' + endPct + '%)';
+}
+document.addEventListener('DOMContentLoaded', updateScrollGradient);
+window.addEventListener('resize', updateScrollGradient);
+(function(){
+  var ro = new ResizeObserver(function(){ updateScrollGradient(); });
+  document.querySelectorAll('#cfg-scroll .cfg-sec').forEach(function(el){ ro.observe(el); });
+})();
 
 /* Cross-page push transition, mirrors the PDP's pushTo() on the way in/out */
 function closeConfigurator(){
