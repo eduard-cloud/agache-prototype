@@ -712,7 +712,7 @@ input.price-mm-pill:focus{border-color:var(--ink)}
    quietly clearing filters they chose on purpose. */
 .cfg-deadend{display:none;text-align:center;margin-top:8px;background:var(--chipbg);border-radius:16px;padding:24px 8px 20px}
 .cfg-deadend.show{display:block}
-.cfg-deadend h4{font-size:16px;font-weight:600;letter-spacing:-.3px;margin-bottom:6px}
+.cfg-deadend h4{font-size:16px;font-weight:500;margin-bottom:6px}
 .cfg-deadend p{font-size:14px;line-height:1.45;color:var(--gray);margin-bottom:16px}
 .cfg-deadend-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
 .cfg-deadend-row button{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 14px;border:1px solid var(--ink);border-radius:9999px;background:#fff;font-size:14px;font-weight:500;color:var(--ink);white-space:nowrap}
@@ -2566,7 +2566,7 @@ function renderDeadEnd(show, pillDefs, byCat){
   actions.forEach(function(a){
     var b = document.createElement('button');
     b.type = 'button';
-    b.innerHTML = '<span>' + a.label + '</span><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+    b.innerHTML = '<span>' + a.label + '</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
     b.onclick = a.run;
     row.appendChild(b);
   });
