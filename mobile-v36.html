@@ -93,6 +93,19 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
    draggable. */
 .cfg-dim + .cfg-dim{margin-top:18px}
 .cfg-dim-lab{font-size:14px;font-weight:500;color:var(--ink);margin-bottom:8px}
+.cfg-dim-lab-row{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.cfg-dim-lab-row .cfg-dim-lab{margin-bottom:0}
+.cfg-dim-info-btn{flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:20px;height:20px;padding:0;color:var(--gray);border-radius:50%}
+.cfg-dim-info-btn:active{color:var(--ink);background:var(--chipbg)}
+/* v36: the size-slider info bubble, matched to the reference -- a dark rounded card that
+   floats just under the "?" trigger, with its own close X rather than relying on tap-outside
+   alone (tap-outside still works, since the bubble sits inside the same positioned wrapper). */
+.cfg-dim-info-wrap{position:relative}
+.cfg-info-bubble{position:absolute;top:calc(100% + 8px);left:0;z-index:5;width:264px;max-width:calc(100vw - 64px);background:var(--ink);color:#fff;border-radius:14px;padding:16px 34px 16px 16px;box-shadow:0 8px 24px rgba(0,0,0,.22)}
+.cfg-info-bubble[hidden]{display:none}
+.cfg-info-bubble p{margin:0;font-size:14px;line-height:1.45;color:#fff}
+.cfg-info-bubble-close{position:absolute;top:14px;right:14px;width:20px;height:20px;padding:0;display:flex;align-items:center;justify-content:center;color:#fff;opacity:.8}
+.cfg-info-bubble-close:active{opacity:1}
 .cfg-dim-line{display:flex;align-items:center;gap:10px}
 .cfg-dim-track{position:relative;flex:1 1 auto;height:52px;background:#fff;border:1px solid var(--hair);border-radius:8px;overflow:hidden}
 .cfg-dim-fill{position:absolute;top:0;bottom:0;left:0;right:0;background:#ECECEC}
@@ -861,7 +874,18 @@ input.price-mm-pill:focus{border-color:var(--ink)}
 
         <!-- Only the island can grow or shrink, so it only shows up on a colțar. -->
         <div class="cfg-dim" id="dim-isl-row">
-          <div class="cfg-dim-lab" id="dim-isl-lab">Lungime insulă</div>
+          <div class="cfg-dim-info-wrap">
+            <div class="cfg-dim-lab-row">
+              <div class="cfg-dim-lab" id="dim-isl-lab">Lungime insulă</div>
+              <button type="button" class="cfg-dim-info-btn" aria-label="Detalii dimensiune" onclick="toggleDimInfo(event)">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.25" stroke="currentColor" stroke-width="1.4"/><path d="M6.55 6.2c.15-.85.95-1.45 1.85-1.4.9.05 1.62.7 1.62 1.5 0 .65-.4 1-.9 1.35-.5.35-.87.65-.87 1.25v.3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8.05" cy="11.15" r=".85" fill="currentColor"/></svg>
+              </button>
+            </div>
+            <div class="cfg-info-bubble" id="dim-info-bubble" hidden>
+              <button type="button" class="cfg-info-bubble-close" aria-label="Închide" onclick="toggleDimInfo(event,false)"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 2l10 10M12 2L2 12"/></svg></button>
+              <p>Modulele se ajustează din 27 în 27 cm. Dimensiunile finale reflectă întreaga configurație a canapelei tale.</p>
+            </div>
+          </div>
           <div class="cfg-dim-line">
             <div class="cfg-dim-track">
               <div class="cfg-dim-fill" id="dim-isl-fill"></div>
@@ -1367,6 +1391,16 @@ function cheapestPrice(){
 }
 function collectionPrice(slug, shapeName){
   return SHAPE_TIER_PRICE[shapeName || baseVariantName()][COLLECTIONS[slug].tier] + STEP_LEI * sizeSteps();
+}
+/* v40: the colour picker was quoting each collection's full sofa price (base + that material),
+   which reads as "this sofa costs 4.985 lei" over and over rather than "this fabric costs X more
+   than the one you'd get by default" -- the number that actually helps you compare collections.
+   Sized off the tiers directly (no STEP_LEI term) so it stays the material's own price gap
+   regardless of whatever length is currently dialled in. */
+function collectionPriceDiffLabel(slug, shapeName){
+  var tiers = SHAPE_TIER_PRICE[shapeName || baseVariantName()];
+  var diff = tiers[COLLECTIONS[slug].tier] - tiers.Practic;
+  return diff > 0 ? '+' + Math.round(diff).toLocaleString('ro-RO') + ' lei' : '0 lei';
 }
 function shapePriceRange(shapeName){
   var t = SHAPE_TIER_PRICE[shapeName || baseVariantName()];
@@ -1925,6 +1959,23 @@ function onDimInput(){
   paintDim('isl');
   updateLayoutSelDims();
   applyCombo();
+}
+/* v36: the size-slider info bubble -- toggled from its own "?" button, dismissible via its X
+   or a tap anywhere else on the page. */
+function toggleDimInfo(e, force){
+  e.stopPropagation();
+  var bubble = document.getElementById('dim-info-bubble');
+  var show = (typeof force === 'boolean') ? force : bubble.hidden;
+  bubble.hidden = !show;
+  if (show) document.addEventListener('click', closeDimInfoOutside);
+}
+function closeDimInfoOutside(e){
+  var bubble = document.getElementById('dim-info-bubble');
+  if (bubble.hidden) { document.removeEventListener('click', closeDimInfoOutside); return; }
+  if (!bubble.contains(e.target)) {
+    bubble.hidden = true;
+    document.removeEventListener('click', closeDimInfoOutside);
+  }
 }
 /* The pencil is for shoppers who already know their wall: it swaps the read-only value for a
    real number field, then snaps whatever they type back onto the slider's own range. */
@@ -2668,7 +2719,7 @@ function renderFabricSections(){
           '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 11v5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7.7" r="1.1" fill="currentColor"/></svg>' +
         '</button>' +
       '</span>' +
-      '<span class="cfg-matgroup-right">' + Math.round(collectionPrice(slug)).toLocaleString('ro-RO') + ' lei</span>';
+      '<span class="cfg-matgroup-right">' + collectionPriceDiffLabel(slug) + '</span>';
     wrap.appendChild(h);
     appendFabricGrid(wrap, swatches);
   });
@@ -3183,7 +3234,7 @@ function collectionChipHtml(slug){
     '<span class="cfg-collchip-img"><img src="' + fabricAsset(first) + '" alt="' + c.name + '"></span>' +
     '<span class="cfg-collchip-text">' +
       '<span class="cfg-collchip-name">' + c.name + '</span>' +
-      '<span class="cfg-collchip-price">' + Math.round(collectionPrice(slug)).toLocaleString('ro-RO') + ' lei</span>' +
+      '<span class="cfg-collchip-price">' + collectionPriceDiffLabel(slug) + '</span>' +
     '</span>' +
     '<span class="cfg-collchip-info" role="button" aria-label="Detalii despre colecția ' + c.name + '" onclick="event.stopPropagation();openCollectionDetail(\'' + slug + '\')">' +
       '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.6"/><path d="M12 11v5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="8" r="1.1" fill="currentColor"/></svg>' +
