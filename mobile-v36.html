@@ -2267,37 +2267,35 @@ function resetSheetFilters(){
 /* Slider's min/max/step are pegged to the currently selected shape's real Practic->Special
    price spread (SHAPE_TIER_PRICE) instead of an arbitrary range, and get re-pegged whenever
    the shape changes since a corner unit's price spread is nowhere near a 3-seat's. */
-/* Same bar count as the reference histogram -- 30 buckets across whatever the current shape's
-   real min..max price span is. */
-var PRICE_HIST_BUCKETS = 30;
-var priceHistBucketEdges = [];
+/* The reference's 30-bucket grid assumes near-continuous pricing (thousands of distinct
+   listings). Our catalogue only has as many distinct prices as there are tiers -- 5, one per
+   Practic/Confort/Premium/Lux/Special -- so forcing that into 30 evenly-spaced buckets left ~25
+   empty and a handful of random spikes. One bar per *actual* distinct price is both more honest
+   (every bar means something real) and reads as a clean chart instead of broken. */
+var priceHistPoints = [];
 function buildPriceHistogram(){
   var wrap = document.getElementById('price-hist');
   wrap.innerHTML = '';
-  var lo = PRICE_MIN_DEFAULT, hi = PRICE_MAX_DEFAULT;
-  var span = hi - lo || 1;
-  var counts = new Array(PRICE_HIST_BUCKETS).fill(0);
+  var counts = {};
   ALL_SWATCHES.forEach(function(sw){
     var p = collectionPrice(sw.slug);
-    var idx = Math.min(PRICE_HIST_BUCKETS - 1, Math.max(0, Math.floor((p - lo) / span * PRICE_HIST_BUCKETS)));
-    counts[idx]++;
+    counts[p] = (counts[p] || 0) + 1;
   });
-  priceHistBucketEdges = counts.map(function(_, i){ return lo + span * i / PRICE_HIST_BUCKETS; });
-  var maxCount = Math.max.apply(null, counts.concat([1]));
-  counts.forEach(function(c){
+  priceHistPoints = Object.keys(counts).map(Number).sort(function(a, b){ return a - b; });
+  var maxCount = Math.max.apply(null, priceHistPoints.map(function(p){ return counts[p]; }).concat([1]));
+  priceHistPoints.forEach(function(p){
     var bar = document.createElement('div');
     bar.className = 'bar';
-    bar.style.height = Math.max(6, Math.round(c / maxCount * 52)) + 'px';
+    bar.style.height = Math.max(6, Math.round(counts[p] / maxCount * 52)) + 'px';
+    bar.dataset.price = p;
     wrap.appendChild(bar);
   });
 }
 function refreshPriceHistogramHighlight(min, max){
   var bars = document.querySelectorAll('#price-hist .bar');
-  var span = (PRICE_MAX_DEFAULT - PRICE_MIN_DEFAULT) || 1;
-  bars.forEach(function(bar, i){
-    var bucketLo = priceHistBucketEdges[i];
-    var bucketHi = i + 1 < priceHistBucketEdges.length ? priceHistBucketEdges[i + 1] : PRICE_MAX_DEFAULT;
-    bar.classList.toggle('in-range', bucketHi >= min && bucketLo <= max);
+  bars.forEach(function(bar){
+    var p = +bar.dataset.price;
+    bar.classList.toggle('in-range', p >= min && p <= max);
   });
 }
 function updatePriceSliderBounds(){
