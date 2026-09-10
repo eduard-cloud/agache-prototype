@@ -2977,13 +2977,22 @@ function renderFabGrid(){
 /* Picking a collection re-dresses the whole sofa in it: every zone moves to that collection's
    first colour, because a zone can't keep a colour that no longer exists. */
 /* Once the grid is narrowed to one collection (locked, or zones need every swatch from the
-   same fabric), the material-type filter can't do anything -- the grid ignores it either way.
-   Leaving a pill checked-but-greyed reads as a contradiction (selected AND disabled), and it
-   was also still narrowing things it shouldn't (the collection picker itself), so it's cleared
-   outright whenever narrowing kicks in, from whichever entry point triggers it. */
+   same fabric), the material-type row stops acting as a filter -- the grid is pinned to that
+   one collection regardless of what's checked. But whatever the collection actually IS should
+   still read as checked: locking a Catifea collection while Catifea is on isn't a contradiction,
+   it's just true, and blanking it would throw away accurate information along with the stale
+   kind. So the row is resynced to whatever material types the locked collection really has,
+   rather than cleared outright -- Piano (not Catifea) drops the stale Catifea check, Manila
+   (Efect catifea) keeps Efect catifea checked because that's simply correct. */
 function clearMaterialFilterIfNarrowed(){
-  if (collectionNarrowed() && activeFabricPills.length){
-    activeFabricPills = [];
+  if (!collectionNarrowed()) return;
+  var c = COLLECTIONS[sel.collectionSlug];
+  var truth = FABRIC_PILLS.filter(function(p){
+    return p.stems.some(function(stem){ return c.materialTypes.some(function(t){ return t.indexOf(stem) > -1; }); });
+  }).map(function(p){ return p.key; });
+  var changed = truth.length !== activeFabricPills.length || truth.some(function(k){ return activeFabricPills.indexOf(k) === -1; });
+  if (changed){
+    activeFabricPills = truth;
     renderFabricPillRow();
     renderFsheetMaterialPill();
   }
