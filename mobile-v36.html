@@ -102,7 +102,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-dim-edit{flex:0 0 auto;width:52px;height:52px;border:1px solid var(--hair);border-radius:10px;background:#fff;color:var(--ink);display:flex;align-items:center;justify-content:center}
 .cfg-dim-edit:active{background:var(--chipbg)}
 /* the fixed main run: same label, but the value reads as a spec, not a control */
-.cfg-subtitle{font-size:15px;font-weight:600;letter-spacing:-.2px;color:var(--ink);margin:34px 0 14px}
+.cfg-subtitle{font-size:20px;font-weight:400;letter-spacing:-.2px;color:var(--ink);margin:34px 0 14px}
 .cfg-dim + .cfg-subtitle{margin-top:34px}
 .cfg-dim-fixed{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-bottom:18px;border-bottom:1px solid var(--hair)}
 .cfg-dim-fixed + .cfg-dim{margin-top:18px}
@@ -112,6 +112,9 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 #dim-isl-row.on{display:block}
 .cfg-shape-label strong{font-size:14px;font-weight:600;display:block}
 .cfg-shape-label span{font-size:12px;color:var(--gray);margin-top:2px;display:block}
+.cfg-shape-label strong span{display:inline}
+.cfg-shape-label strong #cfg-arm-sel-name{font-size:14px;color:var(--ink);font-weight:400;margin-top:0}
+.cfg-shape-label .cfg-shape-dims{display:inline;margin-top:0;margin-left:6px;font-size:14px;font-weight:400;color:var(--ink)}
 .fchip{display:flex;align-items:center;gap:7px;background:var(--chipbg);border-radius:8px;height:30px;padding:0 10px;font-size:13px}
 .rz-row{display:flex;align-items:center;justify-content:space-between;padding:20px 17px;border-bottom:1px solid var(--hair)}
 .rz-row .k{font-size:15px;font-weight:600}
@@ -261,7 +264,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 /* Apple-style config title: bold lead word(s) + period, then the description continues
    inline in grey as part of the same sentence/paragraph, instead of a bold heading with a
    separate grey line underneath. */
-h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.4;color:var(--ink);margin-bottom:24px}
+h3.cfg-title{font-size:20px;font-weight:400;letter-spacing:-.03em;line-height:1.4;color:var(--ink);margin-bottom:24px}
 .cfg-fabric-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:24px}
 .cfg-fabric-head h3.cfg-title{margin-bottom:0}
 /* Card format matches Figma node 899:7869 exactly: 16px outer radius, 8px padding, 16px gap,
@@ -780,7 +783,7 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
         <h3 class="cfg-title">Alege forma canapelei</h3>
         <div class="cfg-shape-row" id="layout-grid"></div>
         <div class="cfg-shape-label">
-          <strong id="cfg-layout-sel-name">Canapea dreaptă</strong>
+          <strong><span id="cfg-layout-sel-name">Canapea dreaptă</span><span class="cfg-shape-dims" id="cfg-layout-sel-dims"></span></strong>
         </div>
 
         <!-- Only the island can grow or shrink, so it only shows up on a colțar. -->
@@ -1744,6 +1747,13 @@ function renderLayoutGrid(){
     row.appendChild(t);
   });
   document.getElementById('cfg-layout-sel-name').textContent = layoutDef().label;
+  updateLayoutSelDims();
+}
+/* Shown right next to the layout name so the cm figure reads as part of the same line, not
+   a separate stat below it. */
+function updateLayoutSelDims(){
+  var el = document.getElementById('cfg-layout-sel-dims');
+  if (el) el.textContent = currentDims();
 }
 /* Both sliders are painted the same way: fill to the handle, value inside the track. */
 function paintDim(which){
@@ -1805,6 +1815,7 @@ function renderSizeSliders(){
 function onDimInput(){
   sel.isl = +document.getElementById('dim-isl').value;
   paintDim('isl');
+  updateLayoutSelDims();
   applyCombo();
 }
 /* The pencil is for shoppers who already know their wall: it swaps the read-only value for a
