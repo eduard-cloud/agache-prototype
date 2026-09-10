@@ -710,11 +710,11 @@ h3.cfg-title{font-size:18px;font-weight:600;letter-spacing:-.03em;line-height:1.
 .cfg-zonetabs{display:none;gap:4px;margin-bottom:24px;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .cfg-zonetabs::-webkit-scrollbar{display:none}
 .cfg-zonetabs.on{display:flex}
-.cfg-zonetab{flex:0 0 auto;scroll-snap-align:start;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:0 16px 10px;background:none;border:none;border-bottom:2px solid var(--chipbg)}
+.cfg-zonetab{flex:1 1 auto;min-width:max-content;scroll-snap-align:start;display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;padding:0 16px 10px;background:none;border:none;border-bottom:2px solid var(--chipbg)}
 .cfg-zonetab-name{font-size:16px;font-weight:500;letter-spacing:-.64px;color:var(--gray);white-space:nowrap}
-.cfg-zonetab-val{font-size:12px;letter-spacing:-.24px;color:var(--gray);white-space:nowrap}
-.cfg-zonetab.on{border-bottom-color:var(--ink)}
-.cfg-zonetab.on .cfg-zonetab-name,.cfg-zonetab.on .cfg-zonetab-val{color:var(--ink)}
+.cfg-zonetab-val{font-size:12px;font-weight:400;letter-spacing:-.24px;color:var(--gray);white-space:nowrap}
+.cfg-zonetab.on{border-bottom-color:#1d1d1f}
+.cfg-zonetab.on .cfg-zonetab-name,.cfg-zonetab.on .cfg-zonetab-val{color:#1d1d1f}
 
 /* ── cta bar -- the reference's floating bar: just a big price + a pill button, nothing else ── */
 .cfg-cta{flex:0 0 auto;background:#fff;border-top:1px solid var(--hair);display:flex;align-items:center;justify-content:space-between;padding:14px 24px;transition:padding .18s ease}
