@@ -785,6 +785,11 @@ input.price-mm-pill:focus{border-color:var(--ink)}
 .cfg-price-btn{display:flex;align-items:center;gap:2px;background:none;border:none;padding:0;cursor:pointer}
 .cfg-price-btn svg{width:18px;height:18px;color:var(--gray2);flex:0 0 auto;transition:width .18s ease,height .18s ease}
 .cfg-cta.condensed .cfg-price-btn svg{width:15px;height:15px}
+/* v39: "de la X lei" before any material/colour/accessory/service is picked is just the cheapest
+   possible starting price, nothing to break down yet -- the chevron only earns its place once a
+   choice actually changes what's in the receipt. */
+.cfg-price-btn.no-breakdown{cursor:default}
+.cfg-price-btn.no-breakdown svg{display:none}
 .pbd-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:60;align-items:flex-end}
 .pbd-overlay.open{display:flex}
 .pbd-sheet{background:#fff;border-radius:24px 24px 0 0;width:100%;max-height:80vh;display:flex;flex-direction:column;box-shadow:0 -8px 30px rgba(0,0,0,.14)}
@@ -1016,7 +1021,7 @@ input.price-mm-pill:focus{border-color:var(--ink)}
     </div>
 
     <div class="cfg-cta" id="cfg-cta">
-      <button type="button" class="cfg-price-btn" onclick="openPriceBreakdown()" aria-label="Vezi detalierea prețului">
+      <button type="button" class="cfg-price-btn" id="cfg-price-btn" onclick="openPriceBreakdown()" aria-label="Vezi detalierea prețului">
         <span class="pr" id="cfg-price">—</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"/></svg>
       </button>
@@ -1785,6 +1790,11 @@ function updateSummary(){
   /* Floating CTA bar mirrors the PDP's own price style (see mobile-v12.html .p-price) --
      no decimals there, so match it here instead of reusing the 2-decimal summary format. */
   document.getElementById('cfg-price').textContent = (c ? '' : 'de la ') + Math.round(price).toLocaleString('ro-RO') + ' lei';
+
+  var priceBtn = document.getElementById('cfg-price-btn');
+  var hasBreakdown = !!c || accLines.length > 0 || sizeSteps() !== 0;
+  priceBtn.classList.toggle('no-breakdown', !hasBreakdown);
+  priceBtn.onclick = hasBreakdown ? openPriceBreakdown : null;
 }
 function toggleSummaryDetails(){
   var wrap = document.getElementById('cfg-sum-details');
