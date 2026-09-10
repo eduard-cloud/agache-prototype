@@ -2890,6 +2890,13 @@ function toggleZoneMode(){
        so the first tap changes one zone rather than redressing the whole sofa. */
     ZONES.forEach(function(z){ sel.zones[z.key] = sel.colorName; });
     sel.zone = 'sezut';
+    /* A collectionSlug set here without ever being locked is just what the shopper happened to
+       be looking at while browsing broadly -- not a decision. Carrying it forward would silently
+       pin the whole multi-zone flow (and, in turn, the material filter) to something they never
+       actually chose, the moment they flip this toggle. Zones start with no collection instead,
+       same as a first-time visit, so "Alege colecția pentru toate zonele" is a real prompt, not
+       a formality over a choice already made behind their back. */
+    if (!sel.collectionLocked) sel.collectionSlug = null;
   } else {
     /* Leaving it collapses back to the body's colour -- the one the shopper sees most of. */
     sel.colorName = sel.zones.corp;
@@ -2897,9 +2904,8 @@ function toggleZoneMode(){
        back to browsing every collection, whatever was picked while zones were on. */
     sel.collectionLocked = false;
   }
-  /* Turning zones on can narrow the grid all by itself -- if a collection was already inferred
-     from earlier browsing (sel.collectionSlug set, but never locked), collectionNarrowed()
-     flips true the moment zoneMode does, with no pickCollection() call in between. */
+  /* Belt and braces: if a collection is somehow still locked in here (e.g. re-entering zone
+     mode right after picking one), keep the material row honest rather than stale. */
   clearMaterialFilterIfNarrowed();
   renderZoneUI();
   applyFabricFilters();
