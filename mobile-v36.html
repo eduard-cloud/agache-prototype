@@ -2700,7 +2700,14 @@ function closeImgLightbox(){
    number, the way the reference's own price breakdown sheet does it. */
 function openPriceBreakdown(){
   var c = COLLECTIONS[sel.collectionSlug];
-  var base = SHAPE_TIER_PRICE[baseVariantName()][c ? c.tier : 'Practic'];
+  var tiers = SHAPE_TIER_PRICE[baseVariantName()];
+  /* v38: the flat "Canapea Boston -- <collection>" line priced Luna and Spello identically even
+     though they sit in different tiers (Practic vs Lux) -- splitting off the material as its own
+     line is what actually shows that difference, instead of just the different collection name
+     next to the same-shaped number. */
+  var practic = tiers.Practic;
+  var tierPrice = tiers[c ? c.tier : 'Practic'];
+  var matDiff = tierPrice - practic;
   var steps = sizeSteps();
   var extra = STEP_LEI * steps;
   var accTotal = 0, accLines = [];
@@ -2711,9 +2718,10 @@ function openPriceBreakdown(){
     accTotal += lp;
     accLines.push([acc.name + (st.qty > 1 ? ' x ' + st.qty : ''), formatPrice(lp) + ' lei']);
   });
-  var total = base + extra + accTotal;
+  var total = practic + matDiff + extra + accTotal;
 
-  var lines = [['Canapea Boston' + (c ? ' – ' + c.name : ''), formatPrice(base) + ' lei']];
+  var lines = [['Canapea Boston – preț standard', formatPrice(practic) + ' lei']];
+  if (c && matDiff > 0) lines.push(['Material ales – ' + c.name + ' (' + c.tier + ')', '+ ' + formatPrice(matDiff) + ' lei']);
   if (steps) lines.push(['Extindere dimensiune (' + Math.abs(steps) + ' x 500 lei)', (extra < 0 ? '–' : '+') + ' ' + formatPrice(Math.abs(extra)) + ' lei']);
   lines = lines.concat(accLines);
 
