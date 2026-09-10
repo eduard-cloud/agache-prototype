@@ -2977,6 +2977,14 @@ function pickCollection(slug, el){
      whether or not zones are in play. A collection merely inferred from a swatch doesn't lock
      anything -- that shopper is still browsing the whole catalogue. */
   sel.collectionLocked = !deselect;
+  /* Locking a collection makes the material-type filter inert -- the grid is pinned to this one
+     collection regardless of what's checked up there. Leaving a pill checked-but-greyed reads as
+     a contradiction (selected AND disabled), so it's cleared instead of lingering in a dead state. */
+  if (!deselect && activeFabricPills.length){
+    activeFabricPills = [];
+    renderFabricPillRow();
+    renderFsheetMaterialPill();
+  }
   if (deselect){
     sel.colorName = null;
     sel.zones = {};
