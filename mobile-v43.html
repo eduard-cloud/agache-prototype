@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Homepage – Agache (redesign, PDP system)</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --purple:#4d35ff; --ink:#121212; --gray:#707173; --gray2:#b6b9be;
+  --hair:#ececec; --chipbg:#f2f2f2; --graysec:#f5f5f7;
+  --yellow:#feffbe; --yellow2:#ffffe0; --lav:#f6f5ff; --lavchip:#ebe8ff;
+  --blue:#eefbff; --cream:#f9f2df; --orange:#fa7800;
+  --red:#eb2f1e; --slate:#363944;
+  --black:#1D1D1F; --f7:#f7f7f7; --stroke:#f2f2f2; --c8:#c8cbd0; --beige:#F2F0E9;
+  --ls-12:-.24px; --ls-13:-.26px; --ls-14:-.42px;
+  --ls-16:-.64px; --ls-18:-.72px; --ls-20:-.8px; --ls-24:-.96px; --ls-28:-1.12px; --ls-34:-1.36px;
+}
+html{-webkit-text-size-adjust:100%;overflow-x:hidden}
+body{font-family:'DM Sans',sans-serif;color:var(--ink);background:#fff;overflow-x:hidden;font-variation-settings:"opsz" 14;font-feature-settings:"ss03" 1}
+button{cursor:pointer;border:none;background:none;font-family:inherit;color:inherit}
+a{text-decoration:none;color:inherit}
+img,video{display:block;max-width:100%}
+.page{max-width:480px;margin:0 auto;background:#fff;position:relative;min-height:100vh}
+.px{padding-left:20px;padding-right:20px}
+
+/* ══ shared type / eyebrow (verbatim from PDP mobile-v37) ══ */
+.eyebrow{font-size:12px;letter-spacing:.84px;font-weight:500;color:#363944;line-height:1.2}
+.sec-h2{font-size:28px;font-weight:500;letter-spacing:-.84px;line-height:1.1;color:#1D1D1F;margin-top:16px;margin-bottom:-2px}
+.h20{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-bottom:-4px}
+
+/* ══ announcement + header (identical to PDP mobile-v37 / mobile-v42) ══ */
+#annbar{height:40px;background:var(--stroke);display:flex;align-items:center;justify-content:space-between;padding:0 12px}
+#annbar .ann-txt{font-size:14px;font-weight:500;letter-spacing:-.28px;line-height:1.2;color:var(--black);flex:1;text-align:center}
+#annbar button{width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+#header{height:64px;display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:#fff;border-bottom:1px solid var(--stroke)}
+#header .logo img{height:32px;width:auto;display:block}
+#header .h-icons{display:flex;align-items:center;gap:32px}
+#header .icon-group{display:flex;align-items:center;gap:16px}
+#header .icon-group button{width:24px;height:24px;padding:0;display:flex;align-items:center;justify-content:center}
+#header .icon-group button img{display:block}
+#header .menu-btn{width:32px;height:24px;padding:0;display:flex;align-items:center;justify-content:center}
+#header .menu-btn img{display:block;width:23px;height:14px}
+
+/* ══ hero (product-first, matches PDP hero conventions: badge, pill CTA) ══ */
+#hhero{position:relative;aspect-ratio:4/5;overflow:hidden;background:#f5f5f7}
+#hhero img{width:100%;height:100%;object-fit:cover}
+#hhero .hh-badge{position:absolute;top:16px;left:20px;background:#fff;color:var(--black);font-size:10px;font-weight:500;letter-spacing:.2px;line-height:1.2;padding:3.33px 10px;text-transform:uppercase;z-index:2}
+#hhero .hh-ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(0,0,0,.62) 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:0 20px 28px}
+#hhero h1{font-size:34px;font-weight:500;letter-spacing:var(--ls-34);line-height:1.05;color:#fff}
+#hhero .hh-sub{font-size:14px;letter-spacing:var(--ls-14);line-height:1.4;color:#fff;opacity:.92;margin-top:12px;max-width:300px}
+#hhero .hh-cta{margin-top:20px}
+
+/* ══ CTAs (verbatim from PDP) ══ */
+.btn-buy{background:var(--red);color:#fff;border-radius:9999px;font-size:16px;font-weight:500;letter-spacing:var(--ls-16);line-height:1.2;height:56px;padding:0 24px;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;transition:transform .1s,background .2s}
+.btn-buy:active{transform:scale(.97)}
+.btn-custom{background:#fff;border:1px solid var(--red);color:var(--red);border-radius:9999px;height:56px;padding:0 24px;font-size:16px;font-weight:500;letter-spacing:var(--ls-16);line-height:1.2;display:flex;align-items:center;justify-content:center;gap:8px;width:100%}
+.btn-custom:active{background:rgba(235,47,30,.06)}
+.btn-custom svg{width:16px;height:16px;display:block}
+
+/* ══ category chips (fpill, verbatim from PDP #testim .filters) ══ */
+#catchips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:20px 20px;margin-top:0}
+#catchips::-webkit-scrollbar{display:none}
+.fpill{flex:0 0 auto;font-size:14px;letter-spacing:-.28px;padding:16px;border-radius:9999px;border:1px solid #363944;background:#fff;white-space:nowrap}
+.fpill.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* ══ rail / rail-nav / rail-scrollbar (verbatim from PDP) ══ */
+.rail{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:0 20px;scroll-padding:0 20px;margin-top:24px}
+.rail::-webkit-scrollbar{display:none}
+.rail-nav{display:flex;justify-content:flex-end;gap:16px;padding:0 16px;margin-top:24px;align-items:center}
+.rn-prev,.rn-next{width:40px;height:40px;padding:0}
+.rn-prev img,.rn-next img{width:40px;height:40px;display:block}
+.rail-scrollbar{height:1px;background:#e3e3e3;margin:12px 20px 0;position:relative}
+.rail-scrollbar-thumb{position:absolute;top:0;left:0;height:3px;margin-top:-1px;width:20%;background:var(--ink)}
+
+/* ══ product cards (pcard, verbatim from PDP #like/#recent) ══ */
+.pcard{border-radius:12px;overflow:hidden;background:var(--chipbg);flex:0 0 168px;scroll-snap-align:start;position:relative}
+.pcard .im{height:130px;background:#e9e9e9;position:relative}
+.pcard .im img{width:100%;height:100%;object-fit:cover}
+.pcard .sale-badge{position:absolute;top:8px;left:8px;background:var(--red);color:#fff;font-size:11px;font-weight:500;letter-spacing:var(--ls-12);padding:3px 8px;border-radius:4px;z-index:1}
+.pcard .tx{padding:10px 12px 12px}
+.pcard .n{font-size:13px;font-weight:500;line-height:16px}
+.pcard .p{font-size:13px;color:var(--gray);margin-top:4px}
+.pcard .p .sale{color:var(--red);font-weight:500}
+.pcard .p .was{text-decoration:line-through;color:var(--gray2);margin-left:6px}
+.pcard .rv{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--gray);margin-top:4px}
+.pcard .rv svg{width:10px;height:10px;fill:var(--ink)}
+
+/* ══ atelier / craft photo band ══ */
+#atelier{position:relative;aspect-ratio:3/4;overflow:hidden;background:#111;margin-top:64px}
+#atelier img{width:100%;height:100%;object-fit:cover}
+#atelier .at-ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,18,18,0) 40%,rgba(18,18,18,.75) 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:28px 20px}
+#atelier .eyebrow{color:#fff;opacity:.85}
+#atelier .sec-h2{color:#fff;margin-top:8px}
+#atelier p{color:#fff;opacity:.9;font-size:14px;letter-spacing:var(--ls-14);line-height:1.5;margin-top:12px;max-width:300px}
+
+/* ══ configureaza section (verbatim structure from PDP #confsec) ══ */
+#confsec{background:var(--beige);padding:64px 0 56px;margin-top:0}
+#confsec .wph{position:relative;margin-top:24px;border-radius:16px 16px 0 0;overflow:hidden}
+#confsec .wph img{width:100%;height:420px;object-fit:cover;display:block}
+#confsec .wbtn{position:absolute;left:20px;width:calc(100% - 40px);bottom:20px;background:#fff;border-radius:9999px;padding:16px 24px;font-size:16px;letter-spacing:var(--ls-16);line-height:1.2;font-weight:500;color:var(--black);display:flex;align-items:center;justify-content:center;gap:8px}
+#confsec .wbtn svg{display:block;flex:0 0 16px}
+#confsec .swrow{display:flex;align-items:center;gap:8px;margin-top:20px}
+#confsec .sw-dot{width:32px;height:32px;border-radius:50%;flex:0 0 32px;object-fit:cover;border:2px solid #fff;box-shadow:0 0 0 1px var(--stroke);margin-left:-10px}
+#confsec .sw-dot:first-child{margin-left:0}
+#confsec .sw-more{font-size:13px;color:var(--slate);letter-spacing:var(--ls-13);margin-left:8px}
+
+/* ══ trust / craft rail (ccard system, verbatim from PDP #construit) ══ */
+#construit{background:#fff;padding:64px 0}
+#construit .chead{display:flex;flex-direction:column;padding:0 20px}
+#construit .chead .lead{font-size:18px;font-weight:500;letter-spacing:var(--ls-18);line-height:1.2;color:var(--black)}
+#crail{gap:12px;padding:0 16px;margin-top:32px;scroll-padding:0 16px;align-items:flex-start}
+.ccard{position:relative;flex:0 0 280px;width:280px;min-height:420px;background:#fff;border-radius:16px;overflow:hidden;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:space-between;align-items:center}
+.ccard-tinted{position:relative;box-shadow:0 8px 24px rgba(90,68,36,.1)}
+.ccard-beige{background:radial-gradient(130% 100% at 22% 0%,#ffffff 0%,#f6efe1 40%,#e9ddc5 78%,#e2d4b8 100%)}
+.ccard-tesatura{background:radial-gradient(130% 100% at 78% 100%,#ffffff 0%,#f6e9da 38%,#e3c6a3 74%,#c99a68 100%)}
+.ccard-culori{background:radial-gradient(130% 100% at 25% 0%,#ffffff 0%,#f3ede2 38%,#e2d6c3 74%,#c9b89e 100%)}
+.ccard-captuseala{background:radial-gradient(130% 100% at 75% 0%,#ffffff 0%,#eef2f4 38%,#dde5e8 74%,#c9d5da 100%)}
+.ccard .ctxt{display:flex;flex-direction:column;gap:14px;padding:28px 22px;width:100%}
+.ccard .tag{font-size:15px;font-weight:500;letter-spacing:var(--ls-16);line-height:1.2;color:var(--black)}
+.ccard .ttl{font-size:22px;font-weight:600;letter-spacing:0;line-height:1.1;color:var(--black)}
+.ccard .dsc{font-size:15px;font-weight:500;letter-spacing:var(--ls-16);line-height:1.35;color:var(--black)}
+.ccard-photo{background:linear-gradient(165deg,#2e2015 0%,#8a5a35 45%,#dba873 75%,#f0d2ab 100%);position:relative;display:block}
+.ccard-photo .ph-full{position:absolute;inset:0;width:100%;height:100%}
+.ccard-photo .ph-full img{width:100%;height:100%;object-fit:cover}
+.ccard-photo .ctxt{position:relative;z-index:1;background:linear-gradient(180deg,rgba(18,18,18,.75) 0%,rgba(18,18,18,.4) 55%,rgba(18,18,18,0) 85%);padding-bottom:24px}
+.ccard-photo .ctxt .tag,.ccard-photo .ctxt .ttl,.ccard-photo .ctxt .dsc{color:#fff}
+.ccard-photo .ctxt .tag{font-weight:400}
+.ccard .ph{flex:0 0 auto}
+.ccard .ph img{object-fit:cover;width:100%;height:100%}
+.ph-garantie{width:236px;height:158px;margin-bottom:16px}
+.ph-tesatura{width:280px;height:158px}
+.ph-captuseala{width:280px;height:187px;border-radius:0 0 16px 16px;overflow:hidden}
+.ph-culori{width:280px;height:158px;display:flex}
+.ph-culori img{width:33.33%;height:100%;object-fit:cover}
+
+/* ══ testimonials (score-badge + simplified rvcard, verbatim tokens from PDP #testim) ══ */
+#testim{background:var(--f7);padding:64px 0}
+.score-badge{width:fit-content;margin:0 0 0 20px;background:#fff;border:1px solid #e5e5e5;border-radius:16px;padding:24px 20px;display:flex;align-items:center;gap:16px}
+.score-badge .big{font-size:48px;font-weight:500;letter-spacing:-1.44px;line-height:1.05;color:#1D1D1F}
+.score-badge .sb-col{display:flex;flex-direction:column;gap:8px}
+.score-badge .stars{display:flex;gap:1px}
+.score-badge .stars .star{width:20px;height:20px;fill:#ffc800}
+.score-badge .cnt{font-size:18px;font-weight:500;letter-spacing:-.54px;color:#1D1D1F}
+.rvcard-s{flex:0 0 140px;scroll-snap-align:start}
+.rvcard-s .rp{position:relative;aspect-ratio:140/188;border-radius:12px;overflow:hidden;background:#eee}
+.rvcard-s .rp img{width:100%;height:100%;object-fit:cover}
+.rv-badge-s{position:absolute;top:10px;left:10px;background:rgba(255,255,255,.92);border-radius:9999px;display:flex;align-items:center;gap:3px;padding:4px 7px}
+.rv-badge-s .stars{display:flex;gap:1px}
+.rv-badge-s .star{width:9px;height:9px;fill:#ffc800}
+.rvcard-s .rv-name{margin-top:8px;font-size:13px;font-weight:500;letter-spacing:var(--ls-13);color:var(--black)}
+
+/* ══ showroom banner (full-bleed image, ccard-photo overlay conventions) ══ */
+#showroom{position:relative;aspect-ratio:1/1;overflow:hidden;margin-top:0}
+#showroom img{width:100%;height:100%;object-fit:cover}
+#showroom .sr-ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,18,18,0) 8%,rgba(18,18,18,.55) 48%,rgba(18,18,18,.88) 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:28px 20px}
+#showroom .eyebrow{color:#fff;opacity:.85}
+#showroom .sec-h2{color:#fff;margin-top:8px}
+#showroom .sr-btn{margin-top:20px;background:#fff;color:var(--black)}
+
+/* ══ category grid (pcard-style 2-col, verbatim grid pattern from PDP #like) ══ */
+#catgrid{padding:64px 20px 0}
+#catgrid .grid{display:grid;grid-template-columns:1fr 1fr;gap:24px 8px;margin-top:24px}
+#catgrid .pcard{flex:auto}
+#catgrid .pcard .im{height:150px}
+
+/* ══ newsletter capture ══ */
+#news{background:#fff;padding:64px 20px}
+#news-card{border:1px solid var(--stroke);border-radius:16px;padding:24px 20px;margin-top:24px}
+#news-card input{width:100%;height:52px;border:1px solid #c8cbd0;border-radius:9999px;padding:0 20px;font-size:15px;font-family:inherit;color:var(--ink);margin-bottom:10px}
+#news-card input::placeholder{color:var(--gray2)}
+
+/* ══ closing brand statement (dark) ══ */
+#closing{background:var(--ink);color:#fff;padding:64px 20px;text-align:center}
+#closing p{font-size:26px;font-weight:500;letter-spacing:-.9px;line-height:1.25}
+#closing a{display:inline-block;margin-top:24px;font-size:14px;font-weight:500;color:#fff;text-decoration:underline;text-underline-offset:3px}
+
+/* ══ footer (kept from v42, restyled to PDP tokens) ══ */
+footer{background:var(--f7);margin-top:0;padding:28px 20px 24px}
+.foot-contact p{font-size:13px;color:var(--slate);display:flex;align-items:center;gap:8px;margin-bottom:10px;letter-spacing:var(--ls-13)}
+.foot-contact svg{flex:0 0 auto;color:var(--slate)}
+.accordion{border-top:1px solid var(--stroke)}
+.accordion summary{list-style:none;display:flex;align-items:center;justify-content:space-between;padding:16px 0;font-size:14px;font-weight:500;letter-spacing:var(--ls-14);cursor:pointer}
+.accordion summary::-webkit-details-marker{display:none}
+.accordion:last-of-type{border-bottom:1px solid var(--stroke)}
+.badges-row{display:flex;flex-direction:column;gap:10px;margin-top:20px}
+.badges-row img{height:38px;width:auto}
+.badges-row span{font-size:11px;font-weight:600;text-decoration:underline;margin-top:-4px;margin-bottom:6px;color:var(--slate)}
+.pay-icons{display:flex;gap:6px;margin-top:20px;flex-wrap:wrap}
+.pay-icons div{width:38px;height:24px;border-radius:4px;background:#e2e2e2}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div id="annbar">
+    <button aria-label="Anterior"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <div class="ann-txt">Livrare 2-3 saptamani</div>
+    <button aria-label="Următor"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+  </div>
+
+  <header id="header">
+    <a class="logo" href="#"><img src="assets/logo.png" alt="agache"></a>
+    <div class="h-icons">
+      <div class="icon-group">
+        <button aria-label="Căutare"><img src="assets/v2/header/search.svg" alt=""></button>
+        <button aria-label="Cont"><img src="assets/v2/header/account.svg" alt=""></button>
+        <button aria-label="Coș"><img src="assets/v2/header/basket.svg" alt=""></button>
+      </div>
+      <button class="menu-btn" aria-label="Meniu"><img src="assets/v2/header/menu.svg" alt=""></button>
+    </div>
+  </header>
+
+  <!-- Hero: product-first, immediate CTA into the configurator -->
+  <div id="hhero">
+    <span class="hh-badge">Personalizabil</span>
+    <img src="assets/boston-soft-comfort-woman-v1.webp" alt="Canapea Agache în living">
+    <div class="hh-ov">
+      <h1>Canapeaua gândită pentru felul tău de a trăi.</h1>
+      <p class="hh-sub">Alegi forma, mărimea și stofa. Restul e treaba noastră, de peste 30 de ani.</p>
+      <div class="hh-cta"><button class="btn-buy" onclick="location.href='mobile-v41.html'">Configurează-ți canapeaua</button></div>
+    </div>
+  </div>
+
+  <!-- Category chips: jump straight to what you're looking for -->
+  <div id="catchips">
+    <button class="fpill on">Toate produsele</button>
+    <button class="fpill">Canapele</button>
+    <button class="fpill">Colțare</button>
+    <button class="fpill">Colțare de bucătărie</button>
+    <button class="fpill">Fotolii</button>
+    <button class="fpill">Paturi de dormitor</button>
+  </div>
+
+  <!-- Best sellers -->
+  <div class="px" style="margin-top:8px">
+    <div class="eyebrow">CELE MAI CĂUTATE</div>
+    <div class="sec-h2" style="font-size:24px">Cele mai vândute produse</div>
+  </div>
+  <div class="rail" id="bsrail">
+    <div class="pcard">
+      <div class="im"><img src="https://agache.ro/cdn/shop/files/Paris_Cover_Tiny.jpg?v=1773327192&width=355" alt="Colecția Paris"></div>
+      <div class="tx"><div class="n">Colecția Paris</div><div class="p">De la 5.355,00 lei</div><div class="rv"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>34 recenzii</div></div>
+    </div>
+    <div class="pcard">
+      <div class="im"><img src="https://agache.ro/cdn/shop/files/Cover_Chere.jpg?v=1773325616&width=355" alt="Colțar Chere"></div>
+      <div class="tx"><div class="n">Colțar Chere</div><div class="p">De la 6.110,00 lei</div><div class="rv"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>8 recenzii</div></div>
+    </div>
+    <div class="pcard">
+      <div class="im"><img src="https://agache.ro/cdn/shop/files/Boston_Cover_Tiny.jpg?v=1773325081&width=355" alt="Colecția Boston"></div>
+      <div class="tx"><div class="n">Colecția Boston</div><div class="p">De la 4.745,00 lei</div><div class="rv"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>21 recenzii</div></div>
+    </div>
+    <div class="pcard">
+      <div class="im"><img src="https://agache.ro/cdn/shop/files/Valencia_Cover_Tiny.jpg?v=1773328122&width=1500" alt="Colecția Valencia"></div>
+      <div class="tx"><div class="n">Colecția Valencia</div><div class="p">De la 6.265,00 lei</div><div class="rv"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>10 recenzii</div></div>
+    </div>
+    <div class="pcard">
+      <div class="im"><span class="sale-badge">Reducere</span><img src="https://agache.ro/cdn/shop/files/Canapea-Madrid-Main.jpg?v=1771993338&width=1000" alt="Canapea Madrid"></div>
+      <div class="tx"><div class="n">Canapea Madrid</div><div class="p"><span class="sale">5.145,00 lei</span><span class="was">7.345,00 lei</span></div><div class="rv"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>1 recenzii</div></div>
+    </div>
+  </div>
+  <div class="rail-nav">
+    <button class="rn-prev" onclick="railNav('bsrail',-1)" aria-label="Anterior"><img src="assets/arrow-left-40.svg" alt=""></button>
+    <button class="rn-next" onclick="railNav('bsrail',1)" aria-label="Următor"><img src="assets/arrow-right-40.svg" alt=""></button>
+  </div>
+
+  <!-- Atelier / craft photo band -->
+  <div id="atelier">
+    <img src="assets/workshop.png" alt="Atelierul Agache din Timișoara">
+    <div class="at-ov">
+      <div class="eyebrow">POVESTEA NOASTRĂ</div>
+      <div class="sec-h2">30 de ani de meșteșug, o singură familie.</div>
+      <p>Din 1994 construim mobilier tapițat în Timișoara, cu aceeași echipă care nu face compromisuri la materiale.</p>
+    </div>
+  </div>
+
+  <!-- Configureaza: the core differentiator, teased like a color picker -->
+  <div id="confsec">
+    <div class="px">
+      <div class="eyebrow">PERSONALIZEAZĂ</div>
+      <div class="sec-h2">Alege stofa.<br>Restul vine de la sine.</div>
+      <div class="swrow">
+        <img class="sw-dot" src="assets/swatches/enjoylux-03.jpg" alt="">
+        <img class="sw-dot" src="assets/swatches/enjoylux-07.jpg" alt="">
+        <img class="sw-dot" src="assets/swatches/enjoylux-12.jpg" alt="">
+        <img class="sw-dot" src="assets/swatches/enjoylux-18.jpg" alt="">
+        <img class="sw-dot" src="assets/swatches/enjoylux-22.jpg" alt="">
+        <span class="sw-more">peste 300 de nuanțe</span>
+      </div>
+    </div>
+    <div class="px">
+      <div class="wph">
+        <img src="assets/manila-hero.png" alt="Configurator canapea Agache">
+        <button class="wbtn" onclick="location.href='mobile-v41.html'">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4V2M15 16V14M8 9H10M20 9H22M17.8 11.8L19 13M17.8 6.2L19 5M3 21L12 12M12.2 6.2L11 5"/></svg>
+          Configurează canapeaua ta
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trust / craft rail: brand-wide version of the PDP's "5 motive" -->
+  <div id="construit">
+    <div class="chead">
+      <p class="lead">5 motive pentru care clienții noștri aleg Agache:</p>
+    </div>
+    <div class="rail" id="crail">
+      <div class="ccard ccard-photo">
+        <div class="ph-full"><img src="assets/hero-1.png" alt="Canapea Agache"></div>
+        <div class="ctxt">
+          <div class="tag">Făcută de mână</div>
+          <div class="ttl">30 de ani de meșteșug</div>
+          <div class="dsc">Aceeași familie, aceeași echipă din Timișoara, de la primul colțar din 1994.</div>
+        </div>
+      </div>
+      <div class="ccard ccard-tinted ccard-beige">
+        <div class="ctxt">
+          <div class="tag">Garanție extinsă</div>
+          <div class="ttl">10 ani de garanție structurală</div>
+          <div class="dsc">Garanția noastră acoperă structura de lemn masiv a fiecărei canapele Agache.</div>
+        </div>
+        <div class="ph ph-garantie"><img src="assets/construit-garantie.png" alt="Structura canapelei"></div>
+      </div>
+      <div class="ccard ccard-tinted ccard-tesatura">
+        <div class="ctxt">
+          <div class="tag">Atenție la detalii</div>
+          <div class="ttl">Țesături alese cu grijă</div>
+          <div class="dsc">Materiale testate la uzură, alese să reziste ani la rând, nu doar în poze.</div>
+        </div>
+        <div class="ph ph-tesatura"><img src="assets/construit-tesatura.png" alt="Țesătură" style="object-position:0 93%"></div>
+      </div>
+      <div class="ccard ccard-tinted ccard-culori">
+        <div class="ctxt">
+          <div class="tag">Materiale și culori</div>
+          <div class="ttl">300 de nuanțe</div>
+          <div class="dsc">De la bucle la catifea - limita până la care poți personaliza rămâne imaginația ta.</div>
+        </div>
+        <div class="ph ph-culori">
+          <img src="assets/swatches/enjoylux-05.jpg" alt="">
+          <img src="assets/swatches/enjoylux-14.jpg" alt="">
+          <img src="assets/swatches/enjoylux-21.jpg" alt="">
+        </div>
+      </div>
+      <div class="ccard ccard-tinted ccard-captuseala">
+        <div class="ctxt">
+          <div class="tag">Căptușeală</div>
+          <div class="ttl">Căptușit pe toate părțile</div>
+          <div class="dsc">Fiecare canapea e gândită să reziste la uzura zilnică, chiar și pe părțile ascunse.</div>
+        </div>
+        <div class="ph ph-captuseala"><img src="assets/construit-captuseala.png" alt="Căptușeală"></div>
+      </div>
+    </div>
+    <div class="rail-scrollbar"><div class="rail-scrollbar-thumb"></div></div>
+  </div>
+
+  <!-- Testimonials -->
+  <div id="testim">
+    <div class="score-badge">
+      <div class="big">4.9</div>
+      <div class="sb-col">
+        <div class="stars">
+          <svg class="star" width="20" height="20" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="star" width="20" height="20" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="star" width="20" height="20" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="star" width="20" height="20" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="star" width="20" height="20" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <div class="cnt">1008 recenzii</div>
+      </div>
+    </div>
+    <div class="px" style="margin-top:32px">
+      <div class="eyebrow">DE LA CLIENȚII NOȘTRI</div>
+      <div class="sec-h2">30.000 de clienți fericiți în peste 30 de ani.</div>
+    </div>
+    <div class="rail" id="rvrail">
+      <div class="rvcard-s">
+        <div class="rp"><img src="https://review-images.judgeme.com/mobila-agache/1788863017__20260828_202614__original.jpg?quality=80&width=240" alt=""><div class="rv-badge-s"><div class="stars"><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div></div></div>
+        <div class="rv-name">Ioana</div>
+      </div>
+      <div class="rvcard-s">
+        <div class="rp"><img src="https://review-images.judgeme.com/mobila-agache/1787489892__1000179405__original.jpg?quality=80&width=240" alt=""><div class="rv-badge-s"><div class="stars"><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div></div></div>
+        <div class="rv-name">Ionuț</div>
+      </div>
+      <div class="rvcard-s">
+        <div class="rp"><img src="https://review-images.judgeme.com/mobila-agache/1787213872__26458__original.jpg?quality=80&width=240" alt=""><div class="rv-badge-s"><div class="stars"><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div></div></div>
+        <div class="rv-name">Bogdan</div>
+      </div>
+      <div class="rvcard-s">
+        <div class="rp"><img src="https://review-images.judgeme.com/mobila-agache/1784968776__1000138799__original.jpg?quality=80&width=240" alt=""><div class="rv-badge-s"><div class="stars"><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div></div></div>
+        <div class="rv-name">Sorina</div>
+      </div>
+    </div>
+    <div class="rail-nav">
+      <button class="rn-prev" onclick="railNav('rvrail',-1)" aria-label="Anterior"><img src="assets/arrow-left-40.svg" alt=""></button>
+      <button class="rn-next" onclick="railNav('rvrail',1)" aria-label="Următor"><img src="assets/arrow-right-40.svg" alt=""></button>
+    </div>
+  </div>
+
+  <!-- Showroom banner -->
+  <div id="showroom">
+    <img src="assets/video-poster.png" alt="Showroom Agache">
+    <div class="sr-ov">
+      <div class="eyebrow">MAGAZINELE NOASTRE</div>
+      <div class="sec-h2">Vezi și atinge canapelele, la 6 showroom-uri.</div>
+      <div style="margin-top:20px"><button class="btn-buy sr-btn">Găsește un magazin</button></div>
+    </div>
+  </div>
+
+  <!-- Category grid -->
+  <div id="catgrid">
+    <div class="eyebrow">CE CAUȚI?</div>
+    <div class="sec-h2" style="font-size:24px">Alege categoria</div>
+    <div class="grid">
+      <a class="pcard"><div class="im"><img src="https://agache.ro/cdn/shop/files/couch.jpg?v=1772111416&width=900" alt="Canapele"></div><div class="tx"><div class="n">Canapele</div></div></a>
+      <a class="pcard"><div class="im"><img src="https://agache.ro/cdn/shop/files/corners.jpg?v=1772111430&width=900" alt="Colțare"></div><div class="tx"><div class="n">Colțare</div></div></a>
+      <a class="pcard"><div class="im"><img src="https://agache.ro/cdn/shop/files/Kitchen.jpg?v=1772111445&width=900" alt="Colțare de bucătărie"></div><div class="tx"><div class="n">Colțare de bucătărie</div></div></a>
+      <a class="pcard"><div class="im"><img src="https://agache.ro/cdn/shop/files/Armchair.jpg?v=1772111459&width=900" alt="Fotolii"></div><div class="tx"><div class="n">Fotolii</div></div></a>
+      <a class="pcard"><div class="im"><img src="https://agache.ro/cdn/shop/files/beds.jpg?v=1772111472&width=900" alt="Paturi de dormitor"></div><div class="tx"><div class="n">Paturi de dormitor</div></div></a>
+    </div>
+  </div>
+
+  <!-- Newsletter -->
+  <div id="news">
+    <div class="eyebrow">OFERTĂ</div>
+    <div class="sec-h2" style="font-size:24px">Primești 10% reducere la prima comandă</div>
+    <div id="news-card">
+      <input type="email" placeholder="Adresa ta de e-mail">
+      <button class="btn-buy">Trimite</button>
+    </div>
+  </div>
+
+  <!-- Closing brand statement -->
+  <div id="closing">
+    <p>Mobilier care se potrivește casei tale, nu invers.</p>
+    <a href="#">Vezi produsele noastre</a>
+  </div>
+
+  <footer>
+    <div class="foot-contact">
+      <p><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>36 Buziasului, Lugoj, Timis, 305500</p>
+      <p><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 6l8 7 8-7"/></svg>agache@agache.ro</p>
+      <p><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8h12l-1 12H7L6 8Z"/></svg>+40754011485 / +40744661246</p>
+    </div>
+    <details class="accordion"><summary>Contactează-ne <span>−</span></summary></details>
+    <details class="accordion"><summary>Legal <span>+</span></summary></details>
+    <details class="accordion"><summary>Colecții <span>+</span></summary></details>
+    <details class="accordion"><summary>Informații <span>+</span></summary></details>
+    <div class="badges-row">
+      <img src="https://agache.ro/cdn/shop/files/anpc-sal_cf85fb04-20ff-46eb-a147-355d17f27d24.png?v=1768233426&width=535" alt="ANPC SAL">
+      <span>ANPC SAL</span>
+      <img src="https://agache.ro/cdn/shop/files/anpc-sol.png?v=1768233455&width=535" alt="ANPC SOL">
+      <span>ANPC SOL</span>
+    </div>
+    <div class="pay-icons"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+  </footer>
+
+</div>
+<script>
+function railNav(id,dir){
+  var el=document.getElementById(id);
+  var card=el.querySelector(':scope > *');
+  var step=card?card.getBoundingClientRect().width+16:280;
+  el.scrollBy({left:dir*step,behavior:'smooth'});
+}
+</script>
+</body>
+</html>

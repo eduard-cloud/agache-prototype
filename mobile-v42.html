@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Homepage – Agache (import v1)</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#121212; --gray:#63666e; --gray2:#8d8f94; --hair:#e7e7e7;
+  --cream:#f4ecd8; --graybg:#f5f5f5; --red:#eb2f1e;
+  --black:#1D1D1F; --f7:#f7f7f7; --stroke:#f2f2f2;
+}
+html,body{height:100%;-webkit-text-size-adjust:100%;overflow-x:hidden}
+body{font-family:'DM Sans',sans-serif;color:var(--ink);background:#fff;line-height:1.4}
+button{cursor:pointer;border:none;background:none;font-family:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%}
+.wrap{max-width:480px;margin:0 auto;background:#fff;min-height:100vh;position:relative}
+
+/* ── announcement bar (v2, matches PDP mobile-v37) ── */
+#annbar{height:40px;background:var(--stroke);display:flex;align-items:center;justify-content:space-between;padding:0 12px}
+#annbar .ann-txt{font-size:14px;font-weight:500;letter-spacing:-.28px;line-height:1.2;color:var(--black);flex:1;text-align:center}
+#annbar button{width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+
+/* ── header (v2, matches PDP mobile-v37) ── */
+#header{height:64px;display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:#fff;border-bottom:1px solid var(--stroke)}
+#header .logo img{height:32px;width:auto;display:block}
+#header .h-icons{display:flex;align-items:center;gap:32px}
+#header .icon-group{display:flex;align-items:center;gap:16px}
+#header .icon-group button{width:24px;height:24px;padding:0;display:flex;align-items:center;justify-content:center}
+#header .icon-group button img{display:block}
+#header .menu-btn{width:32px;height:24px;padding:0;display:flex;align-items:center;justify-content:center}
+#header .menu-btn img{display:block;width:23px;height:14px}
+
+/* ── hero ── */
+.hero{position:relative;aspect-ratio:3/4;overflow:hidden}
+.hero img{width:100%;height:100%;object-fit:cover}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15) 0%,rgba(0,0,0,.05) 35%,rgba(0,0,0,.55) 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:24px 20px 28px;color:#fff}
+.hero h1{font-size:42px;font-weight:700;letter-spacing:-.02em;line-height:1.05;margin-bottom:14px}
+.hero p{font-size:15px;line-height:1.5;margin-bottom:18px;max-width:320px}
+.hero-cta{display:inline-block;background:#fff;color:var(--ink);font-size:15px;font-weight:600;padding:15px 22px;border-radius:2px;align-self:flex-start}
+
+/* ── brand story ── */
+.story{background:var(--graybg);padding:32px 20px}
+.story h2{font-size:19px;font-weight:600;letter-spacing:-.01em;margin-bottom:14px}
+.story .intro{font-size:14px;color:var(--ink);margin-bottom:14px}
+.story p{font-size:14px;color:var(--gray);line-height:1.6;margin-bottom:14px}
+.story strong{color:var(--ink);font-weight:600}
+.story .sign{font-size:14px;margin-top:4px}
+.story .sign b{display:block;margin-top:2px}
+
+/* ── reviews ── */
+.section{padding:32px 0 8px}
+.section-title{font-size:19px;font-weight:600;letter-spacing:-.01em;padding:0 20px;margin-bottom:10px}
+.rating-row{display:flex;align-items:center;gap:6px;padding:0 20px;margin-bottom:16px;font-size:14px;font-weight:600}
+.rating-row svg{color:#121212}
+.rating-row span.count{color:var(--gray);font-weight:400}
+.rev-scroll{display:flex;gap:10px;overflow-x:auto;padding:0 20px 4px;scrollbar-width:none}
+.rev-scroll::-webkit-scrollbar{display:none}
+.rev-card{flex:0 0 128px;position:relative;border-radius:10px;overflow:hidden;aspect-ratio:128/172;background:#eee}
+.rev-card img{width:100%;height:100%;object-fit:cover}
+.rev-card .stars{position:absolute;top:10px;left:10px;display:flex;gap:2px}
+.rev-card .stars svg{width:11px;height:11px;color:#fff;filter:drop-shadow(0 1px 2px rgba(0,0,0,.4))}
+.rev-card .name{position:absolute;bottom:10px;left:10px;color:#fff;font-size:13px;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,.45)}
+.rev-card.badge .name::after{content:'✓';display:inline-block;margin-left:5px;width:14px;height:14px;background:#3b82f6;color:#fff;border-radius:50%;font-size:9px;text-align:center;line-height:14px}
+
+/* ── categories grid ── */
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 20px}
+.cat-card{text-align:left}
+.cat-card .imw{border-radius:10px;overflow:hidden;aspect-ratio:1/1;background:#eee;margin-bottom:8px}
+.cat-card img{width:100%;height:100%;object-fit:cover}
+.cat-card span{font-size:14px;font-weight:500}
+
+/* ── product carousel ── */
+.prod-scroll{display:flex;gap:12px;overflow-x:auto;padding:0 20px 4px;scrollbar-width:none}
+.prod-scroll::-webkit-scrollbar{display:none}
+.prod-card{flex:0 0 168px}
+.prod-card .imw{border-radius:10px;overflow:hidden;aspect-ratio:168/130;background:#eee;margin-bottom:10px;position:relative}
+.prod-card img{width:100%;height:100%;object-fit:cover}
+.prod-card .sale-badge{position:absolute;top:8px;left:8px;background:var(--red);color:#fff;font-size:11px;font-weight:600;padding:3px 8px;border-radius:3px}
+.prod-card .name{font-size:14px;font-weight:600;margin-bottom:3px}
+.prod-card .price{font-size:13px;color:var(--gray);margin-bottom:4px}
+.prod-card .price .sale{color:var(--red);font-weight:600}
+.prod-card .price .was{text-decoration:line-through;color:var(--gray2);margin-left:6px}
+.prod-card .rev{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--gray)}
+.prod-card .rev svg{width:11px;height:11px;color:var(--ink)}
+
+/* ── stores ── */
+.store-card{padding:0 20px;margin-bottom:28px}
+.store-card .imw{border-radius:10px;overflow:hidden;aspect-ratio:280/180;background:#eee;margin-bottom:12px}
+.store-card img{width:100%;height:100%;object-fit:cover}
+.store-card h3{font-size:15px;font-weight:600;margin-bottom:8px}
+.store-card p{font-size:13px;color:var(--gray);margin-bottom:8px}
+.store-card b{color:var(--ink);font-weight:600}
+.store-card a.tel{color:var(--ink);text-decoration:underline}
+.store-card .maplink{display:block;font-size:13px;font-weight:600;text-decoration:underline;margin-top:8px}
+
+/* ── trust badges ── */
+.trust-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:8px 20px 0}
+.trust-card{background:#fff;border:1px solid var(--hair);border-radius:10px;padding:20px 12px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px}
+.trust-card svg{color:#2f5fdb}
+.trust-card span{font-size:13px;color:var(--ink);line-height:1.4}
+
+/* ── footer ── */
+footer{background:var(--graybg);margin-top:32px;padding:28px 20px 24px}
+.foot-contact{margin-bottom:8px}
+.foot-contact p{font-size:13px;color:var(--gray);display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.foot-contact svg{flex:0 0 auto;color:var(--gray)}
+.accordion{border-top:1px solid var(--hair)}
+.accordion summary{list-style:none;display:flex;align-items:center;justify-content:space-between;padding:16px 0;font-size:14px;font-weight:500;cursor:pointer}
+.accordion summary::-webkit-details-marker{display:none}
+.accordion:last-of-type{border-bottom:1px solid var(--hair)}
+.badges-row{display:flex;flex-direction:column;gap:10px;margin-top:20px}
+.badges-row img{height:38px;width:auto}
+.badges-row span{font-size:11px;font-weight:600;text-decoration:underline;margin-top:-4px;margin-bottom:6px}
+.pay-icons{display:flex;gap:6px;margin-top:20px;flex-wrap:wrap}
+.pay-icons div{width:38px;height:24px;border-radius:4px;background:#e2e2e2}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div id="annbar">
+    <button aria-label="Anterior"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <div class="ann-txt">Livrare 2-3 saptamani</div>
+    <button aria-label="Următor"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+  </div>
+
+  <header id="header">
+    <a class="logo" href="#"><img src="assets/logo.png" alt="agache"></a>
+    <div class="h-icons">
+      <div class="icon-group">
+        <button aria-label="Căutare"><img src="assets/v2/header/search.svg" alt=""></button>
+        <button aria-label="Cont"><img src="assets/v2/header/account.svg" alt=""></button>
+        <button aria-label="Coș"><img src="assets/v2/header/basket.svg" alt=""></button>
+      </div>
+      <button class="menu-btn" aria-label="Meniu"><img src="assets/v2/header/menu.svg" alt=""></button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <img src="https://agache.ro/cdn/shop/files/main-cover-tiny.jpg?v=1773659975&width=800" alt="Familia Agache in showroom-ul din Timișoara">
+    <div class="hero-overlay">
+      <h1>Familia<br>Agache</h1>
+      <p>Cu peste 30 de ani de experiență, transformăm pasiunea într-un mobilier pe care te poți baza o viață</p>
+      <span class="hero-cta">Vezi produsele noastre</span>
+    </div>
+  </section>
+
+  <section class="story">
+    <h2>Primul colțar l-am construit pentru noi...</h2>
+    <p class="intro">Salut, suntem Mariana, Mihai, Andrei si Andreea Agache.</p>
+    <p>În 1994, am construit un colțar pentru propriul nostru living. Nu aveam experiență în mobilă, dar <strong>ne doream ceva făcut să reziste.</strong></p>
+    <p>L-am vândut imediat unui prieten, convinși că ne vom face rapid altul. N-am mai apucat. Acel prim colțar a adus prima comandă. Apoi a doua. Apoi zeci.</p>
+    <p>La început, <strong>aduceam personal stofele cu trenul</strong>, din Timișoara, pentru că refuzam să facem compromisuri la calitatea materialelor. Am învățat că un client cu adevărat fericit va aduce mereu alți clienți.</p>
+    <p>Astăzi, după mai bine de 30 de ani, am devenit unul dintre cei mai apreciați producători de mobilier tapițat la comandă din România. Dar <strong>am rămas o afacere de familie</strong> - o familie mai mare, care muncește zilnic pentru a aduce confortul suprem în casa ta.</p>
+    <p class="sign">Cu drag,<b>Mariana Agache</b></p>
+  </section>
+
+  <section class="section">
+    <div class="section-title">De la clienții noștri</div>
+    <div class="rating-row">
+      4.9
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.9-6.2-3.3-6.2 3.3 1.2-6.9-5-4.9 6.9-1z"/></svg>
+      <span class="count">(1008)</span>
+    </div>
+    <div class="rev-scroll">
+      <div class="rev-card"><img src="https://review-images.judgeme.com/mobila-agache/1788863017__20260828_202614__original.jpg?quality=80&width=240" alt=""><div class="stars">★★★★★</div><div class="name">Ioana</div></div>
+      <div class="rev-card"><img src="https://review-images.judgeme.com/mobila-agache/1788863021__20260828_202557__original.jpg?quality=80&width=240" alt=""><div class="stars">★★★★★</div><div class="name">Ioana</div></div>
+      <div class="rev-card"><img src="https://review-images.judgeme.com/mobila-agache/1787489892__1000179405__original.jpg?quality=80&width=240" alt=""><div class="stars">★★★★★</div><div class="name">Ionuț</div></div>
+      <div class="rev-card"><img src="https://review-images.judgeme.com/mobila-agache/1787489894__1000179403__original.jpg?quality=80&width=240" alt=""><div class="stars">★★★★★</div><div class="name">Ionuț</div></div>
+      <div class="rev-card badge"><img src="https://review-images.judgeme.com/mobila-agache/1787213872__26458__original.jpg?quality=80&width=240" alt=""><div class="stars">★★★★★</div><div class="name">Bogdan</div></div>
+      <div class="rev-card badge"><img src="https://review-images.judgeme.com/mobila-agache/1784968776__1000138799__original.jpg?quality=80&width=240" alt=""><div class="stars">★★★★★</div><div class="name">Sorina</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">Categorii de produse</div>
+    <div class="cat-grid">
+      <a class="cat-card"><div class="imw"><img src="https://agache.ro/cdn/shop/files/couch.jpg?v=1772111416&width=900" alt="Canapele"></div><span>Canapele</span></a>
+      <a class="cat-card"><div class="imw"><img src="https://agache.ro/cdn/shop/files/corners.jpg?v=1772111430&width=900" alt="Colțare"></div><span>Colțare</span></a>
+      <a class="cat-card"><div class="imw"><img src="https://agache.ro/cdn/shop/files/Kitchen.jpg?v=1772111445&width=900" alt="Colțare de bucătărie"></div><span>Colțare de bucătărie</span></a>
+      <a class="cat-card"><div class="imw"><img src="https://agache.ro/cdn/shop/files/Armchair.jpg?v=1772111459&width=900" alt="Fotolii"></div><span>Fotolii</span></a>
+      <a class="cat-card"><div class="imw"><img src="https://agache.ro/cdn/shop/files/beds.jpg?v=1772111472&width=900" alt="Paturi de dormitor"></div><span>Paturi de dormitor</span></a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">Cele mai vândute produse</div>
+    <div class="prod-scroll">
+      <div class="prod-card">
+        <div class="imw"><img src="https://agache.ro/cdn/shop/files/Paris_Cover_Tiny.jpg?v=1773327192&width=355" alt="Colecția Paris"></div>
+        <div class="name">Colecția Paris</div>
+        <div class="price">Preț obișnuit<br>De la 5.355,00 lei</div>
+        <div class="rev">★★★★★ 34 recenzii</div>
+      </div>
+      <div class="prod-card">
+        <div class="imw"><img src="https://agache.ro/cdn/shop/files/Cover_Chere.jpg?v=1773325616&width=355" alt="Colțar Chere"></div>
+        <div class="name">Colțar Chere</div>
+        <div class="price">Preț obișnuit<br>De la 6.110,00 lei</div>
+        <div class="rev">★★★★★ 8 recenzii</div>
+      </div>
+      <div class="prod-card">
+        <div class="imw"><img src="https://agache.ro/cdn/shop/files/Boston_Cover_Tiny.jpg?v=1773325081&width=355" alt="Colecția Boston"></div>
+        <div class="name">Colecția Boston</div>
+        <div class="price">Preț obișnuit<br>De la 4.745,00 lei</div>
+        <div class="rev">★★★★★ 21 recenzii</div>
+      </div>
+      <div class="prod-card">
+        <div class="imw"><img src="https://agache.ro/cdn/shop/files/Valencia_Cover_Tiny.jpg?v=1773328122&width=1500" alt="Colecția Valencia"></div>
+        <div class="name">Colecția Valencia</div>
+        <div class="price">Preț obișnuit<br>De la 6.265,00 lei</div>
+        <div class="rev">★★★★★ 10 recenzii</div>
+      </div>
+      <div class="prod-card">
+        <div class="imw"><span class="sale-badge">Reducere</span><img src="https://agache.ro/cdn/shop/files/Canapea-Madrid-Main.jpg?v=1771993338&width=1000" alt="Canapea Madrid"></div>
+        <div class="name">Canapea Madrid</div>
+        <div class="price"><span class="sale">5.145,00 lei</span><span class="was">7.345,00 lei</span></div>
+        <div class="rev">★★★★★ 1 recenzii</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">Magazinele noastre</div>
+    <div class="store-card">
+      <div class="imw"><img src="https://agache.ro/cdn/shop/files/431590852_815891413918507_6018654212020095740_n_b49ae953-390b-4826-a360-5f72d41daf22.webp?v=1772021390&width=750" alt="Bucuresti - Danielli Design"></div>
+      <h3>Bucuresti - Danielli Design</h3>
+      <p><b>Adresă:</b> Bulevardul Ghencea nr. 154, Centrul comercial Danieli Design</p>
+      <p><b>Telefon:</b> <a class="tel" href="tel:0744661246">0744 661 246</a></p>
+      <a class="maplink">Vezi pe hartă</a>
+    </div>
+    <div class="store-card">
+      <div class="imw"><img src="https://agache.ro/cdn/shop/files/402278450_736044465236536_5113600496213496742_n.webp?v=1772021389&width=750" alt="Timisoara - Rebreanu"></div>
+      <h3>Timisoara - Rebreanu</h3>
+      <p><b>Adresă:</b> Bvd. Liviu Rebreanu nr.165A, Parter Olympus Residence</p>
+      <p><b>Telefon:</b> <a class="tel" href="tel:0747115585">0747 115 585</a></p>
+      <a class="maplink">Vezi pe hartă</a>
+    </div>
+    <div class="store-card">
+      <div class="imw"><img src="https://agache.ro/cdn/shop/files/351343798_637353821293371_8872057262591919875_n.webp?v=1772021389&width=750" alt="Timisoara - Alfa Center"></div>
+      <h3>Timisoara - Alfa Center</h3>
+      <p><b>Adresă:</b> Strada Ion Barac 42, Centrul Comercial Alfa</p>
+      <p><b>Telefon:</b> <a class="tel" href="tel:0758080590">0758 080 590</a></p>
+      <a class="maplink">Vezi pe hartă</a>
+    </div>
+    <div class="store-card">
+      <div class="imw"><img src="https://agache.ro/cdn/shop/files/375062461_695460392628277_8276695693429150018_n.webp?v=1772021390&width=750" alt="Oradea - Rogerius"></div>
+      <h3>Oradea - Rogerius</h3>
+      <p><b>Adresă:</b> Strada Transilvaniei nr. 13, Rogerius, mg. Tineretului</p>
+      <p><b>Telefon:</b> <a class="tel" href="tel:0747115591">0747 115 591</a></p>
+      <a class="maplink">Vezi pe hartă</a>
+    </div>
+    <div class="store-card">
+      <div class="imw"><img src="https://agache.ro/cdn/shop/files/467782290_982115497296097_2356198773015960284_n.webp?v=1772021389&width=750" alt="Arad - Aurel Vlaicu"></div>
+      <h3>Arad - Aurel Vlaicu</h3>
+      <p><b>Adresă:</b> Str. Aurel Vlaicu nr. 185A, Stația Fortuna</p>
+      <p><b>Telefon:</b> <a class="tel" href="tel:0747115587">0747 115 587</a></p>
+      <a class="maplink">Vezi pe hartă</a>
+    </div>
+    <div class="store-card">
+      <div class="imw"><img src="https://agache.ro/cdn/shop/files/467979336_982115453962768_4195046554472911370_n.webp?v=1772021389&width=750" alt="Lugoj - Nicolae Balcescu"></div>
+      <h3>Lugoj - Nicolae Balcescu</h3>
+      <p><b>Adresă:</b> Str. Nicolae Bălcescu nr. 22, Sens giratoriu Catedrală</p>
+      <p><b>Telefon:</b> <a class="tel" href="tel:0747115584">0747 115 584</a></p>
+      <a class="maplink">Vezi pe hartă</a>
+    </div>
+  </section>
+
+  <div class="trust-grid">
+    <div class="trust-card">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 3h13v13H1z"/><path d="M14 8h4l3 3v5h-7V8Z"/><circle cx="5.5" cy="18.5" r="1.5"/><circle cx="17.5" cy="18.5" r="1.5"/></svg>
+      <span>Transport gratuit oriunde în țară în 2 săptămâni</span>
+    </div>
+    <div class="trust-card">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg>
+      <span>Poți livreza, ai 14 zile pentru retur</span>
+    </div>
+    <div class="trust-card">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4Z"/></svg>
+      <span>Garanție extinsă pentru fiecare produs</span>
+    </div>
+    <div class="trust-card">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8l-9-5-9 5v8l9 5 9-5Z"/><path d="M3.3 7l8.7 5 8.7-5M12 22V12"/></svg>
+      <span>Fabricate în România încă din 1994</span>
+    </div>
+  </div>
+
+  <footer>
+    <div class="foot-contact">
+      <p><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>36 Buziasului, Lugoj, Timis, 305500</p>
+      <p><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 6l8 7 8-7"/></svg>agache@agache.ro</p>
+      <p><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8h12l-1 12H7L6 8Z"/></svg>+40754011485 / +40744661246</p>
+    </div>
+    <details class="accordion"><summary>Contactează-ne <span>−</span></summary></details>
+    <details class="accordion"><summary>Legal <span>+</span></summary></details>
+    <details class="accordion"><summary>Colecții <span>+</span></summary></details>
+    <details class="accordion"><summary>Informații <span>+</span></summary></details>
+    <div class="badges-row">
+      <img src="https://agache.ro/cdn/shop/files/anpc-sal_cf85fb04-20ff-46eb-a147-355d17f27d24.png?v=1768233426&width=535" alt="ANPC SAL">
+      <span>ANPC SAL</span>
+      <img src="https://agache.ro/cdn/shop/files/anpc-sol.png?v=1768233455&width=535" alt="ANPC SOL">
+      <span>ANPC SOL</span>
+    </div>
+    <div class="pay-icons"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+  </footer>
+
+</div>
+</body>
+</html>
