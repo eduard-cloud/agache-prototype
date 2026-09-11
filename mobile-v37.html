@@ -131,7 +131,8 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
 #swatches .sw-row{display:flex;align-items:stretch;justify-content:space-between;gap:6px}
 #swatches .sw-strip{display:flex;gap:6px}
 #swatches .sw{width:40px;height:64px;flex:0 0 40px}
-#swatches .sw.on::after{content:"";position:absolute;inset:0;border:1px solid #000;box-shadow:inset 0 0 0 2px #fff}
+#swatches .sw.on{box-shadow:0 0 0 1px #fff,0 0 0 2px #000}
+#swatches .sw.on::after{content:"";position:absolute;inset:0;border:1px solid #fff;box-shadow:none}
 #swatches .sw-plus{width:40px;height:auto;flex:0 0 40px;align-self:stretch;background:var(--f7);border:.5px solid var(--black)}
 #swatches .sw-plus svg{width:32px;height:32px;display:block}
 /* v29: the Culoare row is label + name only -- Comanda mostre moved under the CTAs */
@@ -195,7 +196,7 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
 .cta-samples svg{width:14px;height:14px;display:block;flex:0 0 14px}
 
 /* v23: specs are a 5-row list (replaces the v5 2×3 icon grid, Figma 1108:11476) */
-#bsgroup{margin-top:40px}
+#bsgroup{margin-top:40px;padding-bottom:64px}
 .speclist{display:flex;flex-direction:column;gap:2px;width:100%}
 .speclist .sl-rule{height:1px;background:var(--stroke);width:100%;flex:0 0 1px}
 .sl-row{display:flex;align-items:center;gap:8px;width:100%;padding:6px 8px;background:none;font:inherit;color:inherit;text-align:left}
@@ -207,18 +208,17 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
 .sl-row>.sl-chev{width:24px;height:24px;flex:0 0 24px;display:block;color:var(--black)}
 
 /* v23: "Doresti o experienta completa?" upsell card (Figma 1108:11552) */
-#upsell{margin:40px 0 48px;background:var(--f7);border:1px solid var(--f7);border-radius:8px;overflow:hidden;padding:20px 0 8px;display:flex;flex-direction:column;gap:20px}
-#upsell h2{padding:0 20px;font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;color:var(--black)}
-#upsell .up-list{display:flex;flex-direction:column;gap:8px}
-#upsell .up-rule{height:1px;background:var(--stroke);width:100%;flex:0 0 1px}
-#upsell .up-row{display:flex;align-items:center;gap:16px;padding:8px 16px}
-#upsell .up-i{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
-#upsell .up-i svg{width:32px;height:32px;flex:0 0 32px;display:block;color:var(--slate);stroke-width:1}
-#upsell .up-t{font-size:16px;font-weight:500;letter-spacing:var(--ls-16);line-height:1.2;color:var(--slate)}
-#upsell .up-t u{text-decoration:underline}
-#upsell .up-p{font-size:14px;font-weight:400;letter-spacing:var(--ls-14);line-height:1.2;color:var(--black);white-space:nowrap}
-#upsell .up-add{background:var(--red);border-radius:9999px;padding:8px 4px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
-#upsell .up-add svg{width:24px;height:24px;display:block;color:#fff}
+/* v37: the two upsell rows now live inside the Transport/Montaj panels of the spec-info
+   sheet (id="specinfo-transport"/"specinfo-montaj") instead of a standalone card, so the
+   add-on sits right next to the detail that explains it. */
+.up-row{display:flex;align-items:center;gap:16px}
+.up-i{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
+.up-i svg{width:24px;height:24px;flex:0 0 24px;display:block;color:var(--slate);stroke-width:1}
+.up-t{font-size:14px;font-weight:400;letter-spacing:var(--ls-14);line-height:1.2;color:var(--slate)}
+.up-t u{text-decoration:underline}
+.up-p{font-size:14px;font-weight:400;letter-spacing:var(--ls-14);line-height:1.2;color:var(--black);white-space:nowrap}
+.up-add{background:var(--red);border-radius:9999px;padding:8px 4px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.up-add svg{width:24px;height:24px;display:block;color:#fff}
 
 /* eyebrow (shared by construit/confsec/testim headings) */
 .eyebrow{font-size:12px;letter-spacing:.84px;font-weight:500;color:#363944;line-height:1.2}
@@ -268,19 +268,21 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
 /* video */
 #vidsec{position:relative;height:320px;background:#111;overflow:hidden}
 #vidsec video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-#vidsec .cap{position:absolute;left:20px;bottom:24px;font-size:12px;letter-spacing:.84px;color:rgba(255,255,255,.85);font-weight:500}
+#vidsec .cap{position:absolute;left:20px;bottom:20px;height:48px;display:flex;align-items:flex-end;font-size:12px;letter-spacing:.84px;color:rgba(255,255,255,.85);font-weight:500}
+#vidsec .vidsec-pause{position:absolute;right:20px;bottom:20px;width:48px;height:48px;padding:0}
+#vidsec .vidsec-pause img{width:48px;height:48px;display:block}
 
 /* construite — exact per node 212:19467 */
 /* v24: rebuilt to Figma 1127:12007 -- beige ground, white 300x450 cards,
    the .dsc subtext restored from mobile.html, which is where it last lived */
 #construit{background:var(--beige);padding:64px 0}
-#construit .chead{display:flex;flex-direction:column;padding:0 16px}
+#construit .chead{display:flex;flex-direction:column;padding:0 20px}
 #construit .chead .lead{font-size:18px;font-weight:500;letter-spacing:var(--ls-18);line-height:1.2;color:var(--black)}
 #construit .rail{margin-top:32px;gap:12px}
 .rail{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:0 20px;scroll-padding:0 20px;margin-top:36px}
 .rail::-webkit-scrollbar{display:none}
 #crail{gap:12px;padding:0 16px;margin-top:32px;scroll-padding:0 16px;align-items:flex-start}
-.ccard{position:relative;flex:0 0 300px;width:300px;min-height:450px;background:#fff;border-radius:16px;overflow:hidden;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:space-between;align-items:center}
+.ccard{position:relative;flex:0 0 300px;width:300px;min-height:450px;background:#fff;border-radius:0;overflow:hidden;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:space-between;align-items:center}
 .ccard-tinted{position:relative;box-shadow:0 8px 24px rgba(90,68,36,.1)}
 .ccard-tinted .ctxt,.ccard-tinted .ph,.ccard-tinted .ph-strips{position:relative;z-index:1}
 .ccard-tinted::after{content:'';position:absolute;inset:0;z-index:0;opacity:.15;mix-blend-mode:soft-light;pointer-events:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
@@ -320,6 +322,12 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
 .rail-nav{display:flex;justify-content:flex-end;gap:16px;padding:0 16px;margin-top:32px;align-items:center}
 .rn-prev,.rn-next{width:40px;height:40px;padding:0}
 .rn-prev img,.rn-next img{width:40px;height:40px;display:block}
+/* v37: crail drops the arrow pair for a thin scroll-progress line instead, same move as the
+   Hannun PDP reference -- a full-width hairline track with a dark fill that grows from the left
+   edge to the current scroll fraction (0 -> 100%), not a viewport-proportional thumb that
+   slides (that's a real scrollbar's affordance, and reads completely differently). */
+.rail-scrollbar{height:1px;background:#fff;margin:12px 20px 0;position:relative}
+.rail-scrollbar-thumb{position:absolute;top:0;left:0;height:3px;margin-top:-1px;width:5%;background:var(--ink);transition:width .1s ease-out}
 
 /* configureaza section */
 #confsec{background:var(--beige);padding:80px 0 0}
@@ -705,7 +713,7 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
           <button class="sw-plus" onclick="pushTo('mobile-v39.html#color')" aria-label="Mai multe materiale"><svg viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
         </div>
         <div class="sw-lbl-row">
-          <button class="sw-name" onclick="openModal()">Culoare
+          <button class="sw-name" onclick="openModal()">Material
             <b><span id="swname">Luna 8</span>
               <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z"/></svg>
             </b>
@@ -823,25 +831,6 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
         <div class="sl-rule"></div>
       </div>
     </div>
-
-    <!-- v23: upsell card (Figma 1108:11552) -->
-    <div id="upsell">
-      <h2>Doresti o experienta completa?</h2>
-      <div class="up-list">
-        <div class="up-rule"></div>
-        <div class="up-row">
-          <span class="up-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M9 22V18H15V22M8 6H8.01M16 6H16.01M12 6H12.01M12 10H12.01M12 14H12.01M16 10H16.01M16 14H16.01M8 10H8.01M8 14H8.01M6 2H18C19.1046 2 20 2.89543 20 4V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V4C4 2.89543 4.89543 2 6 2Z"/></svg><span class="up-t">Transport de la strada<br>pana in sufragerie</span></span>
-          <span class="up-p">149 lei</span>
-          <button class="up-add" aria-label="Adaugă transport la domiciliu" onclick="addExtra(this,'Transport la sufragerie')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.33" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-        </div>
-        <div class="up-rule"></div>
-        <div class="up-row">
-          <span class="up-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M11 14H13C13.5304 14 14.0391 13.7893 14.4142 13.4142C14.7893 13.0391 15 12.5304 15 12C15 11.4696 14.7893 10.9609 14.4142 10.5858C14.0391 10.2107 13.5304 10 13 10H10C9.4 10 8.9 10.2 8.6 10.6L3 16M7 20L8.6 18.6C8.9 18.2 9.4 18 10 18H14C15.1 18 16.1 17.6 16.8 16.8L21.4 12.4C21.7859 12.0354 22.0111 11.5323 22.0261 11.0016C22.0411 10.4709 21.8447 9.95592 21.48 9.57003C21.1153 9.18414 20.6123 8.95892 20.0816 8.94392C19.5508 8.92891 19.0359 9.12535 18.65 9.49003L14.45 13.39M2 15L8 21M19.4999 8.5C20.1999 7.8 20.9999 6.9 20.9999 5.8C21.0698 5.18893 20.9313 4.57216 20.6068 4.04964C20.2824 3.52712 19.791 3.12947 19.2123 2.92114C18.6336 2.71281 18.0015 2.706 17.4184 2.90182C16.8354 3.09763 16.3355 3.4846 15.9999 4C15.6429 3.52458 15.1429 3.17613 14.5734 3.00578C14.0038 2.83544 13.3946 2.85219 12.8352 3.05356C12.2758 3.25494 11.7957 3.63034 11.4654 4.12465C11.1351 4.61896 10.9719 5.20614 10.9999 5.8C10.9999 7 11.7999 7.8 12.4999 8.6L15.9999 12L19.4999 8.5Z"/></svg><span class="up-t">Serviciu de montaj<br>in <u>orasele eligibile</u></span></span>
-          <span class="up-p">399 lei</span>
-          <button class="up-add" aria-label="Adaugă serviciu de montaj" onclick="addExtra(this,'Serviciu de montaj')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.33" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-        </div>
-      </div>
-    </div>
   </div>
 
   <!-- Construite cu intentie (v4 redesign per Figma 791:10512) -->
@@ -900,16 +889,14 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
         <button class="ccard-plus" type="button" aria-expanded="false" aria-label="Mai multe detalii" onclick="toggleReason(this)"><svg viewBox="0 0 16 16" fill="none"><line x1="1.5" y1="8" x2="14.5" y2="8"/><line x1="8" y1="1.5" x2="8" y2="14.5"/></svg></button>
       </div>
     </div>
-    <div class="rail-nav">
-      <button class="rn-prev" onclick="railNav('crail',-1)" aria-label="Anterior"><img src="assets/arrow-left-40.svg" alt=""></button>
-      <button class="rn-next" onclick="railNav('crail',1)" aria-label="Următor"><img src="assets/arrow-right-40.svg" alt=""></button>
-    </div>
+    <div class="rail-scrollbar"><div class="rail-scrollbar-thumb" id="crail-thumb"></div></div>
   </div>
 
   <!-- Video -->
   <div id="vidsec">
     <video src="hero-video.mp4" autoplay muted loop playsinline poster="assets/video-poster.png"></video>
     <div class="cap">DESCOPERĂ CANAPEAUA BOSTON</div>
+    <button type="button" class="vidsec-pause" aria-label="Pauză video" onclick="toggleVidsecPlay(this)"><img src="assets/pause-circle.svg" alt=""></button>
   </div>
 
   <!-- Deep dive + samples (v4 redesign per Figma 783:10276) -->
@@ -1396,10 +1383,11 @@ Păstrează factura și certificatul de garanție și anunță problema cât mai
       <p>Canapea Boston este realizată la comandă, personalizată cu materialul și culoarea alese de tine. Timpul de producție este de 6-7 săptămâni de la confirmarea comenzii, după care produsul este pregătit pentru livrare.</p>
     </section>
     <section class="info-sec" id="specinfo-transport">
-      <h3>Transport și retur</h3>
-      <p>Transportul este gratuit pe teritoriul României. Pentru comanda ta, livrarea va fi în perioada 12 – 23 iulie, prin curier până în fața casei sau a blocului, ori cu ridicare din showroom-urile Agache.
-
-Ai 14 zile calendaristice pentru retur, fără să explici motivul. Termenul începe din ziua în care primești produsul. Rambursarea se face în maximum 14 zile, în contul IBAN oferit. Costul transportului de retur este suportat de client.</p>
+      <div class="up-row">
+        <span class="up-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M9 22V18H15V22M8 6H8.01M16 6H16.01M12 6H12.01M12 10H12.01M12 14H12.01M16 10H16.01M16 14H16.01M8 10H8.01M8 14H8.01M6 2H18C19.1046 2 20 2.89543 20 4V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V4C4 2.89543 4.89543 2 6 2Z"/></svg><span class="up-t">Transport de la strada<br>pana in sufragerie</span></span>
+        <span class="up-p">149 lei</span>
+        <button class="up-add" aria-label="Adaugă transport la domiciliu" onclick="addExtra(this,'Transport la sufragerie')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.33" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
     </section>
     <section class="info-sec" id="specinfo-dimensiuni">
       <h3>Dimensiuni</h3>
@@ -1418,8 +1406,11 @@ Ai 14 zile calendaristice pentru retur, fără să explici motivul. Termenul în
       <p>Extensibil prin plierea spătarului, ce asigură o prelungire confortabilă atunci când este folosit ca pat. Suprafața de dormit rezultată este de 150 x 210 cm.</p>
     </section>
     <section class="info-sec" id="specinfo-montaj">
-      <h3>Montaj</h3>
-      <p>Serviciul de montaj costă 399 lei și este disponibil în orașele eligibile. Echipa noastră asamblează canapeaua direct în locuința ta, gata de folosit.</p>
+      <div class="up-row">
+        <span class="up-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M11 14H13C13.5304 14 14.0391 13.7893 14.4142 13.4142C14.7893 13.0391 15 12.5304 15 12C15 11.4696 14.7893 10.9609 14.4142 10.5858C14.0391 10.2107 13.5304 10 13 10H10C9.4 10 8.9 10.2 8.6 10.6L3 16M7 20L8.6 18.6C8.9 18.2 9.4 18 10 18H14C15.1 18 16.1 17.6 16.8 16.8L21.4 12.4C21.7859 12.0354 22.0111 11.5323 22.0261 11.0016C22.0411 10.4709 21.8447 9.95592 21.48 9.57003C21.1153 9.18414 20.6123 8.95892 20.0816 8.94392C19.5508 8.92891 19.0359 9.12535 18.65 9.49003L14.45 13.39M2 15L8 21M19.4999 8.5C20.1999 7.8 20.9999 6.9 20.9999 5.8C21.0698 5.18893 20.9313 4.57216 20.6068 4.04964C20.2824 3.52712 19.791 3.12947 19.2123 2.92114C18.6336 2.71281 18.0015 2.706 17.4184 2.90182C16.8354 3.09763 16.3355 3.4846 15.9999 4C15.6429 3.52458 15.1429 3.17613 14.5734 3.00578C14.0038 2.83544 13.3946 2.85219 12.8352 3.05356C12.2758 3.25494 11.7957 3.63034 11.4654 4.12465C11.1351 4.61896 10.9719 5.20614 10.9999 5.8C10.9999 7 11.7999 7.8 12.4999 8.6L15.9999 12L19.4999 8.5Z"/></svg><span class="up-t">Serviciu de montaj<br>in <u>orasele eligibile</u></span></span>
+        <span class="up-p">399 lei</span>
+        <button class="up-add" aria-label="Adaugă serviciu de montaj" onclick="addExtra(this,'Serviciu de montaj')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.33" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
     </section>
   </div>
 </div>
@@ -1901,12 +1892,42 @@ function toggleReason(btn){
   btn.setAttribute('aria-expanded', open);
 }
 
+function toggleVidsecPlay(btn){
+  var video = btn.parentElement.querySelector('video');
+  var icon = btn.querySelector('img');
+  if (video.paused){
+    video.play();
+    icon.src = 'assets/pause-circle.svg';
+    btn.setAttribute('aria-label', 'Pauză video');
+  } else {
+    video.pause();
+    icon.src = 'assets/play-circle.svg';
+    btn.setAttribute('aria-label', 'Redă video');
+  }
+}
+
 /* ── Rails ── */
 function railNav(id, d){
   var r = document.getElementById(id);
   var w = r.firstElementChild.offsetWidth + 16;
   r.scrollBy({ left: d * w, behavior: 'smooth' });
 }
+/* crail's arrow pair was replaced by a Hannun-style scroll-progress line: a bar with no track
+   that simply grows from 0 to 100% width as you scroll from the start to the end of the rail --
+   not a windowed scrollbar thumb, which is a different (and here, wrong) affordance. */
+(function(){
+  var rail = document.getElementById('crail');
+  var thumb = document.getElementById('crail-thumb');
+  if (!rail || !thumb) return;
+  function sync(){
+    var maxScroll = rail.scrollWidth - rail.clientWidth;
+    var pct = maxScroll > 0 ? (rail.scrollLeft / maxScroll) * 100 : 0;
+    thumb.style.width = Math.max(pct, 5) + '%';
+  }
+  rail.addEventListener('scroll', sync, { passive: true });
+  window.addEventListener('resize', sync);
+  sync();
+})();
 
 /* ── Views (materials / collection) ── */
 /* whichever overlay (view / samples sheet / swatch modal) was opened most recently
