@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Homepage – Agache (redesign, PDP system)</title>
+<title>Homepage – Agache (structural rebuild)</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -14,6 +14,7 @@
   --blue:#eefbff; --cream:#f9f2df; --orange:#fa7800;
   --red:#eb2f1e; --slate:#363944;
   --black:#1D1D1F; --f7:#f7f7f7; --stroke:#f2f2f2; --c8:#c8cbd0; --beige:#F2F0E9;
+  --beige-100:#F2F0E9; --beige-200:#EAE3D3; --dark:#1D1D1F; --lt:#FAFBFC;
   --ls-12:-.24px; --ls-13:-.26px; --ls-14:-.42px;
   --ls-16:-.64px; --ls-18:-.72px; --ls-20:-.8px; --ls-24:-.96px; --ls-28:-1.12px; --ls-34:-1.36px;
 }
@@ -23,14 +24,28 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
 a{text-decoration:none;color:inherit}
 img,video{display:block;max-width:100%}
 .page{max-width:480px;margin:0 auto;background:#fff;position:relative;min-height:100vh}
-.px{padding-left:20px;padding-right:20px}
+.px{padding-left:16px;padding-right:16px}
 
-/* ══ shared type / eyebrow (verbatim from PDP mobile-v37) ══ */
-.eyebrow{font-size:12px;letter-spacing:.84px;font-weight:500;color:#363944;line-height:1.2}
-.sec-h2{font-size:28px;font-weight:500;letter-spacing:-.84px;line-height:1.1;color:#1D1D1F;margin-top:16px;margin-bottom:-2px}
-.h20{font-size:24px;font-weight:500;letter-spacing:-.48px;line-height:1.3;margin-bottom:-4px}
+/* ══ measured type scale ══ */
+.h32{font-size:32px;line-height:1.2;letter-spacing:-1px;font-weight:600;color:var(--black)}
+.h28{font-size:28px;line-height:1.4;letter-spacing:-1px;font-weight:600;color:var(--black)}
+.h24{font-size:24px;line-height:1.4;letter-spacing:0;font-weight:600;color:var(--black)}
+.tag14{font-size:14px;line-height:1.4;font-weight:400;color:var(--slate)}
+.price14{font-size:14px;line-height:1.4;font-weight:600;color:var(--black)}
 
-/* ══ announcement + header (identical to PDP mobile-v37 / mobile-v42) ══ */
+/* ══ button system (pill radius 9999px always) ══ */
+.btn{border-radius:9999px;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;transition:transform .1s,background .15s,color .15s}
+.btn:active{transform:scale(.97)}
+.btn-xl{min-height:48px;padding:0 24px;font-size:16px;font-weight:600}
+.btn-m{min-height:44px;padding:0 20px;font-size:16px;font-weight:600}
+.btn-s{min-height:38px;padding:0 16px;font-size:14px;font-weight:600}
+.btn-filled{background:var(--red);color:#fff}
+.btn-filled-dark{background:#fff;color:var(--dark)}
+.btn-outlined{background:transparent;color:var(--dark);border:1px solid var(--dark)}
+.btn-outlined:active{background:var(--dark);color:#fff;transform:scale(.97)}
+.btn-full{width:100%}
+
+/* ══ announcement + header (untouched, identical to PDP mobile-v37) ══ */
 #annbar{height:40px;background:var(--stroke);display:flex;align-items:center;justify-content:space-between;padding:0 12px}
 #annbar .ann-txt{font-size:14px;font-weight:500;letter-spacing:-.28px;line-height:1.2;color:var(--black);flex:1;text-align:center}
 #annbar button{width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
@@ -43,38 +58,27 @@ img,video{display:block;max-width:100%}
 #header .menu-btn{width:32px;height:24px;padding:0;display:flex;align-items:center;justify-content:center}
 #header .menu-btn img{display:block;width:23px;height:14px}
 
-/* ══ hero (product-first, matches PDP hero conventions: badge, pill CTA) ══ */
+/* ══ 2. hero: full-bleed, headline + one CTA, no subtext ══ */
 #hhero{position:relative;aspect-ratio:4/5;overflow:hidden;background:#f5f5f7}
 #hhero img{width:100%;height:100%;object-fit:cover}
-#hhero .hh-badge{position:absolute;top:16px;left:20px;background:#fff;color:var(--black);font-size:10px;font-weight:500;letter-spacing:.2px;line-height:1.2;padding:3.33px 10px;text-transform:uppercase;z-index:2}
-#hhero .hh-ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(0,0,0,.62) 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:0 20px 28px}
-#hhero h1{font-size:34px;font-weight:500;letter-spacing:var(--ls-34);line-height:1.05;color:#fff}
-#hhero .hh-sub{font-size:14px;letter-spacing:var(--ls-14);line-height:1.4;color:#fff;opacity:.92;margin-top:12px;max-width:300px}
+#hhero .hh-badge{position:absolute;top:16px;left:16px;background:#fff;color:var(--black);font-size:10px;font-weight:500;letter-spacing:.2px;line-height:1.2;padding:3.33px 10px;text-transform:uppercase;z-index:2}
+#hhero .hh-ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(0,0,0,.62) 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:0 16px 28px}
+#hhero h1{font-size:32px;font-weight:600;letter-spacing:-1px;line-height:1.2;color:#fff}
 #hhero .hh-cta{margin-top:20px}
 
-/* ══ CTAs (verbatim from PDP) ══ */
-.btn-buy{background:var(--red);color:#fff;border-radius:9999px;font-size:16px;font-weight:500;letter-spacing:var(--ls-16);line-height:1.2;height:56px;padding:0 24px;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;transition:transform .1s,background .2s}
-.btn-buy:active{transform:scale(.97)}
-.btn-custom{background:#fff;border:1px solid var(--red);color:var(--red);border-radius:9999px;height:56px;padding:0 24px;font-size:16px;font-weight:500;letter-spacing:var(--ls-16);line-height:1.2;display:flex;align-items:center;justify-content:center;gap:8px;width:100%}
-.btn-custom:active{background:rgba(235,47,30,.06)}
-.btn-custom svg{width:16px;height:16px;display:block}
+/* ══ 3. short bold statement, white bg ══ */
+#statement{background:#fff;padding:48px 16px;text-align:center}
+#statement p{font-size:28px;font-weight:600;letter-spacing:-1px;line-height:1.3;color:var(--black)}
 
-/* ══ category chips (fpill, verbatim from PDP #testim .filters) ══ */
-#catchips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:20px 20px;margin-top:0}
-#catchips::-webkit-scrollbar{display:none}
-.fpill{flex:0 0 auto;font-size:14px;letter-spacing:-.28px;padding:16px;border-radius:9999px;border:1px solid #363944;background:#fff;white-space:nowrap}
-.fpill.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+/* ══ 4. category chips: wrapping grid, outlined ══ */
+#catchips{display:flex;flex-wrap:wrap;gap:8px;padding:0 16px 48px}
+.fpill{flex:0 0 auto;font-size:14px;font-weight:600;letter-spacing:-.28px;min-height:38px;padding:0 16px}
 
-/* ══ rail / rail-nav / rail-scrollbar (verbatim from PDP) ══ */
-.rail{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:0 20px;scroll-padding:0 20px;margin-top:24px}
+/* ══ 5/9. product rail section ══ */
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;padding:0 16px}
+.sec-head .seeall{font-size:14px;font-weight:600;color:var(--black);text-decoration:underline;text-underline-offset:2px;flex:0 0 auto;padding-bottom:4px}
+.rail{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:0 16px;scroll-padding:0 16px;margin-top:20px}
 .rail::-webkit-scrollbar{display:none}
-.rail-nav{display:flex;justify-content:flex-end;gap:16px;padding:0 16px;margin-top:24px;align-items:center}
-.rn-prev,.rn-next{width:40px;height:40px;padding:0}
-.rn-prev img,.rn-next img{width:40px;height:40px;display:block}
-.rail-scrollbar{height:1px;background:#e3e3e3;margin:12px 20px 0;position:relative}
-.rail-scrollbar-thumb{position:absolute;top:0;left:0;height:3px;margin-top:-1px;width:20%;background:var(--ink)}
-
-/* ══ product cards (pcard, verbatim from PDP #like/#recent) ══ */
 .pcard{border-radius:12px;overflow:hidden;background:var(--chipbg);flex:0 0 168px;scroll-snap-align:start;position:relative}
 .pcard .im{height:130px;background:#e9e9e9;position:relative}
 .pcard .im img{width:100%;height:100%;object-fit:cover}
@@ -86,63 +90,49 @@ img,video{display:block;max-width:100%}
 .pcard .p .was{text-decoration:line-through;color:var(--gray2);margin-left:6px}
 .pcard .rv{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--gray);margin-top:4px}
 .pcard .rv svg{width:10px;height:10px;fill:var(--ink)}
+#bestsellers{background:#fff;padding:48px 0}
+#featured-rail{background:#fff;padding:0 0 48px}
 
-/* ══ atelier / craft photo band ══ */
-#atelier{position:relative;aspect-ratio:3/4;overflow:hidden;background:#111;margin-top:64px}
-#atelier img{width:100%;height:100%;object-fit:cover}
-#atelier .at-ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,18,18,0) 40%,rgba(18,18,18,.75) 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:28px 20px}
-#atelier .eyebrow{color:#fff;opacity:.85}
-#atelier .sec-h2{color:#fff;margin-top:8px}
-#atelier p{color:#fff;opacity:.9;font-size:14px;letter-spacing:var(--ls-14);line-height:1.5;margin-top:12px;max-width:300px}
+/* ══ 6. mood-break photo band (minimal/no text) ══ */
+#moodbreak{position:relative;aspect-ratio:1/1;overflow:hidden;background:#111}
+#moodbreak img{width:100%;height:100%;object-fit:cover}
+#moodbreak .mb-ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,18,18,0) 65%,rgba(18,18,18,.65) 100%);display:flex;align-items:flex-end;padding:16px}
+#moodbreak .mb-cap{color:#fff;font-size:14px;font-weight:400;letter-spacing:var(--ls-14)}
 
-/* ══ configureaza section (verbatim structure from PDP #confsec) ══ */
-#confsec{background:var(--beige);padding:64px 0 56px;margin-top:0}
-#confsec .wph{position:relative;margin-top:24px;border-radius:16px 16px 0 0;overflow:hidden}
-#confsec .wph img{width:100%;height:420px;object-fit:cover;display:block}
-#confsec .wbtn{position:absolute;left:20px;width:calc(100% - 40px);bottom:20px;background:#fff;border-radius:9999px;padding:16px 24px;font-size:16px;letter-spacing:var(--ls-16);line-height:1.2;font-weight:500;color:var(--black);display:flex;align-items:center;justify-content:center;gap:8px}
-#confsec .wbtn svg{display:block;flex:0 0 16px}
-#confsec .swrow{display:flex;align-items:center;gap:8px;margin-top:20px}
-#confsec .sw-dot{width:32px;height:32px;border-radius:50%;flex:0 0 32px;object-fit:cover;border:2px solid #fff;box-shadow:0 0 0 1px var(--stroke);margin-left:-10px}
-#confsec .sw-dot:first-child{margin-left:0}
-#confsec .sw-more{font-size:13px;color:var(--slate);letter-spacing:var(--ls-13);margin-left:8px}
+/* ══ 7. color/material 3-col picker teaser ══ */
+#picker{background:var(--beige-100);padding:64px 0}
+.picker-cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:24px;padding:0 16px}
+.picker-col .pc-im{aspect-ratio:1/1;border-radius:10px;overflow:hidden;background:#e9e9e9}
+.picker-col .pc-im img{width:100%;height:100%;object-fit:cover}
+.picker-col .pc-name{font-size:13px;font-weight:600;margin-top:10px;color:var(--black)}
+.picker-col .pc-swrow{display:flex;gap:3px;margin-top:8px}
+.picker-col .pc-dot{width:14px;height:14px;border-radius:50%;object-fit:cover;flex:0 0 14px;border:1px solid #fff;box-shadow:0 0 0 1px var(--stroke)}
+.picker-col .btn{margin-top:10px;width:100%}
 
-/* ══ trust / craft rail (ccard system, verbatim from PDP #construit) ══ */
-#construit{background:#fff;padding:64px 0}
-#construit .chead{display:flex;flex-direction:column;padding:0 20px}
-#construit .chead .lead{font-size:18px;font-weight:500;letter-spacing:var(--ls-18);line-height:1.2;color:var(--black)}
-#crail{gap:12px;padding:0 16px;margin-top:32px;scroll-padding:0 16px;align-items:flex-start}
-.ccard{position:relative;flex:0 0 280px;width:280px;min-height:420px;background:#fff;border-radius:16px;overflow:hidden;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:space-between;align-items:center}
-.ccard-tinted{position:relative;box-shadow:0 8px 24px rgba(90,68,36,.1)}
-.ccard-beige{background:radial-gradient(130% 100% at 22% 0%,#ffffff 0%,#f6efe1 40%,#e9ddc5 78%,#e2d4b8 100%)}
-.ccard-tesatura{background:radial-gradient(130% 100% at 78% 100%,#ffffff 0%,#f6e9da 38%,#e3c6a3 74%,#c99a68 100%)}
-.ccard-culori{background:radial-gradient(130% 100% at 25% 0%,#ffffff 0%,#f3ede2 38%,#e2d6c3 74%,#c9b89e 100%)}
-.ccard-captuseala{background:radial-gradient(130% 100% at 75% 0%,#ffffff 0%,#eef2f4 38%,#dde5e8 74%,#c9d5da 100%)}
-.ccard .ctxt{display:flex;flex-direction:column;gap:14px;padding:28px 22px;width:100%}
-.ccard .tag{font-size:15px;font-weight:500;letter-spacing:var(--ls-16);line-height:1.2;color:var(--black)}
-.ccard .ttl{font-size:22px;font-weight:600;letter-spacing:0;line-height:1.1;color:var(--black)}
-.ccard .dsc{font-size:15px;font-weight:500;letter-spacing:var(--ls-16);line-height:1.35;color:var(--black)}
-.ccard-photo{background:linear-gradient(165deg,#2e2015 0%,#8a5a35 45%,#dba873 75%,#f0d2ab 100%);position:relative;display:block}
-.ccard-photo .ph-full{position:absolute;inset:0;width:100%;height:100%}
-.ccard-photo .ph-full img{width:100%;height:100%;object-fit:cover}
-.ccard-photo .ctxt{position:relative;z-index:1;background:linear-gradient(180deg,rgba(18,18,18,.75) 0%,rgba(18,18,18,.4) 55%,rgba(18,18,18,0) 85%);padding-bottom:24px}
-.ccard-photo .ctxt .tag,.ccard-photo .ctxt .ttl,.ccard-photo .ctxt .dsc{color:#fff}
-.ccard-photo .ctxt .tag{font-weight:400}
-.ccard .ph{flex:0 0 auto}
-.ccard .ph img{object-fit:cover;width:100%;height:100%}
-.ph-garantie{width:236px;height:158px;margin-bottom:16px}
-.ph-tesatura{width:280px;height:158px}
-.ph-captuseala{width:280px;height:187px;border-radius:0 0 16px 16px;overflow:hidden}
-.ph-culori{width:280px;height:158px;display:flex}
-.ph-culori img{width:33.33%;height:100%;object-fit:cover}
+/* ══ 8. comfort full-bleed photo ══ */
+#comfort{position:relative;aspect-ratio:3/4;overflow:hidden}
+#comfort img{width:100%;height:100%;object-fit:cover}
+#comfort .cf-ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.6) 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:0 16px 28px}
+#comfort h2{font-size:32px;font-weight:600;letter-spacing:-1px;line-height:1.2;color:#fff}
+#comfort .btn{margin-top:16px}
 
-/* ══ testimonials (score-badge + simplified rvcard, verbatim tokens from PDP #testim) ══ */
-#testim{background:var(--f7);padding:64px 0}
-.score-badge{width:fit-content;margin:0 0 0 20px;background:#fff;border:1px solid #e5e5e5;border-radius:16px;padding:24px 20px;display:flex;align-items:center;gap:16px}
-.score-badge .big{font-size:48px;font-weight:500;letter-spacing:-1.44px;line-height:1.05;color:#1D1D1F}
-.score-badge .sb-col{display:flex;flex-direction:column;gap:8px}
+/* ══ 10. design-once / durability section ══ */
+#durable{background:var(--beige-200);padding:48px 0}
+.collage{display:grid;grid-template-columns:1.3fr 1fr;gap:8px;margin-top:24px;padding:0 16px}
+.collage img{width:100%;height:100%;object-fit:cover;border-radius:12px;display:block}
+.collage .cl-a{aspect-ratio:130/180}
+.collage .cl-b{aspect-ratio:110/180}
+#durable .sub{margin-top:24px;padding:0 16px}
+#durable .sub p.copy{font-size:15px;font-weight:400;letter-spacing:var(--ls-16);line-height:1.5;color:var(--slate);margin-top:10px}
+
+/* ══ 11. customer-focus / testimonial section ══ */
+#testim{background:var(--beige-200);padding:64px 0}
+.score-badge{width:fit-content;margin:24px 0 0 16px;background:#fff;border:1px solid #e5e5e5;border-radius:16px;padding:20px 18px;display:flex;align-items:center;gap:14px}
+.score-badge .big{font-size:40px;font-weight:600;letter-spacing:-1px;line-height:1.05;color:#1D1D1F}
+.score-badge .sb-col{display:flex;flex-direction:column;gap:6px}
 .score-badge .stars{display:flex;gap:1px}
-.score-badge .stars .star{width:20px;height:20px;fill:#ffc800}
-.score-badge .cnt{font-size:18px;font-weight:500;letter-spacing:-.54px;color:#1D1D1F}
+.score-badge .stars .star{width:18px;height:18px;fill:#ffc800}
+.score-badge .cnt{font-size:16px;font-weight:500;letter-spacing:-.3px;color:#1D1D1F}
 .rvcard-s{flex:0 0 140px;scroll-snap-align:start}
 .rvcard-s .rp{position:relative;aspect-ratio:140/188;border-radius:12px;overflow:hidden;background:#eee}
 .rvcard-s .rp img{width:100%;height:100%;object-fit:cover}
@@ -151,44 +141,93 @@ img,video{display:block;max-width:100%}
 .rv-badge-s .star{width:9px;height:9px;fill:#ffc800}
 .rvcard-s .rv-name{margin-top:8px;font-size:13px;font-weight:500;letter-spacing:var(--ls-13);color:var(--black)}
 
-/* ══ showroom banner (full-bleed image, ccard-photo overlay conventions) ══ */
-#showroom{position:relative;aspect-ratio:1/1;overflow:hidden;margin-top:0}
-#showroom img{width:100%;height:100%;object-fit:cover}
-#showroom .sr-ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,18,18,0) 8%,rgba(18,18,18,.55) 48%,rgba(18,18,18,.88) 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:28px 20px}
-#showroom .eyebrow{color:#fff;opacity:.85}
-#showroom .sec-h2{color:#fff;margin-top:8px}
-#showroom .sr-btn{margin-top:20px;background:#fff;color:var(--black)}
+/* ══ 12. gift-card banner ══ */
+#giftcard{padding:16px}
+.gift-card{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:1/1;background:linear-gradient(155deg,#3a3230 0%,#5c473a 45%,#a9764f 80%,#d9a877 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:16px}
+.gift-card h3{font-size:24px;font-weight:600;letter-spacing:0;line-height:1.4;color:#fff}
+.gift-card .btn{margin-top:14px;align-self:flex-start}
 
-/* ══ category grid (pcard-style 2-col, verbatim grid pattern from PDP #like) ══ */
-#catgrid{padding:64px 20px 0}
-#catgrid .grid{display:grid;grid-template-columns:1fr 1fr;gap:24px 8px;margin-top:24px}
+/* ══ 13. sustainability / philosophy (grid layout) ══ */
+#philosophy{background:#fff;padding:48px 16px}
+.phil-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:24px}
+#construit .chead{padding:0}
+#construit .chead .lead{font-size:16px;font-weight:600;letter-spacing:var(--ls-16);line-height:1.3;color:var(--black);margin-top:24px}
+#crail{gap:12px;padding:0 16px;margin-top:20px;scroll-padding:0 16px;align-items:flex-start;margin-left:-16px;margin-right:-16px;width:calc(100% + 32px)}
+.ccard{position:relative;flex:0 0 260px;width:260px;min-height:400px;background:#fff;border-radius:16px;overflow:hidden;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:space-between;align-items:center;border:1px solid var(--stroke)}
+.ccard-tinted{position:relative;box-shadow:0 8px 24px rgba(90,68,36,.1)}
+.ccard-beige{background:radial-gradient(130% 100% at 22% 0%,#ffffff 0%,#f6efe1 40%,#e9ddc5 78%,#e2d4b8 100%)}
+.ccard-tesatura{background:radial-gradient(130% 100% at 78% 100%,#ffffff 0%,#f6e9da 38%,#e3c6a3 74%,#c99a68 100%)}
+.ccard-culori{background:radial-gradient(130% 100% at 25% 0%,#ffffff 0%,#f3ede2 38%,#e2d6c3 74%,#c9b89e 100%)}
+.ccard-captuseala{background:radial-gradient(130% 100% at 75% 0%,#ffffff 0%,#eef2f4 38%,#dde5e8 74%,#c9d5da 100%)}
+.ccard .ctxt{display:flex;flex-direction:column;gap:12px;padding:24px 20px;width:100%}
+.ccard .tag{font-size:14px;font-weight:500;letter-spacing:var(--ls-16);line-height:1.2;color:var(--black)}
+.ccard .ttl{font-size:20px;font-weight:600;letter-spacing:0;line-height:1.1;color:var(--black)}
+.ccard .dsc{font-size:14px;font-weight:400;letter-spacing:var(--ls-16);line-height:1.4;color:var(--black)}
+.ccard-photo{background:linear-gradient(165deg,#2e2015 0%,#8a5a35 45%,#dba873 75%,#f0d2ab 100%);position:relative;display:block}
+.ccard-photo .ph-full{position:absolute;inset:0;width:100%;height:100%}
+.ccard-photo .ph-full img{width:100%;height:100%;object-fit:cover}
+.ccard-photo .ctxt{position:relative;z-index:1;background:linear-gradient(180deg,rgba(18,18,18,.75) 0%,rgba(18,18,18,.4) 55%,rgba(18,18,18,0) 85%);padding-bottom:24px}
+.ccard-photo .ctxt .tag,.ccard-photo .ctxt .ttl,.ccard-photo .ctxt .dsc{color:#fff}
+.ccard-photo .ctxt .tag{font-weight:400}
+.ccard .ph{flex:0 0 auto}
+.ccard .ph img{object-fit:cover;width:100%;height:100%}
+.ph-garantie{width:216px;height:145px;margin-bottom:16px}
+.ph-tesatura{width:260px;height:145px}
+.ph-captuseala{width:260px;height:172px;border-radius:0 0 16px 16px;overflow:hidden}
+.ph-culori{width:260px;height:145px;display:flex}
+.ph-culori img{width:33.33%;height:100%;object-fit:cover}
+.rail-scrollbar{height:1px;background:#e3e3e3;margin:12px 16px 0;position:relative}
+.rail-scrollbar-thumb{position:absolute;top:0;left:0;height:3px;margin-top:-1px;width:20%;background:var(--ink)}
+.rail-nav{display:flex;justify-content:flex-end;gap:16px;padding:0 16px;margin-top:20px;align-items:center}
+.rn-prev,.rn-next{width:40px;height:40px;padding:0}
+.rn-prev img,.rn-next img{width:40px;height:40px;display:block}
+
+/* ══ 14. showroom band ══ */
+#showroom{position:relative;aspect-ratio:1/1;overflow:hidden}
+#showroom img{width:100%;height:100%;object-fit:cover}
+#showroom .sr-ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,18,18,0) 8%,rgba(18,18,18,.55) 48%,rgba(18,18,18,.88) 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:0 16px 28px}
+#showroom .sr-ov h2{color:#fff}
+#showroom .sr-btn{margin-top:16px}
+
+/* ══ 15. most popular products: 2-col grid ══ */
+#catgrid{background:#fff;padding:48px 0}
+#catgrid .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px 8px;margin-top:24px;padding:0 16px}
 #catgrid .pcard{flex:auto}
 #catgrid .pcard .im{height:150px}
 
-/* ══ newsletter capture ══ */
-#news{background:#fff;padding:64px 20px}
-#news-card{border:1px solid var(--stroke);border-radius:16px;padding:24px 20px;margin-top:24px}
-#news-card input{width:100%;height:52px;border:1px solid #c8cbd0;border-radius:9999px;padding:0 20px;font-size:15px;font-family:inherit;color:var(--ink);margin-bottom:10px}
-#news-card input::placeholder{color:var(--gray2)}
+/* ══ 16. editorial / journal rail ══ */
+#journal{background:var(--beige-200);padding:64px 0}
+.jcard{flex:0 0 200px;scroll-snap-align:start}
+.jcard .jim{aspect-ratio:200/140;border-radius:12px;overflow:hidden;background:#e9e9e9}
+.jcard .jim img{width:100%;height:100%;object-fit:cover}
+.jcard .jt{font-size:14px;font-weight:600;margin-top:10px;color:var(--black)}
 
-/* ══ closing brand statement (dark) ══ */
-#closing{background:var(--ink);color:#fff;padding:64px 20px;text-align:center}
-#closing p{font-size:26px;font-weight:500;letter-spacing:-.9px;line-height:1.25}
-#closing a{display:inline-block;margin-top:24px;font-size:14px;font-weight:500;color:#fff;text-decoration:underline;text-underline-offset:3px}
+/* ══ 17. newsletter (single-row layout) ══ */
+#news{background:var(--beige-100);padding:64px 16px}
+#news-row{display:flex;gap:8px;margin-top:24px}
+#news-row input{flex:1;min-width:0;height:48px;border:1px solid var(--c8);border-radius:9999px;padding:0 18px;font-size:15px;font-family:inherit;color:var(--ink);background:#fff}
+#news-row input::placeholder{color:var(--gray2)}
+#news-row .btn{flex:0 0 auto}
 
-/* ══ footer (kept from v42, restyled to PDP tokens) ══ */
-footer{background:var(--f7);margin-top:0;padding:28px 20px 24px}
-.foot-contact p{font-size:13px;color:var(--slate);display:flex;align-items:center;gap:8px;margin-bottom:10px;letter-spacing:var(--ls-13)}
-.foot-contact svg{flex:0 0 auto;color:var(--slate)}
-.accordion{border-top:1px solid var(--stroke)}
-.accordion summary{list-style:none;display:flex;align-items:center;justify-content:space-between;padding:16px 0;font-size:14px;font-weight:500;letter-spacing:var(--ls-14);cursor:pointer}
+/* ══ 18. closing dark brand statement ══ */
+#closing{background:var(--dark);color:#fff;padding:64px 16px;text-align:center}
+#closing p{font-size:32px;font-weight:600;letter-spacing:-1px;line-height:1.2}
+#closing a{display:inline-block;margin-top:20px;font-size:14px;font-weight:500;color:#fff;text-decoration:underline;text-underline-offset:3px}
+
+/* ══ 19. footer (dark) ══ */
+footer{background:var(--dark);color:#fff;margin-top:0;padding:32px 16px 28px}
+.foot-contact p{font-size:14px;font-weight:400;color:#fff;opacity:.8;display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.foot-contact svg{flex:0 0 auto;color:#fff;opacity:.8}
+.accordion{border-top:1px solid rgba(255,255,255,.16)}
+.accordion summary{list-style:none;display:flex;align-items:center;justify-content:space-between;padding:16px 0;font-size:16px;font-weight:400;color:#fff;cursor:pointer}
 .accordion summary::-webkit-details-marker{display:none}
-.accordion:last-of-type{border-bottom:1px solid var(--stroke)}
+.accordion:last-of-type{border-bottom:1px solid rgba(255,255,255,.16)}
 .badges-row{display:flex;flex-direction:column;gap:10px;margin-top:20px}
-.badges-row img{height:38px;width:auto}
-.badges-row span{font-size:11px;font-weight:600;text-decoration:underline;margin-top:-4px;margin-bottom:6px;color:var(--slate)}
+.badges-row img{height:38px;width:auto;filter:brightness(0) invert(1);opacity:.85}
+.badges-row span{font-size:11px;font-weight:600;text-decoration:underline;margin-top:-4px;margin-bottom:6px;color:#fff;opacity:.8}
 .pay-icons{display:flex;gap:6px;margin-top:20px;flex-wrap:wrap}
-.pay-icons div{width:38px;height:24px;border-radius:4px;background:#e2e2e2}
+.pay-icons div{width:38px;height:24px;border-radius:4px;background:rgba(255,255,255,.14)}
+.wordmark{margin-top:36px;text-align:center;font-size:15vw;line-height:1;font-weight:700;letter-spacing:-2px;color:#fff}
 </style>
 </head>
 <body>
@@ -212,168 +251,173 @@ footer{background:var(--f7);margin-top:0;padding:28px 20px 24px}
     </div>
   </header>
 
-  <!-- Hero: product-first, immediate CTA into the configurator -->
+  <!-- 2. Hero: full-bleed photo, badge, headline, one CTA only -->
   <div id="hhero">
     <span class="hh-badge">Personalizabil</span>
-    <img src="assets/boston-soft-comfort-woman-v1.webp" alt="Canapea Agache în living">
+    <img src="https://agache.ro/cdn/shop/files/main-cover-tiny.jpg?v=1773659975&width=800" alt="Familia Agache în showroom-ul din Timișoara">
     <div class="hh-ov">
       <h1>Canapeaua gândită pentru felul tău de a trăi.</h1>
-      <p class="hh-sub">Alegi forma, mărimea și stofa. Restul e treaba noastră, de peste 30 de ani.</p>
-      <div class="hh-cta"><button class="btn-buy" onclick="location.href='mobile-v41.html'">Configurează-ți canapeaua</button></div>
+      <div class="hh-cta"><button class="btn btn-filled-dark btn-xl btn-full" onclick="location.href='mobile-v41.html'">Configurează-ți canapeaua</button></div>
     </div>
   </div>
 
-  <!-- Category chips: jump straight to what you're looking for -->
+  <!-- 3. Short bold statement -->
+  <div id="statement">
+    <p>Personalizată. Durabilă. Simplu de configurat.</p>
+  </div>
+
+  <!-- 4. Category chips: wrapping grid -->
   <div id="catchips">
-    <button class="fpill on">Toate produsele</button>
-    <button class="fpill">Canapele</button>
-    <button class="fpill">Colțare</button>
-    <button class="fpill">Colțare de bucătărie</button>
-    <button class="fpill">Fotolii</button>
-    <button class="fpill">Paturi de dormitor</button>
+    <button class="btn fpill btn-outlined" style="background:var(--dark);color:#fff;border-color:var(--dark)">Toate produsele</button>
+    <button class="btn fpill btn-outlined">Canapele</button>
+    <button class="btn fpill btn-outlined">Colțare</button>
+    <button class="btn fpill btn-outlined">Colțare de bucătărie</button>
+    <button class="btn fpill btn-outlined">Fotolii</button>
+    <button class="btn fpill btn-outlined">Paturi de dormitor</button>
   </div>
 
-  <!-- Best sellers -->
-  <div class="px" style="margin-top:8px">
-    <div class="eyebrow">CELE MAI CĂUTATE</div>
-    <div class="sec-h2" style="font-size:24px">Cele mai vândute produse</div>
-  </div>
-  <div class="rail" id="bsrail">
-    <div class="pcard">
-      <div class="im"><img src="https://agache.ro/cdn/shop/files/Paris_Cover_Tiny.jpg?v=1773327192&width=355" alt="Colecția Paris"></div>
-      <div class="tx"><div class="n">Colecția Paris</div><div class="p">De la 5.355,00 lei</div><div class="rv"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>34 recenzii</div></div>
+  <!-- 5. Best sellers rail -->
+  <div id="bestsellers">
+    <div class="sec-head">
+      <div class="h28">Cele mai vândute produse</div>
+      <a class="seeall" href="#">Vezi tot</a>
     </div>
-    <div class="pcard">
-      <div class="im"><img src="https://agache.ro/cdn/shop/files/Cover_Chere.jpg?v=1773325616&width=355" alt="Colțar Chere"></div>
-      <div class="tx"><div class="n">Colțar Chere</div><div class="p">De la 6.110,00 lei</div><div class="rv"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>8 recenzii</div></div>
+    <div class="rail" id="bsrail">
+      <div class="pcard">
+        <div class="im"><img src="https://agache.ro/cdn/shop/files/Paris_Cover_Tiny.jpg?v=1773327192&width=355" alt="Colecția Paris"></div>
+        <div class="tx"><div class="n">Colecția Paris</div><div class="p">De la 5.355,00 lei</div><div class="rv"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>34 recenzii</div></div>
+      </div>
+      <div class="pcard">
+        <div class="im"><img src="https://agache.ro/cdn/shop/files/Cover_Chere.jpg?v=1773325616&width=355" alt="Colțar Chere"></div>
+        <div class="tx"><div class="n">Colțar Chere</div><div class="p">De la 6.110,00 lei</div><div class="rv"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>8 recenzii</div></div>
+      </div>
+      <div class="pcard">
+        <div class="im"><img src="https://agache.ro/cdn/shop/files/Boston_Cover_Tiny.jpg?v=1773325081&width=355" alt="Colecția Boston"></div>
+        <div class="tx"><div class="n">Colecția Boston</div><div class="p">De la 4.745,00 lei</div><div class="rv"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>21 recenzii</div></div>
+      </div>
+      <div class="pcard">
+        <div class="im"><img src="https://agache.ro/cdn/shop/files/Valencia_Cover_Tiny.jpg?v=1773328122&width=1500" alt="Colecția Valencia"></div>
+        <div class="tx"><div class="n">Colecția Valencia</div><div class="p">De la 6.265,00 lei</div><div class="rv"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>10 recenzii</div></div>
+      </div>
+      <div class="pcard">
+        <div class="im"><span class="sale-badge">Reducere</span><img src="https://agache.ro/cdn/shop/files/Canapea-Madrid-Main.jpg?v=1771993338&width=1000" alt="Canapea Madrid"></div>
+        <div class="tx"><div class="n">Canapea Madrid</div><div class="p"><span class="sale">5.145,00 lei</span><span class="was">7.345,00 lei</span></div><div class="rv"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>1 recenzii</div></div>
+      </div>
     </div>
-    <div class="pcard">
-      <div class="im"><img src="https://agache.ro/cdn/shop/files/Boston_Cover_Tiny.jpg?v=1773325081&width=355" alt="Colecția Boston"></div>
-      <div class="tx"><div class="n">Colecția Boston</div><div class="p">De la 4.745,00 lei</div><div class="rv"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>21 recenzii</div></div>
-    </div>
-    <div class="pcard">
-      <div class="im"><img src="https://agache.ro/cdn/shop/files/Valencia_Cover_Tiny.jpg?v=1773328122&width=1500" alt="Colecția Valencia"></div>
-      <div class="tx"><div class="n">Colecția Valencia</div><div class="p">De la 6.265,00 lei</div><div class="rv"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>10 recenzii</div></div>
-    </div>
-    <div class="pcard">
-      <div class="im"><span class="sale-badge">Reducere</span><img src="https://agache.ro/cdn/shop/files/Canapea-Madrid-Main.jpg?v=1771993338&width=1000" alt="Canapea Madrid"></div>
-      <div class="tx"><div class="n">Canapea Madrid</div><div class="p"><span class="sale">5.145,00 lei</span><span class="was">7.345,00 lei</span></div><div class="rv"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>1 recenzii</div></div>
-    </div>
-  </div>
-  <div class="rail-nav">
-    <button class="rn-prev" onclick="railNav('bsrail',-1)" aria-label="Anterior"><img src="assets/arrow-left-40.svg" alt=""></button>
-    <button class="rn-next" onclick="railNav('bsrail',1)" aria-label="Următor"><img src="assets/arrow-right-40.svg" alt=""></button>
   </div>
 
-  <!-- Atelier / craft photo band -->
-  <div id="atelier">
+  <!-- 6. Mood-break photo band -->
+  <div id="moodbreak">
     <img src="assets/workshop.png" alt="Atelierul Agache din Timișoara">
-    <div class="at-ov">
-      <div class="eyebrow">POVESTEA NOASTRĂ</div>
-      <div class="sec-h2">30 de ani de meșteșug, o singură familie.</div>
-      <p>Din 1994 construim mobilier tapițat în Timișoara, cu aceeași echipă care nu face compromisuri la materiale.</p>
-    </div>
+    <div class="mb-ov"><div class="mb-cap">Din atelierul nostru, de 30 de ani.</div></div>
   </div>
 
-  <!-- Configureaza: the core differentiator, teased like a color picker -->
-  <div id="confsec">
+  <!-- 7. Color/material 3-col picker -->
+  <div id="picker">
     <div class="px">
-      <div class="eyebrow">PERSONALIZEAZĂ</div>
-      <div class="sec-h2">Alege stofa.<br>Restul vine de la sine.</div>
-      <div class="swrow">
-        <img class="sw-dot" src="assets/swatches/enjoylux-03.jpg" alt="">
-        <img class="sw-dot" src="assets/swatches/enjoylux-07.jpg" alt="">
-        <img class="sw-dot" src="assets/swatches/enjoylux-12.jpg" alt="">
-        <img class="sw-dot" src="assets/swatches/enjoylux-18.jpg" alt="">
-        <img class="sw-dot" src="assets/swatches/enjoylux-22.jpg" alt="">
-        <span class="sw-more">peste 300 de nuanțe</span>
-      </div>
+      <div class="h32">Alege stofa.<br>Restul vine de la sine.</div>
     </div>
-    <div class="px">
-      <div class="wph">
-        <img src="assets/manila-hero.png" alt="Configurator canapea Agache">
-        <button class="wbtn" onclick="location.href='mobile-v41.html'">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4V2M15 16V14M8 9H10M20 9H22M17.8 11.8L19 13M17.8 6.2L19 5M3 21L12 12M12.2 6.2L11 5"/></svg>
-          Configurează canapeaua ta
-        </button>
+    <div class="picker-cols">
+      <div class="picker-col">
+        <div class="pc-im"><img src="https://agache.ro/cdn/shop/files/Boston_Cover_Tiny.jpg?v=1773325081&width=355" alt="Colecția Boston"></div>
+        <div class="pc-name">Boston</div>
+        <div class="pc-swrow">
+          <img class="pc-dot" src="assets/swatches/enjoylux-03.jpg" alt="">
+          <img class="pc-dot" src="assets/swatches/enjoylux-07.jpg" alt="">
+          <img class="pc-dot" src="assets/swatches/enjoylux-12.jpg" alt="">
+        </div>
+        <button class="btn btn-outlined btn-s" onclick="location.href='mobile-v41.html'">Descoperă</button>
+      </div>
+      <div class="picker-col">
+        <div class="pc-im"><img src="https://agache.ro/cdn/shop/files/Paris_Cover_Tiny.jpg?v=1773327192&width=355" alt="Colecția Paris"></div>
+        <div class="pc-name">Paris</div>
+        <div class="pc-swrow">
+          <img class="pc-dot" src="assets/swatches/enjoylux-14.jpg" alt="">
+          <img class="pc-dot" src="assets/swatches/enjoylux-18.jpg" alt="">
+          <img class="pc-dot" src="assets/swatches/enjoylux-22.jpg" alt="">
+        </div>
+        <button class="btn btn-outlined btn-s" onclick="location.href='mobile-v41.html'">Descoperă</button>
+      </div>
+      <div class="picker-col">
+        <div class="pc-im"><img src="https://agache.ro/cdn/shop/files/Valencia_Cover_Tiny.jpg?v=1773328122&width=1500" alt="Colecția Valencia"></div>
+        <div class="pc-name">Valencia</div>
+        <div class="pc-swrow">
+          <img class="pc-dot" src="assets/swatches/enjoylux-05.jpg" alt="">
+          <img class="pc-dot" src="assets/swatches/enjoylux-09.jpg" alt="">
+          <img class="pc-dot" src="assets/swatches/enjoylux-21.jpg" alt="">
+        </div>
+        <button class="btn btn-outlined btn-s" onclick="location.href='mobile-v41.html'">Descoperă</button>
       </div>
     </div>
   </div>
 
-  <!-- Trust / craft rail: brand-wide version of the PDP's "5 motive" -->
-  <div id="construit">
-    <div class="chead">
-      <p class="lead">5 motive pentru care clienții noștri aleg Agache:</p>
+  <!-- 8. Comfort full-bleed photo -->
+  <div id="comfort">
+    <img src="assets/video-poster.png" alt="Client testând canapeaua Boston în showroom">
+    <div class="cf-ov">
+      <h2>Confortul pe care îl simți din prima secundă.</h2>
+      <button class="btn btn-filled-dark btn-m" onclick="location.href='mobile-v41.html'">Configurează-ți canapeaua</button>
     </div>
-    <div class="rail" id="crail">
-      <div class="ccard ccard-photo">
-        <div class="ph-full"><img src="assets/hero-1.png" alt="Canapea Agache"></div>
-        <div class="ctxt">
-          <div class="tag">Făcută de mână</div>
-          <div class="ttl">30 de ani de meșteșug</div>
-          <div class="dsc">Aceeași familie, aceeași echipă din Timișoara, de la primul colțar din 1994.</div>
-        </div>
-      </div>
-      <div class="ccard ccard-tinted ccard-beige">
-        <div class="ctxt">
-          <div class="tag">Garanție extinsă</div>
-          <div class="ttl">10 ani de garanție structurală</div>
-          <div class="dsc">Garanția noastră acoperă structura de lemn masiv a fiecărei canapele Agache.</div>
-        </div>
-        <div class="ph ph-garantie"><img src="assets/construit-garantie.png" alt="Structura canapelei"></div>
-      </div>
-      <div class="ccard ccard-tinted ccard-tesatura">
-        <div class="ctxt">
-          <div class="tag">Atenție la detalii</div>
-          <div class="ttl">Țesături alese cu grijă</div>
-          <div class="dsc">Materiale testate la uzură, alese să reziste ani la rând, nu doar în poze.</div>
-        </div>
-        <div class="ph ph-tesatura"><img src="assets/construit-tesatura.png" alt="Țesătură" style="object-position:0 93%"></div>
-      </div>
-      <div class="ccard ccard-tinted ccard-culori">
-        <div class="ctxt">
-          <div class="tag">Materiale și culori</div>
-          <div class="ttl">300 de nuanțe</div>
-          <div class="dsc">De la bucle la catifea - limita până la care poți personaliza rămâne imaginația ta.</div>
-        </div>
-        <div class="ph ph-culori">
-          <img src="assets/swatches/enjoylux-05.jpg" alt="">
-          <img src="assets/swatches/enjoylux-14.jpg" alt="">
-          <img src="assets/swatches/enjoylux-21.jpg" alt="">
-        </div>
-      </div>
-      <div class="ccard ccard-tinted ccard-captuseala">
-        <div class="ctxt">
-          <div class="tag">Căptușeală</div>
-          <div class="ttl">Căptușit pe toate părțile</div>
-          <div class="dsc">Fiecare canapea e gândită să reziste la uzura zilnică, chiar și pe părțile ascunse.</div>
-        </div>
-        <div class="ph ph-captuseala"><img src="assets/construit-captuseala.png" alt="Căptușeală"></div>
-      </div>
-    </div>
-    <div class="rail-scrollbar"><div class="rail-scrollbar-thumb"></div></div>
   </div>
 
-  <!-- Testimonials -->
+  <!-- 9. Product rail -->
+  <div id="featured-rail">
+    <div class="sec-head" style="padding-top:48px">
+      <div class="h28">Alte modele populare</div>
+      <a class="seeall" href="#">Vezi tot</a>
+    </div>
+    <div class="rail" id="fRail">
+      <div class="pcard">
+        <div class="im"><img src="https://agache.ro/cdn/shop/files/Boston_Cover_Tiny.jpg?v=1773325081&width=355" alt="Colecția Boston"></div>
+        <div class="tx"><div class="n">Colecția Boston</div><div class="p">De la 4.745,00 lei</div><div class="rv"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>21 recenzii</div></div>
+      </div>
+      <div class="pcard">
+        <div class="im"><img src="https://agache.ro/cdn/shop/files/Paris_Cover_Tiny.jpg?v=1773327192&width=355" alt="Colecția Paris"></div>
+        <div class="tx"><div class="n">Colecția Paris</div><div class="p">De la 5.355,00 lei</div><div class="rv"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>34 recenzii</div></div>
+      </div>
+      <div class="pcard">
+        <div class="im"><img src="https://agache.ro/cdn/shop/files/Valencia_Cover_Tiny.jpg?v=1773328122&width=1500" alt="Colecția Valencia"></div>
+        <div class="tx"><div class="n">Colecția Valencia</div><div class="p">De la 6.265,00 lei</div><div class="rv"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>10 recenzii</div></div>
+      </div>
+      <div class="pcard">
+        <div class="im"><img src="https://agache.ro/cdn/shop/files/Cover_Chere.jpg?v=1773325616&width=355" alt="Colțar Chere"></div>
+        <div class="tx"><div class="n">Colțar Chere</div><div class="p">De la 6.110,00 lei</div><div class="rv"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>8 recenzii</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. Design once, love forever -->
+  <div id="durable">
+    <div class="collage">
+      <img class="cl-a" src="assets/hero-1.png" alt="Canapea Agache în living">
+      <img class="cl-b" src="assets/construit-tesatura.png" alt="Detaliu țesătură canapea">
+    </div>
+    <div class="sub px">
+      <div class="h28">O dată aleasă, iubită mereu.</div>
+      <div class="h24" style="margin-top:16px">Construite să dureze</div>
+      <p class="copy">Structură de lemn masiv garantată 10 ani și țesături testate la uzură — gândite pentru casa ta de azi și de peste un deceniu.</p>
+    </div>
+  </div>
+
+  <!-- 11. Customer-focus / testimonials -->
   <div id="testim">
     <div class="score-badge">
       <div class="big">4.9</div>
       <div class="sb-col">
         <div class="stars">
-          <svg class="star" width="20" height="20" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg class="star" width="20" height="20" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg class="star" width="20" height="20" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg class="star" width="20" height="20" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg class="star" width="20" height="20" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="star" width="18" height="18" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="star" width="18" height="18" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="star" width="18" height="18" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="star" width="18" height="18" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="star" width="18" height="18" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
         </div>
         <div class="cnt">1008 recenzii</div>
       </div>
     </div>
-    <div class="px" style="margin-top:32px">
-      <div class="eyebrow">DE LA CLIENȚII NOȘTRI</div>
-      <div class="sec-h2">30.000 de clienți fericiți în peste 30 de ani.</div>
+    <div class="px" style="margin-top:24px">
+      <div class="h32">Ce ne interesează pe noi? Tu.</div>
     </div>
-    <div class="rail" id="rvrail">
+    <div class="rail" id="rvrail" style="margin-top:20px">
       <div class="rvcard-s">
         <div class="rp"><img src="https://review-images.judgeme.com/mobila-agache/1788863017__20260828_202614__original.jpg?quality=80&width=240" alt=""><div class="rv-badge-s"><div class="stars"><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div></div></div>
         <div class="rv-name">Ioana</div>
@@ -391,26 +435,87 @@ footer{background:var(--f7);margin-top:0;padding:28px 20px 24px}
         <div class="rv-name">Sorina</div>
       </div>
     </div>
-    <div class="rail-nav">
-      <button class="rn-prev" onclick="railNav('rvrail',-1)" aria-label="Anterior"><img src="assets/arrow-left-40.svg" alt=""></button>
-      <button class="rn-next" onclick="railNav('rvrail',1)" aria-label="Următor"><img src="assets/arrow-right-40.svg" alt=""></button>
+  </div>
+
+  <!-- 12. Gift-card banner -->
+  <div id="giftcard">
+    <div class="gift-card">
+      <h3>Acest cadou i se potrivește mereu.</h3>
+      <button class="btn btn-filled btn-s">Cumpără un card cadou</button>
     </div>
   </div>
 
-  <!-- Showroom banner -->
+  <!-- 13. Sustainability / philosophy -->
+  <div id="philosophy">
+    <div class="h32">Producem doar mobilier comandat, cu grijă.</div>
+    <div id="construit">
+      <div class="chead">
+        <p class="lead">5 motive pentru care clienții noștri aleg Agache:</p>
+      </div>
+      <div class="rail" id="crail">
+        <div class="ccard ccard-photo">
+          <div class="ph-full"><img src="assets/hero-1.png" alt="Canapea Agache"></div>
+          <div class="ctxt">
+            <div class="tag">Făcută de mână</div>
+            <div class="ttl">30 de ani de meșteșug</div>
+            <div class="dsc">Aceeași familie, aceeași echipă din Timișoara, de la primul colțar din 1994.</div>
+          </div>
+        </div>
+        <div class="ccard ccard-tinted ccard-beige">
+          <div class="ctxt">
+            <div class="tag">Garanție extinsă</div>
+            <div class="ttl">10 ani de garanție structurală</div>
+            <div class="dsc">Garanția noastră acoperă structura de lemn masiv a fiecărei canapele Agache.</div>
+          </div>
+          <div class="ph ph-garantie"><img src="assets/construit-garantie.png" alt="Structura canapelei"></div>
+        </div>
+        <div class="ccard ccard-tinted ccard-tesatura">
+          <div class="ctxt">
+            <div class="tag">Atenție la detalii</div>
+            <div class="ttl">Țesături alese cu grijă</div>
+            <div class="dsc">Materiale testate la uzură, alese să reziste ani la rând, nu doar în poze.</div>
+          </div>
+          <div class="ph ph-tesatura"><img src="assets/construit-tesatura.png" alt="Țesătură" style="object-position:0 93%"></div>
+        </div>
+        <div class="ccard ccard-tinted ccard-culori">
+          <div class="ctxt">
+            <div class="tag">Materiale și culori</div>
+            <div class="ttl">300 de nuanțe</div>
+            <div class="dsc">De la bucle la catifea - limita până la care poți personaliza rămâne imaginația ta.</div>
+          </div>
+          <div class="ph ph-culori">
+            <img src="assets/swatches/enjoylux-05.jpg" alt="">
+            <img src="assets/swatches/enjoylux-14.jpg" alt="">
+            <img src="assets/swatches/enjoylux-21.jpg" alt="">
+          </div>
+        </div>
+        <div class="ccard ccard-tinted ccard-captuseala">
+          <div class="ctxt">
+            <div class="tag">Căptușeală</div>
+            <div class="ttl">Căptușit pe toate părțile</div>
+            <div class="dsc">Fiecare canapea e gândită să reziste la uzura zilnică, chiar și pe părțile ascunse.</div>
+          </div>
+          <div class="ph ph-captuseala"><img src="assets/construit-captuseala.png" alt="Căptușeală"></div>
+        </div>
+      </div>
+      <div class="rail-scrollbar"><div class="rail-scrollbar-thumb"></div></div>
+    </div>
+  </div>
+
+  <!-- 14. Showroom band -->
   <div id="showroom">
-    <img src="assets/video-poster.png" alt="Showroom Agache">
+    <img src="https://agache.ro/cdn/shop/files/431590852_815891413918507_6018654212020095740_n_b49ae953-390b-4826-a360-5f72d41daf22.webp?v=1772021390&width=750" alt="Showroom Agache București">
     <div class="sr-ov">
-      <div class="eyebrow">MAGAZINELE NOASTRE</div>
-      <div class="sec-h2">Vezi și atinge canapelele, la 6 showroom-uri.</div>
-      <div style="margin-top:20px"><button class="btn-buy sr-btn">Găsește un magazin</button></div>
+      <div class="h32">Vezi și atinge canapelele, la 6 showroom-uri.</div>
+      <button class="btn btn-filled-dark btn-xl sr-btn">Găsește un magazin</button>
     </div>
   </div>
 
-  <!-- Category grid -->
+  <!-- 15. Most popular products: 2-col grid -->
   <div id="catgrid">
-    <div class="eyebrow">CE CAUȚI?</div>
-    <div class="sec-h2" style="font-size:24px">Alege categoria</div>
+    <div class="px">
+      <div class="h28">Cele mai populare categorii</div>
+    </div>
     <div class="grid">
       <a class="pcard"><div class="im"><img src="https://agache.ro/cdn/shop/files/couch.jpg?v=1772111416&width=900" alt="Canapele"></div><div class="tx"><div class="n">Canapele</div></div></a>
       <a class="pcard"><div class="im"><img src="https://agache.ro/cdn/shop/files/corners.jpg?v=1772111430&width=900" alt="Colțare"></div><div class="tx"><div class="n">Colțare</div></div></a>
@@ -420,17 +525,35 @@ footer{background:var(--f7);margin-top:0;padding:28px 20px 24px}
     </div>
   </div>
 
-  <!-- Newsletter -->
-  <div id="news">
-    <div class="eyebrow">OFERTĂ</div>
-    <div class="sec-h2" style="font-size:24px">Primești 10% reducere la prima comandă</div>
-    <div id="news-card">
-      <input type="email" placeholder="Adresa ta de e-mail">
-      <button class="btn-buy">Trimite</button>
+  <!-- 16. Editorial / journal rail -->
+  <div id="journal">
+    <div class="px"><div class="h32">Din atelierul Agache</div></div>
+    <div class="rail" id="jrail" style="margin-top:20px">
+      <div class="jcard">
+        <div class="jim"><img src="assets/workshop.png" alt="O zi în atelier"></div>
+        <div class="jt">O zi în atelier</div>
+      </div>
+      <div class="jcard">
+        <div class="jim"><img src="assets/manila-hero.png" alt="Cum alegem stofele"></div>
+        <div class="jt">Cum alegem stofele</div>
+      </div>
+      <div class="jcard">
+        <div class="jim"><img src="assets/video-poster.png" alt="În showroom"></div>
+        <div class="jt">Ce vezi într-un showroom Agache</div>
+      </div>
     </div>
   </div>
 
-  <!-- Closing brand statement -->
+  <!-- 17. Newsletter -->
+  <div id="news">
+    <div class="h28">Primești 10% reducere la prima comandă</div>
+    <div id="news-row">
+      <input type="email" placeholder="Adresa ta de e-mail">
+      <button class="btn btn-filled btn-xl">Trimite</button>
+    </div>
+  </div>
+
+  <!-- 18. Closing dark brand statement -->
   <div id="closing">
     <p>Mobilier care se potrivește casei tale, nu invers.</p>
     <a href="#">Vezi produsele noastre</a>
@@ -453,6 +576,7 @@ footer{background:var(--f7);margin-top:0;padding:28px 20px 24px}
       <span>ANPC SOL</span>
     </div>
     <div class="pay-icons"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+    <div class="wordmark">agache</div>
   </footer>
 
 </div>
