@@ -169,11 +169,11 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 /* ── bottom sheet ── */
 #cfg-sheet{position:relative;flex:0 0 auto;height:var(--sheet-h);background:#fff;border-radius:0;box-shadow:0 -8px 30px rgba(0,0,0,.14);display:flex;flex-direction:column;overflow:hidden;z-index:3}
 #cfg-sheet.dragging{transition:none}
-.cfg-handle{flex:0 0 auto;display:flex;justify-content:center;touch-action:none;padding-top:4px}
-.cfg-handle .hbar{visibility:hidden}
+.cfg-handle{flex:0 0 auto;display:flex;justify-content:center;touch-action:none;padding-top:8px}
+.cfg-handle .hbar{display:none}
 /* The bar owns the hairline and the bottom padding now; the chips inside it are the only part
    that scrolls, so the filter button and its divider stay put at the right edge. */
-.cfg-navbar{flex:0 0 auto;display:flex;align-items:center;padding:0 0 16px;border-bottom:1px solid var(--hair)}
+.cfg-navbar{flex:0 0 auto;display:flex;align-items:center;padding:0 0 8px;border-bottom:1px solid var(--hair)}
 /* No ring, ever -- the count badge alone says filters are on. */
 .cfg-navfilter{flex:0 0 auto;position:relative;display:flex;align-items:center;justify-content:center;width:40px;height:40px;margin-right:8px;padding:0;border:none;background:none;color:var(--ink)}
 .cfg-navfilter .nav-cnt{display:none;position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:999px;background:#1D1D1F;color:#fff;font-size:11px;font-weight:600;align-items:center;justify-content:center;border:2px solid #fff}
@@ -412,24 +412,28 @@ h3.cfg-title{font-size:20px;font-weight:400;letter-spacing:-.03em;line-height:1.
 .cfg-filter-btn .cnt{display:none;position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:999px;background:#1D1D1F;color:#fff;font-size:11px;font-weight:600;align-items:center;justify-content:center;border:2px solid #fff}
 .cfg-filter-btn.has-count .cnt{display:flex}
 
-.cfg-filter-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.cfg-filter-pills{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:12px}
 #fsheet-material{flex-wrap:wrap}
-#fsheet-culoare{gap:10px}
-.cfg-fpill-color{height:32px;padding:0 12px;border-radius:10px}
-.cfg-fpill-color.on{box-shadow:inset 0 0 0 2px var(--ink)}
-.cfg-fpill-color .fp-chk{display:none;width:14px;height:14px;border-radius:50%;background:#fff;align-items:center;justify-content:center;flex:0 0 auto}
-.cfg-fpill-color.on .fp-chk{display:flex}
+#fsheet-culoare{gap:20px 8px}
+#fsheet-prop{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;gap:4px}
+#fsheet-prop::-webkit-scrollbar{display:none}
+#fsheet-prop .cfg-fpill-amenity{flex:0 0 auto}
+.cfg-fpill-color{flex-direction:column;background:none;height:auto;padding:0;gap:6px;width:56px;border-radius:0}
+.cfg-fpill-color .fp-swatch{width:44px;height:44px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.cfg-fpill-color.on .fp-swatch{box-shadow:0 0 0 2px #fff,0 0 0 4px var(--ink)}
+.cfg-fpill-color .fp-label{font-size:13px;letter-spacing:-.01em;color:var(--ink)}
 .cfg-fpill.on{background:var(--ink);color:#fff}
+.cfg-fpill-color.on{background:none;color:var(--ink)}
 /* Proprietăți pills recreated as reference-style amenity pills -- icon + label inside a full
    rounded, bordered capsule. Selected state only thickens the border (1px->2px, ink) and stays
    white -- no background fill -- instead of inverting to solid ink, since a solid fill on an
    icon+text pill this size reads closer to a disabled state than an on state. Padding drops by
    1px to match the thicker border so the pill doesn't grow and reflow its neighbors. */
-.cfg-fpill-amenity{height:48px;padding:0 20px;border-radius:9999px;border:1px solid var(--hair);background:#fff;gap:10px}
+.cfg-fpill-amenity{height:40px;padding:0 16px;border-radius:9999px;border:1px solid var(--hair);background:#fff;gap:8px}
 .cfg-fpill-amenity .fp-icon{display:flex;flex:0 0 auto;color:var(--ink)}
-.cfg-fpill-amenity .fp-icon svg{width:20px;height:20px}
-.cfg-fpill-amenity span{font-size:14px;letter-spacing:-.02em;white-space:nowrap}
-.cfg-fpill-amenity.on{border:2px solid var(--ink);background:#fff;color:var(--ink);padding:0 19px}
+.cfg-fpill-amenity .fp-icon svg{width:16px;height:16px}
+.cfg-fpill-amenity span{font-size:13px;letter-spacing:-.01em;white-space:nowrap}
+.cfg-fpill-amenity.on{border:2px solid var(--ink);background:#fff;color:var(--ink);padding:0 15px}
 @media (hover:hover) and (pointer:fine){
   .cfg-fpill-amenity:not(.on):hover{background:var(--chipbg)}
 }
@@ -503,7 +507,7 @@ input.price-mm-pill:focus{border-color:var(--ink)}
 .cfg-matgroup-name{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:6px}
 .cfg-matgroup-right{flex:0 0 auto;font-size:14px;font-weight:400;letter-spacing:-.02em;color:var(--ink);display:flex;align-items:center;gap:8px}
 .cfg-matgroup-badges{display:flex;align-items:center;gap:5px;flex:0 0 auto;color:var(--ink)}
-.cfg-matgroup-badges svg{display:block;width:15px;height:15px}
+.cfg-matgroup-badges svg{display:block;width:24px;height:24px}
 /* v39: title used to be a direct child of #cfg-fabric-sections, so :first-of-type alone picked
    out the very first group. Now each title lives inside its own .cfg-matgroup-body wrapper (see
    renderFabricSections) -- it's trivially :first-of-type within that wrapper regardless of
@@ -1450,18 +1454,13 @@ function collectionPriceDiffLabel(slug, shapeName){
   var diff = tiers[COLLECTIONS[slug].tier] - tiers.Practic;
   return diff > 0 ? '+' + Math.round(diff).toLocaleString('ro-RO') + ' lei' : '0 lei';
 }
-/* assets/fabric-features/*.svg inlined so `fill="currentColor"` picks up the badge's own ink
-   colour -- an <img> would freeze it to the file's own black. easyClean's mask needs a unique
-   id per copy (a collection group can render it more than once as filters change), so it's
-   built through a counter instead of a static string like the other two. */
-var FEATURE_ICON_UID = 0;
+/* Same glyphs as the Proprietăți filter pills (USP_ICONS.droplet/sparkle/paw) so a claim like
+   "Impermeabil" looks identical whether it's a badge here or a filter pill there -- just at
+   this row's own 24px size instead of the pills' 22px. */
 function featureIconSVG(key){
-  if (key === 'waterproof') return '<svg viewBox="0 0 96 96" fill="currentColor"><path fill-rule="evenodd" d="M8 48A40 40 0 0 1 88 48V58H8Z M48 18 36 34A15 15 0 1 0 60 34Z"/><path d="M11.34 66H84.66A40 40 0 0 1 11.34 66Z"/></svg>';
-  if (key === 'petFriendly') return '<svg viewBox="0 0 96 96" fill="currentColor"><circle cx="34" cy="20" r="12"/><circle cx="62" cy="20" r="12"/><circle cx="13" cy="42" r="10"/><circle cx="83" cy="42" r="10"/><path d="M20 76A28 28 0 0 1 76 76V88H60A12 12 0 0 0 36 88H20Z"/></svg>';
-  if (key === 'easyClean'){
-    var uid = 'ec-cut-' + (FEATURE_ICON_UID++);
-    return '<svg viewBox="0 0 96 96" fill="currentColor"><defs><mask id="' + uid + '" maskUnits="userSpaceOnUse" x="0" y="0" width="96" height="96"><rect width="96" height="96" fill="white"/><path d="M48 19C48 37 59 48 77 48 59 48 48 59 48 77 48 59 37 48 19 48 37 48 48 37 48 19Z" fill="black"/><path d="M8 83 33 58 39 64 14 89Z" fill="black"/></mask></defs><circle cx="48" cy="48" r="40" mask="url(#' + uid + ')"/></svg>';
-  }
+  if (key === 'waterproof') return '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>';
+  if (key === 'petFriendly') return '<svg width="24" height="24" viewBox="0 0 96 96" fill="currentColor"><circle cx="34" cy="20" r="12"/><circle cx="62" cy="20" r="12"/><circle cx="13" cy="42" r="10"/><circle cx="83" cy="42" r="10"/><path d="M20 76A28 28 0 0 1 76 76V88H60A12 12 0 0 0 36 88H20Z"/></svg>';
+  if (key === 'easyClean') return '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C12.5 8 16 11.5 22 12C16 12.5 12.5 16 12 22C11.5 16 8 12.5 2 12C8 11.5 11.5 8 12 2Z"/></svg>';
   return '';
 }
 function collectionBadgesHTML(c){
@@ -1636,12 +1635,12 @@ function avgScore(c){
 }
 var USP_ICONS = {
   people: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
-  droplet: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>',
+  droplet: '<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>',
   hand: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>',
   shield: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>',
   grid: '<svg width="22" height="22" viewBox="0 0 24 24" fill="#4d35ff"><circle cx="7" cy="5" r="1.6"/><circle cx="13" cy="5" r="1.6"/><circle cx="7" cy="12" r="1.6"/><circle cx="13" cy="12" r="1.6"/><circle cx="7" cy="19" r="1.6"/><circle cx="13" cy="19" r="1.6"/></svg>',
-  paw: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><ellipse cx="12" cy="16.3" rx="5.3" ry="4.2"/><circle cx="5.4" cy="10" r="2"/><circle cx="9.6" cy="5.6" r="2.1"/><circle cx="14.4" cy="5.6" r="2.1"/><circle cx="18.6" cy="10" r="2"/></svg>',
-  sparkle: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 2C12.5 8 16 11.5 22 12C16 12.5 12.5 16 12 22C11.5 16 8 12.5 2 12C8 11.5 11.5 8 12 2Z"/></svg>'
+  paw: '<svg width="22" height="22" viewBox="0 0 96 96" fill="currentColor"><circle cx="34" cy="20" r="12"/><circle cx="62" cy="20" r="12"/><circle cx="13" cy="42" r="10"/><circle cx="83" cy="42" r="10"/><path d="M20 76A28 28 0 0 1 76 76V88H60A12 12 0 0 0 36 88H20Z"/></svg>',
+  sparkle: '<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C12.5 8 16 11.5 22 12C16 12.5 12.5 16 12 22C11.5 16 8 12.5 2 12C8 11.5 11.5 8 12 2Z"/></svg>'
 };
 function textureLabel(c){
   if (c.surface === 'Plush/Soft') return c.finish === 'Glossy' ? 'Aspect catifelat, lucios' : 'Aspect catifelat, mat';
@@ -2394,14 +2393,11 @@ function makeFsheetPill(opt){
   }
   pill.className = 'fchip cfg-fpill' + (famStyle ? ' cfg-fpill-color' : '') + (on ? ' on' : '');
   if (famStyle){
-    pill.style.background = famStyle.bg;
-    pill.style.color = famStyle.fg;
-    /* Colored chips (unlike the plain grey ones) never invert to solid black on selection --
-       that would erase the family color, and for Negru specifically the chip is already solid
-       black, so the usual on-state would be visually identical to off and look like reset
-       silently failed. A neutral white checkmark badge makes the selected state legible no
-       matter what the chip's own background is. */
-    pill.innerHTML = '<span>' + opt + '</span><span class="fp-chk"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>';
+    /* A swatch circle in the family's own colour, name centered below -- selection reads as a
+       ring around the circle (a white gap then a dark ring) rather than a background invert,
+       which would erase the family colour and, for Negru specifically, be indistinguishable
+       from the off state since the chip is already solid black. */
+    pill.innerHTML = '<span class="fp-swatch" style="background:' + famStyle.bg + '"></span><span class="fp-label">' + opt + '</span>';
   } else {
     pill.textContent = opt;
   }
