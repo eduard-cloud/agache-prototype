@@ -505,16 +505,23 @@ input.price-mm-pill:focus{border-color:var(--ink)}
 .cfg-matgroup-body:first-of-type .cfg-matgroup-title,.cfg-matgroup-title.first-visible{margin-top:0}
 .cfg-matgroup-info{flex:0 0 auto;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#1d1d1f}
 .cfg-color-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
-/* v39: one message per collection group instead of one per swatch -- a single card centred over
-   the (still visibly dimmed) grid, matching how a lock/attention overlay reads elsewhere. */
+#cfg-fabric-sections.cfg-grid3 .cfg-color-grid{grid-template-columns:repeat(3,1fr);gap:12px 10px}
+/* One card per locked-out collection group, pinned just past its first row of (dimmed)
+   swatches -- see positionMatgroupLocks(), which sets its "top" in px to whatever row 2
+   actually starts at for that group's real column count and tile size. Centring it in the
+   whole group (the old behaviour) buried it mid-scroll on any collection with more than a
+   couple of rows, easy to miss without scrolling well past where it lived. top:16px here is
+   only the fallback for a one-row group, where positionMatgroupLocks finds no second row to
+   anchor to and leaves the inline top unset. min-height keeps the group at least as tall as
+   the card even then, so it still never bleeds into a neighbour. */
 .cfg-matgroup-body{position:relative}
-.cfg-matgroup-lock{display:none;position:absolute;left:0;right:0;top:0;bottom:0;z-index:2;align-items:center;justify-content:center;padding:16px}
+.cfg-matgroup-body.locked{min-height:240px}
+.cfg-matgroup-lock{display:none;position:absolute;left:0;right:0;top:16px;z-index:2;justify-content:center;padding:0 16px}
 .cfg-matgroup-body.locked .cfg-matgroup-lock{display:flex}
 .cfg-matgroup-lock-card{max-width:240px;background:#fff;border-radius:16px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.18);text-align:center}
 .cfg-matgroup-lock-card svg{display:block;margin:0 auto 8px;color:var(--gray)}
 .cfg-matgroup-lock-card p{font-size:13px;font-weight:400;letter-spacing:-.02em;line-height:1.4;color:var(--gray);margin-bottom:14px}
 .cfg-matgroup-lock-card button{height:34px;padding:0 16px;border-radius:9999px;background:var(--ink);color:#fff;border:none;font-size:13px;font-weight:500;letter-spacing:-.02em}
-#cfg-fabric-sections.cfg-grid3 .cfg-color-grid{grid-template-columns:repeat(3,1fr);gap:12px 10px}
 .mtile{position:relative;transition:transform .12s ease,filter .12s ease}
 .mtile .imw{position:relative;aspect-ratio:3/2;overflow:hidden;border-radius:8px}
 /* Source swatch photos are only 160x160 and mostly flat-looking at that size -- scaling the
@@ -810,7 +817,12 @@ input.price-mm-pill:focus{border-color:var(--ink)}
    summary of what has been set, so nobody has to open all three to find out. */
 .cfg-zonetabs{display:none;gap:4px;margin-bottom:24px;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .cfg-zonetabs::-webkit-scrollbar{display:none}
-.cfg-zonetabs.on{display:flex}
+/* Pinned while scrolling the swatch grid below: which zone you're colouring is exactly the
+   thing you'd otherwise lose track of once Luna's grid scrolls past and Spello's starts --
+   sticky keeps the tabs (and the "on" one) in view the whole time. Negative margin + matching
+   padding cancel out #cfg-scroll's own 12px top padding so the bar sits flush under the
+   Layout/Material/Culoare navbar with no gap, instead of stopping 12px short of it. */
+.cfg-zonetabs.on{display:flex;position:sticky;top:-12px;z-index:5;background:#fff;margin-top:-12px;padding-top:12px;padding-bottom:2px}
 .cfg-zonetab{flex:1 1 auto;min-width:max-content;scroll-snap-align:start;display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;padding:0 16px 10px;background:none;border:none;border-bottom:2px solid var(--chipbg)}
 .cfg-zonetab-name{font-size:16px;font-weight:500;letter-spacing:-.64px;color:var(--gray);white-space:nowrap}
 .cfg-zonetab-val{font-size:12px;font-weight:400;letter-spacing:-.24px;color:var(--gray);white-space:nowrap}
@@ -2316,6 +2328,7 @@ function setColorGridCols(n, el){
   document.getElementById('cfg-fabric-sections').classList.toggle('cfg-grid3', n === 3);
   document.querySelectorAll('.cfg-gridbtn').forEach(function(b){ b.classList.remove('on'); });
   el.classList.add('on');
+  positionMatgroupLocks();
 }
 
 /* Proprietăți pills reuse the same icon set as the collection USP badges (people/droplet/hand/
@@ -2652,12 +2665,18 @@ function applyFabricFilters(){
      zeroes that margin; hidden groups are display:none, not removed, so a CSS :first-of-type
      can't do this on its own. */
   if (firstShownTitle) firstShownTitle.classList.add('first-visible');
-  /* v39: one lock card per group, not one per swatch -- toggled here since this is the one place
+  /* One lock card per group, not one per swatch -- toggled here since this is the one place
      that already re-runs on every change that can affect it (zone mode, the first colour pick
-     that settles a collection, and Șterge colecția clearing it again). */
+     that settles a collection, and Șterge colecția clearing it again). A group a material pill
+     has filtered down to zero visible swatches already has its title+grid hidden above (the
+     anyVisible loop) -- skip the card there too, or it floats with no swatches of its own for
+     the shopper to see it's covering, right after whichever real group happens to precede it. */
   document.querySelectorAll('#cfg-fabric-sections .cfg-matgroup-body').forEach(function(body){
-    body.classList.toggle('locked', sel.zoneMode && !!sel.collectionSlug && body.dataset.slug !== sel.collectionSlug);
+    var grid = body.querySelector('.cfg-color-grid');
+    var anyVisible = !!grid && Array.prototype.some.call(grid.children, function(t){ return t.style.display !== 'none'; });
+    body.classList.toggle('locked', anyVisible && sel.zoneMode && !!sel.collectionSlug && body.dataset.slug !== sel.collectionSlug);
   });
+  positionMatgroupLocks();
   /* Narrowing to a collection counts as a filter for the total above the grid. */
   var narrowed = collectionNarrowed();
   var noFilters = !pillDefs.length && !appliedFilters.length && !priceFiltered && !narrowed;
@@ -2780,7 +2799,9 @@ function renderFabricSections(){
       '<span class="cfg-matgroup-right">' + collectionPriceDiffLabel(slug) + '</span>';
     /* v39: body wraps title + grid together (heading stays grid.previousElementSibling for the
        show/hide-empty-groups logic below) so the single lock message can be positioned absolute
-       against the group as a whole -- one card over the group, not one badge per swatch. */
+       against the group as a whole -- one card over the group, not one badge per swatch. The
+       group's own min-height (see .cfg-matgroup-body.locked) keeps that card from overflowing
+       into a neighbouring group when this one only has a row or two of swatches. */
     var body = document.createElement('div');
     body.className = 'cfg-matgroup-body';
     body.dataset.slug = slug;
@@ -2805,6 +2826,22 @@ function renderFabricSections(){
   syncSwatchSelection();
 }
 
+/* Pins each locked group's card to just past its own first row, instead of the middle of
+   however many rows it has. offsetTop is measured off the tile elements themselves (only the
+   ones still visible after filtering) so it's correct for any column count (2 or 3, see
+   setColorGridCols) and any tile size, without hardcoding a row height that filtering or a
+   column change would immediately invalidate. A group with just one row has no second row to
+   anchor to -- clearing the inline top falls back to the CSS default right under the title. */
+function positionMatgroupLocks(){
+  document.querySelectorAll('#cfg-fabric-sections .cfg-matgroup-body.locked').forEach(function(body){
+    var lock = body.querySelector('.cfg-matgroup-lock');
+    if (!lock) return;
+    var tiles = Array.prototype.filter.call(body.querySelectorAll('.mtile'), function(t){ return t.style.display !== 'none'; });
+    var row1Top = tiles.length ? tiles[0].offsetTop : 0;
+    var row2Tile = tiles.filter(function(t){ return t.offsetTop > row1Top + 1; })[0];
+    lock.style.top = row2Tile ? (row2Tile.offsetTop - 8) + 'px' : '';
+  });
+}
 
 function showSwatchInfo(name){
   var s = SWATCH_INDEX[name];
@@ -3285,7 +3322,11 @@ function setZoneMode(on){
        actually chose, the moment they flip this toggle. Zones start with no collection instead,
        same as a first-time visit, so "Alege colecția pentru toate zonele" is a real prompt, not
        a formality over a choice already made behind their back. */
-    if (!sel.collectionLocked) sel.collectionSlug = null;
+    /* If the shopper already committed to a colour in Unicolor (sel.colorName is set), that
+       colour's collection isn't a passive browsing artefact -- it's the fabric every zone just
+       got seeded with above, so the zone tabs need it to stay put. Only truly unset browsing
+       (no colour picked yet) gets wiped here. */
+    if (!sel.collectionLocked && !sel.colorName) sel.collectionSlug = null;
   } else {
     /* Leaving it collapses back to the body's colour -- the one the shopper sees most of. */
     sel.colorName = sel.zones.corp;
