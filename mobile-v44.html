@@ -416,6 +416,15 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
 .info-sec p{font-size:15px;line-height:1.6;color:var(--gray);margin-top:14px;white-space:pre-line}
 .info-sec .info-list{margin-top:16px;display:flex;flex-direction:column;gap:10px}
 .info-sec .info-list div{font-size:15px;line-height:1.5;color:var(--slate)}
+.info-sec img{width:100%;display:block;margin-top:20px;border-radius:12px}
+
+/* view-info shows one section at a time (title moved to the topbar) -- no divider, no repeated heading */
+#view-info .info-sec{border-top:none;padding-top:28px}
+#view-info .info-sec h3{display:none}
+#view-info .info-sec p strong{color:var(--black);font-weight:600}
+#view-specinfo .info-sec{border-top:none;padding-top:28px}
+#view-specinfo .info-sec h3{display:none}
+#view-specinfo .info-sec p strong{color:var(--black);font-weight:600}
 
 /* ══════════ Materials view ══════════ */
 #mv-stickyhead{position:sticky;top:0;z-index:5;background:#fff}
@@ -751,6 +760,7 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
       <div class="ctas-trust">Transport gratuit&nbsp; |&nbsp; Productie rapida&nbsp; |&nbsp; Produs personalizabil</div>
       <button class="cta-samples" onclick="openSamplesModal()"><svg viewBox="0 0 16.0003 16" fill="currentColor"><path d="M3.54985 0.025936C4.26768 -0.0459082 4.99245 0.0316079 5.67808 0.257226L5.71905 0.270461L5.75749 0.289997C6.15453 0.492295 6.48603 0.799848 6.71796 1.17797L6.81123 1.34371L6.83014 1.38215L6.84401 1.42249C7.07088 2.11447 7.14841 2.84614 7.07341 3.5697V12.4286C7.14904 13.1534 7.07152 13.8857 6.84401 14.5776L6.83014 14.6179L6.81123 14.6564C6.57994 15.1101 6.21125 15.4788 5.75749 15.7101L5.71905 15.729L5.67808 15.7429C4.99239 15.9685 4.26762 16.046 3.54986 15.9735C2.83266 16.0454 2.10789 15.9678 1.42276 15.7429L1.38179 15.729L1.34398 15.7101C0.890211 15.4788 0.520889 15.1101 0.290238 14.6564L0.270071 14.6179L0.257466 14.5776C0.0299455 13.885 -0.0475619 13.1533 0.0280579 12.4286V3.5697C-0.04757 2.84621 0.0299486 2.11453 0.257466 1.42249L0.270071 1.38215L0.290238 1.34371C0.520905 0.889954 0.890227 0.520642 1.34398 0.289997L1.38179 0.270461L1.42276 0.257226C2.10782 0.031615 2.83259 -0.0459066 3.54985 0.025936ZM5.28748 1.30086C4.74673 1.12944 4.17638 1.07271 3.61294 1.13637L3.55054 1.14394L3.48815 1.13637C2.92472 1.07272 2.35374 1.12944 1.81296 1.30086C1.59743 1.41934 1.4197 1.59705 1.30121 1.81259C1.12979 2.35333 1.07306 2.92429 1.13673 3.48774L1.14051 3.51925V12.4809L1.13673 12.5118C1.07307 13.0759 1.12979 13.6462 1.30121 14.1863C1.4197 14.4025 1.59741 14.5796 1.81296 14.6987C2.35371 14.8695 2.92406 14.9268 3.48815 14.8638L3.55054 14.8562L3.61294 14.8638C4.177 14.9268 4.74672 14.8695 5.28748 14.6987C5.50364 14.5796 5.68074 14.4025 5.79923 14.1863C5.97065 13.6462 6.02801 13.0759 5.96435 12.5118L5.96119 12.4809V3.51925L5.96435 3.48774C6.028 2.92432 5.97065 2.35336 5.79923 1.81259C5.68075 1.59707 5.50366 1.41934 5.28748 1.30086Z"/><path d="M4.29251 12.6353C4.59943 12.6353 4.84838 12.8842 4.84838 13.1917C4.84838 13.4986 4.59943 13.7476 4.29251 13.7476H2.80895C2.50203 13.7476 2.25246 13.4986 2.25246 13.1917C2.25246 12.8842 2.50203 12.6353 2.80895 12.6353H4.29251Z"/><path d="M10.3277 0.987032C10.8117 0.830107 11.3329 0.830107 11.8169 0.987032L11.8573 1.00027L11.8957 1.0198C12.5404 1.34499 13.1083 1.80254 13.5652 2.3609C14.0518 2.75856 14.4614 3.24068 14.774 3.78456L14.9057 4.0297L14.9253 4.06689L14.9385 4.10785C15.0954 4.59186 15.0954 5.11368 14.9385 5.59769L14.9253 5.63802L14.9057 5.67646C14.5768 6.32874 14.1129 6.90224 13.5457 7.36161L5.96146 14.9457V6.46233C5.92239 6.0048 5.9684 5.5441 6.09759 5.10358L6.11398 5.0456L6.14297 4.99266C6.36355 4.58932 6.65724 4.23072 7.00828 3.93453L8.56621 2.37664C9.02502 1.81071 9.59852 1.34813 10.249 1.01978L10.2862 1.00024L10.3277 0.987032ZM11.4337 2.03382C11.1974 1.96513 10.9466 1.96513 10.7102 2.03382C10.2067 2.29473 9.76362 2.65837 9.41006 3.10204L9.39052 3.12662L7.76132 4.75514L7.74115 4.77215C7.50355 4.96879 7.30315 5.207 7.14873 5.47359C7.06869 5.77169 7.04222 6.08237 7.07121 6.38992L7.07373 6.41576V12.2605L12.7774 6.55758L12.7995 6.53615L12.8234 6.51661C13.2665 6.16244 13.6295 5.71939 13.8904 5.21585C13.9597 4.97888 13.9597 4.72744 13.8904 4.49047C13.6288 3.98693 13.2658 3.54388 12.8228 3.19033L12.7743 3.15126L12.7352 3.1021C12.381 2.6578 11.9373 2.29473 11.4337 2.03382Z"/><path d="M12.4225 8.92711C13.1491 8.85022 13.884 8.92837 14.5778 9.15714L14.6181 9.17038L14.6566 9.18991C15.0536 9.39158 15.3858 9.69912 15.617 10.076L15.7103 10.2424L15.7299 10.2808L15.7431 10.3211C15.9687 11.0062 16.0462 11.7316 15.9744 12.4488C16.0462 13.1666 15.9687 13.892 15.7431 14.5777L15.7299 14.618L15.7103 14.6558C15.4797 15.1096 15.1103 15.4782 14.6566 15.7095L14.6181 15.729L14.5778 15.7429C13.8864 15.9698 13.1547 16.0473 12.4312 15.9723H3.55058V14.86H12.481L12.5125 14.8625C13.076 14.9262 13.6463 14.8694 14.1871 14.6987C14.4033 14.5795 14.5804 14.4018 14.6988 14.1857C14.8696 13.6449 14.9276 13.0746 14.864 12.5112L14.857 12.4494L14.864 12.3876C14.9276 11.8236 14.8709 11.2533 14.6995 10.7131C14.5804 10.4963 14.4026 10.3186 14.1858 10.2001C13.6457 10.0287 13.076 9.97263 12.5126 10.0357L12.4811 10.0394H10.596V8.92712L12.4225 8.92711Z"/></svg><span>Comanda mostre</span></button>
     </div>
+
     <!-- Voice note (Figma 1122:11892) -->
     <div id="voicenote">
       <div class="vn-top">
@@ -1285,16 +1295,8 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
 <div class="view" id="view-info">
   <div class="info-topbar">
     <div class="info-head">
-      <span class="info-title">Descoperă canapeaua Boston</span>
+      <span class="info-title" id="info-title">Informații generale</span>
       <button class="circ-btn" onclick="closeView('info')" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    </div>
-    <div class="info-nav" id="info-nav">
-      <button class="info-chip on" data-sec="generale" onclick="scrollInfoTo('generale')">Informații generale</button>
-      <button class="info-chip" data-sec="tehnice" onclick="scrollInfoTo('tehnice')">Detalii tehnice</button>
-      <button class="info-chip" data-sec="asamblare" onclick="scrollInfoTo('asamblare')">Asamblare</button>
-      <button class="info-chip" data-sec="curatare" onclick="scrollInfoTo('curatare')">Curățare</button>
-      <button class="info-chip" data-sec="transport" onclick="scrollInfoTo('transport')">Transport și retur</button>
-      <button class="info-chip" data-sec="garantie" onclick="scrollInfoTo('garantie')">Garanție</button>
     </div>
   </div>
   <div class="info-body">
@@ -1310,8 +1312,9 @@ h1{font-size:20px;font-weight:500;letter-spacing:var(--ls-20);line-height:1.3;co
         <div>Adâncime șezut: 80 cm</div>
         <div>Ladă de depozitare: Da, două.</div>
       </div>
+      <img src="assets/boston-dimensions-3locuri.jpg" alt="Schiță dimensiuni Canapea Boston 3 locuri">
     </section>
-    <section class="info-sec" id="info-tehnice">
+    <section class="info-sec" id="info-tehnice" hidden>
       <h3>Detalii tehnice</h3>
       <p>Șezutul confortabil este prevăzut cu umplutură de spumă de înaltă densitate de 12 cm, iar pernele din fața spătarului oferă stabilitate.
 
@@ -1323,43 +1326,99 @@ Prevăzut cu ladă de depozitare încăpătoare.
 
 Cadru de lemn și PAL.</p>
     </section>
-    <section class="info-sec" id="info-asamblare">
+    <!-- No "Instrucțiuni de asamblare" tab/copy on the live PDP (agache.ro) — left empty rather than invented -->
+    <section class="info-sec" id="info-asamblare" hidden>
       <h3>Instrucțiuni de asamblare</h3>
-      <p>Canapeaua Boston este livrată parțial asamblată, ambalată în cutii separate pentru fiecare modul.
-
-Montajul durează în medie 20-30 de minute și necesită doar o cheie inbus, inclusă în pachet.
-
-Fixează mai întâi picioarele pe structura de bază, apoi atașează modulele și spătarul conform ghidului ilustrat din cutie.
-
-Pentru configurațiile modulare (coltar), unește modulele cu ajutorul conectorilor metalici furnizați, asigurându-te că sunt bine strânși înainte de utilizare.</p>
     </section>
-    <section class="info-sec" id="info-curatare">
+    <!-- Copy from the "Curățare și întreținere" tab on the live PDP (agache.ro), for the selected material -->
+    <section class="info-sec" id="info-curatare" hidden>
       <h3>Curățare și întreținere</h3>
-      <p>Material elegant cu aspect de catifea, plăcut la atingere și foarte rezistent la uzură. Textura sa oferă mobilierului un aspect rafinat și este concepută pentru utilizare zilnică intensă. Materialul este potrivit atât pentru locuințe, cât și pentru spații comerciale, fiind recomandat în special pentru familii cu animale de companie sau copii.</p>
+      <p>Material cu textură plăcută și elastică, realizat dintr-o țesătură tricotată durabilă, concepută pentru mobilier utilizat frecvent. Materialul oferă un echilibru foarte bun între confort, rezistență și durabilitate, fiind potrivit pentru utilizare zilnică.</p>
+      <p>Datorită rezistenței bune la abraziune și a structurii stabile a țesăturii, materialul își păstrează aspectul în timp și rămâne confortabil în utilizare.</p>
+      <p>Materialul este potrivit atât pentru locuințe, cât și pentru spații comerciale, fiind recomandat inclusiv pentru familii cu animale de companie sau copii.</p>
+      <p><strong>Cele mai importante proprietăți</strong></p>
       <div class="info-list">
         <div>✔ Rezistent la gheruțele pisicilor</div>
-        <div>✔ Părul de animale se curăță foarte ușor</div>
+        <div>✔ Părul de animale se curăță ușor</div>
         <div>✔ Rezistență ridicată la uzură</div>
         <div>✔ Rezistent la scămoșare (pilling)</div>
         <div>✔ Ușor de curățat și întreținut</div>
+        <div>✔ Potrivit pentru utilizare rezidențială și HoReCa</div>
       </div>
-      <p>Întreținere: spălare la max. 30°C, program delicat. Nu se curăță chimic, nu se calcă, nu se usucă în uscător și nu se folosește înălbitor. Curățare recomandată cu lavetă din microfibră umedă, uscare întins sau agățat, la umbră.</p>
+      <p><strong>Specificații tehnice</strong></p>
+      <div class="info-list">
+        <div>✔ Tip de țesătură — tricot</div>
+        <div>✔ Compoziție — 100% poliester</div>
+        <div>✔ Greutate — 350–390 g/m² ± 5%</div>
+        <div>✔ Lățime — 140 cm ± 2 cm</div>
+        <div>✔ Alunecare la cusătură — urzeală 2,5–3,5 mm / băteală 2 mm</div>
+        <div>✔ Test Martindale — 45.000–50.000 cicluri</div>
+        <div>✔ Rezistență la agățare (MACE) — 5/5</div>
+        <div>✔ Rezistență culoare la frecare — uscat 4–5 / umed 4–4/5</div>
+        <div>✔ Rezistență la rupere — urzeală 44–62 N / băteală 45–63 N</div>
+        <div>✔ Rezistență la tracțiune — urzeală 582–691 N / băteală 580–693 N</div>
+        <div>✔ Rezistență culoare la lumină — 4–4/5</div>
+        <div>✔ Pilling (scămoșare) — 4</div>
+        <div>✔ Rezistență la foc — BS 5852: Partea 1: 1979, sursa 0 (țigară)</div>
+      </div>
+      <p><strong>Întreținere</strong></p>
+      <div class="info-list">
+        <div>✔ Spălare la max. 30°C — program delicat</div>
+        <div>✔ Nu se curăță chimic</div>
+        <div>✔ Nu se calcă</div>
+        <div>✔ Nu se usucă în uscător (tumble dryer)</div>
+        <div>✔ Nu se folosește înălbitor</div>
+        <div>✔ Curățare recomandată: lavetă din microfibră umedă</div>
+        <div>✔ Uscare — întins sau agățat, la umbră</div>
+      </div>
     </section>
-    <section class="info-sec" id="info-transport">
+    <!-- Copy merged from the live PDP's separate "Transport" and "Anulare și retur" tabs (this prototype's row groups both under one label) -->
+    <section class="info-sec" id="info-transport" hidden>
       <h3>Transport și retur</h3>
-      <p>Pentru produsele personalizate realizate la comandă, termenul de livrare este de aproximativ 14 - 21 zile lucrătoare. Livrarea se face prin curier, până în fața casei sau a blocului, ori cu ridicare din showroom-urile Agache, în funcție de opțiunea aleasă de tine. Ne ocupăm de ambalarea corespunzătoare a produselor și trimitem toate documentele necesare împreună cu ele. Livrăm doar pe teritoriul României.
-
-Ai 14 zile calendaristice pentru retur, fără să explici motivul. Termenul începe din ziua în care primești produsul. Rambursarea se face în maximum 14 zile, în contul IBAN oferit. Costul transportului de retur este suportat de client.</p>
+      <p>Pentru produsele personalizate realizate la comandă, termenul de livrare este de aproximativ 14–21 zile lucrătoare.</p>
+      <p>Livrarea se face prin curier, până în fața casei sau a blocului, ori cu ridicare din showroom-urile Agache — în funcție de opțiunea aleasă de tine. Comenzile online sunt expediate prin curier rapid sau prin altă metodă de transport aleasă de noi, în funcție de localitate, model și cantitate.</p>
+      <p>Ne ocupăm de ambalarea corespunzătoare a produselor și trimitem toate documentele necesare împreună cu ele. Livrăm doar pe teritoriul României.</p>
+      <p>Pentru produsele aflate în stoc, livrarea durează până la 14 zile. Pentru cele realizate la comandă, stabilim împreună termenul exact după plasarea comenzii.</p>
+      <p>Livrarea este gratuită doar pentru produsele unde acest lucru este menționat. Transportul se face prin partenerul nostru PTT Express sau cu mijloacele proprii Agache.</p>
+      <p><strong>Anulare comandă</strong></p>
+      <p>Dacă vrei să anulezi comanda înainte de livrare, sună la 0754 011 485 sau scrie la agache@agache.ro.</p>
+      <p><strong>Dreptul de retur — comenzi online</strong></p>
+      <div class="info-list">
+        <div>Ai 14 zile calendaristice pentru retur, fără să explici motivul.</div>
+        <div>Plătești doar costul transportului de retur.</div>
+        <div>Termenul de 14 zile începe din ziua în care primești produsul.</div>
+        <div>Completează formularul din secțiunea „Formular de retur” în maximum 14 zile.</div>
+      </div>
+      <p><strong>Rambursarea banilor</strong></p>
+      <div class="info-list">
+        <div>În maximum 14 zile.</div>
+        <div>În contul IBAN oferit.</div>
+        <div>Pentru plata în rate — banii se întorc pe același card.</div>
+      </div>
+      <p><strong>Alte informații importante</strong></p>
+      <div class="info-list">
+        <div>Costul transportului de retur este suportat de client.</div>
+        <div>Produsele cadou trebuie returnate.</div>
+        <div>Montajul nu se rambursează.</div>
+        <div>Produsele defecte sunt verificate la recepție.</div>
+      </div>
     </section>
-    <section class="info-sec" id="info-garantie">
+    <!-- Copy from the "Garanție" tab on the live PDP (agache.ro) -->
+    <section class="info-sec" id="info-garantie" hidden>
       <h3>Garanție</h3>
-      <p>Durata garanției: 24 de luni (2 ani) pentru persoane fizice, conform legislației din România.
-
-Ce acoperă: defecte de fabricație - probleme legate de structură, tapițerie sau execuție.
-
-Ce nu acoperă: deteriorări cauzate de utilizare necorespunzătoare (lovituri, zgârieturi, umiditate excesivă etc.).
-
-Păstrează factura și certificatul de garanție și anunță problema cât mai repede, ideal cu poze și detalii clare. Dacă defectul este confirmat, produsul poate fi reparat, înlocuit sau soluționat printr-o variantă stabilită de comun acord, fără costuri suplimentare pentru client.</p>
+      <p><strong>Garanția produselor Agache — pe scurt</strong></p>
+      <div class="info-list">
+        <div>Durata garanției: 24 luni (2 ani) pentru persoane fizice, conform legislației din România.</div>
+        <div>Ce acoperă: defecte de fabricație — probleme legate de structură, tapițerie sau execuție.</div>
+        <div>Ce nu acoperă: deteriorări cauzate de utilizare necorespunzătoare (lovituri, zgârieturi, umiditate excesivă etc.).</div>
+      </div>
+      <p><strong>Ce trebuie să faci</strong></p>
+      <div class="info-list">
+        <div>Păstrează factura și certificatul de garanție.</div>
+        <div>Anunță problema cât mai repede după ce o observi, ideal cu poze și detalii clare.</div>
+      </div>
+      <p><strong>Ce se întâmplă mai departe</strong></p>
+      <p>Dacă defectul este confirmat, produsul poate fi reparat, înlocuit sau soluționat printr-o variantă stabilită de comun acord. Intervențiile pentru defecte de fabricație nu implică costuri suplimentare pentru client.</p>
     </section>
   </div>
 </div>
@@ -1368,46 +1427,45 @@ Păstrează factura și certificatul de garanție și anunță problema cât mai
 <div class="view" id="view-specinfo">
   <div class="info-topbar">
     <div class="info-head">
-      <span class="info-title">Canapea Boston</span>
+      <span class="info-title" id="specinfo-title">Dimensiuni</span>
       <button class="circ-btn" onclick="closeView('specinfo')" aria-label="Închide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    </div>
-    <div class="info-nav" id="specinfo-nav">
-      <button class="info-chip on" data-sec="productie" onclick="scrollSpecInfoTo('productie')">Durata producției</button>
-      <button class="info-chip" data-sec="transport" onclick="scrollSpecInfoTo('transport')">Transport și retur</button>
-      <button class="info-chip" data-sec="dimensiuni" onclick="scrollSpecInfoTo('dimensiuni')">Dimensiuni</button>
-      <button class="info-chip" data-sec="extensibil" onclick="scrollSpecInfoTo('extensibil')">Extensibil</button>
-      <button class="info-chip" data-sec="montaj" onclick="scrollSpecInfoTo('montaj')">Montaj</button>
     </div>
   </div>
   <div class="info-body">
-    <section class="info-sec" id="specinfo-productie">
-      <h3>Durata producției</h3>
-      <p>Canapea Boston este realizată la comandă, personalizată cu materialul și culoarea alese de tine. Timpul de producție este de 6-7 săptămâni de la confirmarea comenzii, după care produsul este pregătit pentru livrare.</p>
+    <!-- No standalone "durată producție" text on the live PDP (agache.ro) — only the dynamic
+         production-window date next to the CTA — so this sheet has no body copy. -->
+    <section class="info-sec" id="specinfo-productie" data-title="Durata producției" hidden>
     </section>
-    <section class="info-sec" id="specinfo-transport">
-      <div class="up-row">
-        <span class="up-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M9 22V18H15V22M8 6H8.01M16 6H16.01M12 6H12.01M12 10H12.01M12 14H12.01M16 10H16.01M16 14H16.01M8 10H8.01M8 14H8.01M6 2H18C19.1046 2 20 2.89543 20 4V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V4C4 2.89543 4.89543 2 6 2Z"/></svg><span class="up-t">Transport de la strada<br>pana in sufragerie</span></span>
-        <span class="up-p">149 lei</span>
-        <button class="up-add" aria-label="Adaugă transport la domiciliu" onclick="addExtra(this,'Transport la sufragerie')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.33" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-      </div>
-    </section>
-    <section class="info-sec" id="specinfo-dimensiuni">
-      <h3>Dimensiuni</h3>
-      <p>Dimensiunile canapelei Boston în configurația aleasă:</p>
+    <section class="info-sec" id="specinfo-dimensiuni" data-title="Dimensiuni">
       <div class="info-list">
-        <div>Dimensiuni: 245 × 100 × 68cm</div>
         <div>Lungime: 245 cm</div>
         <div>Lățime: 100 cm</div>
         <div>Înălțime spătar: 68cm (fără perne)</div>
         <div>Înălțime șezut: 35cm</div>
         <div>Adâncime șezut: 80 cm</div>
       </div>
+      <img src="assets/boston-dimensions-3locuri.jpg" alt="Schiță dimensiuni Canapea Boston 3 locuri">
     </section>
-    <section class="info-sec" id="specinfo-extensibil">
-      <h3>Extensibil</h3>
-      <p>Extensibil prin plierea spătarului, ce asigură o prelungire confortabilă atunci când este folosit ca pat. Suprafața de dormit rezultată este de 150 x 210 cm.</p>
+    <section class="info-sec" id="specinfo-extensibil" data-title="Extensibil" hidden>
+      <p>Extensibil prin plierea spătarului, ce asigură o prelungire confortabilă atunci când este folosit ca pat.</p>
+      <img src="assets/boston-dimensions-3locuri.jpg" alt="Schiță dimensiuni Canapea Boston 3 locuri">
     </section>
-    <section class="info-sec" id="specinfo-montaj">
+    <!-- Copy from the "Transport" tab on the live PDP (agache.ro) -->
+    <section class="info-sec" id="specinfo-transport" data-title="Transport" hidden>
+      <p>Pentru produsele personalizate realizate la comandă, termenul de livrare este de aproximativ 14 - 21 zile lucrătoare.</p>
+      <p>Livrarea se face prin curier, până în fața casei sau a blocului, ori cu ridicare din showroom-urile Agache — în funcție de opțiunea aleasă de tine. Comenzile online sunt expediate prin curier rapid sau prin altă metodă de transport aleasă de noi, în funcție de localitate, model și cantitate.</p>
+      <p>Ne ocupăm de ambalarea corespunzătoare a produselor și trimitem toate documentele necesare împreună cu ele.</p>
+      <p>Livrăm doar pe teritoriul României.</p>
+      <div class="up-row">
+        <span class="up-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M9 22V18H15V22M8 6H8.01M16 6H16.01M12 6H12.01M12 10H12.01M12 14H12.01M16 10H16.01M16 14H16.01M8 10H8.01M8 14H8.01M6 2H18C19.1046 2 20 2.89543 20 4V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V4C4 2.89543 4.89543 2 6 2Z"/></svg><span class="up-t">Transport de la strada<br>pana in sufragerie</span></span>
+        <span class="up-p">149 lei</span>
+        <button class="up-add" aria-label="Adaugă transport la domiciliu" onclick="addExtra(this,'Transport la sufragerie')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.33" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+    </section>
+    <!-- No standalone "montaj" text on the live PDP (agache.ro) — only "Montajul nu se
+         rambursează" inside the Anulare și retur tab, which isn't assembly info — so this
+         sheet keeps only the existing paid add-on row. -->
+    <section class="info-sec" id="specinfo-montaj" data-title="Montaj" hidden>
       <div class="up-row">
         <span class="up-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M11 14H13C13.5304 14 14.0391 13.7893 14.4142 13.4142C14.7893 13.0391 15 12.5304 15 12C15 11.4696 14.7893 10.9609 14.4142 10.5858C14.0391 10.2107 13.5304 10 13 10H10C9.4 10 8.9 10.2 8.6 10.6L3 16M7 20L8.6 18.6C8.9 18.2 9.4 18 10 18H14C15.1 18 16.1 17.6 16.8 16.8L21.4 12.4C21.7859 12.0354 22.0111 11.5323 22.0261 11.0016C22.0411 10.4709 21.8447 9.95592 21.48 9.57003C21.1153 9.18414 20.6123 8.95892 20.0816 8.94392C19.5508 8.92891 19.0359 9.12535 18.65 9.49003L14.45 13.39M2 15L8 21M19.4999 8.5C20.1999 7.8 20.9999 6.9 20.9999 5.8C21.0698 5.18893 20.9313 4.57216 20.6068 4.04964C20.2824 3.52712 19.791 3.12947 19.2123 2.92114C18.6336 2.71281 18.0015 2.706 17.4184 2.90182C16.8354 3.09763 16.3355 3.4846 15.9999 4C15.6429 3.52458 15.1429 3.17613 14.5734 3.00578C14.0038 2.83544 13.3946 2.85219 12.8352 3.05356C12.2758 3.25494 11.7957 3.63034 11.4654 4.12465C11.1351 4.61896 10.9719 5.20614 10.9999 5.8C10.9999 7 11.7999 7.8 12.4999 8.6L15.9999 12L19.4999 8.5Z"/></svg><span class="up-t">Serviciu de montaj<br>in <u>orasele eligibile</u></span></span>
         <span class="up-p">399 lei</span>
@@ -1989,99 +2047,27 @@ function closeHeartTip(){
   sheet.addEventListener('pointerup', endDrag);
   sheet.addEventListener('pointercancel', endDrag);
 })();
-/* ── Info (deep-dive) view ── */
+/* ── Info (deep-dive) view — side sheet per topic, one section shown at a time, no chip nav ── */
 function openInfo(sec){
-  openView('info');
-  scrollInfoTo(sec, true);
-}
-function scrollInfoTo(sec, instant){
   var view = document.getElementById('view-info');
   var target = document.getElementById('info-' + sec);
   if (!target) return;
-  var top = target.offsetTop - document.querySelector('#view-info .info-topbar').offsetHeight;
-  view.scrollTo({ top: Math.max(0, top), behavior: instant ? 'auto' : 'smooth' });
-  setActiveInfoChip(sec, instant);
+  view.querySelectorAll('.info-sec').forEach(function(s){ s.hidden = (s !== target); });
+  var h3 = target.querySelector('h3');
+  document.getElementById('info-title').textContent = h3 ? h3.textContent : '';
+  view.scrollTop = 0;
+  openView('info');
 }
-function setActiveInfoChip(sec, instant){
-  var chips = document.querySelectorAll('.info-chip');
-  var active;
-  chips.forEach(function(c){
-    var on = c.dataset.sec === sec;
-    c.classList.toggle('on', on);
-    if (on) active = c;
-  });
-  if (active){
-    var nav = document.getElementById('info-nav');
-    nav.scrollTo({ left: Math.max(0, active.offsetLeft - 20), behavior: instant ? 'auto' : 'smooth' });
-  }
-}
-(function(){
-  var view = document.getElementById('view-info');
-  var sections = Array.prototype.slice.call(document.querySelectorAll('.info-sec'));
-  var lastSec = '';
-  view.addEventListener('scroll', function(){
-    /* pick whichever section occupies the most visible area below the sticky topbar --
-       robust even when the last sections are shorter than one viewport and can't scroll
-       far enough for a simple "top has passed the header" check to ever select them */
-    var topbarH = document.querySelector('#view-info .info-topbar').offsetHeight;
-    var viewRect = view.getBoundingClientRect();
-    var winTop = viewRect.top + topbarH;
-    var winBottom = viewRect.bottom;
-    var current = sections[0], bestArea = -1;
-    sections.forEach(function(s){
-      var r = s.getBoundingClientRect();
-      var area = Math.min(r.bottom, winBottom) - Math.max(r.top, winTop);
-      if (area > bestArea){ bestArea = area; current = s; }
-    });
-    var sec = current.id.replace('info-', '');
-    if (sec !== lastSec){ lastSec = sec; setActiveInfoChip(sec, false); }
-  });
-})();
-/* ── Spec info (under-CTA rows) view — separate from the deep-dive info modal ── */
+/* ── Spec info (under-CTA rows) view — side sheet per topic, one section shown at a time, no chip nav ── */
 function openSpecInfo(sec){
-  openView('specinfo');
-  scrollSpecInfoTo(sec, true);
-}
-function scrollSpecInfoTo(sec, instant){
   var view = document.getElementById('view-specinfo');
   var target = document.getElementById('specinfo-' + sec);
   if (!target) return;
-  var top = target.offsetTop - document.querySelector('#view-specinfo .info-topbar').offsetHeight;
-  view.scrollTo({ top: Math.max(0, top), behavior: instant ? 'auto' : 'smooth' });
-  setActiveSpecInfoChip(sec, instant);
+  view.querySelectorAll('.info-sec').forEach(function(s){ s.hidden = (s !== target); });
+  document.getElementById('specinfo-title').textContent = target.dataset.title;
+  view.scrollTop = 0;
+  openView('specinfo');
 }
-function setActiveSpecInfoChip(sec, instant){
-  var chips = document.querySelectorAll('#specinfo-nav .info-chip');
-  var active;
-  chips.forEach(function(c){
-    var on = c.dataset.sec === sec;
-    c.classList.toggle('on', on);
-    if (on) active = c;
-  });
-  if (active){
-    var nav = document.getElementById('specinfo-nav');
-    nav.scrollTo({ left: Math.max(0, active.offsetLeft - 20), behavior: instant ? 'auto' : 'smooth' });
-  }
-}
-(function(){
-  var view = document.getElementById('view-specinfo');
-  var sections = Array.prototype.slice.call(view.querySelectorAll('.info-sec'));
-  var lastSec = '';
-  view.addEventListener('scroll', function(){
-    var topbarH = document.querySelector('#view-specinfo .info-topbar').offsetHeight;
-    var viewRect = view.getBoundingClientRect();
-    var winTop = viewRect.top + topbarH;
-    var winBottom = viewRect.bottom;
-    var current = sections[0], bestArea = -1;
-    sections.forEach(function(s){
-      var r = s.getBoundingClientRect();
-      var area = Math.min(r.bottom, winBottom) - Math.max(r.top, winTop);
-      if (area > bestArea){ bestArea = area; current = s; }
-    });
-    var sec = current.id.replace('specinfo-', '');
-    if (sec !== lastSec){ lastSec = sec; setActiveSpecInfoChip(sec, false); }
-  });
-})();
 function closeView(name){
   document.getElementById('view-' + name).classList.remove('open');
   if (!document.querySelector('.view.open')) document.body.style.overflow = '';
@@ -2598,7 +2584,7 @@ function pressFeedback(el){
 }
 /* Cross-page push transition into the v3 configurator (Figma-style push) */
 function pushTo(url){
-  sessionStorage.setItem('pdpOrigin', 'mobile-v37.html');
+  sessionStorage.setItem('pdpOrigin', location.pathname.split('/').pop());
   document.body.classList.add('push-out-l');
   setTimeout(function(){ location.href = url; }, 260);
 }

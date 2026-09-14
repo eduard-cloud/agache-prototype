@@ -413,7 +413,10 @@ h3.cfg-title{font-size:20px;font-weight:400;letter-spacing:-.03em;line-height:1.
 .cfg-filter-btn.has-count .cnt{display:flex}
 
 .cfg-filter-pills{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:12px}
-#fsheet-material{flex-wrap:wrap}
+/* narrower gap than the shared .cfg-filter-pills default (8px 16px) -- at 16px column-gap the
+   4 material cards (72px each) overflow the sheet's 335px row by 1px and wrap to a 2nd row;
+   8px matches the vert/sm card's own intended spacing (see buildFabricSeg's .vert.sm comment) */
+#fsheet-material{flex-wrap:wrap;gap:8px}
 #fsheet-culoare{gap:20px 8px}
 #fsheet-prop{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;gap:4px}
 #fsheet-prop::-webkit-scrollbar{display:none}
@@ -3953,7 +3956,7 @@ function closeConfigurator(){
   var origin = sessionStorage.getItem('pdpOrigin');
   sessionStorage.removeItem('pdpOrigin');
   document.body.classList.add('push-out-r');
-  setTimeout(function(){ location.href = origin || 'mobile-v37.html'; }, 260);
+  setTimeout(function(){ location.href = origin || 'mobile-v44.html'; }, 260);
 }
 </script>
 </body>
