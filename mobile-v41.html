@@ -125,7 +125,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-dim-edit{flex:0 0 auto;width:52px;height:52px;border:1px solid var(--hair);border-radius:8px;background:#fff;color:var(--ink);display:flex;align-items:center;justify-content:center}
 .cfg-dim-edit:active{background:var(--chipbg)}
 /* the fixed main run: same label, but the value reads as a spec, not a control */
-.cfg-subtitle{font-size:20px;font-weight:400;letter-spacing:-.2px;color:var(--ink);margin:34px 0 24px}
+.cfg-subtitle{font-size:20px;font-weight:400;letter-spacing:-.2px;color:var(--ink);margin:34px 0 20px}
 .cfg-dim + .cfg-subtitle{margin-top:60px}
 .cfg-dim-fixed{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-bottom:18px;border-bottom:1px solid var(--hair)}
 .cfg-dim-fixed + .cfg-dim{margin-top:18px}
@@ -299,11 +299,14 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
    inline in grey as part of the same sentence/paragraph, instead of a bold heading with a
    separate grey line underneath. */
 h3.cfg-title{font-size:20px;font-weight:400;letter-spacing:-.03em;line-height:1.4;color:var(--ink);margin-bottom:20px}
-.cfg-fabric-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:24px}
-.cfg-fabric-head h3.cfg-title{margin-bottom:0}
+.cfg-fabric-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+/* h3.cfg-title's own margin-bottom:20px (above) applies here unchanged. */
 /* Compact pill, same idiom as .cfg-colormode next to "Alege culoarea": sits in the head row
-   to the right of the title instead of its own full-width card underneath. */
-.cfg-matdiff-btn{flex:0 0 auto;display:flex;align-items:center;gap:8px;background:var(--graysec);border:none;border-radius:9999px;padding:3px 14px 3px 3px;height:34px;text-align:left}
+   to the right of the title instead of its own full-width card underneath.
+   margin-bottom lives on each child (not the row) so the gap to the next block reads as
+   20px from BOTH the title's text and the pill's edge, even though the pill (34px) is
+   taller than the title's line-box (28px) and would otherwise stretch the title's gap. */
+.cfg-matdiff-btn{flex:0 0 auto;display:flex;align-items:center;gap:8px;background:var(--graysec);border:none;border-radius:9999px;padding:3px 14px 3px 3px;height:34px;text-align:left;margin-bottom:20px}
 .cfg-matdiff-swatch{position:relative;width:28px;height:28px;border-radius:9999px;overflow:hidden;flex:0 0 auto;background:#fff}
 /* Loops just the 10s-12.7s window (see the swatch's inline JS below) -- a clean, static-camera
    talking-head stretch with her hands down, before the clip cuts to a title card. The source
@@ -350,7 +353,7 @@ h3.cfg-title{font-size:20px;font-weight:400;letter-spacing:-.03em;line-height:1.
    in two lines if needed. Same component (buildFabricSeg), same data/click handler, just
    stacked instead of pilled -- only the top fabric-type row uses it. */
 .cfg-fabric-pillrow.vert{gap:8px}
-.cfg-seg.vert{flex-direction:column;align-items:flex-start;gap:8px;width:84px;background:none;border:none;padding:0;border-radius:0}
+.cfg-seg.vert{flex-direction:column;align-items:flex-start;gap:12px;width:84px;background:none;border:none;padding:0;border-radius:0}
 .cfg-seg.vert.on{background:none;border:none;padding:0}
 .cfg-seg.vert .dot{position:relative;width:84px;height:110px;border-radius:8px;background-size:auto;box-shadow:none;border:1px solid var(--hair);overflow:hidden}
 .cfg-seg.vert.on .dot{border:1.5px solid var(--ink)}
@@ -498,7 +501,9 @@ input.price-mm-pill:focus{border-color:var(--ink)}
    colors below) -- see renderFabricSections ── */
 .cfg-matgroup-title{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:18px;font-weight:400;letter-spacing:-.2px;color:var(--ink);margin-top:24px}
 .cfg-matgroup-name{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:6px}
-.cfg-matgroup-right{flex:0 0 auto;font-size:14px;font-weight:400;letter-spacing:-.02em;color:var(--ink)}
+.cfg-matgroup-right{flex:0 0 auto;font-size:14px;font-weight:400;letter-spacing:-.02em;color:var(--ink);display:flex;align-items:center;gap:8px}
+.cfg-matgroup-badges{display:flex;align-items:center;gap:5px;flex:0 0 auto;color:var(--ink)}
+.cfg-matgroup-badges svg{display:block;width:15px;height:15px}
 /* v39: title used to be a direct child of #cfg-fabric-sections, so :first-of-type alone picked
    out the very first group. Now each title lives inside its own .cfg-matgroup-body wrapper (see
    renderFabricSections) -- it's trivially :first-of-type within that wrapper regardless of
@@ -805,12 +810,15 @@ input.price-mm-pill:focus{border-color:var(--ink)}
 .cfg-collchip-info{flex:0 0 auto;width:16px;height:16px;display:flex;align-items:center;justify-content:center;color:var(--gray)}
 
 /* ══ v27: zone switch and zone tabs ══ */
-.cfg-color-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:24px}
-.cfg-color-head .cfg-title{margin-bottom:0;flex:1 1 auto;min-width:0}
+.cfg-color-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.cfg-color-head .cfg-title{margin-bottom:20px;flex:1 1 auto;min-width:0}
 /* Segmented control for one colour vs. per-zone colours -- two named, always-visible states
    read faster than a bare on/off switch, which says nothing about what "on" means until you
-   already know the feature. The dot icons repeat the same cue non-verbally. */
-.cfg-colormode{position:relative;display:flex;align-items:center;gap:2px;flex:0 0 auto;background:var(--graysec);border-radius:9999px;padding:3px}
+   already know the feature. The dot icons repeat the same cue non-verbally.
+   margin-bottom lives on the control itself (not the row), same reasoning as .cfg-matdiff-btn
+   above -- it's 34px tall vs. the title's 28px line-box, so a row-level margin would give the
+   title an extra ~6px of gap that the control doesn't get. */
+.cfg-colormode{position:relative;display:flex;align-items:center;gap:2px;flex:0 0 auto;background:var(--graysec);border-radius:9999px;padding:3px;margin-bottom:20px}
 .cfg-colormode-thumb{position:absolute;top:3px;left:0;height:28px;background:#fff;border-radius:9999px;box-shadow:0 1px 3px rgba(0,0,0,.14);transition:transform .25s cubic-bezier(.4,0,.2,1),width .25s cubic-bezier(.4,0,.2,1)}
 .cfg-colormode-btn{position:relative;z-index:1;flex:0 0 auto;border:none;background:none;height:28px;padding:0 10px;border-radius:9999px;font-size:14px;letter-spacing:-.02em;font-weight:400;color:var(--gray);white-space:nowrap;transition:color .15s}
 .cfg-colormode-btn.on{color:var(--ink)}
@@ -1442,6 +1450,28 @@ function collectionPriceDiffLabel(slug, shapeName){
   var diff = tiers[COLLECTIONS[slug].tier] - tiers.Practic;
   return diff > 0 ? '+' + Math.round(diff).toLocaleString('ro-RO') + ' lei' : '0 lei';
 }
+/* assets/fabric-features/*.svg inlined so `fill="currentColor"` picks up the badge's own ink
+   colour -- an <img> would freeze it to the file's own black. easyClean's mask needs a unique
+   id per copy (a collection group can render it more than once as filters change), so it's
+   built through a counter instead of a static string like the other two. */
+var FEATURE_ICON_UID = 0;
+function featureIconSVG(key){
+  if (key === 'waterproof') return '<svg viewBox="0 0 96 96" fill="currentColor"><path fill-rule="evenodd" d="M8 48A40 40 0 0 1 88 48V58H8Z M48 18 36 34A15 15 0 1 0 60 34Z"/><path d="M11.34 66H84.66A40 40 0 0 1 11.34 66Z"/></svg>';
+  if (key === 'petFriendly') return '<svg viewBox="0 0 96 96" fill="currentColor"><circle cx="34" cy="20" r="12"/><circle cx="62" cy="20" r="12"/><circle cx="13" cy="42" r="10"/><circle cx="83" cy="42" r="10"/><path d="M20 76A28 28 0 0 1 76 76V88H60A12 12 0 0 0 36 88H20Z"/></svg>';
+  if (key === 'easyClean'){
+    var uid = 'ec-cut-' + (FEATURE_ICON_UID++);
+    return '<svg viewBox="0 0 96 96" fill="currentColor"><defs><mask id="' + uid + '" maskUnits="userSpaceOnUse" x="0" y="0" width="96" height="96"><rect width="96" height="96" fill="white"/><path d="M48 19C48 37 59 48 77 48 59 48 48 59 48 77 48 59 37 48 19 48 37 48 48 37 48 19Z" fill="black"/><path d="M8 83 33 58 39 64 14 89Z" fill="black"/></mask></defs><circle cx="48" cy="48" r="40" mask="url(#' + uid + ')"/></svg>';
+  }
+  return '';
+}
+function collectionBadgesHTML(c){
+  var keys = [];
+  if (c.waterproof) keys.push('waterproof');
+  if (c.easyClean) keys.push('easyClean');
+  if (c.petFriendly) keys.push('petFriendly');
+  if (!keys.length) return '';
+  return '<span class="cfg-matgroup-badges">' + keys.map(featureIconSVG).join('') + '</span>';
+}
 function shapePriceRange(shapeName){
   var t = SHAPE_TIER_PRICE[shapeName || baseVariantName()];
   var d = STEP_LEI * sizeSteps();
@@ -1609,7 +1639,9 @@ var USP_ICONS = {
   droplet: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>',
   hand: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>',
   shield: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>',
-  grid: '<svg width="22" height="22" viewBox="0 0 24 24" fill="#4d35ff"><circle cx="7" cy="5" r="1.6"/><circle cx="13" cy="5" r="1.6"/><circle cx="7" cy="12" r="1.6"/><circle cx="13" cy="12" r="1.6"/><circle cx="7" cy="19" r="1.6"/><circle cx="13" cy="19" r="1.6"/></svg>'
+  grid: '<svg width="22" height="22" viewBox="0 0 24 24" fill="#4d35ff"><circle cx="7" cy="5" r="1.6"/><circle cx="13" cy="5" r="1.6"/><circle cx="7" cy="12" r="1.6"/><circle cx="13" cy="12" r="1.6"/><circle cx="7" cy="19" r="1.6"/><circle cx="13" cy="19" r="1.6"/></svg>',
+  paw: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><ellipse cx="12" cy="16.3" rx="5.3" ry="4.2"/><circle cx="5.4" cy="10" r="2"/><circle cx="9.6" cy="5.6" r="2.1"/><circle cx="14.4" cy="5.6" r="2.1"/><circle cx="18.6" cy="10" r="2"/></svg>',
+  sparkle: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 2C12.5 8 16 11.5 22 12C16 12.5 12.5 16 12 22C11.5 16 8 12.5 2 12C8 11.5 11.5 8 12 2Z"/></svg>'
 };
 function textureLabel(c){
   if (c.surface === 'Plush/Soft') return c.finish === 'Glossy' ? 'Aspect catifelat, lucios' : 'Aspect catifelat, mat';
@@ -1630,9 +1662,9 @@ function durabilityLabel(c){
    properties first, while every collection still always ends up with exactly 3 genuine badges
    via the always-true fallbacks (texture, durability tier, composition) at the end. */
 var USP_BADGES = [
-  { icon: 'people', test: function(c){ return c.petFriendly; }, label: function(){ return 'Pet Friendly'; } },
+  { icon: 'paw', test: function(c){ return c.petFriendly; }, label: function(){ return 'Pet Friendly'; } },
   { icon: 'droplet', test: function(c){ return c.waterproof; }, label: function(){ return 'Impermeabil'; } },
-  { icon: 'hand', test: function(c){ return c.easyClean; }, label: function(){ return 'Ușor de curățat'; } },
+  { icon: 'sparkle', test: function(c){ return c.easyClean; }, label: function(){ return 'Ușor de curățat'; } },
   { icon: 'shield', test: function(c){ return !!c.certifications; }, label: function(c){ return c.certifications; } },
   { icon: 'grid', test: function(){ return true; }, label: textureLabel },
   { icon: 'people', test: function(){ return true; }, label: durabilityLabel },
@@ -2332,13 +2364,15 @@ function setColorGridCols(n, el){
   positionMatgroupLocks();
 }
 
-/* Proprietăți pills reuse the same icon set as the collection USP badges (people/droplet/hand/
+/* Proprietăți pills reuse the same icon set as the collection USP badges (droplet/sparkle/paw/
    shield) so a claim like "Impermeabil" looks identical whether it shows up as a filter pill
-   here or a badge on a collection card. */
+   here or a badge on a collection card. Pet Friendly used to share the 'people' glyph with the
+   durability badge below -- same icon, two unrelated meanings -- so it gets its own paw print;
+   Easy Clean's fiddly rubbing-hand becomes a plain sparkle, easier to read at pill size. */
 var PROP_ICONS = {
   'Impermeabil': 'droplet',
-  'Easy Clean': 'hand',
-  'Pet Friendly': 'people',
+  'Easy Clean': 'sparkle',
+  'Pet Friendly': 'paw',
   'Piele sensibilă (OEKO-TEX®)': 'shield'
 };
 function makeFsheetPill(opt){
@@ -2797,7 +2831,7 @@ function renderFabricSections(){
           '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 11v5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7.7" r="1.1" fill="currentColor"/></svg>' +
         '</button>' +
       '</span>' +
-      '<span class="cfg-matgroup-right">' + collectionPriceDiffLabel(slug) + '</span>';
+      '<span class="cfg-matgroup-right">' + collectionBadgesHTML(c) + collectionPriceDiffLabel(slug) + '</span>';
     /* v39: body wraps title + grid together (heading stays grid.previousElementSibling for the
        show/hide-empty-groups logic below) so the single lock message can be positioned absolute
        against the group as a whole -- one card over the group, not one badge per swatch. The

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" fill="currentColor" role="img" aria-labelledby="pet-friendly-title">
+  <title id="pet-friendly-title">Pet friendly</title>
+  <circle cx="34" cy="20" r="12"/>
+<circle cx="62" cy="20" r="12"/>
+<circle cx="13" cy="42" r="10"/>
+<circle cx="83" cy="42" r="10"/>
+<path d="M20 76A28 28 0 0 1 76 76V88H60A12 12 0 0 0 36 88H20Z"/>
+</svg>

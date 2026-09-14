@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="590" viewBox="0 0 1200 590"><rect width="1200" height="590" fill="#080706"/>
+<g transform="translate(104 100) scale(2)" fill="#f7f5ef"><defs><mask id="easy-clean-cut" maskUnits="userSpaceOnUse" x="0" y="0" width="96" height="96"><rect width="96" height="96" fill="white"/><path d="M48 19C48 37 59 48 77 48 59 48 48 59 48 77 48 59 37 48 19 48 37 48 48 37 48 19Z" fill="black"/><path d="M8 83 33 58 39 64 14 89Z" fill="black"/></mask></defs>
+<circle cx="48" cy="48" r="40" mask="url(#easy-clean-cut)"/></g>
+<text x="200" y="360" text-anchor="middle" fill="#f7f5ef" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="1.6">EASY CLEAN</text>
+<g transform="translate(108.0 442.0) scale(0.5)" fill="#f7f5ef"><defs><mask id="easy-clean-cut-0" maskUnits="userSpaceOnUse" x="0" y="0" width="96" height="96"><rect width="96" height="96" fill="white"/><path d="M48 19C48 37 59 48 77 48 59 48 48 59 48 77 48 59 37 48 19 48 37 48 48 37 48 19Z" fill="black"/><path d="M8 83 33 58 39 64 14 89Z" fill="black"/></mask></defs>
+<circle cx="48" cy="48" r="40" mask="url(#easy-clean-cut-0)"/></g>
+<g transform="translate(176.0 450.0) scale(0.3333333333333333)" fill="#f7f5ef"><defs><mask id="easy-clean-cut-1" maskUnits="userSpaceOnUse" x="0" y="0" width="96" height="96"><rect width="96" height="96" fill="white"/><path d="M48 19C48 37 59 48 77 48 59 48 48 59 48 77 48 59 37 48 19 48 37 48 48 37 48 19Z" fill="black"/><path d="M8 83 33 58 39 64 14 89Z" fill="black"/></mask></defs>
+<circle cx="48" cy="48" r="40" mask="url(#easy-clean-cut-1)"/></g>
+<g transform="translate(242.0 456.0) scale(0.20833333333333334)" fill="#f7f5ef"><defs><mask id="easy-clean-cut-2" maskUnits="userSpaceOnUse" x="0" y="0" width="96" height="96"><rect width="96" height="96" fill="white"/><path d="M48 19C48 37 59 48 77 48 59 48 48 59 48 77 48 59 37 48 19 48 37 48 48 37 48 19Z" fill="black"/><path d="M8 83 33 58 39 64 14 89Z" fill="black"/></mask></defs>
+<circle cx="48" cy="48" r="40" mask="url(#easy-clean-cut-2)"/></g>
+<g transform="translate(504 100) scale(2)" fill="#f7f5ef"><circle cx="34" cy="20" r="12"/>
+<circle cx="62" cy="20" r="12"/>
+<circle cx="13" cy="42" r="10"/>
+<circle cx="83" cy="42" r="10"/>
+<path d="M20 76A28 28 0 0 1 76 76V88H60A12 12 0 0 0 36 88H20Z"/></g>
+<text x="600" y="360" text-anchor="middle" fill="#f7f5ef" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="1.6">PET FRIENDLY</text>
+<g transform="translate(508.0 442.0) scale(0.5)" fill="#f7f5ef"><circle cx="34" cy="20" r="12"/>
+<circle cx="62" cy="20" r="12"/>
+<circle cx="13" cy="42" r="10"/>
+<circle cx="83" cy="42" r="10"/>
+<path d="M20 76A28 28 0 0 1 76 76V88H60A12 12 0 0 0 36 88H20Z"/></g>
+<g transform="translate(576.0 450.0) scale(0.3333333333333333)" fill="#f7f5ef"><circle cx="34" cy="20" r="12"/>
+<circle cx="62" cy="20" r="12"/>
+<circle cx="13" cy="42" r="10"/>
+<circle cx="83" cy="42" r="10"/>
+<path d="M20 76A28 28 0 0 1 76 76V88H60A12 12 0 0 0 36 88H20Z"/></g>
+<g transform="translate(642.0 456.0) scale(0.20833333333333334)" fill="#f7f5ef"><circle cx="34" cy="20" r="12"/>
+<circle cx="62" cy="20" r="12"/>
+<circle cx="13" cy="42" r="10"/>
+<circle cx="83" cy="42" r="10"/>
+<path d="M20 76A28 28 0 0 1 76 76V88H60A12 12 0 0 0 36 88H20Z"/></g>
+<g transform="translate(904 100) scale(2)" fill="#f7f5ef"><path fill-rule="evenodd" d="M8 48A40 40 0 0 1 88 48V58H8Z
+M48 18 36 34A15 15 0 1 0 60 34Z"/>
+<path d="M11.34 66H84.66A40 40 0 0 1 11.34 66Z"/></g>
+<text x="1000" y="360" text-anchor="middle" fill="#f7f5ef" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="1.6">IMPERMEABLE</text>
+<g transform="translate(908.0 442.0) scale(0.5)" fill="#f7f5ef"><path fill-rule="evenodd" d="M8 48A40 40 0 0 1 88 48V58H8Z
+M48 18 36 34A15 15 0 1 0 60 34Z"/>
+<path d="M11.34 66H84.66A40 40 0 0 1 11.34 66Z"/></g>
+<g transform="translate(976.0 450.0) scale(0.3333333333333333)" fill="#f7f5ef"><path fill-rule="evenodd" d="M8 48A40 40 0 0 1 88 48V58H8Z
+M48 18 36 34A15 15 0 1 0 60 34Z"/>
+<path d="M11.34 66H84.66A40 40 0 0 1 11.34 66Z"/></g>
+<g transform="translate(1042.0 456.0) scale(0.20833333333333334)" fill="#f7f5ef"><path fill-rule="evenodd" d="M8 48A40 40 0 0 1 88 48V58H8Z
+M48 18 36 34A15 15 0 1 0 60 34Z"/>
+<path d="M11.34 66H84.66A40 40 0 0 1 11.34 66Z"/></g>
+</svg>
