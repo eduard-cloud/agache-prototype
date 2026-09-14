@@ -419,8 +419,9 @@ h3.cfg-title{font-size:20px;font-weight:400;letter-spacing:-.03em;line-height:1.
 #fsheet-prop::-webkit-scrollbar{display:none}
 #fsheet-prop .cfg-fpill-amenity{flex:0 0 auto}
 .cfg-fpill-color{flex-direction:column;background:none;height:auto;padding:0;gap:6px;width:56px;border-radius:0}
-.cfg-fpill-color .fp-swatch{width:44px;height:44px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.cfg-fpill-color .fp-swatch{position:relative;width:44px;height:44px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
 .cfg-fpill-color.on .fp-swatch{box-shadow:0 0 0 2px #fff,0 0 0 4px var(--ink)}
+.cfg-fpill-color.is-unavailable .fp-swatch::after{content:'';position:absolute;top:50%;left:0;right:0;height:2px;background:#fff;transform:translateY(-50%) rotate(-45deg)}
 .cfg-fpill-color .fp-label{font-size:13px;letter-spacing:-.01em;color:var(--ink)}
 .cfg-fpill.on{background:var(--ink);color:#fff}
 .cfg-fpill-color.on{background:none;color:var(--ink)}
