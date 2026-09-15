@@ -568,10 +568,6 @@ input.price-mm-pill:focus{border-color:var(--ink)}
 /* v41: a black badge on a black fabric is just the checkmark glyph floating in mid-air --
    dark swatches flip the badge itself to white-on-black instead, keeping the ring black. */
 .mtile.dark .mtile-chk{background:#fff}
-/* v39: multicolor's "one collection only" rule shown, not just told -- a swatch from any other
-   collection stays on screen once one is picked, greyed and inert, instead of disappearing. */
-.mtile.is-locked-out{pointer-events:none}
-.mtile.is-locked-out .imw{opacity:.35;filter:grayscale(.5)}
 .mtile .lr{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
 #cfg-fabric-sections .mtile .lr{display:none}
 .mtile .nm{font-size:14px;font-weight:500;letter-spacing:-.02em;color:var(--ink)}
@@ -2681,16 +2677,15 @@ function applyFabricFilters(){
        zone has to come from the same fabric). Otherwise every swatch is a valid sofa and the
        whole catalogue stays open. */
     var inCollection = !collectionNarrowed() || s.slug === sel.collectionSlug;
-    /* v39: in zone mode the out-of-collection swatches stay on screen, greyed and inert,
-       instead of disappearing -- the shopper can see the rest of the catalogue exists and why
-       it's off limits, rather than have it silently vanish the moment a collection is settled.
-       Unicolor's own locked-collection narrowing (and the dead-end panel it can trigger) is
-       untouched: this only changes what zone mode does with the swatches it excludes. */
-    var lockedOut = sel.zoneMode && passesFilters && !inCollection;
-    var visible = passesFilters && (inCollection || sel.zoneMode);
-    tile.classList.toggle('is-locked-out', lockedOut);
+    /* Out-of-collection swatches in zone mode used to stay on screen greyed and inert (v39),
+       but at 35% opacity + grayscale a collection whose colours are mostly pale (Maya, Zoya)
+       read as empty white boxes, not "faded" -- indistinguishable from actually having no
+       swatches. The top-of-section zone note (#cfg-zone-note) already explains the lock and
+       offers "Șterge selecția", so hiding the collection outright loses no functionality and
+       reads correctly instead of looking broken. */
+    var visible = passesFilters && inCollection;
     tile.style.display = visible ? '' : 'none';
-    if (visible && !lockedOut) visibleCount++;
+    if (visible) visibleCount++;
   });
   /* v34: a filter combination that shows nothing at all is never fixed by changing what the
      shopper picked out from under them -- Airbnb's own "no exact matches" pattern instead: name
@@ -2706,19 +2701,25 @@ function applyFabricFilters(){
   } else {
     renderDeadEnd(false);
   }
-  /* A collection group (heading + its grid) can end up with every tile hidden once material/
-     colour/price/zone filters are layered on -- hide the heading along with the empty grid
-     rather than leaving it standing over blank space. */
+  /* A collection group (heading + its grid, and its feature-labels row when it has one) can end
+     up with every tile hidden once material/colour/price/zone filters are layered on -- hide the
+     whole group rather than leaving the heading (and, for a collection like Maya with badges
+     that don't fit inline, a stray features row) standing over blank space. Hiding the body's
+     direct children -- not just grid.previousElementSibling -- is what makes this correct
+     regardless of whether a group got the inline or block feature-row layout. */
   var firstShownTitle = null;
-  document.querySelectorAll('#cfg-fabric-sections .cfg-color-grid').forEach(function(grid){
-    var anyVisible = Array.prototype.some.call(grid.children, function(t){ return t.style.display !== 'none'; });
-    var title = grid.previousElementSibling;
-    if (title && title.classList.contains('cfg-matgroup-title')){
+  document.querySelectorAll('#cfg-fabric-sections .cfg-matgroup-body').forEach(function(body){
+    var grid = body.querySelector('.cfg-color-grid');
+    var title = body.querySelector('.cfg-matgroup-title');
+    var feat = body.querySelector('.cfg-matgroup-features');
+    var anyVisible = !!grid && Array.prototype.some.call(grid.children, function(t){ return t.style.display !== 'none'; });
+    if (title){
       title.style.display = anyVisible ? '' : 'none';
       title.classList.remove('first-visible');
       if (anyVisible && !firstShownTitle) firstShownTitle = title;
     }
-    grid.style.display = anyVisible ? '' : 'none';
+    if (feat) feat.style.display = anyVisible ? '' : 'none';
+    if (grid) grid.style.display = anyVisible ? '' : 'none';
   });
   /* All eight groups sit in the DOM, so filtering down to one leaves the earlier headings
      hidden and the surviving one carrying the 28px gap meant to separate it from the group
