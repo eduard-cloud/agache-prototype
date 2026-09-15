@@ -191,13 +191,13 @@ img{display:block}
 .benefit-card.photo.open .benefit-text{background:none}
 
 /* ── Workshop — Figma 1323:12768, content from mobile #confsec ── */
-#workshop{position:relative;background:#f5f5f7}
-.workshop-img-wrap{width:100%;aspect-ratio:1440/844;position:relative;overflow:hidden}
+#workshop{position:relative;background:#f5f5f7;height:900px;overflow:hidden}
+.workshop-img-wrap{position:absolute;inset:0}
 .workshop-img-wrap img{width:100%;height:100%;object-fit:cover;object-position:bottom;display:block}
-.workshop-eyebrow{position:absolute;left:100px;top:65px;font-size:14px;font-weight:500;color:#fff;letter-spacing:.98px}
-.workshop-bottom{position:absolute;left:100px;right:100px;bottom:108px;display:flex;align-items:center;justify-content:space-between;gap:40px}
+.workshop-eyebrow{position:absolute;left:100px;top:65px;transform:translateY(-50%);font-size:14px;font-weight:500;line-height:1.2;color:#fff;letter-spacing:.98px}
+.workshop-bottom{position:absolute;left:100px;top:735.77px;width:1240px;display:flex;align-items:center;justify-content:space-between;gap:40px}
 .workshop-title{font-size:60px;font-weight:500;color:#fff;letter-spacing:-1.8px;line-height:1.05;max-width:997px}
-.workshop-cta{display:inline-flex;align-items:center;gap:8px;flex-shrink:0;background:#fff;color:#eb2f1e;border:none;border-radius:9999px;padding:16px 40px;font-size:16px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;transition:opacity .2s;white-space:nowrap}
+.workshop-cta{display:inline-flex;align-items:center;gap:8px;flex-shrink:0;background:#fff;color:#eb2f1e;border:none;border-radius:9999px;padding:16px 40px;font-size:16px;font-weight:500;letter-spacing:-.64px;line-height:1.2;font-family:'DM Sans',sans-serif;cursor:pointer;transition:opacity .2s;white-space:nowrap}
 .workshop-cta:hover{opacity:.85}
 .workshop-cta svg{width:16px;height:16px;flex-shrink:0}
 
