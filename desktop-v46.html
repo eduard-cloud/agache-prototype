@@ -8,7 +8,7 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:16px}
-body{background:#fff;font-family:'DM Sans',sans-serif;min-width:1440px;color:#121212}
+body{background:#fff;font-family:'DM Sans',sans-serif;min-width:1280px;color:#121212}
 button{cursor:pointer;border:none;background:none;font-family:inherit}
 a{text-decoration:none;color:inherit}
 img{display:block}
@@ -17,13 +17,13 @@ img{display:block}
 #ann-bar{height:40px;background:#f2f2f2;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;letter-spacing:-.28px;color:#1d1d1f}
 
 /* ── Header / navbar (Figma 1323:12038) ────────────────── */
-#header{background:#fff;display:flex;align-items:center;justify-content:space-between;padding:16px 60px;position:relative;z-index:20}
+#header{background:#fff;display:flex;flex-wrap:wrap;row-gap:8px;align-items:center;justify-content:space-between;padding:16px 60px;position:relative;z-index:20}
 #header .logo{width:120px;height:33px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
 #header .logo img{height:33px;width:auto;display:block}
 #header nav{display:flex;flex-wrap:wrap;align-items:center;height:32px;flex-shrink:0}
 #header nav a{font-size:16px;font-weight:500;letter-spacing:-.64px;color:#000;padding:4px 8px;white-space:nowrap;transition:opacity .2s}
 #header nav a:hover{opacity:.6}
-#header .h-right{display:flex;align-items:center;gap:60px;width:360px;flex-shrink:0}
+#header .h-right{display:flex;align-items:center;gap:24px;flex:0 1 360px;min-width:0}
 #header .h-search{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;background:none;border:none;cursor:pointer;text-align:left;font-family:inherit;padding:0}
 #header .h-search-inner{display:flex;align-items:center;gap:8px;padding:4px 0;overflow:hidden}
 #header .h-search-inner svg,#header .h-search-inner img{width:16px;height:16px;flex-shrink:0}
@@ -35,10 +35,10 @@ img{display:block}
 
 /* ── Buybox (Figma 1323:12141): 960 media + 480 info ───── */
 #pdpmain{display:flex;width:100%;background:#fff}
-.pdp-media{position:relative;width:960px;flex-shrink:0;display:flex;flex-direction:column}
-.pdp-hero-clip{position:relative;width:960px;height:720px;overflow:hidden;background:#f2f2f2}
+.pdp-media{position:relative;flex:0 0 66.6667%;min-width:0;display:flex;flex-direction:column}
+.pdp-hero-clip{position:relative;width:100%;aspect-ratio:960/720;overflow:hidden;background:#f2f2f2}
 .pdp-hero-track{display:flex;width:100%;height:100%;transition:transform .4s cubic-bezier(.4,0,.2,1)}
-.pdp-hero-slide{width:960px;height:720px;flex-shrink:0}
+.pdp-hero-slide{width:100%;height:100%;flex-shrink:0}
 .pdp-hero-slide img,.pdp-hero-slide video{width:100%;height:100%;object-fit:cover;display:block}
 .pdp-crumb{position:absolute;left:60px;top:24px;display:flex;align-items:center;gap:8px;font-size:12px;color:#707173;letter-spacing:-.24px;z-index:5}
 .pdp-crumb a{color:#707173}
@@ -54,7 +54,7 @@ img{display:block}
 .pdp-thumb.active{border-color:#1d1d1f}
 .pdp-thumb img{width:100%;height:100%;object-fit:cover;display:block}
 
-.pdp-info{width:480px;flex-shrink:0;padding:48px 60px 80px;display:flex;flex-direction:column;gap:40px}
+.pdp-info{flex:0 0 33.3333%;min-width:0;padding:48px 60px 80px;display:flex;flex-direction:column;gap:40px}
 .pc-top-row{display:flex;align-items:center;justify-content:space-between;width:100%}
 .pc-rating{display:flex;align-items:center;gap:8px}
 .pc-rating .star-icon{width:14px;height:14px;fill:#121212}
@@ -146,7 +146,7 @@ img{display:block}
 .benefits-nav{display:flex;gap:12px;align-items:center}
 .benefits-nav button{width:40px;height:40px;padding:0}
 .benefits-nav img{width:40px;height:40px;display:block}
-.benefits-cards{display:flex;gap:16px;overflow-x:auto;scrollbar-width:none}
+.benefits-cards{display:flex;gap:16px;overflow-x:auto;min-width:0;scrollbar-width:none}
 .benefits-cards::-webkit-scrollbar{display:none}
 /* scroll-progress line — copied verbatim from mobile-v45 .rail-scrollbar */
 .rail-scrollbar{height:1px;background:#fff;margin-top:12px;position:relative}
