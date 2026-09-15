@@ -156,7 +156,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 #cfg{position:fixed;inset:0;margin:0;display:flex;flex-direction:row;height:100vh;background:#fff;overflow:hidden}
 
 /* ── preview zone ── */
-#cfg-preview{position:relative;flex:3 1 0%;min-width:0;height:100%;overflow:hidden;background:var(--graysec)}
+#cfg-preview{position:relative;flex:2 1 0%;min-width:0;height:100%;overflow:hidden;background:var(--graysec)}
 #cfg-shape-img{width:100%;height:100%;object-fit:contain;background:var(--graysec)}
 #cfg-close{position:absolute;left:32px;top:32px;z-index:2;background:rgba(255,255,255,.9);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);border:none}
 #cfg-measure{position:absolute;right:32px;top:32px;z-index:2;width:40px;height:40px;padding:0;border-radius:50%;overflow:hidden;border:none}
@@ -169,7 +169,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 
 /* ── side panel (was a bottom sheet on mobile; on desktop it's a fixed-width column that
    fills the full viewport height alongside the preview, so there's no drag-to-resize handle) ── */
-#cfg-sheet{position:relative;flex:2 1 0%;min-width:460px;height:100%;background:#fff;border-radius:0;display:flex;flex-direction:column;overflow:hidden;z-index:3}
+#cfg-sheet{position:relative;flex:1 1 0%;min-width:380px;height:100%;background:#fff;border-radius:0;display:flex;flex-direction:column;overflow:hidden;z-index:3}
 .cfg-handle{display:none}
 /* The bar owns the hairline and the bottom padding now; the chips inside it are the only part
    that scrolls, so the filter button and its divider stay put at the right edge. */
@@ -451,7 +451,7 @@ h3.cfg-title{font-size:24px;font-weight:400;letter-spacing:-.03em;line-height:1.
   .cfg-fpill-amenity:not(.on):hover{background:var(--chipbg)}
 }
 
-.fsheet-overlay{display:none;position:fixed;inset:0;left:auto;width:40vw;min-width:460px;margin:0;background:rgba(0,0,0,.45);z-index:65;align-items:flex-end}
+.fsheet-overlay{display:none;position:fixed;inset:0;left:auto;width:33.3334vw;min-width:380px;margin:0;background:rgba(0,0,0,.45);z-index:65;align-items:flex-end}
 /* v27: the sheet rises from the bottom edge instead of appearing in place -- the pinned filter
    button opens it from anywhere in the flow now, so the movement is what tells you where it
    came from and where it will go back to. */
@@ -575,7 +575,7 @@ input.price-mm-pill:focus{border-color:var(--ink)}
 .info-i svg{width:32px;height:32px;pointer-events:none;display:block}
 
 /* ── individual swatch info modal (opened from a color tile's info button) ── */
-.swm-overlay{display:none;position:fixed;inset:0;left:auto;width:40vw;min-width:460px;margin:0;background:rgba(0,0,0,.45);z-index:60;align-items:flex-end}
+.swm-overlay{display:none;position:fixed;inset:0;left:auto;width:33.3334vw;min-width:380px;margin:0;background:rgba(0,0,0,.45);z-index:60;align-items:flex-end}
 .swm-overlay.open{display:flex}
 .swm-sheet{background:#fff;border-radius:24px 24px 0 0;width:100%;max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 -8px 30px rgba(0,0,0,.14)}
 .swm-hero{position:relative;height:260px}
@@ -599,7 +599,7 @@ input.price-mm-pill:focus{border-color:var(--ink)}
 .swm-body .mt-p{font-size:13px;line-height:1.6;color:var(--slate);margin-top:12px}
 
 /* ── collection detail modal (exact copy of mobile-v2.html's "Collection view": st-hero/mh-trk/st-dots/st-body/yl-band/rz-head/rz-row/ft-h/ft-row/mt-h/mt-p) ── */
-.colm-overlay{display:none;position:fixed;inset:0;left:auto;width:40vw;min-width:460px;margin:0;background:rgba(0,0,0,.45);z-index:70;align-items:flex-end}
+.colm-overlay{display:none;position:fixed;inset:0;left:auto;width:33.3334vw;min-width:380px;margin:0;background:rgba(0,0,0,.45);z-index:70;align-items:flex-end}
 .colm-overlay.open{display:flex}
 .colm-sheet{background:#fff;border-radius:24px 24px 0 0;width:100%;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 -8px 30px rgba(0,0,0,.14)}
 .st-hero{position:relative;height:373px;touch-action:pan-y}
@@ -639,7 +639,7 @@ input.price-mm-pill:focus{border-color:var(--ink)}
 
 /* ── samples modal (order up to 5 free fabric swatches) -- adapted from mobile-v6.html's
    #samplesmodal, same real 191-swatch data, wired to this file's own overlay conventions ── */
-.sm-overlay{display:none;position:fixed;inset:0;left:auto;width:40vw;min-width:460px;margin:0;background:rgba(0,0,0,.45);z-index:75;align-items:flex-end}
+.sm-overlay{display:none;position:fixed;inset:0;left:auto;width:33.3334vw;min-width:380px;margin:0;background:rgba(0,0,0,.45);z-index:75;align-items:flex-end}
 .sm-overlay.open{display:flex}
 .sm-sheet{position:relative;background:#fff;border-radius:20px 20px 0 0;width:100%;max-height:92vh;display:flex;flex-direction:column;overflow:hidden}
 .sm-top{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;flex-shrink:0}
@@ -678,7 +678,7 @@ input.price-mm-pill:focus{border-color:var(--ink)}
    floating loose over it. It's a white bottom sheet now, built like the Filtre and swatch
    sheets above it -- dim scrim, sheet pinned to the bottom edge, 24px top corners -- with the
    segmented control sitting in the sheet's own head rather than over the content. */
-.matd-overlay{display:none;position:fixed;inset:0;left:auto;width:40vw;min-width:460px;margin:0;background:rgba(0,0,0,.45);z-index:78;align-items:flex-end}
+.matd-overlay{display:none;position:fixed;inset:0;left:auto;width:33.3334vw;min-width:380px;margin:0;background:rgba(0,0,0,.45);z-index:78;align-items:flex-end}
 .matd-overlay.open{display:flex}
 /* One height for both modes, so switching Video/Text moves the thumb and nothing else -- a
    sheet that resized under the toggle made the control itself jump. It also has to be a
@@ -869,7 +869,7 @@ input.price-mm-pill:focus{border-color:var(--ink)}
    choice actually changes what's in the receipt. */
 .cfg-price-btn.no-breakdown{cursor:default}
 .cfg-price-btn.no-breakdown svg{display:none}
-.pbd-overlay{display:none;position:fixed;inset:0;left:auto;width:40vw;min-width:460px;margin:0;background:rgba(0,0,0,.45);z-index:60;align-items:flex-end}
+.pbd-overlay{display:none;position:fixed;inset:0;left:auto;width:33.3334vw;min-width:380px;margin:0;background:rgba(0,0,0,.45);z-index:60;align-items:flex-end}
 .pbd-overlay.open{display:flex}
 .pbd-sheet{background:#fff;border-radius:24px 24px 0 0;width:100%;max-height:80vh;display:flex;flex-direction:column;box-shadow:0 -8px 30px rgba(0,0,0,.14)}
 .pbd-head{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;padding:20px 20px 4px}
