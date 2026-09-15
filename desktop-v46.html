@@ -201,29 +201,38 @@ img{display:block}
 .workshop-cta:hover{opacity:.85}
 .workshop-cta svg{width:16px;height:16px;flex-shrink:0}
 
-/* ── Reviews ───────────────────────────────────────────── */
-#reviews{background:#f5f5f7;padding:100px 50px;display:flex;flex-direction:column;gap:48px}
-.reviews-label{font-size:14px;font-weight:500;color:#363944;letter-spacing:.98px}
-.reviews-title{font-size:60px;font-weight:500;color:#121212;letter-spacing:-1.8px;line-height:1.05}
-.reviews-filters{display:flex;flex-wrap:wrap;gap:8px}
-.reviews-filter-btn{padding:16px 24px;border-radius:9999px;border:1px solid #363944;font-size:18px;font-weight:500;color:#363944;cursor:pointer;background:transparent;font-family:'DM Sans',sans-serif;white-space:nowrap;transition:all .2s}
-.reviews-filter-btn.active{background:#121212;color:#fff;border-color:#121212}
-.reviews-tabpanel{display:flex;gap:25px;align-items:flex-start}
-.reviews-score-card{width:317px;flex-shrink:0;border:1px solid #121212;background:#fff;border-radius:16px;padding:40px 32px;display:flex;flex-direction:column;gap:48px;align-items:center}
-.reviews-big-score{font-size:60px;font-weight:500;color:#121212;letter-spacing:-1.8px;line-height:1;text-align:center}
-.reviews-stars-row{display:flex;gap:4px;align-items:center;justify-content:center}
-.reviews-count{font-size:18px;font-weight:500;color:#121212;letter-spacing:-.36px;text-align:center}
-.reviews-col{flex:1;display:flex;flex-direction:column;gap:25px}
-.review-card{display:flex;gap:24px;align-items:flex-start}
+/* ── Reviews — Figma 1323:12585, content from mobile #testim ── */
+#reviews{background:#fff;padding:80px 100px;display:flex;flex-direction:column;gap:100px}
+.reviews-title{font-size:48px;font-weight:500;color:#1d1d1f;letter-spacing:-1.44px;line-height:1.05}
+.reviews-row{display:flex;gap:100px;align-items:flex-start}
+.reviews-score-card{width:317px;flex-shrink:0;border:1px solid #1d1d1f;background:#fff;border-radius:16px;padding:40px;display:flex;flex-direction:column;gap:16px;align-items:center}
+.reviews-big-score{font-size:60px;font-weight:500;color:#1d1d1f;letter-spacing:-1.8px;line-height:1.05;text-align:center}
+.reviews-stars-count{display:flex;flex-direction:column;gap:16px;align-items:center}
+.reviews-stars-row{display:flex;gap:1px}
+.reviews-stars-row .star{width:20px;height:20px;fill:#f5a623}
+.reviews-count{font-size:18px;font-weight:500;color:#1d1d1f;letter-spacing:-.72px}
+.reviews-list{flex:1;min-width:0;display:flex;flex-direction:column;gap:25px}
+.review-card{display:flex;gap:24px}
+.review-divider{height:1px;background:#f2f2f2;border:none;margin:0}
 .review-photo{width:240px;height:240px;object-fit:cover;border-radius:8px;flex-shrink:0}
-.review-body{flex:1;padding-top:8px}
-.review-meta{display:flex;align-items:center;gap:16px;margin-bottom:16px}
-.review-rating-inline{display:flex;gap:3px}
-.reviewer-name{font-size:16px;font-weight:700;color:#121212;letter-spacing:-.32px}
-.review-text{font-size:15px;color:#363944;line-height:1.65;margin-bottom:20px}
-.review-product-ref{display:flex;align-items:center;gap:12px;padding:10px 14px;background:#f5f5f7;border-radius:10px;width:fit-content}
-.review-product-ref img{width:60px;height:32px;object-fit:cover;border-radius:4px}
-.review-product-name{font-size:13px;font-weight:500;color:#121212}
+.review-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:48px;padding-top:8px}
+.review-meta{display:flex;align-items:center;justify-content:space-between;width:100%}
+.review-meta-left{display:flex;align-items:center;gap:16px}
+.review-stars-inline{display:flex;gap:1px}
+.review-stars-inline .star{width:14px;height:14px;fill:#f5a623}
+.review-name{font-size:16px;font-weight:700;color:#1d1d1f;letter-spacing:-.64px}
+.review-verified{display:flex;align-items:center;gap:4px;font-size:16px;color:#363944;letter-spacing:-.64px}
+.review-verified svg{width:16px;height:16px}
+.review-date{font-size:16px;color:#363944;letter-spacing:-.64px}
+.review-text-block{display:flex;flex-direction:column;gap:16px}
+.review-title{font-size:24px;font-weight:500;color:#1d1d1f;letter-spacing:-.96px;line-height:1.05}
+.review-text{font-size:16px;font-weight:500;color:#1d1d1f;letter-spacing:-.64px;line-height:1.2}
+.review-product-ref{display:flex;align-items:center;gap:8px;border:1px solid #f2f2f2;border-radius:16px;padding:16px;width:fit-content}
+.review-product-thumb{width:77px;height:40px;object-fit:cover;border-radius:4px}
+.review-product-text{font-size:16px;color:#363944;letter-spacing:-.64px;display:flex;flex-direction:column;gap:12px}
+.review-product-text .b{text-decoration:underline}
+.reviews-loadmore{align-self:flex-start;border:1px solid #1d1d1f;border-radius:9999px;padding:16px 24px;display:flex;align-items:center;gap:8px;font-size:16px;font-weight:500;color:#1d1d1f;letter-spacing:-.64px;background:#fff;cursor:pointer}
+.reviews-loadmore svg{width:16px;height:16px}
 
 /* ── Footer ─────────────────────────────────────────────── */
 #footer{background:#121212;color:#fff;padding:60px 50px 40px}
@@ -519,79 +528,92 @@ img{display:block}
   </div>
 </div>
 
-<!-- ── Reviews ───────────────────────────────── -->
+<!-- ── Reviews — Figma 1323:12585, content from mobile #testim ── -->
 <div id="reviews">
-  <div class="reviews-label">TESTIMONIALE</div>
   <div class="reviews-title">30.000 de clienți fericiți în peste 30 de ani de activitate.</div>
 
-  <div class="reviews-filters">
-    <button class="reviews-filter-btn active">Review-uri cu poze</button>
-    <button class="reviews-filter-btn">Asamblare</button>
-    <button class="reviews-filter-btn">Transport și retur</button>
-    <button class="reviews-filter-btn">Calitate</button>
-    <button class="reviews-filter-btn">Garanție</button>
-    <button class="reviews-filter-btn">Customer Support</button>
-  </div>
-
-  <div class="reviews-tabpanel">
+  <div class="reviews-row">
 
     <!-- Score card -->
     <div class="reviews-score-card">
       <div class="reviews-big-score">4.9</div>
-      <div class="reviews-stars-row">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="#f5a623"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="#f5a623"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="#f5a623"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="#f5a623"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="#f5a623"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <div class="reviews-stars-count">
+        <div class="reviews-stars-row">
+          <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <div class="reviews-count">21 recenzii</div>
       </div>
-      <div class="reviews-count">21 recenzii</div>
     </div>
 
-    <!-- Reviews column -->
-    <div class="reviews-col">
+    <!-- Reviews list -->
+    <div class="reviews-list">
 
       <div class="review-card">
-        <img class="review-photo" src="https://www.figma.com/api/mcp/asset/e4908ce0-4f4b-443d-b5f7-4325a85dab85" alt="">
+        <img class="review-photo" src="assets/review-1.png" alt="Canapea Boston la client">
         <div class="review-body">
           <div class="review-meta">
-            <div class="review-rating-inline">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="#f5a623"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="#f5a623"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="#f5a623"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="#f5a623"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="#f5a623"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <div class="review-meta-left">
+              <div class="review-stars-inline">
+                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              </div>
+              <span class="review-name">Cristian Lungu</span>
+              <span class="review-verified"><svg viewBox="0 0 24 24" fill="none" stroke="#707173" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>verificat</span>
             </div>
-            <div class="reviewer-name">Cristian Lungu</div>
+            <span class="review-date">27 Apr. 2025</span>
           </div>
-          <div class="review-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Canapeaua a depășit toate așteptările mele — calitatea materialelor este excepțională, iar confortul este remarcat de toți vizitatorii.</div>
+          <div class="review-text-block">
+            <div class="review-title">Dormit zilnic</div>
+            <div class="review-text">dorm zilnic pe el, foarte ok, nu ma doare spatele, dorm chiar bine, recomand!</div>
+          </div>
           <div class="review-product-ref">
-            <img src="https://www.figma.com/api/mcp/asset/02610d7e-0c1c-437a-a17a-52e01a25ddc6" alt="">
-            <span class="review-product-name">Boston Material Practic</span>
+            <img class="review-product-thumb" src="assets/review-thumb.png" alt="">
+            <div class="review-product-text"><span class="a">Recenzie pentru</span><span class="b">Boston Material Practic</span></div>
           </div>
         </div>
       </div>
 
+      <hr class="review-divider">
+
       <div class="review-card">
-        <img class="review-photo" src="https://www.figma.com/api/mcp/asset/c52db207-8f87-4f8d-9c36-7fde0809f208" alt="">
+        <img class="review-photo" src="assets/hero-1.png" alt="Canapea Boston">
         <div class="review-body">
           <div class="review-meta">
-            <div class="review-rating-inline">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="#f5a623"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="#f5a623"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="#f5a623"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="#f5a623"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="#f5a623"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <div class="review-meta-left">
+              <div class="review-stars-inline">
+                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              </div>
+              <span class="review-name">Borozan Florina</span>
+              <span class="review-verified"><svg viewBox="0 0 24 24" fill="none" stroke="#707173" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>verificat</span>
             </div>
-            <div class="reviewer-name">Borozan Florina</div>
+            <span class="review-date">14 Mar. 2025</span>
           </div>
-          <div class="review-text">Am cumpărat canapeaua Boston pentru sufrageria noastră și sunt absolut încântată. Materialul este de o calitate remarcabilă, iar montajul a fost rapid. Livrarea a fost la timp, exact cum a fost promis.</div>
+          <div class="review-text-block">
+            <div class="review-title">Depășit așteptările</div>
+            <div class="review-text">Materialul este de o calitate remarcabilă, iar montajul a fost rapid. Livrarea a fost la timp, exact cum a fost promis.</div>
+          </div>
           <div class="review-product-ref">
-            <img src="https://www.figma.com/api/mcp/asset/02610d7e-0c1c-437a-a17a-52e01a25ddc6" alt="">
-            <span class="review-product-name">Boston Material Practic</span>
+            <img class="review-product-thumb" src="assets/review-thumb.png" alt="">
+            <div class="review-product-text"><span class="a">Recenzie pentru</span><span class="b">Boston Material Practic</span></div>
           </div>
         </div>
       </div>
+
+      <button class="reviews-loadmore" type="button">
+        <svg viewBox="0 0 16 16" fill="none" stroke="#1d1d1f" stroke-width="1.6" stroke-linecap="round"><line x1="8" y1="1.5" x2="8" y2="14.5"/><line x1="1.5" y1="8" x2="14.5" y2="8"/></svg>
+        Încarca mai multe
+      </button>
 
     </div>
   </div>
@@ -719,13 +741,6 @@ function pickSwatch(el){
   }
 }
 
-// ── Reviews filter pills ──────────────────────
-document.querySelectorAll('.reviews-filter-btn').forEach(function(btn) {
-  btn.addEventListener('click', function() {
-    document.querySelectorAll('.reviews-filter-btn').forEach(function(b) { b.classList.remove('active'); });
-    this.classList.add('active');
-  });
-});
 </script>
 </body>
 </html>
