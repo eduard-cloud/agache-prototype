@@ -513,6 +513,10 @@ input.price-mm-pill:focus{border-color:var(--ink)}
 /* Kave-style text row under the collection title: small uppercase labels, dot-separated, muted */
 .cfg-matgroup-features{margin-top:2px;font-size:11px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;color:var(--gray)}
 .cfg-matgroup-features span+span::before{content:"  ·  "}
+/* Inline variant: same labels, sits in the title row itself between the info icon and the
+   price, with a 20px gap on each side -- used only when renderFabricSections' width check
+   finds room for it; otherwise the block variant above (its own line, no gap needed) is used. */
+.cfg-matgroup-features.inline{margin:0 20px;white-space:nowrap;flex:0 0 auto}
 /* v39: title used to be a direct child of #cfg-fabric-sections, so :first-of-type alone picked
    out the very first group. Now each title lives inside its own .cfg-matgroup-body wrapper (see
    renderFabricSections) -- it's trivially :first-of-type within that wrapper regardless of
@@ -1469,10 +1473,25 @@ function collectionFeatureLabels(c){
   if (c.petFriendly) labels.push('Pet Friendly');
   return labels;
 }
-function collectionFeaturesHTML(c){
-  var labels = collectionFeatureLabels(c);
-  if (!labels.length) return '';
-  return '<div class="cfg-matgroup-features">' + labels.map(function(l){ return '<span>' + l + '</span>'; }).join('') + '</div>';
+function featureLabelsInnerHTML(labels){
+  return labels.map(function(l){ return '<span>' + l + '</span>'; }).join('');
+}
+/* Off-DOM width probe: matches the real element's class (and so its font/letter-spacing) but
+   sits absolute+hidden so measuring it never affects live layout. Used to decide, per
+   collection, whether the feature row fits inline next to the price (see renderFabricSections)
+   before ever touching the real title row. */
+function measureNaturalWidth(html, className){
+  var probe = document.createElement('span');
+  probe.className = className;
+  probe.style.position = 'absolute';
+  probe.style.visibility = 'hidden';
+  probe.style.whiteSpace = 'nowrap';
+  probe.style.left = '-9999px';
+  probe.innerHTML = html;
+  document.body.appendChild(probe);
+  var w = probe.getBoundingClientRect().width;
+  document.body.removeChild(probe);
+  return w;
 }
 function shapePriceRange(shapeName){
   var t = SHAPE_TIER_PRICE[shapeName || baseVariantName()];
@@ -2823,14 +2842,15 @@ function renderFabricSections(){
     var c = COLLECTIONS[slug];
     var swatches = c.colors.map(function(pair){ return SWATCH_INDEX[c.name + ' ' + pair[0]]; });
     if (!swatches.length) return;
-    var h = document.createElement('div');
-    h.className = 'cfg-matgroup-title';
-    h.innerHTML = '<span class="cfg-matgroup-name">' + c.name +
+    var nameHTML = c.name +
         '<button type="button" class="cfg-matgroup-info" aria-label="Detalii ' + c.name + '" onclick="openCollectionDetail(\'' + slug + '\')">' +
           '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 11v5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7.7" r="1.1" fill="currentColor"/></svg>' +
-        '</button>' +
-      '</span>' +
-      '<span class="cfg-matgroup-right">' + collectionPriceDiffLabel(slug) + '</span>';
+        '</button>';
+    var priceHTML = collectionPriceDiffLabel(slug);
+    var h = document.createElement('div');
+    h.className = 'cfg-matgroup-title';
+    h.innerHTML = '<span class="cfg-matgroup-name">' + nameHTML + '</span>' +
+      '<span class="cfg-matgroup-right">' + priceHTML + '</span>';
     /* v39: body wraps title + grid together (heading stays grid.previousElementSibling for the
        show/hide-empty-groups logic below) so the single lock message can be positioned absolute
        against the group as a whole -- one card over the group, not one badge per swatch. The
@@ -2840,12 +2860,6 @@ function renderFabricSections(){
     body.className = 'cfg-matgroup-body';
     body.dataset.slug = slug;
     body.appendChild(h);
-    var featHTML = collectionFeaturesHTML(c);
-    if (featHTML){
-      var feat = document.createElement('div');
-      feat.innerHTML = featHTML;
-      body.appendChild(feat.firstChild);
-    }
     appendFabricGrid(body, swatches);
     var lock = document.createElement('div');
     lock.className = 'cfg-matgroup-lock';
@@ -2856,6 +2870,32 @@ function renderFabricSections(){
       '</div>';
     body.appendChild(lock);
     wrap.appendChild(body);
+    /* Feature row placement needs real layout (h.clientWidth), so it only happens once h is
+       actually attached to the live document -- everything above this point can still be built
+       off-DOM. */
+    var labels = collectionFeatureLabels(c);
+    if (labels.length){
+      var featInnerHTML = featureLabelsInnerHTML(labels);
+      /* Try the title row itself first: info icon | features | price, each side of the
+         features text needing >=20px clearance (20px margin + the row's own 8px flex gap =
+         28px actual, comfortably over the minimum). Only fall back to the row below the
+         title -- no space constraint there -- once it's measured not to fit. */
+      var nameW = measureNaturalWidth(nameHTML, 'cfg-matgroup-name');
+      var priceW = measureNaturalWidth(priceHTML, 'cfg-matgroup-right');
+      var featW = measureNaturalWidth(featInnerHTML, 'cfg-matgroup-features inline');
+      var fitsInline = (nameW + featW + priceW + 56) <= h.clientWidth;
+      if (fitsInline){
+        var inlineFeat = document.createElement('span');
+        inlineFeat.className = 'cfg-matgroup-features inline';
+        inlineFeat.innerHTML = featInnerHTML;
+        h.insertBefore(inlineFeat, h.querySelector('.cfg-matgroup-right'));
+      } else {
+        var feat = document.createElement('div');
+        feat.className = 'cfg-matgroup-features';
+        feat.innerHTML = featInnerHTML;
+        body.insertBefore(feat, body.querySelector('.cfg-color-grid'));
+      }
+    }
   });
   wrap.querySelectorAll('.mtile').forEach(function(tile){
     tile.onclick = function(){ pickFabricSwatch(tile, tile.dataset.slug); };
