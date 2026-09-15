@@ -293,7 +293,7 @@ img{display:block}
       <div class="pdp-crumb"><a href="#">Acasă</a><span>/</span><a href="#">Canapele</a><span>/</span><span>Canapea Boston</span></div>
       <button class="pdp-hero-arr prev" onclick="heroNav(-1)" aria-label="Anterior"><img src="assets/v2/hero/arrow-circle.svg" alt="" style="transform:rotate(180deg)"></button>
       <button class="pdp-hero-arr next" onclick="heroNav(1)" aria-label="Următor"><img src="assets/v2/hero/arrow-circle.svg" alt=""></button>
-      <button class="pdp-configure-pill" onclick="location.href='mobile-v41.html'">
+      <button class="pdp-configure-pill" onclick="pushTo('desktop-config-v1.html')">
         <svg viewBox="0 0 24 24" fill="none" stroke="#1d1d1f" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4V2M15 16V14M8 9H10M20 9H22M17.8 11.8L19 13M17.8 6.2L19 5M3 21L12 12M12.2 6.2L11 5"/></svg>
         <span>Configurează</span>
       </button>
@@ -353,7 +353,7 @@ img{display:block}
             <button class="sw" data-name="Luna 5" onclick="pickSwatch(this)"><img src="assets/v2/fabrics/luna-5.png" alt="Luna 5"></button>
             <button class="sw" data-name="Luna 6" onclick="pickSwatch(this)"><img src="assets/v2/fabrics/luna-6.png" alt="Luna 6"></button>
           </div>
-          <button class="sw-plus" onclick="location.href='mobile-v41.html#color'" aria-label="Mai multe materiale"><svg viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+          <button class="sw-plus" onclick="pushTo('desktop-config-v1.html#color')" aria-label="Mai multe materiale"><svg viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
         </div>
         <div class="sw-lbl-row">
           <button class="sw-name" onclick="void(0)">Material
@@ -366,7 +366,7 @@ img{display:block}
     </div>
 
     <div class="pc-type-wrap">
-      <button class="pc-type-row" type="button" onclick="location.href='mobile-v41.html#layout'">
+      <button class="pc-type-row" type="button" onclick="pushTo('desktop-config-v1.html#layout')">
         <img class="pc-type-thumb" src="assets/v2/luna-8-sofa.png" alt="">
         <span class="pc-type-info">
           <span class="pc-type-name-row"><span class="pc-type-name">Canapea cu 3 locuri</span><span class="pc-type-change">Schimba</span></span>
@@ -388,7 +388,7 @@ img{display:block}
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="21" r="1.6"/><circle cx="19" cy="21" r="1.6"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
           Adaugă în coș
         </button>
-        <button class="btn-configure" type="button" onclick="location.href='mobile-v41.html'">
+        <button class="btn-configure" type="button" onclick="pushTo('desktop-config-v1.html')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4V2M15 16V14M8 9H10M20 9H22M17.8 11.8L19 13M17.8 6.2L19 5M3 21L12 12M12.2 6.2L11 5"/></svg>
           Configurează canapeaua
         </button>
@@ -521,7 +521,7 @@ img{display:block}
   <div class="workshop-eyebrow">CONFIGUREAZĂ-ȚI CANAPEAUA</div>
   <div class="workshop-bottom">
     <div class="workshop-title">Vrei să îți creezi<br>o canapea unică?</div>
-    <button class="workshop-cta" onclick="location.href='mobile-v41.html'">
+    <button class="workshop-cta" onclick="pushTo('desktop-config-v1.html')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4V2M15 16V14M8 9H10M20 9H22M17.8 11.8L19 13M17.8 6.2L19 5M3 21L12 12M12.2 6.2L11 5"/></svg>
       Personalizeaza canapeaua
     </button>
@@ -678,6 +678,13 @@ function heroTo(idx) {
 }
 
 function addToCart(){}
+
+// ── Hand off to the configurator, remembering where to return (mirrors mobile-v45's pushTo) ──
+function pushTo(url) {
+  sessionStorage.setItem('pdpOrigin', location.pathname.split('/').pop());
+  document.body.classList.add('push-out-l');
+  setTimeout(function(){ location.href = url; }, 260);
+}
 
 // ── Video pause/play (copied from mobile-v45) ─────────────
 function toggleVidsecPlay(btn){
