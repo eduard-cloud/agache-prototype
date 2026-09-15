@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=1440">
 <title>Canapea Colecția Boston - Agache</title>
+<script>if(document.referrer.indexOf('desktop-config-v1.html')>-1)document.documentElement.classList.add('enter-l');</script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -12,6 +13,12 @@ body{background:#fff;font-family:'DM Sans',sans-serif;min-width:1280px;color:#12
 button{cursor:pointer;border:none;background:none;font-family:inherit}
 a{text-decoration:none;color:inherit}
 img{display:block}
+
+/* ── Cross-page push transition (PDP ↔ desktop configurator), mirrors mobile-v45 ── */
+@keyframes pushOutL{to{transform:translateX(-100%)}}
+@keyframes pushInL{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+body.push-out-l{animation:pushOutL .26s cubic-bezier(.4,0,1,1) forwards}
+html.enter-l body{animation:pushInL .26s cubic-bezier(.16,1,.3,1) both}
 
 /* ── Announcement bar (Figma) ───────────────────────────── */
 #ann-bar{height:40px;background:#f2f2f2;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;letter-spacing:-.28px;color:#1d1d1f}
