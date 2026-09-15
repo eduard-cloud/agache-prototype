@@ -156,7 +156,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 #cfg{position:fixed;inset:0;margin:0;display:flex;flex-direction:row;height:100vh;background:#fff;overflow:hidden}
 
 /* ── preview zone ── */
-#cfg-preview{position:relative;flex:2 1 0%;min-width:0;height:100%;overflow:hidden;background:var(--graysec)}
+#cfg-preview{position:relative;flex:3 1 0%;min-width:0;height:100%;overflow:hidden;background:var(--graysec)}
 #cfg-shape-img{width:100%;height:100%;object-fit:contain;background:var(--graysec)}
 #cfg-close{position:absolute;left:32px;top:32px;z-index:2;background:rgba(255,255,255,.9);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);border:none}
 #cfg-measure{position:absolute;right:32px;top:32px;z-index:2;width:40px;height:40px;padding:0;border-radius:50%;overflow:hidden;border:none}
@@ -169,17 +169,17 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 
 /* ── side panel (was a bottom sheet on mobile; on desktop it's a fixed-width column that
    fills the full viewport height alongside the preview, so there's no drag-to-resize handle) ── */
-#cfg-sheet{position:relative;flex:1 1 0%;min-width:380px;height:100%;background:#fff;border-radius:0;box-shadow:-8px 0 30px rgba(0,0,0,.08);display:flex;flex-direction:column;overflow:hidden;z-index:3}
+#cfg-sheet{position:relative;flex:2 1 0%;min-width:460px;height:100%;background:#fff;border-radius:0;display:flex;flex-direction:column;overflow:hidden;z-index:3}
 .cfg-handle{display:none}
 /* The bar owns the hairline and the bottom padding now; the chips inside it are the only part
    that scrolls, so the filter button and its divider stay put at the right edge. */
-.cfg-navbar{flex:0 0 auto;display:flex;align-items:center;padding:0 0 8px;border-bottom:1px solid var(--hair)}
+.cfg-navbar{flex:0 0 auto;display:flex;align-items:center;padding:0 40px 8px;border-bottom:1px solid var(--hair)}
 /* No ring, ever -- the count badge alone says filters are on. */
-.cfg-navfilter{flex:0 0 auto;position:relative;display:flex;align-items:center;justify-content:center;width:40px;height:40px;margin-right:8px;padding:0;border:none;background:none;color:var(--ink)}
+.cfg-navfilter{flex:0 0 auto;position:relative;display:flex;align-items:center;justify-content:center;width:40px;height:40px;margin-right:0;padding:0;border:none;background:none;color:var(--ink)}
 .cfg-navfilter .nav-cnt{display:none;position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:999px;background:#1D1D1F;color:#fff;font-size:11px;font-weight:600;align-items:center;justify-content:center;border:2px solid #fff}
 .cfg-navfilter.has-count .nav-cnt{display:flex}
 .cfg-nav-divider{flex:0 0 auto;width:1px;height:24px;background:var(--hair);margin:0 8px}
-.cfg-chips{flex:1 1 auto;min-width:0;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding:0 0 0 16px}
+.cfg-chips{flex:1 1 auto;min-width:0;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding:0}
 .cfg-chips::-webkit-scrollbar{display:none}
 /* Nav chips: no outline on unselected (just ink text on transparent bg), and the
    selected pill's checkmark lives in a permanently-reserved slot (fixed width, animated via
@@ -205,8 +205,8 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
    moves 24px -> 28px and the 4-across colour grid keeps essentially the same tile size.
    Radius is 16px rather than the reference's 8px so the cards sit in the same radius family
    as the rest of the configurator (.cfg-matdiff-btn 16px, the sheet itself 24px). */
-.cfg-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 12px 0;background:linear-gradient(180deg,#fff 0%,#F5F4EF 100%);background-attachment:local}
-.cfg-sec{scroll-margin-top:12px;background:var(--seccard);border-radius:16px;padding:24px 12px 24px;margin:0 0 16px;border-bottom:none}
+.cfg-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 40px 0;background:linear-gradient(180deg,#fff 0%,#F5F4EF 100%);background-attachment:local}
+.cfg-sec{scroll-margin-top:12px;background:var(--seccard);border-radius:16px;padding:24px 0;margin:0 0 16px;border-bottom:none}
 .cfg-sec:last-of-type{margin-bottom:0}
 /* v40: Sumar closes out the flow, so it gets more air above it than the 16px margin + 24px
    padding every other card-to-card gap carries -- bumped so the total gap above "Gata!" reads
@@ -442,7 +442,7 @@ h3.cfg-title{font-size:20px;font-weight:400;letter-spacing:-.03em;line-height:1.
   .cfg-fpill-amenity:not(.on):hover{background:var(--chipbg)}
 }
 
-.fsheet-overlay{display:none;position:fixed;inset:0;left:auto;width:33.3334vw;min-width:380px;margin:0;background:rgba(0,0,0,.45);z-index:65;align-items:flex-end}
+.fsheet-overlay{display:none;position:fixed;inset:0;left:auto;width:40vw;min-width:460px;margin:0;background:rgba(0,0,0,.45);z-index:65;align-items:flex-end}
 /* v27: the sheet rises from the bottom edge instead of appearing in place -- the pinned filter
    button opens it from anywhere in the flow now, so the movement is what tells you where it
    came from and where it will go back to. */
@@ -570,7 +570,7 @@ input.price-mm-pill:focus{border-color:var(--ink)}
 .info-i svg{width:32px;height:32px;pointer-events:none;display:block}
 
 /* ── individual swatch info modal (opened from a color tile's info button) ── */
-.swm-overlay{display:none;position:fixed;inset:0;left:auto;width:33.3334vw;min-width:380px;margin:0;background:rgba(0,0,0,.45);z-index:60;align-items:flex-end}
+.swm-overlay{display:none;position:fixed;inset:0;left:auto;width:40vw;min-width:460px;margin:0;background:rgba(0,0,0,.45);z-index:60;align-items:flex-end}
 .swm-overlay.open{display:flex}
 .swm-sheet{background:#fff;border-radius:24px 24px 0 0;width:100%;max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 -8px 30px rgba(0,0,0,.14)}
 .swm-hero{position:relative;height:260px}
@@ -594,7 +594,7 @@ input.price-mm-pill:focus{border-color:var(--ink)}
 .swm-body .mt-p{font-size:13px;line-height:1.6;color:var(--slate);margin-top:12px}
 
 /* ── collection detail modal (exact copy of mobile-v2.html's "Collection view": st-hero/mh-trk/st-dots/st-body/yl-band/rz-head/rz-row/ft-h/ft-row/mt-h/mt-p) ── */
-.colm-overlay{display:none;position:fixed;inset:0;left:auto;width:33.3334vw;min-width:380px;margin:0;background:rgba(0,0,0,.45);z-index:70;align-items:flex-end}
+.colm-overlay{display:none;position:fixed;inset:0;left:auto;width:40vw;min-width:460px;margin:0;background:rgba(0,0,0,.45);z-index:70;align-items:flex-end}
 .colm-overlay.open{display:flex}
 .colm-sheet{background:#fff;border-radius:24px 24px 0 0;width:100%;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 -8px 30px rgba(0,0,0,.14)}
 .st-hero{position:relative;height:373px;touch-action:pan-y}
@@ -634,7 +634,7 @@ input.price-mm-pill:focus{border-color:var(--ink)}
 
 /* ── samples modal (order up to 5 free fabric swatches) -- adapted from mobile-v6.html's
    #samplesmodal, same real 191-swatch data, wired to this file's own overlay conventions ── */
-.sm-overlay{display:none;position:fixed;inset:0;left:auto;width:33.3334vw;min-width:380px;margin:0;background:rgba(0,0,0,.45);z-index:75;align-items:flex-end}
+.sm-overlay{display:none;position:fixed;inset:0;left:auto;width:40vw;min-width:460px;margin:0;background:rgba(0,0,0,.45);z-index:75;align-items:flex-end}
 .sm-overlay.open{display:flex}
 .sm-sheet{position:relative;background:#fff;border-radius:20px 20px 0 0;width:100%;max-height:92vh;display:flex;flex-direction:column;overflow:hidden}
 .sm-top{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;flex-shrink:0}
@@ -673,7 +673,7 @@ input.price-mm-pill:focus{border-color:var(--ink)}
    floating loose over it. It's a white bottom sheet now, built like the Filtre and swatch
    sheets above it -- dim scrim, sheet pinned to the bottom edge, 24px top corners -- with the
    segmented control sitting in the sheet's own head rather than over the content. */
-.matd-overlay{display:none;position:fixed;inset:0;left:auto;width:33.3334vw;min-width:380px;margin:0;background:rgba(0,0,0,.45);z-index:78;align-items:flex-end}
+.matd-overlay{display:none;position:fixed;inset:0;left:auto;width:40vw;min-width:460px;margin:0;background:rgba(0,0,0,.45);z-index:78;align-items:flex-end}
 .matd-overlay.open{display:flex}
 /* One height for both modes, so switching Video/Text moves the thumb and nothing else -- a
    sheet that resized under the toggle made the control itself jump. It also has to be a
@@ -851,7 +851,7 @@ input.price-mm-pill:focus{border-color:var(--ink)}
 .cfg-zonetab.on .cfg-zonetab-name,.cfg-zonetab.on .cfg-zonetab-val{color:#1d1d1f}
 
 /* ── cta bar -- the reference's floating bar: just a big price + a pill button, nothing else ── */
-.cfg-cta{flex:0 0 auto;background:#fff;border-top:1px solid var(--hair);display:flex;align-items:center;justify-content:space-between;padding:8px 20px}
+.cfg-cta{flex:0 0 auto;background:#fff;border-top:1px solid var(--hair);display:flex;align-items:center;justify-content:space-between;padding:16px 40px}
 .cfg-cta .pr{font-size:20px;font-weight:500;letter-spacing:-.72px;color:var(--ink)}
 .cfg-cta .bb{height:40px;background:var(--red);color:#fff;border-radius:23px;padding:0 16px;font-size:14px;letter-spacing:-.02em;font-weight:500;display:flex;align-items:center}
 
@@ -864,7 +864,7 @@ input.price-mm-pill:focus{border-color:var(--ink)}
    choice actually changes what's in the receipt. */
 .cfg-price-btn.no-breakdown{cursor:default}
 .cfg-price-btn.no-breakdown svg{display:none}
-.pbd-overlay{display:none;position:fixed;inset:0;left:auto;width:33.3334vw;min-width:380px;margin:0;background:rgba(0,0,0,.45);z-index:60;align-items:flex-end}
+.pbd-overlay{display:none;position:fixed;inset:0;left:auto;width:40vw;min-width:460px;margin:0;background:rgba(0,0,0,.45);z-index:60;align-items:flex-end}
 .pbd-overlay.open{display:flex}
 .pbd-sheet{background:#fff;border-radius:24px 24px 0 0;width:100%;max-height:80vh;display:flex;flex-direction:column;box-shadow:0 -8px 30px rgba(0,0,0,.14)}
 .pbd-head{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;padding:20px 20px 4px}
