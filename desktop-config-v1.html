@@ -191,6 +191,9 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
    same technique the reference uses on its own tab icons, just clipped to a slot that doesn't move. */
 .cfg-chip .chip-check{width:14px;height:14px;flex:0 0 auto;overflow:hidden}
 .cfg-chip .chip-check svg{width:14px;height:14px;display:block;transform-origin:0 50%;transform:scaleX(0);transition:transform .14s linear}
+@media (hover:hover) and (pointer:fine){
+  .cfg-chip:not(.on):hover{background:var(--chipbg)}
+}
 .cfg-chip.on{background:var(--ink);color:#fff}
 .cfg-chip.on .chip-check svg{transform:scaleX(1)}
 .cfg-chip .nav-cnt{display:none;width:18px;height:18px;border-radius:999px;background:#1D1D1F;color:#fff;font-size:11px;font-weight:400;align-items:center;justify-content:center;flex:0 0 auto}
