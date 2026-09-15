@@ -173,7 +173,7 @@ body.push-out-r{animation:pushOutR .26s cubic-bezier(.4,0,1,1) forwards}
 .cfg-handle{display:none}
 /* The bar owns the hairline and the bottom padding now; the chips inside it are the only part
    that scrolls, so the filter button and its divider stay put at the right edge. */
-.cfg-navbar{flex:0 0 auto;display:flex;align-items:center;padding:28px 40px;border-bottom:1px solid var(--hair)}
+.cfg-navbar{flex:0 0 auto;display:flex;align-items:center;padding:20px 40px;border-bottom:1px solid var(--hair)}
 /* No ring, ever -- the count badge alone says filters are on. */
 .cfg-navfilter{flex:0 0 auto;position:relative;display:flex;align-items:center;justify-content:center;width:40px;height:40px;margin-right:0;padding:0;border:none;background:none;color:var(--ink)}
 .cfg-navfilter .nav-cnt{display:none;position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:999px;background:#1D1D1F;color:#fff;font-size:11px;font-weight:600;align-items:center;justify-content:center;border:2px solid #fff}
@@ -851,15 +851,13 @@ input.price-mm-pill:focus{border-color:var(--ink)}
 .cfg-zonetab.on .cfg-zonetab-name,.cfg-zonetab.on .cfg-zonetab-val{color:#1d1d1f}
 
 /* ── cta bar -- the reference's floating bar: just a big price + a pill button, nothing else ── */
-.cfg-cta{flex:0 0 auto;background:#fff;border-top:1px solid var(--hair);display:flex;flex-direction:column;gap:16px;padding:24px 40px 28px}
-.cfg-cta .pr-label{font-size:16px;font-weight:500;color:var(--ink)}
-.cfg-cta .pr{font-size:24px;font-weight:600;letter-spacing:-.72px;color:var(--ink)}
-.cfg-cta .bb{height:56px;width:100%;background:var(--red);color:#fff;border-radius:9999px;padding:0 16px;font-size:16px;letter-spacing:-.02em;font-weight:500;display:flex;align-items:center;justify-content:center}
+.cfg-cta{flex:0 0 auto;background:#fff;border-top:1px solid var(--hair);display:flex;align-items:center;justify-content:space-between;padding:16px 40px}
+.cfg-cta .pr{font-size:20px;font-weight:500;letter-spacing:-.72px;color:var(--ink)}
+.cfg-cta .bb{height:40px;background:var(--red);color:#fff;border-radius:23px;padding:0 16px;font-size:14px;letter-spacing:-.02em;font-weight:500;display:flex;align-items:center}
 
 /* v37: chevron next to the CTA price opens a Tesla-style price breakdown sheet -- the receipt
    the "Mai multe detalii" toggle already builds, just reachable straight from the price itself. */
-.cfg-price-btn{display:flex;align-items:center;justify-content:space-between;width:100%;background:none;border:none;padding:0;cursor:pointer}
-.cfg-price-btn .pr-right{display:flex;align-items:center;gap:2px}
+.cfg-price-btn{display:flex;align-items:center;gap:2px;background:none;border:none;padding:0;cursor:pointer}
 .cfg-price-btn svg{width:15px;height:15px;color:var(--gray2);flex:0 0 auto}
 /* v39: "de la X lei" before any material/colour/accessory/service is picked is just the cheapest
    possible starting price, nothing to break down yet -- the chevron only earns its place once a
@@ -1109,9 +1107,8 @@ input.price-mm-pill:focus{border-color:var(--ink)}
 
     <div class="cfg-cta" id="cfg-cta">
       <button type="button" class="cfg-price-btn" id="cfg-price-btn" onclick="openPriceBreakdown()" aria-label="Vezi detalierea prețului">
-        <span class="pr-label">Total</span>
-        <span class="pr-right"><span class="pr" id="cfg-price">—</span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"/></svg></span>
+        <span class="pr" id="cfg-price">—</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"/></svg>
       </button>
       <button class="bb" onclick="addToCart(this)">Adaugă în coș</button>
     </div>
