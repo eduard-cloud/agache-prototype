@@ -149,12 +149,12 @@ img{display:block}
 .sticky-card-name{font-size:16px;font-weight:500;color:#121212;letter-spacing:-.32px;margin-bottom:4px}
 .sticky-card-price{font-size:22px;font-weight:700;color:#121212;letter-spacing:-.44px}
 
-/* ── Video ─────────────────────────────────────────────── */
-#video-section{height:810px;background:#111;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
-.video-label{position:absolute;top:55px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:600;letter-spacing:3px;color:rgba(255,255,255,.45);text-transform:uppercase;white-space:nowrap}
-.video-play-hint{display:flex;flex-direction:column;align-items:center;gap:20px;color:rgba(255,255,255,.4);cursor:pointer}
-.video-play-circle{width:90px;height:90px;border-radius:50%;border:1.5px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;transition:all .3s}
-.video-play-hint:hover .video-play-circle{border-color:rgba(255,255,255,.6);background:rgba(255,255,255,.05)}
+/* ── Video (Figma 1323:12532, content from mobile #vidsec) ─── */
+#video-section{height:810px;background:#111;position:relative;overflow:hidden}
+#video-section video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.video-label{position:absolute;left:100px;bottom:60px;font-size:14px;font-weight:500;letter-spacing:.98px;color:#fff}
+.video-pause{position:absolute;right:100px;bottom:60px;width:48px;height:48px;padding:0}
+.video-pause img{width:48px;height:48px;display:block}
 
 /* ── Benefits (Figma 1323:12464) ────────────────────────── */
 #benefits{background:#f2f0e9;padding:80px 100px;display:flex;flex-direction:column;gap:48px}
@@ -627,16 +627,11 @@ img{display:block}
 
 </div><!-- /deep-dive -->
 
-<!-- ── Video section ────────────────────────── -->
+<!-- ── Video — Figma 1323:12532, content from mobile #vidsec ── -->
 <div id="video-section">
-  <video src="hero-video.mp4" autoplay muted loop playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>
+  <video src="hero-video.mp4" autoplay muted loop playsinline poster="assets/video-poster.png"></video>
   <div class="video-label">DESCOPERĂ CANAPEAUA BOSTON</div>
-  <div class="video-play-hint">
-    <div class="video-play-circle">
-      <svg width="30" height="30" viewBox="0 0 24 24" fill="rgba(255,255,255,.7)"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-    </div>
-    <span style="font-size:12px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.4)">PLAY</span>
-  </div>
+  <button class="video-pause" type="button" aria-label="Pauză video" onclick="toggleVidsecPlay(this)"><img src="assets/pause-circle.svg" alt=""></button>
 </div>
 
 <!-- ── Workshop ──────────────────────────────── -->
@@ -791,6 +786,21 @@ function heroTo(idx) {
 }
 
 function addToCart(){}
+
+// ── Video pause/play (copied from mobile-v45) ─────────────
+function toggleVidsecPlay(btn){
+  var video = btn.parentElement.querySelector('video');
+  var icon = btn.querySelector('img');
+  if (video.paused){
+    video.play();
+    icon.src = 'assets/pause-circle.svg';
+    btn.setAttribute('aria-label', 'Pauză video');
+  } else {
+    video.pause();
+    icon.src = 'assets/play-circle.svg';
+    btn.setAttribute('aria-label', 'Redă video');
+  }
+}
 
 // ── Benefits card expand (copied from mobile-v45 toggleReason) ──
 function toggleReason(btn){
