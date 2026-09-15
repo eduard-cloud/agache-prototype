@@ -511,12 +511,11 @@ input.price-mm-pill:focus{border-color:var(--ink)}
 .cfg-matgroup-name{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:6px}
 .cfg-matgroup-right{flex:0 0 auto;font-size:14px;font-weight:400;letter-spacing:-.02em;color:var(--ink);display:flex;align-items:center;gap:8px}
 /* Kave-style text row under the collection title: small uppercase labels, dot-separated, muted */
-.cfg-matgroup-features{margin-top:8px;font-size:12px;font-weight:400;line-height:1.2;letter-spacing:.84px;text-transform:uppercase;color:var(--gray)}
-.cfg-matgroup-features span+span::before{content:"  ·  "}
+.cfg-matgroup-features{margin-top:8px;font-size:12px;font-weight:400;line-height:1.2;letter-spacing:.84px;text-transform:uppercase;color:var(--gray);display:flex;flex-wrap:wrap;gap:4px 16px}
 /* Inline variant: same labels, sits in the title row itself between the info icon and the
    price, with a 20px gap on each side -- used only when renderFabricSections' width check
    finds room for it; otherwise the block variant above (its own line, no gap needed) is used. */
-.cfg-matgroup-features.inline{margin:0 20px;white-space:nowrap;flex:0 0 auto}
+.cfg-matgroup-features.inline{margin:0 20px;flex-wrap:nowrap;flex:0 0 auto}
 /* v39: title used to be a direct child of #cfg-fabric-sections, so :first-of-type alone picked
    out the very first group. Now each title lives inside its own .cfg-matgroup-body wrapper (see
    renderFabricSections) -- it's trivially :first-of-type within that wrapper regardless of
