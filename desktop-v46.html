@@ -156,21 +156,56 @@ img{display:block}
 .video-play-circle{width:90px;height:90px;border-radius:50%;border:1.5px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;transition:all .3s}
 .video-play-hint:hover .video-play-circle{border-color:rgba(255,255,255,.6);background:rgba(255,255,255,.05)}
 
-/* ── Benefits ──────────────────────────────────────────── */
-#benefits{background:#f5f5f7;padding:100px 50px;display:flex;flex-direction:column;gap:48px}
-.benefits-label{font-size:14px;font-weight:500;color:#363944;letter-spacing:.98px}
-.benefits-title{font-size:60px;font-weight:500;color:#121212;letter-spacing:-1.8px;line-height:1.05}
-.benefits-cards{display:flex;gap:24px}
-.benefit-card{width:372px;height:520px;flex-shrink:0;background:#fff;border-radius:16px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+/* ── Benefits (Figma 1323:12464) ────────────────────────── */
+#benefits{background:#f2f0e9;padding:80px 100px;display:flex;flex-direction:column;gap:48px}
+.benefits-head{display:flex;align-items:flex-end;gap:25px;width:100%}
+.benefits-title{flex:1;font-size:32px;font-weight:500;color:#1d1d1f;letter-spacing:-.96px;line-height:1.1}
+.benefits-nav{display:flex;gap:12px;align-items:center}
+.benefits-nav button{width:40px;height:40px;padding:0}
+.benefits-nav img{width:40px;height:40px;display:block}
+.benefits-cards{display:flex;gap:16px;overflow-x:auto;scrollbar-width:none}
+.benefits-cards::-webkit-scrollbar{display:none}
+/* scroll-progress line — copied verbatim from mobile-v45 .rail-scrollbar */
+.rail-scrollbar{height:1px;background:#fff;margin-top:12px;position:relative}
+.rail-scrollbar-thumb{position:absolute;top:0;left:0;height:3px;margin-top:-1px;width:5%;background:#1d1d1f;transition:width .1s ease-out}
+.benefit-card{width:372px;height:520px;flex-shrink:0;background:#fff;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;position:relative}
 .benefit-text{padding:32px;display:flex;flex-direction:column;gap:16px}
-.benefit-tag{font-size:16px;font-weight:500;color:#121212;letter-spacing:-.32px}
-.benefit-title{font-size:28px;font-weight:600;color:#121212;letter-spacing:-.14px;line-height:1.1}
-.benefit-desc{font-size:16px;font-weight:500;color:#707173;letter-spacing:-.32px;line-height:1.5}
-.benefit-img-bottom{overflow:hidden}
-.benefit-img-bottom img{width:100%;height:100%;object-fit:cover;display:block}
+.benefit-tag{font-size:16px;font-weight:500;color:#1d1d1f;letter-spacing:-.64px}
+.benefit-title{font-size:28px;font-weight:600;color:#1d1d1f;letter-spacing:-.14px;line-height:1.1}
+.benefit-img-bottom{overflow:hidden;width:100%}
+.benefit-img-bottom img,.benefit-img-bottom video{width:100%;height:100%;object-fit:cover;display:block}
 .benefit-fabrics{display:flex;gap:4px;height:260px}
-.fabric-strip{flex:1;overflow:hidden}
-.fabric-strip img{width:100%;height:100%;object-fit:cover}
+.fabric-strip{flex:1;overflow:hidden;border-radius:16px 16px 0 0}
+.fabric-strip video{width:100%;height:100%;object-fit:cover}
+
+/* photo variant — copied verbatim from mobile-v45 .ccard-photo, resized for desktop */
+.benefit-card.photo{background:linear-gradient(165deg,#2e2015 0%,#8a5a35 45%,#dba873 75%,#f0d2ab 100%);display:block}
+.benefit-card.photo .benefit-img-bottom{position:absolute;inset:0;width:100%;height:100%;background:linear-gradient(165deg,#2e2015 0%,#8a5a35 45%,#dba873 75%,#f0d2ab 100%)}
+.benefit-card.photo .benefit-img-bottom img{width:100%;height:100%;object-fit:contain;object-position:50% 100%}
+.benefit-card.photo .benefit-text{position:relative;z-index:1;background:linear-gradient(180deg,rgba(18,18,18,.8) 0%,rgba(18,18,18,.5) 50%,rgba(18,18,18,0) 80%);padding-bottom:56px}
+.benefit-card.photo .benefit-tag,.benefit-card.photo .benefit-title{color:#fff}
+.benefit-card.photo .benefit-tag{font-weight:400}
+
+/* plus button — copied verbatim from mobile-v45 .ccard-plus, resized for desktop */
+.benefit-plus{position:absolute;right:24px;bottom:24px;z-index:2;width:48px;height:48px;border-radius:50%;background:#121212;border:1.5px solid #fff;display:flex;align-items:center;justify-content:center;padding:0}
+.benefit-plus svg{width:19px;height:19px;display:block}
+.benefit-plus svg line{stroke:#fff;stroke-width:2;stroke-linecap:round}
+.benefit-plus{transition:transform .35s cubic-bezier(.4,0,.2,1)}
+.benefit-card.open .benefit-plus{transform:rotate(45deg)}
+
+/* tinted card backgrounds — copied verbatim from mobile-v45 .ccard-* gradients */
+.benefit-card.beige{background:radial-gradient(130% 100% at 22% 0%,#ffffff 0%,#f6efe1 40%,#e9ddc5 78%,#e2d4b8 100%)}
+.benefit-card.tesatura{background:radial-gradient(130% 100% at 78% 100%,#ffffff 0%,#f6e9da 38%,#e3c6a3 74%,#c99a68 100%)}
+.benefit-card.culori{background:radial-gradient(130% 100% at 25% 0%,#ffffff 0%,#f3ede2 38%,#e2d6c3 74%,#c9b89e 100%)}
+.benefit-card.captuseala{background:radial-gradient(130% 100% at 75% 0%,#ffffff 0%,#eef2f4 38%,#dde5e8 74%,#c9d5da 100%)}
+
+/* expandable description — copied verbatim from mobile-v45 .ccard .dsc */
+.benefit-desc{max-height:0;opacity:0;overflow:hidden;font-size:16px;font-weight:500;letter-spacing:-.32px;line-height:1.2;color:#1d1d1f;transition:max-height .45s cubic-bezier(.4,0,.2,1),opacity .3s ease .05s,margin-top .45s cubic-bezier(.4,0,.2,1),font-size .3s ease}
+.benefit-card.open .benefit-desc{max-height:320px;opacity:1;margin-top:4px;font-size:18px;line-height:1.35}
+.benefit-card.open .benefit-tag,.benefit-card.open .benefit-title{display:none}
+.benefit-card.open .benefit-img-bottom,.benefit-card.open .benefit-fabrics{display:none}
+.benefit-card.photo .benefit-desc{color:#fff}
+.benefit-card.photo.open .benefit-text{background:none}
 
 /* ── Workshop ──────────────────────────────────────────── */
 #workshop{height:960px;position:relative;overflow:hidden}
@@ -376,6 +411,88 @@ img{display:block}
 
 </div><!-- /pdpmain -->
 
+<!-- ── Benefits — Figma 1323:12464, content from mobile #construit ── -->
+<div id="benefits">
+  <div class="benefits-head">
+    <div class="benefits-title">5 motive pentru care clientii nostrii cumpara canapeaua Boston:</div>
+    <div class="benefits-nav">
+      <button onclick="benefitsNav(-1)" aria-label="Anterior"><img src="assets/benefits-arrow-left.svg" alt=""></button>
+      <button onclick="benefitsNav(1)" aria-label="Următor"><img src="assets/benefits-arrow-right.svg" alt=""></button>
+    </div>
+  </div>
+  <div class="benefits-cards" id="benefitsRail">
+
+    <!-- Gandita modular (ccard-photo, full-bleed + gradient — copied from mobile) -->
+    <div class="benefit-card photo">
+      <div class="benefit-text">
+        <div class="benefit-tag">Gandita modular</div>
+        <div class="benefit-title">6 straturi de confort</div>
+        <div class="benefit-desc">De la spuma T-30 la arcurile Bonell si wave springs, fiecare strat e ales sa tina forma canapelei ani la rand.</div>
+      </div>
+      <div class="benefit-img-bottom">
+        <img src="assets/image-1788862558356.webp" alt="Structura in straturi a canapelei">
+      </div>
+      <button class="benefit-plus" type="button" aria-expanded="false" aria-label="Mai multe detalii" onclick="toggleReason(this)"><svg viewBox="0 0 16 16" fill="none"><line x1="1.5" y1="8" x2="14.5" y2="8"/><line x1="8" y1="1.5" x2="8" y2="14.5"/></svg></button>
+    </div>
+
+    <!-- Garanție extinsă -->
+    <div class="benefit-card beige">
+      <div class="benefit-text">
+        <div class="benefit-tag">Garanție extinsă</div>
+        <div class="benefit-title">10 ani de garanție structurală</div>
+        <div class="benefit-desc">Garanția noastră extinsă acoperă orice problemă legată de structura de lemn solid a canapelei.</div>
+      </div>
+      <div class="benefit-img-bottom" style="height:240px">
+        <img src="assets/construit-garantie.png" alt="Structura canapelei">
+      </div>
+      <button class="benefit-plus" type="button" aria-expanded="false" aria-label="Mai multe detalii" onclick="toggleReason(this)"><svg viewBox="0 0 16 16" fill="none"><line x1="1.5" y1="8" x2="14.5" y2="8"/><line x1="8" y1="1.5" x2="8" y2="14.5"/></svg></button>
+    </div>
+
+    <!-- Atentie la detalii -->
+    <div class="benefit-card tesatura">
+      <div class="benefit-text">
+        <div class="benefit-tag">Atentie la detalii</div>
+        <div class="benefit-title">Tesatura French</div>
+        <div class="benefit-desc">Am gândit canapelele noastre pentru diverse cerințe - rezista pana la 130kg pe persoana.</div>
+      </div>
+      <div class="benefit-img-bottom" style="flex:1">
+        <img src="assets/construit-tesatura.png" alt="Tesatura French" style="object-position:0 93%">
+      </div>
+      <button class="benefit-plus" type="button" aria-expanded="false" aria-label="Mai multe detalii" onclick="toggleReason(this)"><svg viewBox="0 0 16 16" fill="none"><line x1="1.5" y1="8" x2="14.5" y2="8"/><line x1="8" y1="1.5" x2="8" y2="14.5"/></svg></button>
+    </div>
+
+    <!-- Materiale și culori -->
+    <div class="benefit-card culori">
+      <div class="benefit-text">
+        <div class="benefit-tag">Materiale și culori</div>
+        <div class="benefit-title">300 de culori</div>
+        <div class="benefit-desc">De la piele italiană la cord francez - limita până la care poți customiza rămâne imaginația ta. Și acolo însă te putem ajuta.</div>
+      </div>
+      <div class="benefit-fabrics">
+        <div class="fabric-strip"><video src="vela.mp4" autoplay muted loop playsinline></video></div>
+        <div class="fabric-strip"><video src="bosco.mp4" autoplay muted loop playsinline></video></div>
+        <div class="fabric-strip"><video src="rambo.mp4" autoplay muted loop playsinline></video></div>
+      </div>
+      <button class="benefit-plus" type="button" aria-expanded="false" aria-label="Mai multe detalii" onclick="toggleReason(this)"><svg viewBox="0 0 16 16" fill="none"><line x1="1.5" y1="8" x2="14.5" y2="8"/><line x1="8" y1="1.5" x2="8" y2="14.5"/></svg></button>
+    </div>
+
+    <!-- Captuseala -->
+    <div class="benefit-card captuseala">
+      <div class="benefit-text">
+        <div class="benefit-tag">Captuseala</div>
+        <div class="benefit-title">Captusit pe toate partile</div>
+        <div class="benefit-desc">Am gândit canapelele noastre pentru diverse cerințe - rezista pana la 130kg pe persoana.</div>
+      </div>
+      <div class="benefit-img-bottom" style="flex:1">
+        <img src="assets/construit-captuseala.png" alt="Captuseala">
+      </div>
+      <button class="benefit-plus" type="button" aria-expanded="false" aria-label="Mai multe detalii" onclick="toggleReason(this)"><svg viewBox="0 0 16 16" fill="none"><line x1="1.5" y1="8" x2="14.5" y2="8"/><line x1="8" y1="1.5" x2="8" y2="14.5"/></svg></button>
+    </div>
+
+  </div>
+  <div class="rail-scrollbar"><div class="rail-scrollbar-thumb" id="benefitsThumb"></div></div>
+</div>
+
 <!-- ── Deep Dive ───────────────────────────── -->
 <div id="deep-dive">
 
@@ -519,65 +636,6 @@ img{display:block}
       <svg width="30" height="30" viewBox="0 0 24 24" fill="rgba(255,255,255,.7)"><polygon points="5 3 19 12 5 21 5 3"/></svg>
     </div>
     <span style="font-size:12px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.4)">PLAY</span>
-  </div>
-</div>
-
-<!-- ── Benefits ─────────────────────────────── -->
-<div id="benefits">
-  <div class="benefits-label">BENEFICIILE TALE</div>
-  <div class="benefits-title">Câteva lucruri pentru care<br>suntem cunoscuți</div>
-  <div class="benefits-cards">
-
-    <!-- Card 1: Garanție -->
-    <div class="benefit-card">
-      <div class="benefit-text">
-        <div class="benefit-tag">Garanție extinsă</div>
-        <div class="benefit-title">10 ani de garanție structurală</div>
-        <div class="benefit-desc">Garanția noastră extinsă la 10 ani acoperă orice problemă legată de structura de lemn solid a canapelei.</div>
-      </div>
-      <div class="benefit-img-bottom" style="height:240px">
-        <img src="https://www.figma.com/api/mcp/asset/dd25697b-09b0-490f-8b50-a9fca50aa657" alt="Garanție">
-      </div>
-    </div>
-
-    <!-- Card 2: Materiale -->
-    <div class="benefit-card">
-      <div class="benefit-text">
-        <div class="benefit-tag">Materiale și culori</div>
-        <div class="benefit-title">300 de culori în 7 materiale calitative</div>
-        <div class="benefit-desc">De la piele italiană la cord francez - limita până la care poți customiza rămâne imaginația ta. Și acolo însă te putem ajuta.</div>
-      </div>
-      <div class="benefit-fabrics">
-        <div class="fabric-strip"><video src="bosco.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover"></video></div>
-        <div class="fabric-strip"><video src="rambo.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover"></video></div>
-        <div class="fabric-strip"><video src="vela.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover"></video></div>
-      </div>
-    </div>
-
-    <!-- Card 3: Modular -->
-    <div class="benefit-card">
-      <div class="benefit-text">
-        <div class="benefit-tag">Canapea modulară</div>
-        <div class="benefit-title">Pentru că viața este modulară</div>
-        <div class="benefit-desc">Am gândit canapelele noastre pentru diverse cerințe - un modul pentru fiecare fază din viața ta.</div>
-      </div>
-      <div class="benefit-img-bottom" style="height:261px">
-        <img src="https://www.figma.com/api/mcp/asset/b48aafd4-9953-45e9-a223-faa5c2cb30e1" alt="Modular">
-      </div>
-    </div>
-
-    <!-- Card 4: Familie -->
-    <div class="benefit-card">
-      <div class="benefit-text">
-        <div class="benefit-tag">🇷🇴 Companie de familie</div>
-        <div class="benefit-title">Agache este o companie de familie</div>
-        <div class="benefit-desc">Producem cu drag de peste 30 de ani în Timișoara, iar 90% din materialele folosite sunt achizitionate din fabrici românești.</div>
-      </div>
-      <div class="benefit-img-bottom" style="height:260px">
-        <img src="https://www.figma.com/api/mcp/asset/98f91aaa-4c09-4660-a1e7-52f1973ead1d" alt="Familie">
-      </div>
-    </div>
-
   </div>
 </div>
 
@@ -733,6 +791,35 @@ function heroTo(idx) {
 }
 
 function addToCart(){}
+
+// ── Benefits card expand (copied from mobile-v45 toggleReason) ──
+function toggleReason(btn){
+  var card = btn.closest('.benefit-card');
+  var open = card.classList.toggle('open');
+  btn.setAttribute('aria-expanded', open);
+}
+
+// ── Benefits rail ──────────────────────────────
+function benefitsNav(dir) {
+  var r = document.getElementById('benefitsRail');
+  var w = r.firstElementChild.offsetWidth + 16;
+  r.scrollBy({ left: dir * w, behavior: 'smooth' });
+}
+
+/* scroll-progress line — copied verbatim from mobile-v45's crail sync */
+(function(){
+  var rail = document.getElementById('benefitsRail');
+  var thumb = document.getElementById('benefitsThumb');
+  if (!rail || !thumb) return;
+  function sync(){
+    var maxScroll = rail.scrollWidth - rail.clientWidth;
+    var pct = maxScroll > 0 ? (rail.scrollLeft / maxScroll) * 100 : 0;
+    thumb.style.width = Math.max(pct, 5) + '%';
+  }
+  rail.addEventListener('scroll', sync, { passive: true });
+  window.addEventListener('resize', sync);
+  sync();
+})();
 
 // ── Swatches (copied from mobile-v45 pickSwatch) ──────────
 var LUNA_SOFA_CODES = ['5','6','8','10','13','14'];
