@@ -510,8 +510,9 @@ input.price-mm-pill:focus{border-color:var(--ink)}
 .cfg-matgroup-title{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:18px;font-weight:400;letter-spacing:-.2px;color:var(--ink);margin-top:24px}
 .cfg-matgroup-name{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:6px}
 .cfg-matgroup-right{flex:0 0 auto;font-size:14px;font-weight:400;letter-spacing:-.02em;color:var(--ink);display:flex;align-items:center;gap:8px}
-.cfg-matgroup-badges{display:flex;align-items:center;gap:5px;flex:0 0 auto;color:var(--ink)}
-.cfg-matgroup-badges svg{display:block;width:24px;height:24px}
+/* Kave-style text row under the collection title: small uppercase labels, dot-separated, muted */
+.cfg-matgroup-features{margin-top:2px;font-size:11px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;color:var(--gray)}
+.cfg-matgroup-features span+span::before{content:"  ·  "}
 /* v39: title used to be a direct child of #cfg-fabric-sections, so :first-of-type alone picked
    out the very first group. Now each title lives inside its own .cfg-matgroup-body wrapper (see
    renderFabricSections) -- it's trivially :first-of-type within that wrapper regardless of
@@ -1458,22 +1459,20 @@ function collectionPriceDiffLabel(slug, shapeName){
   var diff = tiers[COLLECTIONS[slug].tier] - tiers.Practic;
   return diff > 0 ? '+' + Math.round(diff).toLocaleString('ro-RO') + ' lei' : '0 lei';
 }
-/* Same glyphs as the Proprietăți filter pills (USP_ICONS.droplet/sparkle/paw) so a claim like
-   "Impermeabil" looks identical whether it's a badge here or a filter pill there -- just at
-   this row's own 24px size instead of the pills' 22px. */
-function featureIconSVG(key){
-  if (key === 'waterproof') return '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>';
-  if (key === 'petFriendly') return '<svg width="24" height="24" viewBox="0 0 96 96" fill="currentColor"><circle cx="34" cy="20" r="12"/><circle cx="62" cy="20" r="12"/><circle cx="13" cy="42" r="10"/><circle cx="83" cy="42" r="10"/><path d="M20 76A28 28 0 0 1 76 76V88H60A12 12 0 0 0 36 88H20Z"/></svg>';
-  if (key === 'easyClean') return '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C12.5 8 16 11.5 22 12C16 12.5 12.5 16 12 22C11.5 16 8 12.5 2 12C8 11.5 11.5 8 12 2Z"/></svg>';
-  return '';
+/* Kave-style text row under the collection title (see .cfg-matgroup-features) -- same claims,
+   same waterproof/easyClean/petFriendly source data and max-3 cap as before, just spelled out
+   as small-caps labels instead of icon glyphs. */
+function collectionFeatureLabels(c){
+  var labels = [];
+  if (c.waterproof) labels.push('Impermeabil');
+  if (c.easyClean) labels.push('Easy Clean');
+  if (c.petFriendly) labels.push('Pet Friendly');
+  return labels;
 }
-function collectionBadgesHTML(c){
-  var keys = [];
-  if (c.waterproof) keys.push('waterproof');
-  if (c.easyClean) keys.push('easyClean');
-  if (c.petFriendly) keys.push('petFriendly');
-  if (!keys.length) return '';
-  return '<span class="cfg-matgroup-badges">' + keys.map(featureIconSVG).join('') + '</span>';
+function collectionFeaturesHTML(c){
+  var labels = collectionFeatureLabels(c);
+  if (!labels.length) return '';
+  return '<div class="cfg-matgroup-features">' + labels.map(function(l){ return '<span>' + l + '</span>'; }).join('') + '</div>';
 }
 function shapePriceRange(shapeName){
   var t = SHAPE_TIER_PRICE[shapeName || baseVariantName()];
@@ -2831,7 +2830,7 @@ function renderFabricSections(){
           '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 11v5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7.7" r="1.1" fill="currentColor"/></svg>' +
         '</button>' +
       '</span>' +
-      '<span class="cfg-matgroup-right">' + collectionBadgesHTML(c) + collectionPriceDiffLabel(slug) + '</span>';
+      '<span class="cfg-matgroup-right">' + collectionPriceDiffLabel(slug) + '</span>';
     /* v39: body wraps title + grid together (heading stays grid.previousElementSibling for the
        show/hide-empty-groups logic below) so the single lock message can be positioned absolute
        against the group as a whole -- one card over the group, not one badge per swatch. The
@@ -2841,6 +2840,12 @@ function renderFabricSections(){
     body.className = 'cfg-matgroup-body';
     body.dataset.slug = slug;
     body.appendChild(h);
+    var featHTML = collectionFeaturesHTML(c);
+    if (featHTML){
+      var feat = document.createElement('div');
+      feat.innerHTML = featHTML;
+      body.appendChild(feat.firstChild);
+    }
     appendFabricGrid(body, swatches);
     var lock = document.createElement('div');
     lock.className = 'cfg-matgroup-lock';
