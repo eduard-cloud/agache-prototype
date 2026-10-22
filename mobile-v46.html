@@ -788,6 +788,31 @@ html,body{background:#fff!important}
 .email-submit{width:60%;min-height:46px;font-size:16px;padding:12px 20px}
 .email-results{font-size:15px;margin-top:28px}
 }
+</style><style id="compact-quiz-viewport">
+.screen.tylko-quiz:not(.tylko-intro) .ph{height:100dvh!important;min-height:0;overflow:hidden}
+.tylko-quiz:not(.tylko-intro) .hd{height:56px;font-size:14px}
+.tylko-quiz:not(.tylko-intro) .hd>.iconbtn{top:50%;transform:translateY(-50%);right:24px;margin:0}
+.tylko-quiz:not(.tylko-intro) .bd{flex:1;min-height:0;overflow:hidden}
+.tylko-quiz:not(.tylko-intro) .qprogress{margin-bottom:20px}
+.tylko-quiz:not(.tylko-intro) .scroll{display:flex;flex-direction:column;flex:1;min-height:0;overflow:auto}
+.tylko-quiz:not(.tylko-intro) .scroll>div:first-child{flex:none;margin-bottom:22px}
+.tylko-quiz:not(.tylko-intro) .tylko-options{flex:1;min-height:0;grid-auto-rows:minmax(76px,1fr);gap:10px!important}
+.tylko-quiz .tylko-options .tylko-option{min-height:0!important;height:100%}
+.tylko-quiz .tylko-options .tylko-image{min-height:0!important;height:100%!important;flex-basis:36%!important;width:36%!important}
+.tylko-quiz .tylko-options .tylko-caption{padding:12px 16px}
+.tylko-quiz .tylko-options .tylko-image>.ic{height:54px!important;width:50px!important;background-size:40px!important}
+.tylko-quiz .tylko-options .tylko-image svg{height:48px!important;width:42px!important}
+.tylko-quiz:not(.tylko-intro) .bar{flex:none;margin-top:18px;margin-bottom:22px}
+@media(max-width:600px){
+.tylko-quiz:not(.tylko-intro) .hd{height:52px;font-size:13px}
+.tylko-quiz:not(.tylko-intro) .qprogress{margin-bottom:18px}
+.tylko-quiz:not(.tylko-intro) .h3{font-size:26px}
+.tylko-quiz:not(.tylko-intro) .scroll>div:first-child{margin-bottom:18px}
+.tylko-quiz:not(.tylko-intro) .tylko-options{grid-auto-rows:minmax(76px,1fr)}
+.tylko-quiz .tylko-options .tylko-caption{padding:10px 12px}
+.tylko-quiz .tylko-options .tylko-caption .ds{font-size:12px;margin-top:5px}
+.tylko-quiz:not(.tylko-intro) .bar{margin-top:16px;margin-bottom:18px}
+}
 </style></head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="sofa-art" viewBox="0 0 120 84">
@@ -1664,15 +1689,17 @@ html,body{background:#fff!important}
  <form id="quiz-email-form"><input type="email" id="quiz-email" name="email" aria-label="Adresa de e-mail" autocomplete="email" required>
  <p class="email-consent">Sunt de acord să primesc ocazional e-mailuri de la Agache, cu informații despre produse, servicii și noutăți. Adresa mea de e-mail va fi folosită în acest scop, pe baza consimțământului meu.</p>
  <button class="email-submit" type="submit">Trimite</button></form>
- <button class="email-results" type="button">Vezi rezultatele</button></div>
+ </div>
 </div></div>
-<div class="screen quiz-email quiz-summary" data-i="14"><div class="ph"><div class="email-label">QUIZ</div><div class="email-progress"></div><h1>Preferințele tale</h1><div class="quiz-summary-content"></div><button class="email-results summary-back" type="button">Înapoi</button></div></div>
 <script>
 // Build the quiz cards from the existing illustrations and Romanian copy.
 [1,12,2,3].forEach(function(id){
  var screen=document.querySelector('.screen[data-i="'+id+'"]');
  screen.classList.add('tylko-quiz');
  if(id===1){screen.classList.add('tylko-intro');return;}
+ var counter=screen.querySelector('.msub12');
+ var heading=screen.querySelector('.hd>span[style]');
+ if(counter&&heading){heading.textContent=counter.textContent;counter.remove();}
  var list=screen.querySelector('.qlist,.product-options');
  list.classList.add('tylko-options');
  list.querySelectorAll('.abbig,.product-option').forEach(function(card){
@@ -2566,17 +2593,6 @@ document.addEventListener('click', function(e){
 document.addEventListener("keydown",function(e){var r=e.target.closest('[role="radio"]');if(r&&(e.key===" "||e.key==="Enter")){e.preventDefault();r.click();}});
 </script>
 <script>
-(function(){
- function results(){
-  var target=document.querySelector('.quiz-summary-content');target.textContent='';
-  [['Tip de produs',state.products],['Fermitate',state.needs],['Nevoi de lifestyle',state.look]].forEach(function(pair){
-   var row=document.createElement('div'),label=document.createElement('strong'),value=document.createElement('span');
-   label.textContent=pair[0];value.textContent=pair[1].join(', ');row.append(label,value);target.appendChild(row);
-  });show(14);
- }
- document.getElementById('quiz-email-form').addEventListener('submit',function(e){e.preventDefault();if(this.reportValidity())results();});
- document.querySelector('.email-results').addEventListener('click',results);
- document.querySelector('.summary-back').addEventListener('click',function(){show(13);});
-})();
+document.getElementById('quiz-email-form').addEventListener('submit',function(e){e.preventDefault();this.reportValidity();});
 </script></body>
 </html>
