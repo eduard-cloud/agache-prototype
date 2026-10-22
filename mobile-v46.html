@@ -732,6 +732,35 @@ html,body{background:#fff!important}
 .tylko-quiz .bar>.cta{min-width:0;flex:1;padding:13px 16px;font-size:14px}
 .tylko-quiz[data-i="2"] .bar>.tylko-back{flex:0 0 auto;min-width:128px}
 }
+</style><style id="splash-type-hierarchy">
+.splash-heading{top:6.5%;left:24px;right:24px}
+.splash-eyebrow{font:600 18px/1.2 'DM Sans',sans-serif;letter-spacing:0;margin-bottom:30px;color:#fff}
+.splash-heading h1{font-size:clamp(40px,5vw,64px);font-weight:600;line-height:1.08;letter-spacing:-1.8px}
+.splash-start{top:20%;gap:28px}
+.splash-start .splash-subtitle{font:500 20px/1.3 'DM Sans',sans-serif;max-width:600px;color:#fff}
+.tylko-intro .splash-start .bwhite{font-size:18px;font-weight:600;min-height:52px;padding:14px 30px}
+@media(max-width:600px){
+.splash-heading{top:6.5%;left:20px;right:20px}
+.splash-eyebrow{font-size:14px;margin-bottom:24px}
+.splash-heading h1{font-size:34px;letter-spacing:-1.2px;line-height:1.1}
+.splash-start{top:22%;left:20px;right:20px;gap:24px}
+.splash-start .splash-subtitle{font-size:16px;max-width:310px}
+.tylko-intro .splash-start .bwhite{font-size:16px;min-height:48px;padding:13px 26px}
+}
+</style><style id="all-quiz-options-rows">
+.tylko-quiz:not(.tylko-intro) .tylko-options{grid-template-columns:minmax(0,1fr)!important;max-width:700px;gap:18px!important}
+.tylko-quiz .tylko-options .tylko-option{display:flex!important;flex-direction:row!important;align-items:stretch;min-height:140px}
+.tylko-quiz .tylko-options .tylko-image{position:relative;flex:0 0 46%!important;width:46%!important;min-height:140px;height:auto!important;aspect-ratio:auto!important;overflow:hidden}
+.tylko-quiz .tylko-options .tylko-caption{display:flex;flex:1;align-items:center;justify-content:center;text-align:center;padding:24px;min-width:0}
+.tylko-quiz .tylko-options .tylko-caption .tt,.tylko-quiz .tylko-options .tylko-caption .nm{text-align:center}
+.tylko-quiz[data-i="12"] .tylko-option{min-height:220px}
+@media(max-width:600px){
+.tylko-quiz:not(.tylko-intro) .tylko-options{gap:14px!important}
+.tylko-quiz .tylko-options .tylko-option{min-height:130px}
+.tylko-quiz .tylko-options .tylko-image{min-height:130px}
+.tylko-quiz .tylko-options .tylko-caption{padding:16px 12px}
+.tylko-quiz[data-i="12"] .tylko-option{min-height:150px}
+}
 </style></head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="sofa-art" viewBox="0 0 120 84">
@@ -821,8 +850,8 @@ html,body{background:#fff!important}
  <img class="splash-photo" src="assets/samples-splash-v46.png" alt="O femeie și câinele ei pe o canapea Agache">
  <div class="splash-shade"></div>
  
- <div class="splash-heading"><h1>Ce mobilier cauți?</h1></div>
- <div class="splash-start"><div class="bwhite">Începe quizul</div></div>
+ <div class="splash-heading"><div class="splash-eyebrow">QUIZ</div><h1>Ce mobilier cauți?</h1></div>
+ <div class="splash-start"><p class="splash-subtitle">Găsește confortul potrivit pentru tine</p><div class="bwhite">Începe quizul</div></div>
  
 </div></div>
 <div class="screen" data-i="2"><div class="ph">
