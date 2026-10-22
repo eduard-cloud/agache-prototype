@@ -635,7 +635,7 @@ html,body{background:#fff!important}
 .tylko-quiz .h3{font:500 32px/1.18 'DM Sans',sans-serif;letter-spacing:-1px;margin-top:0!important}
 .tylko-quiz .cap13{font-size:15px;line-height:1.45;color:#777}
 .tylko-quiz .tylko-options{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px!important;max-width:870px;width:100%;margin:0 auto;padding:0;align-items:stretch}
-.tylko-quiz[data-i="12"] .tylko-options,.tylko-quiz[data-i="3"] .tylko-options{grid-template-columns:repeat(4,minmax(0,1fr))}
+.tylko-quiz[data-i="12"] .tylko-options,.tylko-quiz[data-i="3"] .tylko-options{grid-template-columns:repeat(3,minmax(0,1fr))}
 .tylko-quiz .tylko-option{appearance:none;box-sizing:border-box;display:flex!important;flex-direction:column;align-items:stretch;justify-content:flex-start;width:100%;min-width:0;padding:0;margin:0!important;gap:0!important;border:1px solid transparent;border-radius:0;background:#f3f3f3;color:#202020;font:inherit;cursor:pointer;overflow:hidden}
 .tylko-quiz .tylko-options .tylko-option.on,.tylko-quiz .tylko-options .tylko-option:hover{border:1px solid #222;background:#f3f3f3;padding:0}
 .tylko-quiz .tylko-image{display:flex;align-items:center;justify-content:center;width:100%;height:215px;background:#eaeae5}
@@ -825,6 +825,8 @@ html,body{background:#fff!important}
 .tylko-quiz:not(.tylko-intro) .scroll>div:first-child>.cap13{margin-top:5px!important}
 </style><style id="q3-photographs">
 .tylko-quiz .tylko-options .tylko-image>.lifestyle-photo{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;object-position:center 43%}
+.tylko-quiz[data-i="12"] .tylko-image>.product-combo{display:flex;overflow:hidden}
+.tylko-quiz[data-i="12"] .tylko-image>.product-combo img{position:relative;inset:auto;width:50%;height:100%;object-fit:cover}
 </style><style id="compact-email-spacing">
 .email-label{margin-bottom:24px}
 .quiz-email h1{margin-top:26px}
@@ -846,7 +848,7 @@ html,body{background:#fff!important}
 .tylko-quiz:not(.tylko-intro) .scroll{flex:none;overflow:visible}
 .tylko-quiz:not(.tylko-intro) .scroll>div:first-child{margin-bottom:58px}
 .tylko-quiz:not(.tylko-intro) .tylko-options{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-auto-rows:auto;max-width:1000px;gap:28px!important;flex:none}
-.tylko-quiz[data-i="12"] .tylko-options,.tylko-quiz[data-i="3"] .tylko-options{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+.tylko-quiz[data-i="3"] .tylko-options{grid-template-columns:repeat(4,minmax(0,1fr))!important}
 .tylko-quiz .tylko-options .tylko-option{flex-direction:column!important;height:auto;min-height:0!important}
 .tylko-quiz .tylko-options .tylko-image{width:100%!important;flex:0 0 auto!important;height:clamp(200px,31vh,340px)!important;min-height:0!important}
 .tylko-quiz .tylko-options .tylko-caption{align-items:center;justify-content:center;min-height:108px;padding:22px 18px;text-align:center;box-sizing:border-box}
@@ -1747,7 +1749,7 @@ html,body{background:#fff!important}
 <div class="screen" data-i="12"><div class="ph">
   <div class="sbar"><span>9:41</span><span>▮▮▮ ▮</span></div>
   <div class="hd"><span class="hdback"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate(180deg)"><path d="m9 18 6-6-6-6"></path></svg></span><span style="flex:1">Configurare</span><span class="iconbtn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></span></div>
-  <div class="bd"><div class="qprogress"><i></i><i class="pending"></i><i class="pending"></i></div><div class="scroll" style="display:flex;flex-direction:column;gap:28px"><div><div class="msub12">Întrebarea 1 din 3</div><div class="h3" style="margin-top:12px">Ce tip de produs cauți?</div><p class="cap13" style="margin:12px 0 0">Poți alege unul sau mai multe tipuri de produse.</p></div><div class="product-options" aria-label="Tip de produs"><button class="abcard product-option" type="button" data-label="Canapea" aria-pressed="false"><span class="product-icon product-photo"><img src="assets/quiz-canapea-v46.png" alt="Canapea"></span><span class="nm">Canapea</span></button><button class="abcard product-option" type="button" data-label="Colțar" aria-pressed="false"><span class="product-icon product-photo"><img src="assets/quiz-coltar-v46.png" alt="Colțar"></span><span class="nm">Colțar</span></button><button class="abcard product-option" type="button" data-label="Pat" aria-pressed="false"><span class="product-icon product-photo"><img src="assets/quiz-pat-v46.png" alt="Pat"></span><span class="nm">Pat</span></button><button class="abcard product-option" type="button" data-label="Fotoliu" aria-pressed="false"><span class="product-icon product-photo"><img src="assets/quiz-fotoliu-v46.png" alt="Fotoliu"></span><span class="nm">Fotoliu</span></button></div></div><div class="bar"><div class="cta is-empty">Continuă <span aria-hidden="true">→</span></div></div></div></div></div>
+  <div class="bd"><div class="qprogress"><i></i><i class="pending"></i><i class="pending"></i></div><div class="scroll" style="display:flex;flex-direction:column;gap:28px"><div><div class="msub12">Întrebarea 1 din 3</div><div class="h3" style="margin-top:12px">Ce tip de produs cauți?</div><p class="cap13" style="margin:12px 0 0">Alege un singur tip de produs.</p></div><div class="product-options" aria-label="Tip de produs"><button class="abcard product-option" type="button" data-label="Canapea sau colțar" aria-pressed="false"><span class="product-icon product-photo product-combo"><img src="assets/quiz-canapea-v46.png" alt="Canapea"><img src="assets/quiz-coltar-v46.png" alt="Colțar"></span><span class="nm">Canapea sau colțar</span></button><button class="abcard product-option" type="button" data-label="Pat" aria-pressed="false"><span class="product-icon product-photo"><img src="assets/quiz-pat-v46.png" alt="Pat"></span><span class="nm">Pat</span></button><button class="abcard product-option" type="button" data-label="Fotoliu" aria-pressed="false"><span class="product-icon product-photo"><img src="assets/quiz-fotoliu-v46.png" alt="Fotoliu"></span><span class="nm">Fotoliu</span></button></div></div><div class="bar"><div class="cta is-empty">Continuă <span aria-hidden="true">→</span></div></div></div></div></div>
 <div class="screen quiz-email" data-i="13"><div class="ph">
  <div class="email-label">QUIZ</div><div class="email-progress"></div>
  <h1>Ești la un pas de rezultat</h1>
@@ -2091,6 +2093,7 @@ function labelOf(el){
 var ANY_OF = { look: 'Standard' };
 function toggleState(group, label){
   var a = state[group], i = a.indexOf(label);
+  if (group === 'products') { a.splice(0, a.length); a.push(label); return; }
   if ((group === 'needs' || group === 'bedSize')){ a.splice(0, a.length); if (i < 0) a.push(label); return; }
   if (i > -1){ a.splice(i, 1); return; }
   var any = ANY_OF[group];
