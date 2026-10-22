@@ -825,8 +825,6 @@ html,body{background:#fff!important}
 .tylko-quiz:not(.tylko-intro) .scroll>div:first-child>.cap13{margin-top:5px!important}
 </style><style id="q3-photographs">
 .tylko-quiz .tylko-options .tylko-image>.lifestyle-photo{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;object-position:center 43%}
-.tylko-quiz[data-i="12"] .tylko-image>.product-combo{display:flex;overflow:hidden}
-.tylko-quiz[data-i="12"] .tylko-image>.product-combo img{position:relative;inset:auto;width:50%;height:100%;object-fit:cover}
 </style><style id="compact-email-spacing">
 .email-label{margin-bottom:24px}
 .quiz-email h1{margin-top:26px}
@@ -872,6 +870,11 @@ html,body{background:#fff!important}
 .tylko-quiz:not(.tylko-intro) .tylko-options{max-width:1400px;gap:16px!important}
 .tylko-quiz .tylko-options .tylko-image{height:clamp(220px,34vh,390px)!important}
 .tylko-quiz .tylko-options .tylko-image img{object-fit:contain;object-position:center!important;background:#eaeae5}
+.tylko-quiz[data-i="12"] .tylko-options{width:calc(75% - 4px);grid-template-columns:repeat(3,minmax(0,1fr))!important;margin-left:auto;margin-right:auto}
+.tylko-quiz[data-i="12"] .tylko-image.photo-backdrop{isolation:isolate;overflow:hidden}
+.tylko-quiz[data-i="12"] .tylko-image.photo-backdrop:before{content:"";position:absolute;inset:-18px;background-image:var(--photo-backdrop);background-size:cover;background-position:center;filter:blur(18px);opacity:.7;z-index:0}
+.tylko-quiz[data-i="12"] .tylko-image>.product-photo{z-index:1}
+.tylko-quiz[data-i="12"] .tylko-image>.product-photo img{object-fit:contain!important;background:transparent}
 .tylko-quiz .tylko-options .tylko-image>.ic{width:110px!important;height:120px!important;background-size:90px!important}
 .tylko-quiz .tylko-options .tylko-image svg{width:96px!important;height:108px!important}
 .tylko-quiz .tylko-options .tylko-caption .tt,.tylko-quiz .tylko-options .tylko-caption .nm{font-size:23px;line-height:1.2}
@@ -1749,7 +1752,7 @@ html,body{background:#fff!important}
 <div class="screen" data-i="12"><div class="ph">
   <div class="sbar"><span>9:41</span><span>▮▮▮ ▮</span></div>
   <div class="hd"><span class="hdback"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate(180deg)"><path d="m9 18 6-6-6-6"></path></svg></span><span style="flex:1">Configurare</span><span class="iconbtn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></span></div>
-  <div class="bd"><div class="qprogress"><i></i><i class="pending"></i><i class="pending"></i></div><div class="scroll" style="display:flex;flex-direction:column;gap:28px"><div><div class="msub12">Întrebarea 1 din 3</div><div class="h3" style="margin-top:12px">Ce tip de produs cauți?</div><p class="cap13" style="margin:12px 0 0">Alege un singur tip de produs.</p></div><div class="product-options" aria-label="Tip de produs"><button class="abcard product-option" type="button" data-label="Canapea sau colțar" aria-pressed="false"><span class="product-icon product-photo product-combo"><img src="assets/quiz-canapea-v46.png" alt="Canapea"><img src="assets/quiz-coltar-v46.png" alt="Colțar"></span><span class="nm">Canapea sau colțar</span></button><button class="abcard product-option" type="button" data-label="Pat" aria-pressed="false"><span class="product-icon product-photo"><img src="assets/quiz-pat-v46.png" alt="Pat"></span><span class="nm">Pat</span></button><button class="abcard product-option" type="button" data-label="Fotoliu" aria-pressed="false"><span class="product-icon product-photo"><img src="assets/quiz-fotoliu-v46.png" alt="Fotoliu"></span><span class="nm">Fotoliu</span></button></div></div><div class="bar"><div class="cta is-empty">Continuă <span aria-hidden="true">→</span></div></div></div></div></div>
+  <div class="bd"><div class="qprogress"><i></i><i class="pending"></i><i class="pending"></i></div><div class="scroll" style="display:flex;flex-direction:column;gap:28px"><div><div class="msub12">Întrebarea 1 din 3</div><div class="h3" style="margin-top:12px">Ce tip de produs cauți?</div><p class="cap13" style="margin:12px 0 0">Alege un singur tip de produs.</p></div><div class="product-options" aria-label="Tip de produs"><button class="abcard product-option" type="button" data-label="Canapea sau colțar" aria-pressed="false"><span class="product-icon product-photo"><img src="assets/quiz-canapea-v46.png" alt="Canapea"></span><span class="nm">Canapea sau colțar</span></button><button class="abcard product-option" type="button" data-label="Pat" aria-pressed="false"><span class="product-icon product-photo"><img src="assets/quiz-pat-v46.png" alt="Pat"></span><span class="nm">Pat</span></button><button class="abcard product-option" type="button" data-label="Fotoliu" aria-pressed="false"><span class="product-icon product-photo"><img src="assets/quiz-fotoliu-v46.png" alt="Fotoliu"></span><span class="nm">Fotoliu</span></button></div></div><div class="bar"><div class="cta is-empty">Continuă <span aria-hidden="true">→</span></div></div></div></div></div>
 <div class="screen quiz-email" data-i="13"><div class="ph">
  <div class="email-label">QUIZ</div><div class="email-progress"></div>
  <h1>Ești la un pas de rezultat</h1>
@@ -1791,6 +1794,7 @@ html,body{background:#fff!important}
   var illustration=card.querySelector('.ic,.product-icon');
   var image=document.createElement('span');image.className='tylko-image';
   if(illustration)image.appendChild(illustration);
+  if(id===12&&illustration){var productPhoto=illustration.querySelector('img');if(productPhoto){image.classList.add('photo-backdrop');image.style.setProperty('--photo-backdrop','url("'+productPhoto.src+'")');}}
   if(id===3){
    var optionLabel=card.querySelector('.nm').textContent.trim();
    var photoSource=optionLabel==='Copil mic'?'assets/quiz-child-v46.png':optionLabel==='Animal de companie'?'assets/quiz-pet-v46.png':optionLabel==='Impermeabil'?'assets/quiz-wine-v46.png':null;
