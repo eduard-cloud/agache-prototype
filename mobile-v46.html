@@ -813,6 +813,14 @@ html,body{background:#fff!important}
 .tylko-quiz .tylko-options .tylko-caption .ds{font-size:12px;margin-top:5px}
 .tylko-quiz:not(.tylko-intro) .bar{margin-top:16px;margin-bottom:18px}
 }
+</style><style id="quiz-back-position">
+.tylko-quiz:not(.tylko-intro) .bar{justify-content:flex-start!important}
+.tylko-quiz .bar>.tylko-back{order:0;margin-right:auto;min-width:0;flex:0 0 90px;padding:13px 18px}
+.tylko-quiz[data-i="2"] .bar>.tylko-back{min-width:0;flex:0 0 90px}
+.tylko-quiz .bar>.cta{margin-left:auto}
+</style><style id="quiz-option-text-left">
+.tylko-quiz .tylko-options .tylko-caption{align-items:flex-start;text-align:left}
+.tylko-quiz .tylko-options .tylko-caption .tt,.tylko-quiz .tylko-options .tylko-caption .nm,.tylko-quiz .tylko-options .tylko-caption .ds{text-align:left}
 </style></head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="sofa-art" viewBox="0 0 120 84">
@@ -1688,7 +1696,7 @@ html,body{background:#fff!important}
  <div class="email-content"><p class="email-prompt">Unde îți trimitem recomandările?</p>
  <form id="quiz-email-form"><input type="email" id="quiz-email" name="email" aria-label="Adresa de e-mail" autocomplete="email" required>
  <p class="email-consent">Sunt de acord să primesc ocazional e-mailuri de la Agache, cu informații despre produse, servicii și noutăți. Adresa mea de e-mail va fi folosită în acest scop, pe baza consimțământului meu.</p>
- <button class="email-submit" type="submit">Finalizează quizul</button></form>
+ <button class="email-submit" type="submit">Finalizează quizul</button></form><button class="email-results" type="button">Vezi rezultate</button>
  </div>
 </div></div>
 <script>
