@@ -1734,7 +1734,7 @@ html,body{background:#fff!important}
   if(illustration)image.appendChild(illustration);
   if(id===3){
    var optionLabel=card.querySelector('.nm').textContent.trim();
-   var photoSource=optionLabel==='Copil mic'?'assets/quiz-child-v46.png':optionLabel==='Animal de companie'?'assets/quiz-pet-v46.png':null;
+   var photoSource=optionLabel==='Copil mic'?'assets/quiz-child-v46.png':optionLabel==='Animal de companie'?'assets/quiz-pet-v46.png':optionLabel==='Pahar de vin'?'assets/quiz-wine-v46.png':null;
    if(photoSource){var photo=document.createElement('img');photo.src=photoSource;photo.alt=optionLabel;photo.className='lifestyle-photo';image.textContent='';image.appendChild(photo);}
   }
   var caption=document.createElement('span');caption.className='tylko-caption';
