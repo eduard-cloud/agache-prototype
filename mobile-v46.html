@@ -715,6 +715,23 @@ html,body{background:#fff!important}
 .splash-note{font-size:11px;max-width:260px}
 .splash-photo{object-position:55% center}
 }
+</style><style id="quiz-photo-and-actions">
+.splash-start{top:29%}
+.tylko-quiz[data-i="12"] .tylko-image{position:relative;overflow:hidden;flex:none;height:auto;aspect-ratio:1;background:#eaeae5}
+.tylko-quiz[data-i="12"] .tylko-image>.product-photo{position:absolute;inset:0;width:100%!important;height:100%!important;max-width:none;margin:0!important}
+.product-photo img{display:block;width:100%;height:100%;object-fit:cover}
+.product-photo img[alt="Fotoliu"]{object-position:center 68%}
+.tylko-quiz:not(.tylko-intro) .bar{display:flex;flex-direction:row!important;align-items:center;justify-content:center;gap:16px;width:100%;max-width:700px;box-sizing:border-box;margin-left:auto;margin-right:auto}
+.tylko-quiz .bar>.tylko-back{flex:0 0 auto;width:auto;min-width:128px;border:1px solid #202020;background:transparent;color:#202020}
+.tylko-quiz .bar>.cta{flex:0 1 auto;width:auto;min-width:160px;background:#EB2F1E;color:#fff;order:2}
+.tylko-quiz .bar>.cta.is-empty{background:#EB2F1E;opacity:.35}
+@media(max-width:600px){
+.splash-start{top:29%}
+.tylko-quiz:not(.tylko-intro) .bar{padding:0 20px;gap:12px}
+.tylko-quiz .bar>.tylko-back{min-width:0;flex:0 0 90px;padding:13px 18px}
+.tylko-quiz .bar>.cta{min-width:0;flex:1;padding:13px 16px;font-size:14px}
+.tylko-quiz[data-i="2"] .bar>.tylko-back{flex:0 0 auto;min-width:128px}
+}
 </style></head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="sofa-art" viewBox="0 0 120 84">
@@ -1583,7 +1600,7 @@ html,body{background:#fff!important}
 <div class="screen" data-i="12"><div class="ph">
   <div class="sbar"><span>9:41</span><span>▮▮▮ ▮</span></div>
   <div class="hd"><span class="hdback"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate(180deg)"><path d="m9 18 6-6-6-6"></path></svg></span><span style="flex:1">Configurare</span><span class="iconbtn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></span></div>
-  <div class="bd"><div class="qprogress"><i></i><i class="pending"></i><i class="pending"></i></div><div class="scroll" style="display:flex;flex-direction:column;gap:28px"><div><div class="msub12">Întrebarea 1 din 3</div><div class="h3" style="margin-top:12px">Ce tip de produs cauți?</div><p class="cap13" style="margin:12px 0 0">Poți alege unul sau mai multe tipuri de produse.</p></div><div class="product-options" aria-label="Tip de produs"><button class="abcard product-option" type="button" data-label="Canapea" aria-pressed="false"><span class="product-icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="19" width="46" height="21" rx="3"/><path d="M10 40V25h36v15"/></svg></span><span class="nm">Canapea</span></button><button class="abcard product-option" type="button" data-label="Colțar" aria-pressed="false"><span class="product-icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15h44a3 3 0 0 1 3 3v19H24v13H6a3 3 0 0 1-3-3V18a3 3 0 0 1 3-3Z"/><path d="M9 46V21h38v10H18v15"/></svg></span><span class="nm">Colțar</span></button><button class="abcard product-option" type="button" data-label="Pat" aria-pressed="false"><span class="product-icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="12" y="5" width="32" height="46" rx="3"/><rect x="16" y="10" width="10" height="8" rx="2"/><rect x="30" y="10" width="10" height="8" rx="2"/><path d="M12 24h32M33 24v12h11M33 24l11 12"/></svg></span><span class="nm">Pat</span></button><button class="abcard product-option" type="button" data-label="Fotoliu" aria-pressed="false"><span class="product-icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="14" y="16" width="29" height="27" rx="3"/><path d="M20 43V22h17v21"/></svg></span><span class="nm">Fotoliu</span></button></div></div><div class="bar"><div class="cta is-empty">Continuă <span aria-hidden="true">→</span></div></div></div></div></div>
+  <div class="bd"><div class="qprogress"><i></i><i class="pending"></i><i class="pending"></i></div><div class="scroll" style="display:flex;flex-direction:column;gap:28px"><div><div class="msub12">Întrebarea 1 din 3</div><div class="h3" style="margin-top:12px">Ce tip de produs cauți?</div><p class="cap13" style="margin:12px 0 0">Poți alege unul sau mai multe tipuri de produse.</p></div><div class="product-options" aria-label="Tip de produs"><button class="abcard product-option" type="button" data-label="Canapea" aria-pressed="false"><span class="product-icon product-photo"><img src="assets/quiz-canapea-v46.png" alt="Canapea"></span><span class="nm">Canapea</span></button><button class="abcard product-option" type="button" data-label="Colțar" aria-pressed="false"><span class="product-icon product-photo"><img src="assets/quiz-coltar-v46.png" alt="Colțar"></span><span class="nm">Colțar</span></button><button class="abcard product-option" type="button" data-label="Pat" aria-pressed="false"><span class="product-icon product-photo"><img src="assets/quiz-pat-v46.png" alt="Pat"></span><span class="nm">Pat</span></button><button class="abcard product-option" type="button" data-label="Fotoliu" aria-pressed="false"><span class="product-icon product-photo"><img src="assets/quiz-fotoliu-v46.png" alt="Fotoliu"></span><span class="nm">Fotoliu</span></button></div></div><div class="bar"><div class="cta is-empty">Continuă <span aria-hidden="true">→</span></div></div></div></div></div>
 <script>
 // Build the quiz cards from the existing illustrations and Romanian copy.
 [1,12,2,3].forEach(function(id){
