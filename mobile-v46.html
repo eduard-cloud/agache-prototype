@@ -877,6 +877,8 @@ html,body{background:#fff!important}
 .tylko-quiz .bar>.tylko-back,.tylko-quiz[data-i="2"] .bar>.tylko-back{flex:0 0 auto;min-width:128px;margin:0;padding:13px 24px}
 .tylko-quiz .bar>.cta{flex:0 0 auto;margin:0;min-width:160px}
 }
+</style><style id="bed-size-branch">
+.tylko-quiz[data-i="14"] .bar>.cta{display:none}
 </style></head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="sofa-art" viewBox="0 0 120 84">
@@ -1755,9 +1757,25 @@ html,body{background:#fff!important}
  <button class="email-submit" type="submit">Finalizează quizul</button></form><button class="email-results" type="button">Vezi rezultate</button>
  </div>
 </div></div>
+<div class="screen" data-i="14"><div class="ph">
+  <div class="sbar"><span>9:41</span><span>▮▮▮ ▮</span></div>
+  <div class="hd"><span class="hdback"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate(180deg)"><path d="m9 18 6-6-6-6"></path></svg></span><span style="flex:1">Configurare</span><span class="iconbtn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></span></div>
+  <div class="bd">
+    <div class="qprogress"><i></i><i></i><i class="pending"></i></div>
+    <div class="scroll" style="display:flex;flex-direction:column;gap:24px">
+      <div>
+        <div class="msub12">Întrebarea 2 din 3</div>
+        <div class="h3" style="margin-top:12px">Ce dimensiune de pat cauți?</div>
+        <p class="cap13" style="margin:12px 0 0">Alege dimensiunea dorită.</p>
+      </div>
+      <div class="qlist" role="radiogroup" aria-label="Dimensiunea patului"><span class="abbig" role="radio" aria-checked="false" tabindex="0"><span class="ic firmness-icon" aria-hidden="true"><svg viewBox="0 0 48 56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="11.0" y="7" width="26" height="36" rx="2"/><path d="M11.0 19h26"/><rect x="15.0" y="11" width="8.0" height="5" rx="1"/><rect x="25" y="11" width="8.0" height="5" rx="1"/><path d="M11.0 50h26m-23-3-3 3 3 3m20-6 3 3-3 3"/></svg></span><span style="flex:1"><span class="tt nm">140 × 200 cm</span></span></span><span class="abbig" role="radio" aria-checked="false" tabindex="0"><span class="ic firmness-icon" aria-hidden="true"><svg viewBox="0 0 48 56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9.0" y="7" width="30" height="36" rx="2"/><path d="M9.0 19h30"/><rect x="13.0" y="11" width="10.0" height="5" rx="1"/><rect x="25" y="11" width="10.0" height="5" rx="1"/><path d="M9.0 50h30m-27-3-3 3 3 3m24-6 3 3-3 3"/></svg></span><span style="flex:1"><span class="tt nm">160 × 200 cm</span></span></span><span class="abbig" role="radio" aria-checked="false" tabindex="0"><span class="ic firmness-icon" aria-hidden="true"><svg viewBox="0 0 48 56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7.0" y="7" width="34" height="36" rx="2"/><path d="M7.0 19h34"/><rect x="11.0" y="11" width="12.0" height="5" rx="1"/><rect x="25" y="11" width="12.0" height="5" rx="1"/><path d="M7.0 50h34m-31-3-3 3 3 3m28-6 3 3-3 3"/></svg></span><span style="flex:1"><span class="tt nm">180 × 200 cm</span></span></span></div>
+    </div>
+    <div class="bar"><div class="cta">Continuă <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></div></div>
+  </div>
+</div></div>
 <script>
 // Build the quiz cards from the existing illustrations and Romanian copy.
-[1,12,2,3].forEach(function(id){
+[1,12,2,3,14].forEach(function(id){
  var screen=document.querySelector('.screen[data-i="'+id+'"]');
  screen.classList.add('tylko-quiz');
  if(id===1){screen.classList.add('tylko-intro');return;}
@@ -1909,7 +1927,7 @@ document.addEventListener('click', function(e){
      else (a dispatched click, a keyboard activation) from walking past it */
   if (nav.classList.contains('is-empty')) return;
   /* one step back, not out -- that is what the X next to it is for */
-  if (nav.classList.contains('hdback')) return show(i === 12 ? 1 : i === 2 ? 12 : i - 1);
+  if (nav.classList.contains('hdback')) return show(i === 12 ? 1 : (i === 2 || i === 14) ? 12 : i === 3 && state.products.indexOf('Pat') > -1 ? 14 : i - 1);
   if (nav.classList.contains('filtbtn') || nav.classList.contains('custbtn')) return show(5);
   /* The flow is a modal over the PDP, so its X dismisses the whole thing and lands back on
      the product page. The exception is the filter panel (6, 7), which is its own overlay on
@@ -1924,7 +1942,8 @@ document.addEventListener('click', function(e){
   if (nav.classList.contains('abshow')){ show(4); applyFilters(); return; }
   if (nav.classList.contains('ebtn')) return show(4);
   if (i === 1) return show(12);
-  if (i === 12) return show(2);
+  if (i === 12) return show(state.products.indexOf('Pat') > -1 ? 14 : 2);
+  if (i === 14) return show(3);
   if (i === 3) return show(13);
   if (i === 4) return show(9);      // rezultate -> livrare
   if (i === 7) return show(4);      // nicio potrivire -> inapoi la rezultate
@@ -2036,10 +2055,11 @@ document.querySelectorAll('.sw').forEach(function(sw){
 /* Which options are ticked, read straight off the screens. The three questions and the
    panel's first three sections are the same three questions, so they share one state and are
    repainted together -- answering on a question screen shows up in the panel and back. */
-var state = { products: [], needs: [], look: [], colors: [], props: [] };
+var state = { bedSize: [], products: [], needs: [], look: [], colors: [], props: [] };
 function groupOf(el){
   var screen = el.closest('.screen');
   var i = screen ? Number(screen.dataset.i) : -1;
+  if (i === 14) return 'bedSize';
   if (i === 12) return 'products';
   if (i === 2) return 'needs';
   if (i === 3) return 'look';
@@ -2071,7 +2091,7 @@ function labelOf(el){
 var ANY_OF = { look: 'Standard' };
 function toggleState(group, label){
   var a = state[group], i = a.indexOf(label);
-  if (group === 'needs'){ a.splice(0, a.length); if (i < 0) a.push(label); return; }
+  if ((group === 'needs' || group === 'bedSize')){ a.splice(0, a.length); if (i < 0) a.push(label); return; }
   if (i > -1){ a.splice(i, 1); return; }
   var any = ANY_OF[group];
   if (any){
@@ -2092,7 +2112,7 @@ var SEL_SECS = Array.prototype.filter.call(document.querySelectorAll('.absec'), 
   return h && /Selectate/.test(h.textContent);
 }).map(function(sec){ return { sec: sec, row: sec.querySelector('.abrow') }; });
 
-var GROUPS = ['products', 'needs', 'look', 'colors', 'props'];
+var GROUPS = ['bedSize', 'products', 'needs', 'look', 'colors', 'props'];
 function picks(){
   var out = [];
   GROUPS.forEach(function(g){
@@ -2204,7 +2224,7 @@ function applyFilters(){
   var rest = GRID_REST ? countVisible(GRID_REST) : 0;
 
   /* a question cannot be moved past until it has an answer */
-  [[12,'products'],[2,'needs'],[3,'look']].forEach(function(pair){
+  [[12,'products'],[2,'needs'],[14,'bedSize'],[3,'look']].forEach(function(pair){
     var cta = screens[pair[0]].querySelector('.cta');
     if (cta) cta.classList.toggle('is-empty', state[pair[1]].length === 0);
   });
@@ -2297,7 +2317,7 @@ document.addEventListener('click', function(e){
   toggleState(g, labelOf(opt));
   repaintOptions();
   applyFilters();
-  if (g === 'needs' && state.needs.length) show(3);
+  if ((g === 'needs' && state.needs.length) || (g === 'bedSize' && state.bedSize.length)) show(3);
 }, true);
 
 repaintOptions();
